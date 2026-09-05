@@ -907,8 +907,8 @@ body.phone #p-command.on>*{order:0;min-width:0}
   .card>.bd.tight>table.led td:first-child[colspan]{position:static;max-width:none;white-space:normal}
   #draftBoard table.led td:first-child:not([colspan]),#draftBoard table.led th:first-child{width:38px;min-width:38px;max-width:38px;padding-left:10px!important;padding-right:4px!important}
   #draftBoard table.led tr>td:not([colspan]):nth-child(2),#draftBoard table.led th:nth-child(2){position:sticky;left:38px;z-index:2;background:#0E1524;max-width:min(52vw,200px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  table.led td.wqcell{max-width:none;width:44px;min-width:44px}
-  table.led td.wqcell+td,table.led th.wqth+th{position:sticky;left:44px;z-index:2;background:#0E1524;max-width:min(52vw,200px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  table.led td.wqcell{max-width:none;width:44px;min-width:44px;padding-left:8px!important;padding-right:0!important}
+  table.led td.wqcell+td,table.led th.wqth+th{position:sticky;left:52px;z-index:2;background:#0E1524;max-width:min(52vw,200px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
 /* dossier + modals as bottom sheets */
 @media(max-width:760px){
@@ -945,10 +945,10 @@ body.phone .card>.hd .btn{white-space:nowrap}
 body.phone .card>.hd .lb .hdsub{display:block;font:500 12px/1.4 var(--sans);letter-spacing:0;text-transform:none;color:var(--mut);margin-top:3px}
 .hdsub::before{content:" — "} body.phone .card>.hd .lb .hdsub::before{content:none} /* a split title read on desktop (panel not yet re-rendered) keeps its dash */
 /* identity cells never wrap badly */
-body.phone table.led td:has(>.ava){white-space:nowrap}
+body.phone table.led td:has(>.ava){white-space:nowrap;text-overflow:clip} /* the cell never ellipsizes the whole name box — the name box clips itself */
 body.phone table.led td:has(>.ava) .ava{margin-right:2px}
 body.phone table.led td:has(>.ava) .ptag{min-width:0;padding:2px 4px;font-size:9.5px;vertical-align:middle}
-body.phone table.led td:has(>.ava) .pname{display:inline-block;vertical-align:middle;max-width:calc(100vw - 190px);overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+body.phone table.led td:has(>.ava) .pname{display:inline-block;vertical-align:middle;max-width:calc(100% - 62px);overflow:hidden;text-overflow:ellipsis;line-height:1.25}
 body.phone table.led td:has(>.ava) .pname .meta{margin-top:3px;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 body.phone table.led td:has(>.ava) .tm,body.phone table.led td:has(>.ava) .tier{vertical-align:middle}
 body.phone .asset .pname,body.phone .suglist .pname,body.phone .searchdrop .pname{display:inline-block;vertical-align:middle;max-width:calc(100vw - 150px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1043,6 +1043,7 @@ body.phone #nrBody>div[style*="display:flex"]{flex-wrap:wrap}
 body.phone #nrBody>div[style*="display:flex"]>.inlinebtns{flex:1 1 100%;max-width:none!important;margin-top:2px}
 body.phone .newsit .nt{white-space:normal;max-width:64px;text-align:right}
 body.phone .newsimg{width:48px;height:34px}
+body.phone #baCard table.led td{white-space:nowrap} /* best-available names stay on one line */
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -8719,7 +8720,7 @@ function switchTab(t){ const prevTab=S.ui.tab; if(isPhone()){ TABSCROLL[prevTab]
     const seen={}; S.dealScan.keys.forEach(k=>seen[k]=1); Store.set('dealseen:'+S.conn.leagueId,seen);
     S.dealScan.fresh=0; const b=$('tdBadge'); if(b) b.style.display='none'; }
   renderTab();
-  if(isPhone()){ syncTabbar(); const y=TABSCROLL[t]||0; requestAnimationFrame(()=>window.scrollTo(0,y)); } } // v5.6: each tab remembers where you were
+  if(isPhone()){ syncTabbar(); const y=TABSCROLL[t]||0; requestAnimationFrame(()=>window.scrollTo(0,y)); Store.set('uitab',t).catch(()=>{}); } } // v5.6: each tab remembers where you were; the app reopens on the last room
 $('tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-tab]'); if(b) switchTab(b.dataset.tab); });
 function renderTab(){
   const t=S.ui.tab;
@@ -8817,6 +8818,7 @@ async function init(){
   S.formmap=await Store.get('formmap')||null;
   if(S.conn&&S.conn.leagueId){ const lg=await Store.get('league:'+S.conn.leagueId); if(lg) S.league=lg;
     const tx=await Store.get('tx:'+S.conn.leagueId); if(tx) S.tx=tx; }
+  if(isPhone()){ try{ const ut=await Store.get('uitab'); if(ut&&ut!=='command'&&document.querySelector('nav.tabs button[data-tab="'+ut+'"]')){ S.ui.tab=ut; document.querySelectorAll('nav.tabs button').forEach(x=>{ x.classList.toggle('on',x.dataset.tab===ut); }); document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on',x.id==='p-'+ut)); syncTabbar(); } }catch(e){} } // v5.6: a Home Screen launch lands on the room you left
   renderHeader(); renderDots(); renderFmtChips(); renderTab();
   try{ if(!(await Store.get('toured'))) openTour(0); }catch(e){} // first paint, before the network cascade — never interrupt a user mid-connect
   await probeSleeper(); renderDots(); renderHeader();
@@ -8925,6 +8927,7 @@ async function phoneRefresh(){ lastPeriodic=0; try{ periodicRefresh(); }catch(e)
 })();
 (function sheetSwipe(){ function attach(head,close){ if(!head) return; let y0=null; head.addEventListener('touchstart',e=>{ y0=isPhone()?e.touches[0].clientY:null; },{passive:true}); head.addEventListener('touchmove',e=>{ if(y0==null) return; if(e.touches[0].clientY-y0>90){ y0=null; close(); } },{passive:true}); head.addEventListener('touchend',()=>{ y0=null; },{passive:true}); }
   attach(document.querySelector('#sover .shd'),closeOver); attach(document.querySelector('#modal .mhd'),()=>$('modal').classList.remove('on')); })();
+$('toasts').addEventListener('click',e=>{ if(!isPhone()||e.target.closest('button')) return; const t=e.target.closest('.toast'); if(t) t.remove(); }); // v5.6: tap a toast to dismiss it
 document.addEventListener('focusin',e=>{ if(isPhone()&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) document.body.classList.add('kb'); });
 document.addEventListener('focusout',()=>setTimeout(()=>{ const a=document.activeElement; if(!a||!/^(INPUT|TEXTAREA)$/.test(a.tagName)) document.body.classList.remove('kb'); },80));
 const PHONE_MQ=(typeof matchMedia==='function')?matchMedia('(max-width:760px)'):null;
