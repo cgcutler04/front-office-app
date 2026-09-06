@@ -1095,6 +1095,31 @@ body.phone .gvscore{font-size:30px}
 body.phone .gvscroll{max-height:calc(var(--vvh,100vh) - 340px)}
 body.phone .rpickhead{top:-12px}
 body.phone .addrow .rpickbtn{flex:1 1 100%;min-height:44px}
+/* ===== v6.1 · readouts ===== */
+.rsec{margin-bottom:14px} .rsec:last-child{margin-bottom:0}
+.rtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:8px}
+.rtile{border:1px solid var(--line);border-radius:var(--r-ctl);background:var(--panel2);padding:9px 11px;min-width:0}
+.rv{font:700 18px/1.2 var(--mono);margin:3px 0 2px;color:var(--ink)} .rv.up{color:var(--gain)} .rv.dn{color:var(--loss)} .rv .fine{font-size:10.5px;font-weight:500}
+.rrk{font:600 10px/1 var(--mono);color:var(--dim);margin-left:6px;vertical-align:middle}
+.dchart{display:flex;flex-direction:column;gap:4px}
+.drow{display:grid;grid-template-columns:22px minmax(120px,1.4fr) 1fr 74px 64px;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;border:1px solid transparent}
+.drow.me{background:rgba(108,155,255,.09);border-color:rgba(108,155,255,.35)}
+.dno{font:700 11px/1 var(--mono);color:var(--dim);text-align:center}
+.drow .who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}
+.dbar{height:6px;border-radius:3px;background:rgba(108,155,255,.12);overflow:hidden} .dbar i{display:block;height:100%;background:linear-gradient(90deg,#3B62B9,#6C9BFF);border-radius:3px}
+.dsn{font:600 10.5px/1 var(--mono);color:var(--mut);text-align:right;white-space:nowrap} .dpg{font:600 10.5px/1 var(--mono);color:var(--dim);text-align:right;white-space:nowrap}
+.mchip{display:inline-block;margin-left:6px;font:600 10px/1 var(--mono);color:var(--dim);border:1px solid var(--line2);border-radius:6px;padding:3px 6px;vertical-align:middle;white-space:nowrap} .mchip.up{color:var(--gain);border-color:rgba(61,214,140,.4)} .mchip.dn{color:var(--loss);border-color:rgba(242,109,96,.4)}
+.chip.dvsoft{color:var(--gain);border-color:rgba(61,214,140,.45)} .chip.dvhard{color:var(--loss);border-color:rgba(242,109,96,.45)}
+.tgridwrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.tcard{margin-bottom:0} .tcard.mine{border-color:rgba(108,155,255,.35)} .tcard .tab{font:800 15px/1 var(--mono);letter-spacing:.06em;color:var(--ink);margin-right:6px}
+.tgrid .lb{margin:10px 0 6px} .tgrid .lb:first-child{margin-top:0}
+.tstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tstat{border:1px solid var(--line);border-radius:var(--r-ctl);background:var(--panel2);padding:8px 8px;min-width:0}
+.tstat .tv{font:700 15px/1.2 var(--mono);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .tstat .tv.up{color:var(--gain)} .tstat .tv.dn{color:var(--loss)} .tstat .tk{font:600 9.5px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+body.phone .rtiles{grid-template-columns:1fr 1fr} body.phone .rv{font-size:17px}
+body.phone .drow{grid-template-columns:20px minmax(90px,1.3fr) 1fr 66px;padding:7px 6px} body.phone .drow .dpg{display:none}
+body.phone .tgridwrap{grid-template-columns:1fr;gap:10px} body.phone .tstats{grid-template-columns:repeat(2,minmax(0,1fr))} body.phone .tstat .tv{font-size:16px}
+body.phone .mchip{display:block;margin:4px 0 0;width:max-content;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 /* ===== v6.0 · load-in screen ===== */
 #splash{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 90% at 50% 0%,#111B33 0%,#0A0E17 45%,#07090F 100%);display:flex;align-items:center;justify-content:center;transition:opacity .38s ease;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 #splash.out{opacity:0;pointer-events:none}
@@ -1174,6 +1199,7 @@ body.phone .addrow{flex-wrap:wrap} body.phone .addrow input{min-width:0;flex:1 1
   <button data-tab="lineup">Lineup Lab</button>
   <button data-tab="outlook">League Outlook</button>
   <button data-tab="intel">Player Intel</button>
+  <button data-tab="teams">Teams</button>
 </nav>
 
 <div class="wrap">
@@ -1198,6 +1224,7 @@ body.phone .addrow{flex-wrap:wrap} body.phone .addrow input{min-width:0;flex:1 1
   <div class="panel" id="p-lineup"></div>
   <div class="panel" id="p-outlook"></div>
   <div class="panel" id="p-intel"></div>
+  <div class="panel" id="p-teams"></div>
 </section>
 </div>
 
@@ -3663,6 +3690,7 @@ async function waiverWhy(row,mount){
   const med=leagueMedianPos(modeNow()); const myPS=myRoster()?posStrength(myRoster().roster_id,modeNow()):{};
   const gap=med[p.p]!=null?Math.round((med[p.p]||0)-(myPS[p.p]||0)):null;
   const lines=[];
+  try{ const mi=matchupInfo(row.pid); if(mi) lines.push('This week: '+mi.bits.join(', ')+' — start/sit weight ×'+mi.mult.toFixed(2)+'.'); const rm=roleMod(row.pid); if(rm) lines.push('Role weight '+(rm>0?'+':'')+Math.round(rm*100)+'% from his snap share and target rate — '+(rm>0?'a full-time role that holds up.':'a part-time role that can vanish in a week.')); }catch(e){} // v6.1
   lines.push(p.n+' was added in '+row.count.toLocaleString()+' Sleeper leagues in the last 24 hours — the market is moving on him right now.');
   if(p.dco===1) lines.push('Depth chart lists him '+p.p+'1: the opportunity is already his, not speculative.');
   else if(p.dco===2) lines.push('He sits one spot from the top of the depth chart — one injury or benching from a full role.');
@@ -3761,7 +3789,7 @@ function startScore(pid){
   else if(proj!=null) base=proj;
   else if(form!=null) base=form*0.9;
   else base=marketValue(pid,'rd')/420; // value-scaled fallback
-  return base*(1+injMod(pid,'rd')*1.2);
+  return base*(1+injMod(pid,'rd')*1.2)*(1+roleMod(pid)); // v6.1: role weight — snap share, first-read proxy, scoring environment
 }
 /* this-week score: byes zeroed, then opponent-DvP + weather + venue adjust — trade math stays season-long */
 function weekScore(pid){
@@ -5984,6 +6012,10 @@ Object.assign(HELP,{
   bestav:{t:'Best available — by ADP',b:'The top names still on the board, ordered by where a real room takes them: <b>live ESPN ADP</b> in redraft, <b>live market rank</b> (format-aware dynasty values) in startup and rookie drafts. Filter by position with the chips. <b>Avail %</b> = the odds each name survives to your next pick — on the clock it answers the real question, "can I wait one more turn?". In a mock or a linked live draft (the ◈ mark), the odds are modeled <b>seat by seat</b>: the actual managers picking before your turn, each simulated with their Draft-DNA lean, QB timing, and current roster needs (a fixed-pool approximation, so hot names read a touch safe); otherwise it\'s a plain ADP curve. Take, queue, research, or mark gone without leaving the list; it re-sorts live as every pick lands.'},
   war:{t:'Live draft war room',b:'<b>Sleeper\'s public API is read-only</b> — no keyless app can submit a pick, so the war room does everything except the click: linked to your real draft it polls the pick feed (every 12s, tightening to 4s as your turn approaches), fires a <b>browser alert the moment you\'re on the clock</b>, keeps your queue alive against the live board (drafted names strike out), recommends the pick — top of your queue first, else best need-weighted VBD — and runs tier-break and position-run alerts throughout. The <b>Open Sleeper draft</b> button drops you into the draft room to make it official. The full <b>draft room board</b> renders live too — every manager\'s column filling in as Sleeper picks land, ticker chips researchable, any column header opening that manager\'s deep-dive — and the <b>Targets</b> shelf ranks need-weighted values tilted by the seat-by-seat odds each name survives the specific managers picking before you.'}
 });
+Object.assign(HELP,{ // v6.1 · readouts
+  teams:{t:'Team readouts',b:'Every NFL offense and defense from Sleeper\'s season stat file, re-summed per team: <b>points, plays, pass rate and yards per play</b> on offense; <b>points and yards allowed, sacks and takeaways</b> on defense; and <b>fantasy points allowed to each position</b> (defense-vs-position, blended with last season early in the year). This week\'s line shows the opponent, kickoff, the market total and implied points, and the forecast at outdoor venues. It reads this season as soon as games exist, last season until then, and refreshes with the 10-minute tick (lines every 6h, weather every 12h, stats every 6h) or the Refresh button.'},
+  readouts:{t:'Readouts on a player card',b:'<b>This week</b>: the opponent\'s rank in fantasy points allowed to his position, the implied team total, the opposing defense\'s scoring and pressure, and the exact start/sit weight the Lineup Lab applies. <b>Offense readout</b>: his team\'s points, pace, pass rate and efficiency with league ranks. <b>Role readout</b>: snap share, target share, air-yard share, red-zone share, carry share — and a <b>first-read proxy</b> (targets per pass snap: how often the ball looks for him when his team drops back; 24%+ is alpha territory, under 14% is a low-volume role). <b>Depth chart</b>: the room at his position ordered by the team\'s depth chart, with each man\'s snap share and scoring. The role weight (snap share, target rate, scoring environment; −15% to +8%) is folded into every start/sit score.'}
+});
 Object.assign(HELP,{ // v6.0 · league hub, post-trade lineup, game center, roster picker
   hub:{t:'Your leagues',b:'Every league you are in, at a glance. <b>Record · standing</b> come from Sleeper; the <b>matchup</b> shows this week\'s projected totals for you and your opponent (exact league scoring for the active league, PPR/half/standard by each league\'s reception setting for the others), live points once games start, and a win-odds read from the projected gap. <b>Tags</b> are the to-do list: empty starter slots, injured or bye-week starters, questionable starters, bench players projecting clearly ahead of a starter, the best trending free agent who beats your worst active piece, the trade deadline and FAAB left. Tap a card to make that league the scope for every other tab; tap a name to open the player. Finished or past-season leagues are hidden — <b>Show past</b> on the My leagues card brings them back.'},
   posttrade:{t:'Your lineup after the trade',b:'The starting lineup you would actually field once the deal goes through, slot by slot — who arrives, who steps up off the bench, who leaves. <b>This week</b> is the change in projected points and the shift in win odds against this week\'s opponent (a normal read on the projected gap). <b>Rest of season</b> sums season-long projections over the starters before and after. <b>Dynasty window</b> projects the whole roster\'s value one, two and three seasons out along the age curve (picks held at today\'s chart), so a deal that helps now but bleeds later shows it.'},
@@ -7550,7 +7582,7 @@ function renderWaiver(){
     <span class="right">${faab?`<span class="chip on mono">FAAB $${faab.mine} left of $${faab.budget}</span>`:''}<span class="src ${stale(WV.ts,6)?'stale':'live'}">scanned ${ago(WV.ts)}</span>${sleeperBtn('players','Waivers in Sleeper')}<button class="btn sm" data-act="rescan">Rescan</button></span></div>
   <div class="bd tight"><table class="led"><thead><tr><th class="wqth" title="Queue for the claim planner">Q</th><th>Player</th><th class="r">24h adds</th><th class="r">Value</th><th class="r">Priority</th><th>Tier</th>${faab?'<th class="r">Bid</th>':''}<th>Suggested drop</th><th></th></tr></thead><tbody>
   ${rows.length?rows.map((r,i)=>{const d=suggestDrop(r);const dp=d?playerOf(d.pid):null;
-    return `<tr class="rowbtn" data-act="pv" data-pid="${r.pid}"><td class="wqcell"><label class="wqc" title="Queue this claim"><input type="checkbox" data-wq="${r.pid}" ${S.ui.wq&&S.ui.wq[r.pid]?'checked':''}></label></td><td>${playerRow(r.pid)}</td><td class="r vnum">${r.count.toLocaleString()}</td><td class="r vnum">${fmtN(r.v)}</td>
+    return `<tr class="rowbtn" data-act="pv" data-pid="${r.pid}"><td class="wqcell"><label class="wqc" title="Queue this claim"><input type="checkbox" data-wq="${r.pid}" ${S.ui.wq&&S.ui.wq[r.pid]?'checked':''}></label></td><td>${playerRow(r.pid,mchipHTML(r.pid))}</td><td class="r vnum">${r.count.toLocaleString()}</td><td class="r vnum">${fmtN(r.v)}</td>
     <td class="r"><span class="vnum ${r.score>=78?'dn':r.score>=62?'wt':''}">${r.score}</span></td>
     <td><span class="tier ${r.tier}">${r.tier==='must'?'Must add':r.tier==='strong'?'Strong':r.tier==='spec'?'Speculative':'Monitor'}</span></td>
     ${faab?`<td class="r vnum" ${r.bid&&r.bid.threats?'style="color:var(--watch)" title="'+r.bid.threats+' rival'+(r.bid.threats>1?'s':'')+' thin at '+esc(r.p.p)+' with cash left"':''}>${r.bid?(r.bid.hi?'$'+r.bid.lo+'–'+r.bid.hi:'$0'):'—'}</td>`:''}
@@ -8108,6 +8140,118 @@ function wirePlayerSearch(inpId,dropId,act){
     dr.classList.add('on'); placeDrop(q,dr); };
   q.onblur=()=>setTimeout(()=>dr.classList.remove('on'),180);
 }
+/* ===== v6.1 · READOUTS — every NFL team's offense and defense from the live season's stat file, this week's matchup, and each player's role ===== */
+const TEAMS={memo:null};
+function teamNick(ab){ const w=(TEAMW[ab]||[])[0]||ab; return w.replace(/\b\w/g,c=>c.toUpperCase()); }
+function teamReadouts(){ // per team: offense summed from every skill/K row, defense from the DEF row — the live season once games exist, else last season
+  const se=usageShareSeason(); const m=S.sstat&&S.sstat[se]; if(!m) return null;
+  const stamp=se+':'+((S.sstatTs&&S.sstatTs[se])||0)+':'+((S.dvp&&S.dvp.ts)||0)+':'+((S.players&&S.players.ts)||0);
+  if(TEAMS.memo&&TEAMS.memo.stamp===stamp) return TEAMS.memo;
+  const T={}; const blank=t=>({t,gp:0,pass_att:0,rush_att:0,pass_yd:0,rush_yd:0,pass_td:0,rush_td:0,rec_tgt:0,rec:0,fgm:0,xpm:0,sack_taken:0,rz_pass:0,rz_rush:0,air:0,def:null});
+  for(const pid in m){ const p=playerOf(pid); if(!p||!p.t) continue; const t=String(p.t).toUpperCase(); const st=m[pid]; if(!st) continue;
+    const r=T[t]=T[t]||blank(t);
+    if(p.p==='DEF'){ r.def=st; continue; }
+    if(!['QB','RB','WR','TE','K'].includes(p.p)) continue;
+    r.gp=Math.max(r.gp,st.gp||0);
+    ['pass_att','rush_att','pass_yd','rush_yd','pass_td','rush_td','rec_tgt','rec','fgm','xpm'].forEach(k=>{ if(st[k]) r[k]+=Number(st[k])||0; });
+    r.sack_taken+=Number(st.pass_sack)||0; r.rz_pass+=Number(st.pass_rz_att)||0; r.rz_rush+=Number(st.rush_rz_att)||0; r.air+=Number(st.pass_air_yd)||0; }
+  const rows=Object.values(T).map(r=>{ const g=Math.max(1,r.gp||(r.def&&r.def.gp)||1); const plays=r.pass_att+r.rush_att+r.sack_taken; const dg=Math.max(1,(r.def&&r.def.gp)||g);
+    const dv=k=>r.def&&r.def[k]!=null?Number(r.def[k]):null;
+    const sacks=dv('sack')!=null?dv('sack'):dv('idp_sack'); const ints=dv('int')!=null?dv('int'):dv('idp_int'); const frs=dv('fr')!=null?dv('fr'):(dv('idp_fr')!=null?dv('idp_fr'):dv('def_st_fum_rec'));
+    return {t:r.t,g,se,ppg:(r.pass_td*6+r.rush_td*6+r.fgm*3+r.xpm+(((dv('def_td')||0)+(dv('st_td')||0))*6))/g,plays:plays/g,passRate:plays?(r.pass_att+r.sack_taken)/plays:null,ypp:plays?(r.pass_yd+r.rush_yd)/plays:null,
+      passYpg:r.pass_yd/g,rushYpg:r.rush_yd/g,rzAtt:(r.rz_pass+r.rz_rush)/g,tgt:r.rec_tgt,rush:r.rush_att,air:r.air,rzPass:r.rz_pass,rzRush:r.rz_rush,
+      dPpg:dv('pts_allow')!=null?dv('pts_allow')/dg:null,dYpg:dv('yds_allow')!=null?dv('yds_allow')/dg:null,dSacks:sacks!=null?sacks/dg:null,dTo:(ints!=null||frs!=null)?((ints||0)+(frs||0))/dg:null}; });
+  const rank=(key,desc)=>{ const arr=rows.filter(r=>r[key]!=null).sort((a,b)=>desc?b[key]-a[key]:a[key]-b[key]); arr.forEach((r,i)=>{ r['r_'+key]=i+1; }); };
+  rank('ppg',true); rank('plays',true); rank('passRate',true); rank('ypp',true); rank('rzAtt',true); rank('dPpg',false); rank('dYpg',false); rank('dSacks',true); rank('dTo',true);
+  const by={}; rows.forEach(r=>by[r.t]=r);
+  return TEAMS.memo={stamp,se,by,n:rows.length,live:se===(Number(S.nfl.season)||0)};
+}
+function teamMatchup(t){ // this week's game for an NFL team: opponent, venue, market, weather, kickoff
+  if(S.nfl.season_type!=='regular') return null; const w=S.nfl.week||0; const T=String(t||'').toUpperCase(); if(!T) return null;
+  const oppW=S.byes&&S.byes.opp&&S.byes.opp[w]; if(!oppW) return null; const opp=oppW[T]; if(!opp) return {bye:true,t:T};
+  const home=!!(S.byes.home&&S.byes.home[w]&&S.byes.home[w][T]); const venue=home?T:opp; const vg=vegasOf(T); const st=STADIUMS[venue]; const wx=(S.wx&&S.wx.week===w&&S.wx.byHome&&S.wx.byHome[venue])||null;
+  const g=((S.live&&S.live.games)||[]).find(x=>(x.home===venue)&&(x.away===T||x.away===opp))||null;
+  return {t:T,opp,home,venue,imp:vg&&vg.imp!=null?vg.imp:null,total:vg&&vg.total!=null?vg.total:null,oppImp:vg&&vg.total!=null&&vg.imp!=null?Math.round((vg.total-vg.imp)*10)/10:null,dome:!!(st&&st.dome),wx,game:g};
+}
+function matchupLine(mu){ if(!mu) return ''; if(mu.bye) return '<span class="tier mon">BYE</span>';
+  const b=[(mu.home?'vs ':'@ ')+mu.opp]; if(mu.game) b.push(mu.game.state==='in'?('LIVE '+(mu.game.period>4?'OT':'Q'+mu.game.period)+' '+mu.game.clock):mu.game.state==='post'?'Final '+mu.game.as+'-'+mu.game.hs:liveKickoff(mu.game)+(mu.game.tv?' · '+mu.game.tv:''));
+  if(mu.total!=null) b.push('O/U '+mu.total+(mu.imp!=null?' · implied '+mu.imp:'')); if(mu.dome) b.push('dome'); else if(mu.wx) b.push((mu.wx.temp!=null?Math.round(mu.wx.temp)+'°':'')+(mu.wx.wind!=null?' · wind '+Math.round(mu.wx.wind)+' mph':'')+(mu.wx.precip>=40?' · rain '+Math.round(mu.wx.precip)+'%':''));
+  return esc(b.join(' · ')); }
+function dvpChip(team,pos){ const D=dvpOf(team,pos); if(!D) return ''; const soft=D.rank<=8, hard=D.rank>=D.n-7; return '<span class="chip mono '+(soft?'dvsoft':hard?'dvhard':'')+'" title="Fantasy points allowed per game to '+pos+' — '+ordinal(D.rank)+'-most of '+D.n+'">'+pos+' '+ordinal(D.rank)+'</span>'; }
+function roleReadout(pid){ // the player's share of his own offense — snaps, targets, air yards, red zone, carries — plus a first-read proxy
+  const p=playerOf(pid); if(!p||!p.t) return null; const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return null;
+  const TR=teamReadouts(); const tm=TR&&TR.se===se?TR.by[String(p.t).toUpperCase()]:null; const g=st.gp||1;
+  const out={se,g,items:[]}; const snap=snapPctOf(st); const it=(lab,v,sub,cls)=>out.items.push({lab,v,sub,cls});
+  if(snap!=null) it('Snap share',Math.round(snap*100)+'%',(st.off_snp||0)+' of '+(st.tm_off_snp||0)+' snaps',snap>=0.8?'up':snap<0.5?'dn':'');
+  if(['WR','TE','RB'].includes(p.p)&&tm&&tm.tgt){ const ts=(st.rec_tgt||0)/tm.tgt; it('Target share',Math.round(ts*100)+'%',((st.rec_tgt||0)/g).toFixed(1)+' targets/gm',ts>=0.22?'up':ts<0.12?'dn':'');
+    if(tm.air&&st.rec_air_yd!=null){ const as=st.rec_air_yd/tm.air; it('Air-yard share',Math.round(as*100)+'%',fmtN(Math.round(st.rec_air_yd/g))+' air yds/gm',as>=0.3?'up':''); }
+    if(st.off_snp&&tm.passRate!=null){ const passSnaps=st.off_snp*tm.passRate; const tprr=passSnaps?(st.rec_tgt||0)/passSnaps:null; if(tprr!=null) it('First-read proxy',Math.round(tprr*100)+'%','targets per pass snap — how often the ball is looking for him',tprr>=0.24?'up':tprr<0.14?'dn':''); }
+    if(tm.rzPass&&st.rec_rz_tgt!=null) it('Red-zone target share',Math.round(100*st.rec_rz_tgt/tm.rzPass)+'%',st.rec_rz_tgt+' RZ targets',''); }
+  if(['RB','QB'].includes(p.p)&&tm&&tm.rush){ const cs=(st.rush_att||0)/tm.rush; it(p.p==='QB'?'Designed-run share':'Carry share',Math.round(cs*100)+'%',((st.rush_att||0)/g).toFixed(1)+' carries/gm',p.p==='RB'?(cs>=0.55?'up':cs<0.3?'dn':''):'');
+    if(tm.rzRush&&st.rush_rz_att!=null) it('Red-zone carry share',Math.round(100*st.rush_rz_att/tm.rzRush)+'%',st.rush_rz_att+' RZ carries',''); }
+  if(p.p==='QB'&&st.pass_att) it('Dropbacks / gm',((st.pass_att+(st.pass_sack||0))/g).toFixed(1),(tm&&tm.r_passRate?'offense passes '+ordinal(tm.r_passRate)+'-most':''),'');
+  return out.items.length?out:null;
+}
+function roleMod(pid){ // v6.1 weighting: a starter's share of the offense — big roles hold up, part-time roles are fragile; plus the team's scoring environment
+  const p=playerOf(pid); if(!p||!['RB','WR','TE'].includes(p.p)) return 0; const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st||(st.gp||0)<2) return 0;
+  let m=0; const snap=snapPctOf(st); if(snap!=null) m+=snap>=0.8?0.03:snap>=0.6?0:snap>=0.4?-0.05:-0.12;
+  const TR=teamReadouts(); const tm=TR&&TR.se===se?TR.by[String(p.t).toUpperCase()]:null;
+  if(tm&&['WR','TE'].includes(p.p)&&st.off_snp&&tm.passRate!=null){ const tprr=(st.rec_tgt||0)/Math.max(1,st.off_snp*tm.passRate); m+=tprr>=0.24?0.03:tprr<0.14?-0.04:0; }
+  if(tm&&tm.r_ppg&&TR.n>=24) m+=tm.r_ppg<=8?0.02:tm.r_ppg>=TR.n-7?-0.02:0;
+  return clamp(m,-0.15,0.08);
+}
+function depthChartCardHTML(pid){ // the room at his position on his team, by depth order, with each man's snap share and scoring — him highlighted
+  const p=playerOf(pid); if(!p||!p.t||!S.players) return ''; const se=usageShareSeason(); const m=S.sstat&&S.sstat[se];
+  const mates=[]; for(const q in S.players.byId){ const qq=S.players.byId[q]; if(qq.t===p.t&&qq.p===p.p) mates.push(q); }
+  if(mates.length<1) return '';
+  const info=q=>{ const st=m&&m[q]; const snap=st?snapPctOf(st):null; const ppg=st&&st.gp?((lgScoreRow(st)!=null?lgScoreRow(st):st.pts)||0)/st.gp:null; return {q,dco:(playerOf(q)||{}).dco||99,snap,ppg,inj:(playerOf(q)||{}).inj}; };
+  const rows=mates.map(info).sort((a,b)=>(a.dco-b.dco)||((b.snap||0)-(a.snap||0))||((b.ppg||0)-(a.ppg||0))).slice(0,6);
+  if(!rows.some(r=>r.q===pid)) rows.push(info(pid));
+  const mx=Math.max(0.01,...rows.map(r=>r.snap||0));
+  return '<div class="dchart"><div class="lb" style="margin-bottom:6px">'+esc(p.t)+' '+esc(p.p)+' room — '+(se===(Number(S.nfl.season)||0)?'this season':se+' season')+'</div>'
+    +rows.map((r,i)=>{ const q=playerOf(r.q); const me=r.q===pid; return '<div class="drow'+(me?' me':'')+'"><span class="dno">'+(r.dco<99?r.dco:'—')+'</span><span class="who" data-pid="'+esc(r.q)+'"><b>'+esc(q.n)+'</b>'+(r.inj?' <span class="tier must">'+esc(r.inj)+'</span>':'')+'</span><span class="dbar"><i style="width:'+Math.round(100*(r.snap||0)/mx)+'%"></i></span><span class="dsn">'+(r.snap!=null?Math.round(r.snap*100)+'% snaps':'—')+'</span><span class="dpg">'+(r.ppg!=null?fmtPts1(r.ppg)+' /gm':'')+'</span></div>'; }).join('')+'</div>';
+}
+function roleEnvHTML(pid){ // dossier block: this week's matchup, his offense, the opposing defense, his role, the depth chart
+  const p=playerOf(pid); if(!p||!p.t) return ''; const T=String(p.t).toUpperCase(); const TR=teamReadouts(); const tm=TR?TR.by[T]:null; const mu=teamMatchup(T); const mi=matchupInfo(pid);
+  const tile=(lab,v,sub,cls)=>'<div class="rtile"><div class="lb">'+lab+'</div><div class="rv '+(cls||'')+'">'+v+'</div>'+(sub?'<div class="fine">'+sub+'</div>':'')+'</div>';
+  const rk=(r,n)=>r?'<span class="rrk">#'+r+(n?'/'+n:'')+'</span>':'';
+  let mk=''; if(mu&&!mu.bye){ const D=dvpOf(mu.opp,p.p); const opp=TR?TR.by[mu.opp]:null;
+    mk='<div class="rsec"><div class="lb">This week · '+matchupLine(mu)+'</div><div class="rtiles">'
+      +(D?tile((mu.home?'vs ':'@ ')+esc(mu.opp)+' vs '+esc(p.p),ordinal(D.rank)+'<span class="fine">-most allowed</span>',D.rank<=8?'soft matchup':D.rank>=D.n-7?'stingy matchup':'average matchup',D.rank<=8?'up':D.rank>=D.n-7?'dn':''):'')
+      +(mu.imp!=null?tile('Implied total',mu.imp,(mu.oppImp!=null?'opp '+mu.oppImp+' · ':'')+'O/U '+mu.total,mu.imp>=26?'up':mu.imp<=19?'dn':''):'')
+      +(opp?tile('Opp defense',fmtPts1(opp.dPpg!=null?opp.dPpg:0)+'<span class="fine"> pts/gm</span>',(opp.r_dPpg?ordinal(opp.r_dPpg)+' fewest allowed · ':'')+(opp.dSacks!=null?opp.dSacks.toFixed(1)+' sacks/gm':''),''):'')
+      +(mi?tile('Start/sit weight','×'+mi.mult.toFixed(2),esc(mi.bits.slice(1).join(' · ')),mi.mult>1.03?'up':mi.mult<0.97?'dn':''):'')+'</div></div>'; }
+  else if(mu&&mu.bye) mk='<div class="rsec"><div class="lb">This week</div><div class="fine">Bye week — no game.</div></div>';
+  let off=''; if(tm){ off='<div class="rsec"><div class="lb">'+esc(T)+' offense readout <span class="fine">('+(TR.live?'this season':tm.se+')')+'</span></div><div class="rtiles">'
+      +tile('Points / gm',fmtPts1(tm.ppg)+rk(tm.r_ppg,TR.n),'','')+tile('Plays / gm',Math.round(tm.plays)+rk(tm.r_plays,TR.n),'pace','')
+      +tile('Pass rate',Math.round((tm.passRate||0)*100)+'%'+rk(tm.r_passRate,TR.n),'dropbacks ÷ plays','')+tile('Yards / play',(tm.ypp||0).toFixed(1)+rk(tm.r_ypp,TR.n),Math.round(tm.passYpg)+' pass · '+Math.round(tm.rushYpg)+' rush /gm','')+'</div></div>'; }
+  const role=roleReadout(pid); const rm=roleMod(pid);
+  const roleH=role?'<div class="rsec"><div class="lb">Role readout <span class="fine">('+(role.se===(Number(S.nfl.season)||0)?'this season':role.se)+' · '+role.g+' gm'+(rm?' · start/sit role weight '+(rm>0?'+':'')+Math.round(rm*100)+'%':'')+')</span></div><div class="rtiles">'+role.items.map(x=>tile(esc(x.lab),esc(String(x.v)),esc(x.sub||''),x.cls)).join('')+'</div></div>':'';
+  const dc=depthChartCardHTML(pid);
+  if(!mk&&!off&&!roleH&&!dc) return '';
+  return '<div class="card rocard"><div class="hd"><span class="lb">Readouts — matchup, offense, role, depth chart '+helpBtn('readouts')+'</span></div><div class="bd">'+mk+off+roleH+(dc?'<div class="rsec">'+dc+'</div>':'')+'</div></div>';
+}
+function mchipHTML(pid){ const mi=matchupInfo(pid); if(!mi) return ''; return '<span class="mchip'+(mi.mult>1.03?' up':mi.mult<0.97?' dn':'')+'" title="This week: '+esc(mi.bits.join(' · '))+'">'+esc(mi.bits.slice(0,2).join(' · '))+'</span>'; }
+function renderTeams(){
+  const m=$('p-teams'); const TR=teamReadouts(); const reg=S.nfl.season_type==='regular'; const wk=S.nfl.week||0;
+  if(!TR){ m.innerHTML='<div class="card"><div class="bd tight">'+emptyHTML('chart','Team readouts','Season stats are still loading — the readouts build from Sleeper\'s season file the moment it lands (Full Sync pulls it now).')+'</div></div>'; return; }
+  if(reg&&!(S.live&&S.live.games&&S.live.games.length)&&S.conn&&S.league) liveRefresh().then(()=>{ if(S.ui.tab==='teams') renderTab(); }).catch(()=>{});
+  const my=myRoster(); const mine={}; if(my) activeIds(my).forEach(pid=>{ const p=playerOf(pid); if(p&&p.t) (mine[String(p.t).toUpperCase()]=mine[String(p.t).toUpperCase()]||[]).push(pid); });
+  const F=S.ui.teamsF||(my?'mine':'all'); const teams=Object.keys(TEAMW).filter(t=>F==='all'||mine[t]).sort((a,b)=>((mine[b]?1:0)-(mine[a]?1:0))||a.localeCompare(b));
+  const rk=(r)=>r?'<span class="rrk">#'+r+'</span>':'';
+  const cards=teams.map(t=>{ const r=TR.by[t]; const mu=reg?teamMatchup(t):null; const mates=(mine[t]||[]).sort((a,b)=>(adjValue(b).v-adjValue(a).v));
+    const stat=(lab,v,rr,cls)=>'<div class="tstat"><div class="tv '+(cls||'')+'">'+v+rk(rr)+'</div><div class="tk">'+lab+'</div></div>';
+    return '<div class="card tcard'+(mine[t]?' mine':'')+'"><div class="hd"><span class="lb"><b class="tab">'+esc(t)+'</b> '+esc(teamNick(t))+'</span><span class="right">'+(mu?'<span class="src">wk '+wk+' · '+matchupLine(mu)+'</span>':'')+'</span></div>'
+      +'<div class="bd">'+(mates.length?'<div class="chips" style="margin-bottom:10px">'+mates.map(pid=>'<span class="xchip who" data-pid="'+esc(pid)+'">'+ptag(posOf(pid))+' '+esc(mockShortName((playerOf(pid)||{}).n||''))+'</span>').join('')+'</div>':'')
+      +(r?'<div class="tgrid"><div class="lb">Offense</div><div class="tstats">'+stat('pts/gm',fmtPts1(r.ppg),r.r_ppg,r.r_ppg<=8?'up':r.r_ppg>=TR.n-7?'dn':'')+stat('plays/gm',Math.round(r.plays),r.r_plays,'')+stat('pass rate',Math.round((r.passRate||0)*100)+'%',r.r_passRate,'')+stat('yds/play',(r.ypp||0).toFixed(1),r.r_ypp,'')+'</div>'
+        +'<div class="lb">Defense</div><div class="tstats">'+stat('pts allowed',r.dPpg!=null?fmtPts1(r.dPpg):'—',r.r_dPpg,r.r_dPpg<=8?'up':r.r_dPpg>=TR.n-7?'dn':'')+stat('yds allowed',r.dYpg!=null?Math.round(r.dYpg):'—',r.r_dYpg,'')+stat('sacks/gm',r.dSacks!=null?r.dSacks.toFixed(1):'—',r.r_dSacks,'')+stat('takeaways/gm',r.dTo!=null?r.dTo.toFixed(1):'—',r.r_dTo,'')+'</div>'
+        +'<div class="lb">Allows to</div><div class="chips">'+['QB','RB','WR','TE'].map(ps=>dvpChip(t,ps)).join('')+(dvpPositions().some(ps=>['DL','LB','DB'].includes(ps))?['DL','LB','DB'].map(ps=>dvpChip(t,ps)).join(''):'')+'</div></div>':'<div class="fine">No stat rows yet for this team.</div>')
+      +'</div></div>'; }).join('');
+  m.innerHTML='<div class="card"><div class="hd"><span class="lb">Team readouts — offense, defense, this week '+helpBtn('teams')+'</span><span class="right inlinebtns">'
+    +'<button class="btn sm '+(F==='mine'?'pri':'')+'" data-act="teamsF" data-v="mine">My players\' teams</button><button class="btn sm '+(F==='all'?'pri':'')+'" data-act="teamsF" data-v="all">All 32</button><button class="btn sm" data-act="teamsRefresh">Refresh</button></span></div>'
+    +'<div class="bd fine">'+(TR.live?'This season\'s stat file':TR.se+' season (this season\'s games have not started)')+' · '+(S.sstatTs&&S.sstatTs[TR.se]?'stats '+esc(ago(S.sstatTs[TR.se])):'')+(S.dvp?' · defense-vs-position thru wk '+esc(String(S.dvp.upto||'')):'')+(S.vegas&&S.vegas.week===wk?' · lines '+esc(ago(S.vegas.ts)):'')+(S.wx&&S.wx.week===wk?' · weather '+esc(ago(S.wx.ts)):'')+'. Rank chips read #1 = most (offense) or fewest allowed (defense). "Allows to" chips: 1st = allows the most fantasy points to that position (soft), 32nd = stingiest.</div></div>'
+    +'<div class="tgridwrap">'+(cards||'<div class="empty">No teams to show — connect a league or switch to All 32.</div>')+'</div>';
+}
 function renderIntel(){
   const m=$('p-intel');
   m.innerHTML=`<div class="card"><div class="hd"><span class="lb">Player intel — every player, current</span><span class="right"><button class="btn sm pri" id="btnDynWire">${S.dynwire?'Refresh dynasty wire':'Pull dynasty wire — my roster'}</button></span></div><div class="bd">
@@ -8193,6 +8337,7 @@ function renderIntelBody(pid){
     </div>
   </div>
   ${livePlayerMountHTML(pid)}
+  ${roleEnvHTML(pid)}
   <div class="grid2">
     <div>
       <div class="kv">
@@ -8624,6 +8769,7 @@ function openPlayer(pid){
       <span class="k">Source</span><span style="font-size:11px;color:var(--dim)">${esc(valueSource(pid).label)}</span>
     </div>
     ${livePlayerMountHTML(pid)}
+    ${roleEnvHTML(pid)}
     <div class="inlinebtns" style="margin-top:16px">
       ${onMine?`<button class="btn sm" data-act="toTradeA" data-pid="${pid}">Send in trade</button>`:''}
       ${onTheir?`<button class="btn sm" data-act="toTradeB" data-pid="${pid}">Target in trade</button>`:''}
@@ -8730,6 +8876,8 @@ document.addEventListener('click',async e=>{
   if(act==='pv'){ if(pid){ $('modal').classList.remove('on'); openPlayer(pid); } return; }
   if(act==='hubRefresh'){ hubFetch(true).catch(()=>{}); return; }
   if(act==='rosterPick'){ openRosterPick(b.dataset.side); return; }
+  if(act==='teamsF'){ S.ui.teamsF=b.dataset.v; renderTab(); return; }
+  if(act==='teamsRefresh'){ b.disabled=true; b.textContent='Pulling…'; try{ await Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false),liveSeasonWanted()?loadSeasonStats(Number(S.nfl.season)||2026,true):Promise.resolve()]); }catch(e){} TEAMS.memo=null; valDirty(); renderTab(); return; }
   if(act==='togglePast'){ S.ui.showPast=!S.ui.showPast; renderHeader(); renderTab(); return; }
   if(act==='rpickDone'){ closeOver(); return; }
   if(act==='openGame'){ openGame(b.dataset.gid); return; }
@@ -8992,7 +9140,7 @@ function renderTab(){
   else if(t==='news') renderNews();
   else if(t==='live') renderLive();
   else if(t==='draft') renderDraft(); else if(t==='lineup') renderLineup(); else if(t==='outlook') renderOutlook();
-  else if(t==='intel') renderIntel();
+  else if(t==='intel') renderIntel(); else if(t==='teams') renderTeams();
   try{ phoneAfterRender(t); }catch(e){} // v5.6: phone-only reorders and the Trade Desk verdict strip
   for(const id in scrolls){ const x=$(id); if(x){ x.scrollTop=scrolls[id].t; x.scrollLeft=scrolls[id].l; } }
   try{ fillUsagePanels(); }catch(e){}
@@ -9002,7 +9150,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v6.0.2','store: '+Store.backend,
+    'FRONT OFFICE v6.1','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -9118,9 +9266,9 @@ async function init(){
 const ICO={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',live:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',trade:'<path d="M17 3l4 4-4 4"/><path d="M21 7H8"/><path d="M7 21l-4-4 4-4"/><path d="M3 17h13"/>',
   waiver:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',lineup:'<path d="M4 6h16M4 12h16M4 18h10"/>',more:'<circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/>',
   dots:'<circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/>',draft:'<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/>',chart:'<path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/>',
-  news:'<path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'};
+  news:'<path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'};
 const PHONE_MAIN=[['command','Home','home'],['live','Live','live'],['trade','Trade','trade'],['waiver','Waivers','waiver'],['lineup','Lineup','lineup']];
-const PHONE_MORE=[['draft','Draft Room','draft'],['outlook','League Outlook','chart'],['news','News Room','news'],['intel','Player Intel','search']];
+const PHONE_MORE=[['draft','Draft Room','draft'],['outlook','League Outlook','chart'],['news','News Room','news'],['intel','Player Intel','search'],['teams','Team Readouts','shield']];
 const TABSCROLL={};
 function isPhone(){ return document.body.classList.contains('phone'); }
 function svgI(k){ return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICO[k]||'')+'</svg>'; }
@@ -9129,13 +9277,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v6.0 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v6.1 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v6.0 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v6.1 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -9152,7 +9300,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v6.0 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v6.1 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
@@ -9212,6 +9360,7 @@ init();
 /* keep it live: silent refresh of the fast-moving feeds every 10 minutes (v5.5: named, so a resume from the background can run it early) */
 let lastPeriodic=Date.now();
 function periodicRefresh(){ if(document.hidden) return; lastPeriodic=Date.now(); try{ hubFetch(true).catch(()=>{}); }catch(e){}
+  if(S.net.sleeper&&S.nfl.season_type==='regular'){ Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false)]).then(()=>{ TEAMS.memo=null; if(['teams','lineup','waiver'].includes(S.ui.tab)) renderTab(); }).catch(()=>{}); } // v6.1: readouts stay current
   loadNews(true).then(()=>{ if(S.ui.tab==='command') renderTab(); }).catch(()=>{});
   if(S.net.sleeper) loadTrending().then(()=>scanWaivers(S.ui.tab!=='waiver')).catch(()=>{});
   // v5.1: keep the live season's stats fresh in long-lived tabs — re-probe the NFL state (week advances) and
