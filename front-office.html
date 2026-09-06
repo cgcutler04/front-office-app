@@ -856,6 +856,7 @@ body.phone.kb nav.tabbar{display:none}
 .pitem.on{border-color:rgba(108,155,255,.4);background:rgba(108,155,255,.1);color:#fff}
 .pitem:active{background:rgba(108,155,255,.14)}
 .pfoot{padding:8px 12px 4px;font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.06em;text-align:center}
+.plink{background:none;border:0;padding:6px 4px;margin:-6px 0;font:inherit;color:#9DB9FF;cursor:pointer;text-transform:none;letter-spacing:.04em;min-height:0}
 #hmenu .pgrid{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 4px 8px;border-bottom:1px solid var(--line)}
 #hmenu .dotrow{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:10px 4px 4px;width:auto}
 #hmenu .sdot{flex:1 1 28%;justify-content:center}
@@ -1129,6 +1130,9 @@ body.phone .addrow{flex-wrap:wrap} body.phone .addrow input{min-width:0;flex:1 1
 </head>
 <body>
 <div id="splash" aria-hidden="true"><div class="spbox"><img class="spmark" alt="" width="112" height="112"><div class="spword">FRONT<b>&nbsp;OFFICE</b></div><div class="spsub">Fantasy Trade &amp; Roster Intelligence</div><div class="spbar"><i></i></div><div class="spmsg" id="spMsg">Opening your front office…</div></div></div>
+<script>(function(){ /* v6.0.1: lifts the curtain even if the app script never runs — no build can strand the user on the logo */
+  var mk=document.querySelector('#splash .spmark'); var m=document.querySelector('img.mark'); if(mk&&m&&!mk.getAttribute('src')) try{ mk.src=m.src; }catch(e){}
+  setTimeout(function(){ var sp=document.getElementById('splash'); if(sp&&!sp.classList.contains('out')){ sp.classList.add('out'); setTimeout(function(){ try{ sp.remove(); }catch(e){} },500); } },8000); })();</script>
 <div id="syncbar"><i></i></div>
 <header class="top">
   <div class="brand">
@@ -8896,6 +8900,7 @@ document.addEventListener('click',async e=>{
     await openScout(rid2); return; }
   if(act==='tourNav'){ openTour((S.ui.tourStep||0)+Number(b.dataset.d)); return; }
   if(act==='tourDone'){ Store.set('toured',1); $('modal').classList.remove('on'); return; }
+  if(act==='tourStart'){ closeSheets(); openTour(0); return; }
   if(act==='cmpPick'){ S.ui.cmpPid=pid; if(S.ui.intelPid) renderIntelBody(S.ui.intelPid); const d=$('cmpD'); if(d) d.classList.remove('on'); return; }
   if(act==='cmpClear'){ S.ui.cmpPid=null; if(S.ui.intelPid) renderIntelBody(S.ui.intelPid); return; }
   if(act==='pinTog'){ S.seen.pins=S.seen.pins||{}; if(S.seen.pins[pid])delete S.seen.pins[pid]; else S.seen.pins[pid]=1; await Store.set('seen',S.seen); await scanWaivers(true); openPlayer(pid); return; }
@@ -8997,7 +9002,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v6.0','store: '+Store.backend,
+    'FRONT OFFICE v6.0.1','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -9075,7 +9080,7 @@ async function init(){
   if(isPhone()){ try{ const ut=await Store.get('uitab'); if(ut&&ut!=='command'&&document.querySelector('nav.tabs button[data-tab="'+ut+'"]')){ S.ui.tab=ut; document.querySelectorAll('nav.tabs button').forEach(x=>{ x.classList.toggle('on',x.dataset.tab===ut); }); document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on',x.id==='p-'+ut)); syncTabbar(); } }catch(e){} } // v5.6: a Home Screen launch lands on the room you left
   renderHeader(); renderDots(); renderFmtChips(); renderTab();
   splashDone(); // first real paint — the curtain lifts here, the network cascade continues behind the live app
-  try{ if(!(await Store.get('toured'))) openTour(0); }catch(e){} // first paint, before the network cascade — never interrupt a user mid-connect
+  try{ if(!(await Store.get('toured'))){ openTour(0); Store.set('toured',1).catch(()=>{}); } }catch(e){} // v6.0.1: the walkthrough runs once — Close, Esc or a backdrop tap count as done, and it is replayable from the More sheet // first paint, before the network cascade — never interrupt a user mid-connect
   await probeSleeper(); renderDots(); renderHeader();
   if(S.conn&&S.conn.leagueId&&S.net.sleeper){ try{ await loadLeague(S.conn.leagueId,false); logSync('League',true); }catch(e){ logSync('League',false,e.message); } }
   const jobs=[];
@@ -9124,8 +9129,8 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v6.0</div>'; document.body.appendChild(more);
-  const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot" id="hmFoot"></div>'; document.body.appendChild(menu);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v6.0 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
@@ -9193,13 +9198,13 @@ if(PHONE_MQ){ const onMQ=e=>{ try{ setPhone(e.matches); }catch(x){} }; if(PHONE_
 /* ---------------- v6.0 · LOAD-IN SCREEN — covers startup until the first real paint; never longer than 7s ---------------- */
 const SPLASH={t0:Date.now(),done:false,i:0,timer:null,msgs:['Opening your front office…','Reading your saved leagues…','Waking the player database…','Pricing the market…','Almost there…']};
 (function splashBoot(){ const sp=$('splash'); if(!sp) return;
-  try{ const m=document.querySelector('img.mark'); const im=sp.querySelector('.spmark'); if(m&&im) im.src=m.src; }catch(e){}
-  SPLASH.timer=setInterval(()=>{ if(SPLASH.done) return; SPLASH.i=Math.min(SPLASH.msgs.length-1,SPLASH.i+1); const x=$('spMsg'); if(x) x.textContent=SPLASH.msgs[SPLASH.i]; },900);
+  try{ const m=document.querySelector('img.mark'); const im=sp.querySelector('.spmark'); if(m&&im&&!im.getAttribute('src')) im.src=m.src; }catch(e){}
+  SPLASH.timer=setInterval(()=>{ if(SPLASH.done) return; SPLASH.i=Math.min(SPLASH.msgs.length-1,SPLASH.i+1); const x=$('spMsg'); if(x) x.textContent=SPLASH.msgs[SPLASH.i]; },650);
   setTimeout(splashDone,7000); // a stalled store or network must never trap the user behind the curtain
 })();
 function splashMsg(t){ if(SPLASH.done) return; const x=$('spMsg'); if(x) x.textContent=t; }
 function splashDone(){ if(SPLASH.done) return; SPLASH.done=true; clearInterval(SPLASH.timer); const sp=$('splash'); if(!sp) return;
-  const hold=Math.max(0,520-(Date.now()-SPLASH.t0)); // one full beat minimum, so a fast load never flashes
+  const hold=Math.max(0,1100-(Date.now()-SPLASH.t0)); // one full beat minimum, so a fast load never flashes
   setTimeout(()=>{ sp.classList.add('out'); setTimeout(()=>{ try{ sp.remove(); }catch(e){} },450); },hold); }
 init();
 /* keep it live: silent refresh of the fast-moving feeds every 10 minutes (v5.5: named, so a resume from the background can run it early) */
@@ -9232,7 +9237,7 @@ window.addEventListener('pageshow',onResume);
   if(!/^https?:$/.test(location.protocol)) return; // file:// → register() would throw SecurityError
   let updating=false, reloaded=false, REG=null, offerToast=null;
   const busyNow=()=>!!(S.mock&&S.mock.active)||document.body.classList.contains('syncing')
-    ||['modal','sover','pal'].some(id=>{ const x=$(id); return !!(x&&x.classList.contains('on')); })
+    ||['modal','sover','pal'].some(id=>{ const x=$(id); if(!(x&&x.classList.contains('on'))) return false; if(id==='modal'&&/^Front Office — \d+ of \d+$/.test(($('mTitle')||{}).textContent||'')) return false; return true; }) // the tour is not unsaved work
     ||!!document.querySelector('aside.rail.open')
     ||!!(document.activeElement&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)&&document.activeElement.value!=='');
   function activate(w){ updating=true; const target=(REG&&REG.waiting)||w; try{ target.postMessage('SKIP_WAITING'); }catch(e){} } // always the CURRENT waiting worker — a newer build may have replaced the one the toast was made for
