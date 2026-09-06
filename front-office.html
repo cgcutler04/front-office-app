@@ -1032,7 +1032,7 @@ body.phone #p-waiver tr.whyrow>td>div{position:sticky;left:0;width:calc(100vw - 
 body.phone #p-waiver tr.whyrow>td{padding:0}
 /* Lineup Lab: the Action column is the decision — keep it on screen */
 body.phone #luBody table.led th:nth-child(4),body.phone #luBody table.led td:nth-child(4){display:none}
-body.phone #luBody table.led td:nth-child(5){white-space:normal;min-width:170px;font-size:11.5px;line-height:1.5}
+body.phone #luBody table.led td:nth-child(5){white-space:normal;min-width:130px;font-size:11.5px;line-height:1.5}
 body.phone #luBody table.led td:nth-child(2) div[style*="margin-left:34px"]{margin-left:0!important}
 body.phone #luBody .vtotals{gap:14px} body.phone #luBody .vtotals .v{font-size:20px}
 /* News Room: filter chips swipe, player chips under the headline */
@@ -1070,6 +1070,35 @@ body.phone #baCard table.led td{white-space:nowrap} /* best-available names stay
 body.phone .hubgrid{grid-template-columns:1fr;padding:10px 12px;gap:10px}
 body.phone .pttiles{grid-template-columns:1fr 1fr} body.phone .pttile:nth-child(3){grid-column:1/-1}
 body.phone .ptlu th:nth-child(4),body.phone .ptlu td:nth-child(4){display:none}
+/* ===== v5.8 · roster picker, game center ===== */
+.rpickhead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:-16px;background:var(--panel);padding:8px 0 10px;z-index:2;margin-top:-4px}
+.rpickpos{margin:14px 0 6px}
+.rpick{display:flex;align-items:center;gap:10px;padding:8px 8px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px}
+.rpick input{width:20px;height:20px;min-height:0;margin:0;padding:0;flex:none;accent-color:var(--acc);-webkit-appearance:checkbox;appearance:auto;background:none;border:0}
+.rpick.on{background:rgba(108,155,255,.09)}
+.rpick .who{cursor:pointer}
+.rpickbtn{white-space:nowrap;flex:none}
+.lhead[data-act]{cursor:pointer} .lhead[data-act]:hover{background:rgba(108,155,255,.05)}
+.gvhead{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:4px 0 10px}
+.gvteam{display:flex;flex-direction:column;gap:4px;min-width:0} .gvteam.them{text-align:right;align-items:flex-end}
+.gvname{font:600 13px/1.2 var(--sans);color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gvscore{font:800 34px/1 var(--mono);color:var(--mut)} .gvteam.lead .gvscore{color:var(--ink)}
+.gvmid{text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+.gvtabs{margin:8px 0 10px;flex-wrap:wrap}
+.gvscroll{max-height:min(58vh,560px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.gvtbl{margin-bottom:10px;border:1px solid var(--line);border-radius:var(--r-ctl);overflow-x:auto}
+.gvbox td:first-child,.gvbox th:first-child{white-space:nowrap;position:sticky;left:0;background:var(--panel);z-index:1}
+tr.gvmine td{background:rgba(61,214,140,.06)}
+.gvfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+body.phone .gvscore{font-size:30px}
+body.phone .gvscroll{max-height:calc(var(--vvh,100vh) - 340px)}
+body.phone .rpickhead{top:-12px}
+body.phone .addrow .rpickbtn{flex:1 1 100%;min-height:44px}
+/* Lineup Lab on phones: reasoning lines wrap instead of truncating; the bench table pans inside the card */
+body.phone #luBody table.led td:has(>.ava,>.who){white-space:normal;min-width:180px}
+body.phone #luBody table.led td:has(>.ava,>.who) .pname{max-width:none;overflow:visible;white-space:normal;display:inline}
+body.phone #luBody>table.led{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+body.phone #luBody>table.led>tbody{display:table;width:100%}
 body.phone #p-trade.on{display:flex;flex-direction:column}
 body.phone #p-trade.on>*{min-width:0}
 body.phone .addrow{flex-wrap:wrap} body.phone .addrow input{min-width:0;flex:1 1 160px} body.phone .addrow select{flex:1 1 100%;max-width:none!important;min-width:0} /* the pick picker drops under the search box instead of pushing the card past the screen edge */
@@ -2115,7 +2144,17 @@ async function loadNews(force){
     if(fan.status==='fulfilled'&&fan.value) parseNow(fan.value).forEach(x=>merge(x,null));
     // v5.7: all 32 team wires — the only way past the front page's 50 stories (the per-athlete feed is gone: HTTP 404). Eight at a time, each story remembers its club.
     const teams=Object.keys(TEAMW); let ti=0;
-    await Promise.all(Array.from({length:8},async()=>{ while(ti<teams.length){ const ab=teams[ti++]; try{ const j=await jf(NEWS_BASE+'&team='+espnAb(ab)); parseESPN(j).forEach(x=>merge(x,ab)); }catch(e){} } }));
+    const teamOf=name=>{ const low=String(name||'').toLowerCase(); for(const ab in TEAMW){ if(TEAMW[ab].some(w=>low.includes(w))) return ab; } return null; };
+    const extra=[
+      (async()=>{ try{ const j=await jf('https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries'); const cut=Date.now()-21*86400e3; // v5.8: the league injury report — every listed player, tagged by ESPN id
+        (j.injuries||[]).forEach(t=>{ const ab=teamOf(t.displayName); (t.injuries||[]).forEach(i=>{ const a=i.athlete||{}; const ts=i.date?Date.parse(i.date):NaN; if(!a.displayName||!i.status||isNaN(ts)||ts<cut) return; if(/^active$/i.test(String(i.status))||!(espnIds&&espnIds.has(String(a.id)))) return; // only real designations, only fantasy-relevant players
+          const det=(i.details&&(i.details.type||i.details.detail))||(i.type&&i.type.description)||''; const pos=(a.position&&a.position.abbreviation)||'';
+          merge({h:a.displayName+(pos||ab?' ('+[pos,ab].filter(Boolean).join(', ')+')':'')+' — '+i.status+(det?': '+det:''),d:String(i.shortComment||i.longComment||'').slice(0,320),t:ts,u:null,img:null,eid:espnIds&&espnIds.has(String(a.id))?String(a.id):null,eids:[String(a.id)],fant:true,src:'Injuries'},ab); }); }); }catch(e){} })(),
+      (async()=>{ try{ const j=await jf('https://site.api.espn.com/apis/site/v2/sports/football/nfl/transactions?limit=50'); // v5.8: signings, releases, IR moves — the wire the front-page feed never carries
+        (j.transactions||[]).forEach(x=>{ const ab=liveTeamKey(x.team&&x.team.abbreviation); const ts=x.date?Date.parse(x.date):NaN; if(!x.description||isNaN(ts)) return;
+          merge({h:(ab?ab+': ':'')+x.description,d:'',t:ts,u:null,img:null,eid:null,eids:[],fant:true,src:'Transactions'},ab||null); }); }catch(e){} })()
+    ];
+    await Promise.all(extra.concat(Array.from({length:8},async()=>{ while(ti<teams.length){ const ab=teams[ti++]; try{ const j=await jf(NEWS_BASE+'&team='+espnAb(ab)); parseESPN(j).forEach(x=>merge(x,ab)); }catch(e){} } })));
     items=items.filter(isFootballNews).sort((a,b)=>b.t-a.t);
     S.news={items,ts:Date.now()}; S.net.news=true; renderDots();
     return S.news;
@@ -6700,7 +6739,7 @@ function renderHeader(){
   const sel=$('leagueSel');
   if(S.conn&&S.conn.leagues.length){
     sel.innerHTML=(S.conn.leagueId?'':'<option value="" selected>Select a league…</option>')+
-      S.conn.leagues.map(l=>`<option value="${esc(l.league_id)}" ${S.conn.leagueId===l.league_id?'selected':''}>${esc(l.name)} · ${esc(l.season)}</option>`).join('')+
+      activeLeagues().map(l=>`<option value="${esc(l.league_id)}" ${S.conn.leagueId===l.league_id?'selected':''}>${esc(l.name)} · ${esc(l.season)}${leagueIsActive(l)?'':' · past'}</option>`).join('')+
       '<option value="__add">+ add league by ID…</option>'+
       '<option value="">— disconnect league —</option>';
   } else sel.innerHTML='<option value="">No league connected</option>';
@@ -6732,7 +6771,12 @@ function playerRow(pid,extra){
 }
 /* ===== v5.7 · LEAGUE HUB — every league at a glance on Command: this week's matchup, projections and what needs doing ===== */
 const HUB={byLid:{},ts:0,busy:false};
-function hubLeagues(){ return (S.conn&&S.conn.leagues)||[]; }
+function leagueIsActive(l){ // v5.8: a league that has finished, or belongs to a past season, is history — hidden unless asked for
+  const b=S.bundles[l.league_id]; const lg=(b&&b.league)||l; const st=String(lg.status||l.status||'').toLowerCase(); const yr=String(lg.season||l.season||''); const cur=String(S.nfl.league_season||S.nfl.season||'');
+  if(st==='complete') return false; if(cur&&yr&&yr!==cur) return false; return true; }
+function activeLeagues(){ const all=(S.conn&&S.conn.leagues)||[]; if(S.ui.showPast) return all; const act=all.filter(leagueIsActive); if(!act.length) return all; // nothing current yet (offseason before the rollover) → show what there is
+  const cur=all.find(l=>l.league_id===S.conn.leagueId); return (cur&&!act.includes(cur))?act.concat([cur]):act; } // the league you are in stays reachable even if it is over
+function hubLeagues(){ return activeLeagues(); }
 function hubLeagueObj(l){ const b=S.bundles[l.league_id]; return (b&&b.league)||l; }
 function hubTeamName(b,rid){ const r=b&&b.rosters.find(x=>x.roster_id===rid); const u=r&&(b.users||[]).find(x=>x.user_id===r.owner_id); return (u&&((u.metadata&&u.metadata.team_name)||u.display_name))||(r?'Roster '+rid:'—'); }
 function hubProj(pid,lg){ if(!S.proj||!S.proj.map) return null; const row=S.proj.map[pid]; if(!row) return null;
@@ -6792,7 +6836,8 @@ function leagueHubHTML(){ const Ls=hubLeagues(); if(!Ls.length) return '';
     +(Ls.length>1?'<div class="railnote foot">Tap a league to make it the active scope for every other tab. Tap a name inside a card to open that player.</div>':'')+'</div>'; }
 function portfolioHTML(){
   if(!S.conn||!S.conn.leagues.length) return '';
-  const rows=S.conn.leagues.map(l=>{
+  const past=S.conn.leagues.filter(l=>!leagueIsActive(l));
+  const rows=activeLeagues().map(l=>{
     const active=S.conn.leagueId===l.league_id;
     const b=S.bundles[l.league_id];
     let rec='—',rank='—',faab='';
@@ -6812,11 +6857,11 @@ function portfolioHTML(){
     const type=(l.settings&&l.settings.type)===2?'Dynasty':(l.settings&&l.settings.type)===1?'Keeper':'Redraft';
     const sf=(l.roster_positions||[]).includes('SUPER_FLEX');
     return `<tr ${active?'style="background:rgba(108,155,255,.06)"':''}>
-      <td><b>${esc(l.name)}</b><div style="font:500 10.5px/1.6 var(--sans);color:var(--dim)">${esc(l.season)} · ${l.total_rosters||'?'}-team · ${sf?'SF':'1QB'} · ${type}${b?'':' · <span style="color:var(--watch)">not loaded — Full Sync</span>'}</div></td>
+      <td><b>${esc(l.name)}</b><div style="font:500 10.5px/1.6 var(--sans);color:var(--dim)">${esc(l.season)} · ${l.total_rosters||'?'}-team · ${sf?'SF':'1QB'} · ${type}${leagueIsActive(l)?'':' · <span style="color:var(--dim)">past season</span>'}${b?'':' · <span style="color:var(--watch)">not loaded — Full Sync</span>'}</div></td>
       <td class="r vnum">${esc(rec)}</td><td class="r vnum">${esc(rank)}</td><td class="r vnum" style="color:var(--mut)">${esc(faab)}</td>
       <td class="r">${active?'<span class="src live">active</span>':`<button class="btn sm" data-act="pickLeague" data-id="${esc(l.league_id)}">Open</button>`}</td></tr>`;
   }).join('');
-  return `<div class="card"><div class="hd"><span class="lb">My leagues — ${esc(S.conn.display_name)}</span><span class="right inlinebtns"><button class="btn sm" data-act="addLeague">Add league by ID</button><button class="btn sm" data-act="switchAccount">Switch account</button></span></div>
+  return `<div class="card"><div class="hd"><span class="lb">My leagues — ${esc(S.conn.display_name)}</span><span class="right inlinebtns">${past.length?`<button class="btn sm" data-act="togglePast">${S.ui.showPast?'Hide':'Show'} past (${past.length})</button>`:''}<button class="btn sm" data-act="addLeague">Add league by ID</button><button class="btn sm" data-act="switchAccount">Switch account</button></span></div>
   <div class="bd tight"><table class="led"><thead><tr><th>League</th><th class="r">Record</th><th class="r">Standing</th><th class="r"></th><th class="r"></th></tr></thead><tbody>${rows}</tbody></table>
   ${S.conn.leagues.length>1?'<div class="railnote foot">Trade drafts are kept per league — switch freely, nothing is lost. Full Sync refreshes every league\'s bundle; values re-price automatically per format.</div>':''}</div></div>`;
 }
@@ -7420,9 +7465,25 @@ function sideBoxHTML(side,title,rid,anSide){
       ${side==='A'&&r.a.type==='player'?xTagHTML(r.a.pid,1):''}<span class="vnum" style="margin-left:auto">${fmtN(r.fv)}</span>${r.fv!==r.av?`<span class="src" title="fit-adjusted from ${fmtN(r.av)}">${r.fv>r.av?'▲fit':'▼fit'}</span>`:''}
       <button class="x" data-act="rmAsset" data-side="${side}" data-i="${i}">×</button></div>`).join(''):'<div class="empty" style="padding:12px">Add players'+(dyn?' or picks':'')+' below</div>'}
     </div>
-    <div class="addrow"><div class="searchwrap" style="flex:1"><input id="q${side}" placeholder="${ph}" autocomplete="off"><div class="searchdrop" id="qd${side}"></div></div>
+    <div class="addrow"><button class="btn sm rpickbtn" data-act="rosterPick" data-side="${side}" title="Tick players and picks straight off the roster">${side==='A'?'My roster':'Their roster'}</button><div class="searchwrap" style="flex:1"><input id="q${side}" placeholder="${ph}" autocomplete="off"><div class="searchdrop" id="qd${side}"></div></div>
     ${dyn&&pks.length?`<select id="pk${side}" style="max-width:170px"><option value="">+ pick…</option>${pks.map((pk,i)=>`<option value="${i}">${esc(pickLabel(pk))}</option>`).join('')}</select>`:''}
     </div></div>`;
+}
+function openRosterPick(side){ // v5.8: the whole roster in the slideover with tick boxes — build a package without typing
+  const rid=side==='A'?((myRoster()||{}).roster_id):S.ui.tradeTheir; const r=rid!=null?rosterById(rid):null;
+  if(!r){ toast(side==='A'?'Connect a league first':'Pick a counterparty first','warn'); return; }
+  const arr=side==='A'?S.ui.tradeA:S.ui.tradeB; const inTrade=new Set(arr.map(assetKey)); const mode=modeNow();
+  const groups={}; activeIds(r).concat(r.reserve||[],r.taxi||[]).forEach(pid=>{ const p=playerOf(pid); if(!p) return; (groups[p.p]=groups[p.p]||[]).push(pid); });
+  const order=['QB','RB','WR','TE','K','DEF','DL','LB','DB'];
+  const rows=Object.keys(groups).sort((a,b)=>(order.indexOf(a)<0?99:order.indexOf(a))-(order.indexOf(b)<0?99:order.indexOf(b))).map(pos=>'<div class="lb rpickpos">'+esc(pos)+'</div>'+groups[pos].sort((a,b)=>adjValue(b,{mode}).v-adjValue(a,{mode}).v).map(pid=>{ const k=assetKey({type:'player',pid}); const on=inTrade.has(k);
+      const st=(r.reserve||[]).includes(pid)?' <span class="tier must">IR</span>':(r.taxi||[]).includes(pid)?' <span class="tier watch">TAXI</span>':'';
+      return '<label class="rpick'+(on?' on':'')+'"><input type="checkbox" data-ttog="'+esc(side)+'" data-pid="'+esc(pid)+'"'+(on?' checked':'')+'>'+playerRow(pid)+st+'<span class="vnum" style="margin-left:auto">'+fmtN(adjValue(pid,{mode}).v)+'</span></label>'; }).join('')).join('');
+  const pks=(mode==='dyn'&&S.league)?rosterPickAssets(rid):[];
+  const pickRows=pks.length?'<div class="lb rpickpos">Draft picks</div>'+pks.map(pk=>{ const a={type:'pick',...pk}; const k=assetKey(a); const on=inTrade.has(k);
+      return '<label class="rpick'+(on?' on':'')+'"><input type="checkbox" data-ttog="'+esc(side)+'" data-asset="'+esc(JSON.stringify(a))+'"'+(on?' checked':'')+'>'+ptag('PICK')+' <span class="pname">'+esc(pickLabel(pk))+'</span><span class="vnum" style="margin-left:auto">'+fmtN(pickValue(Number(pk.season),pk.round,null)||0)+'</span></label>'; }).join(''):'';
+  $('soTitle').textContent=(side==='A'?'Your roster':teamName(rid)+' — their roster');
+  $('soBody').innerHTML='<div class="rpickhead"><span class="fine" id="rpickCount">'+arr.length+' in the trade · tick to add, untick to remove</span><button class="btn sm pri" data-act="rpickDone">Done</button></div>'+rows+pickRows;
+  $('sover').classList.add('on'); $('scrim').classList.add('on'); $('soBody').scrollTop=0;
 }
 function placeDrop(inp,drop){ // v5.5: open the result list upward when the on-screen keyboard leaves no room below the input
   try{ const vv=window.visualViewport; const r=inp.getBoundingClientRect(); const vis=vv?vv.offsetTop+vv.height:window.innerHeight;
@@ -7559,7 +7620,7 @@ function renderNews(){
       const el=mount(); if(!el) return;
       el.innerHTML=(srcs.length>1?'<div class="inlinebtns" style="margin-bottom:8px;flex-wrap:wrap">'+chips([['all','All sources']].concat(srcs.map(s=>[s,s])),EF,'nrS')+'</div>':'')
         +(rows||'<div class="empty">Nothing on the wires for this filter right now'+(F==='mine'?' — try All rosters or Everything':'')+'.</div>')
-        +'<div class="railnote foot">Live sources: the ESPN front-page wire, all 32 ESPN team wires, the ESPN fantasy firehose and ESPN Fantasy player blurbs — merged and de-duplicated. FantasyPros, WalterPicks, CBS and Reddit publish no keyless browser-readable feed (verified CORS-blocked), so every source that works without an account is already here. My-roster mode deep-pulls each of your players\' feeds (cached 30 min); click a player chip for his card.</div>';
+        +'<div class="railnote foot">Live sources: the ESPN front-page wire, all 32 ESPN team wires, the league injury report, the transactions wire, the ESPN fantasy firehose and ESPN Fantasy player blurbs — merged and de-duplicated. FantasyPros, WalterPicks, CBS and Reddit publish no keyless browser-readable feed (verified CORS-blocked), so every source that works without an account is already here. My-roster mode deep-pulls each of your players\' feeds (cached 30 min); click a player chip for his card.</div>';
     }catch(e){ const el=mount(); if(el) el.innerHTML='<div class="empty">Wires unreachable right now.</div>'; }
   })();
 }
@@ -8183,16 +8244,59 @@ function liveParseScoreboard(j){
   return out;
 }
 function liveParseSummary(j){ // ESPN game summary → per-athlete box map, plays, scoring plays, win probability
-  const box={}; const bp=(j&&j.boxscore&&j.boxscore.players)||[];
-  bp.forEach(t=>{ (t.statistics||[]).forEach(g=>{ const keys=g.keys||[]; (g.athletes||[]).forEach(a=>{ const id=a.athlete&&a.athlete.id; if(!id) return;
-    const row=box[String(id)]=box[String(id)]||{name:a.athlete.displayName||''}; keys.forEach((k,i)=>{ row[g.name+'.'+k]=(a.stats||[])[i]; }); }); }); });
+  const box={}; const bp=(j&&j.boxscore&&j.boxscore.players)||[]; const teams=[];
+  bp.forEach(t=>{ const tk=liveTeamKey(t.team&&t.team.abbreviation); const T={team:tk,name:(t.team&&(t.team.shortDisplayName||t.team.displayName))||tk,groups:[]};
+    (t.statistics||[]).forEach(g=>{ const keys=g.keys||[]; const labels=g.labels||keys; const rows=[];
+      (g.athletes||[]).forEach(a=>{ const id=a.athlete&&a.athlete.id; if(!id) return;
+        const row=box[String(id)]=box[String(id)]||{name:a.athlete.displayName||''}; row.team=tk; row.pos=(a.athlete.position&&a.athlete.position.abbreviation)||row.pos; keys.forEach((k,i)=>{ row[g.name+'.'+k]=(a.stats||[])[i]; });
+        rows.push({id:String(id),name:a.athlete.shortName||a.athlete.displayName||'',stats:a.stats||[]}); });
+      if(rows.length) T.groups.push({name:g.name,text:g.text||g.name,labels,rows}); }); // v5.8: the game center's box score, team by team
+    teams.push(T); });
   const wpArr=(j&&j.winprobability)||[]; const wp=wpArr.length?wpArr[wpArr.length-1].homeWinPercentage:null;
   const plays=[]; const drv=j&&j.drives;
   const collect=d=>{ (d.plays||[]).forEach(p=>plays.push({id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,score:!!p.scoringPlay,team:liveTeamKey(d.team&&d.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore})); };
   if(drv){ (drv.previous||[]).forEach(collect); if(drv.current) collect(drv.current); }
   const scoring=((j&&j.scoringPlays)||[]).map(p=>({id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,team:liveTeamKey(p.team&&p.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore,score:true}));
-  return {box,wp,plays:plays.slice(-80),scoring,ts:Date.now()};
+  const drive=(drv&&drv.current&&(drv.current.description||''))||'';
+  return {box,wp,plays:plays.slice(-160),scoring,ts:Date.now(),teams,drive};
 }
+/* ===== v5.8 · GAME CENTER — one game, live: play by play, box score, scoring, your players ===== */
+const GV={timer:null};
+function gameOf(gid){ return ((S.live&&S.live.games)||[]).find(g=>String(g.id)===String(gid))||null; }
+async function liveFetchSummary(gid,force){ const s0=LIVE.sum[gid]; if(!force&&s0&&Date.now()-s0.ts<20000) return s0;
+  try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+gid,12000); if(j) LIVE.sum[gid]=liveParseSummary(j); }catch(e){} return LIVE.sum[gid]||null; }
+function openGame(gid){ const g=gameOf(gid); if(!g){ toast('That game is not on the board right now','warn'); return; }
+  S.ui.gameView=String(gid); S.ui.gvTab=S.ui.gvTab||'feed';
+  $('mTitle').textContent=g.an+' @ '+g.hn; $('mBody').innerHTML='<div id="gvBody">'+gameViewHTML(g)+'</div>'; $('modal').classList.add('on'); if($('modal').querySelector('.mbox')) $('modal').querySelector('.mbox').scrollTop=0;
+  liveFetchSummary(gid,!LIVE.sum[gid]||Date.now()-LIVE.sum[gid].ts>20000).then(()=>gameViewRepaint()); gameViewArm(); }
+function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer);
+  const tick=async()=>{ GV.timer=null; if(!$('gvBody')||!$('modal').classList.contains('on')||!S.ui.gameView){ S.ui.gameView=null; return; }
+    const g=gameOf(S.ui.gameView); if(g&&g.state==='in'){ if(!document.hidden){ await liveFetchSummary(g.id,true); gameViewRepaint(); } GV.timer=setTimeout(tick,20000); } else GV.timer=setTimeout(tick,60000); };
+  GV.timer=setTimeout(tick,20000); }
+function gameViewRepaint(){ const m=$('gvBody'); if(!m||!S.ui.gameView){ S.ui.gameView=null; return; } const g=gameOf(S.ui.gameView); if(!g) return;
+  const sc=m.querySelector('.gvscroll'); const top=sc?sc.scrollTop:0; m.innerHTML=gameViewHTML(g); const sc2=m.querySelector('.gvscroll'); if(sc2) sc2.scrollTop=top; $('mTitle').textContent=g.an+' @ '+g.hn; }
+function gameViewHTML(g){ const sm=LIVE.sum[g.id]; const tab=S.ui.gvTab||'feed'; const sd=liveSides(); const Hs=(sd&&sd.byTeam[g.home])||{mine:[],opp:[]}, As=(sd&&sd.byTeam[g.away])||{mine:[],opp:[]};
+  const mine=[...As.mine,...Hs.mine], opp=[...As.opp,...Hs.opp], watch=[...mine,...opp]; const mineSet=new Set(mine);
+  const wp=sm&&sm.wp!=null?sm.wp:null;
+  const head='<div class="gvhead"><div class="gvteam'+(g.state!=='pre'&&g.as>g.hs?' lead':'')+'"><span class="gvname">'+esc(g.an)+(g.state==='in'&&g.poss===g.away?' <span class="lposs">●</span>':'')+'</span><b class="gvscore">'+(g.state==='pre'?'—':g.as)+'</b></div>'
+    +'<div class="gvmid">'+liveStatusChip(g)+(g.state==='in'&&g.dd?'<div class="fine">'+esc(g.dd)+(g.spot?' · '+esc(g.spot):'')+'</div>':'')+(g.state==='in'&&g.rz?'<div><span class="tier must lpulse">RED ZONE</span></div>':'')+'</div>'
+    +'<div class="gvteam them'+(g.state!=='pre'&&g.hs>g.as?' lead':'')+'"><span class="gvname">'+esc(g.hn)+(g.state==='in'&&g.poss===g.home?' <span class="lposs">●</span>':'')+'</span><b class="gvscore">'+(g.state==='pre'?'—':g.hs)+'</b></div></div>'
+    +(wp!=null?'<div class="lwp" style="padding:0 0 8px"><div class="lwpbar"><i style="width:'+Math.round((1-wp)*100)+'%"></i></div><div class="lwplab"><span>'+esc(g.an)+' '+Math.round((1-wp)*100)+'%</span><span>'+Math.round(wp*100)+'% '+esc(g.hn)+'</span></div></div>':'')
+    +(sm&&sm.drive&&g.state==='in'?'<div class="fine" style="margin:0 0 8px">Drive: '+esc(sm.drive)+'</div>':'');
+  const tabs='<div class="tabsub gvtabs">'+[['feed','Play by play'],['box','Box score'],['scoring','Scoring'],['mine','My players']].map(([k,l])=>'<button class="btn sm'+(tab===k?' pri':'')+'" data-act="gvTab" data-v="'+k+'">'+l+'</button>').join('')+'</div>';
+  let body='';
+  if(!sm) body='<div class="empty"><span class="spin"></span> Pulling the game feed…</div>';
+  else if(tab==='feed'){ const plays=livePlaysFor(g,160);
+    body=plays.length?'<div class="lplays big gvscroll">'+plays.map(p=>{ const hit=livePlayMentions(p.text,watch); return '<div class="lplay'+(hit.length?' mine':'')+(p.score?' score':'')+'"><span class="lpclk">'+(p.period?('Q'+p.period+' '):'')+esc(p.clock||'')+(p.team?' · '+esc(p.team):'')+'</span><span>'+esc(p.text)+(p.score&&p.hs!=null?' <b class="vnum">'+p.as+'-'+p.hs+'</b>':'')+'</span>'+(hit.length?'<span class="lpwho">'+hit.map(x=>esc(mockShortName((playerOf(x)||{}).n||''))).join(', ')+'</span>':'')+'</div>'; }).join('')+'</div>'
+      :'<div class="empty">'+(g.state==='pre'?'Kickoff '+esc(liveKickoff(g))+' — the feed starts with the first snap':'No plays logged yet')+'</div>'; }
+  else if(tab==='scoring'){ const sc=(sm.scoring||[]).slice().reverse();
+    body=sc.length?'<div class="lplays big gvscroll">'+sc.map(p=>'<div class="lplay score"><span class="lpclk">'+(p.period?('Q'+p.period+' '):'')+esc(p.clock||'')+(p.team?' · '+esc(p.team):'')+'</span><span>'+esc(p.text)+' <b class="vnum">'+p.as+'-'+p.hs+'</b></span></div>').join('')+'</div>':'<div class="empty">No scores yet</div>'; }
+  else if(tab==='box'){ const eidPid=newsIndex().eid;
+    body=(sm.teams&&sm.teams.some(T=>T.groups.length))?'<div class="gvscroll">'+sm.teams.map(T=>'<div class="lb rpickpos">'+esc(T.name)+'</div>'+T.groups.map(gp=>'<div class="bd tight gvtbl"><table class="led gvbox"><thead><tr><th>'+esc(gp.text)+'</th>'+gp.labels.map(l=>'<th class="r">'+esc(l)+'</th>').join('')+'</tr></thead><tbody>'
+      +gp.rows.map(r=>{ const pid=eidPid[r.id]; const isMine=pid&&mineSet.has(pid); const isOpp=pid&&opp.includes(pid); return '<tr'+(pid?' class="rowbtn'+(isMine?' gvmine':'')+'" data-act="pv" data-pid="'+esc(pid)+'"':'')+'><td>'+esc(r.name)+(isMine?' <span class="tier gain">mine</span>':isOpp?' <span class="fine">theirs</span>':'')+'</td>'+r.stats.map(v=>'<td class="r vnum">'+esc(String(v==null?'':v))+'</td>').join('')+'</tr>'; }).join('')+'</tbody></table></div>').join('')).join('')+'</div>'
+      :'<div class="empty">The box score fills in once the game is under way</div>'; }
+  else { body=(mine.length||opp.length)?'<div class="bd tight"><table class="led lled"><tbody>'+mine.map(pid=>livePlayerRowHTML(pid,g,'mine',sd.starters.has(pid))).join('')+opp.map(pid=>livePlayerRowHTML(pid,g,'opp',true)).join('')+'</tbody></table></div>':'<div class="empty">None of your players are in this game</div>'; }
+  return head+tabs+body+'<div class="gvfoot"><span class="fine">'+(sm?'updated '+esc(ago(sm.ts))+(g.state==='in'?' · refreshes every 20s while it is on':''):'')+'</span><button class="btn sm" data-act="espnOpen" data-url="https://www.espn.com/nfl/game/_/gameId/'+esc(g.id)+'">ESPN Gamecast ↗</button></div>'; }
 function liveSides(){ // my active players + my opponent's starters, by NFL team
   const my=myRoster(); if(!my) return null;
   const mu=S.live&&S.live.matchup;
@@ -8274,7 +8378,7 @@ function livePlaysFor(g,limit){ // merged, newest-first plays for a game: summar
   arr.reverse(); return arr.slice(0,limit||8);
 }
 function liveSurface(){ // v5.5: the surfaces that show plays, box lines and win probability — the Live tab, or a dossier mount that is visible AND has a game to show
-  return S.ui.tab==='live'||[...document.querySelectorAll('.livePlayer[data-pid]')].some(el=>el.childElementCount>0&&!!el.closest('#sover.on,.panel.on')); }
+  return S.ui.tab==='live'||(!!S.ui.gameView&&!!$('gvBody')&&$('modal').classList.contains('on'))||[...document.querySelectorAll('.livePlayer[data-pid]')].some(el=>el.childElementCount>0&&!!el.closest('#sover.on,.panel.on')); }
 async function liveRefresh(){ // one polling pass — each feed on its own cadence; renders in place afterwards
   if(LIVE.refreshing||!S.conn||!S.league) return; LIVE.refreshing=true;
   const now=Date.now(); const wk=liveWeek(); const y=Number(S.nfl.season)||2026;
@@ -8331,6 +8435,7 @@ function liveRepaint(){ // in-place paints only — never a full renderTab (that
   const cmd=$('liveCmd'); if(cmd){ const h=liveCommandCardHTML(); if(h!==cmd.outerHTML) cmd.outerHTML=h||'<div id="liveCmd" hidden></div>'; }
   document.querySelectorAll('.livePlayer[data-pid]').forEach(el=>{ el.innerHTML=livePlayerInnerHTML(el.dataset.pid); });
   if(isPhone()){ try{ phoneHdSplit($('liveRoot')); }catch(e){} }
+  try{ if(S.ui.gameView&&$('gvBody')) gameViewRepaint(); }catch(e){} // v5.8: the open game center follows every live tick
   const dot=$('liveDot'); if(dot) dot.className='livedot '+liveState();
   const nd=$('liveNavDot'); if(nd) nd.className='livedot '+liveState(); // the nav tab's dot pulses too when games are on
   const bdot=$('liveBarDot'); if(bdot) bdot.className='livedot '+liveState();
@@ -8363,7 +8468,7 @@ function liveGameCardHTML(g){
   const opp=S.ui.liveOpp?[...A.opp,...H.opp]:[];
   const s=LIVE.sum[g.id]; const wp=s&&s.wp!=null?s.wp:null;
   const possArrow=t=>g.state==='in'&&g.poss===t?' <span class="lposs" title="has the ball">●</span>':'';
-  const head='<div class="lhead"><div class="lteams">'
+  const head='<div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button" title="Open the game center — plays, box score, scoring"><div class="lteams">'
     +'<span class="lteam'+(g.state!=='pre'&&g.as>g.hs?' lead':'')+'">'+esc(g.an)+possArrow(g.away)+' <b class="vnum">'+(g.state==='pre'?'':g.as)+'</b></span>'
     +'<span class="lat">@</span>'
     +'<span class="lteam'+(g.state!=='pre'&&g.hs>g.as?' lead':'')+'">'+esc(g.hn)+possArrow(g.home)+' <b class="vnum">'+(g.state==='pre'?'':g.hs)+'</b></span></div>'
@@ -8434,7 +8539,7 @@ function livePlayerInnerHTML(pid){ // dossier / slideover: only while he is actu
   liveArm();
   const p=playerOf(pid); const on=liveOnField(pid,g); const pts=livePts(pid); const line=liveLine(pid); const sp=liveSnap(pid); const pace=livePace(pid);
   const plays=livePlaysFor(g,40).filter(x=>livePlayMentions(x.text,[pid]).length).slice(0,3);
-  return '<div class="card lgame in lmini"><div class="lhead"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+(g.dd?' <span class="chip mono">'+esc(g.dd)+'</span>':'')+'</div></div>'
+  return '<div class="card lgame in lmini"><div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+(g.dd?' <span class="chip mono">'+esc(g.dd)+'</span>':'')+'</div></div>'
     +'<div class="bd"><div class="lminirow">'+(on&&g.rz?'<span class="tier must lpulse">RED ZONE</span>':on?'<span class="tier gain lpulse">ON FIELD</span>':'<span class="tier spec">'+(['DL','LB','DB','DEF'].includes(p.p)?'offense on the field':'on the sideline')+'</span>')
     +'<span class="lbig vnum">'+(pts!=null?fmtPts(pts):'—')+'</span><span class="fine">pts so far · pace <b class="vnum">'+fmtPts(pace)+'</b>'+(sp!=null?' · '+Math.round(sp*100)+'% snaps':'')+'</span></div>'
     +'<div class="lline" style="margin-top:6px">'+(line?esc(line):'<span class="fine">no touches yet</span>')+'</div>'
@@ -8599,6 +8704,12 @@ document.addEventListener('click',async e=>{
     const tt=b.closest('.toast'); if(tt) tt.remove(); return; }
   if(act==='pv'){ if(pid){ $('modal').classList.remove('on'); openPlayer(pid); } return; }
   if(act==='hubRefresh'){ hubFetch(true).catch(()=>{}); return; }
+  if(act==='rosterPick'){ openRosterPick(b.dataset.side); return; }
+  if(act==='togglePast'){ S.ui.showPast=!S.ui.showPast; renderHeader(); renderTab(); return; }
+  if(act==='rpickDone'){ closeOver(); return; }
+  if(act==='openGame'){ openGame(b.dataset.gid); return; }
+  if(act==='gvTab'){ S.ui.gvTab=b.dataset.v; gameViewRepaint(); return; }
+  if(act==='espnOpen'){ const u=b.dataset.url||''; if(/^https:\/\/www\.espn\.com\//.test(u)) window.open(u,'_blank','noopener'); return; }
   if(act==='pickLeague'){ const nid=b.dataset.id;
     if(S.conn.leagueId!==nid){
       // activate only after the bundle loads — a failed load must not leave leagueId pointing at an unloaded league
@@ -8819,6 +8930,11 @@ $('pal').addEventListener('click',e=>{ const b=e.target.closest('.palrow'); if(b
 document.addEventListener('change',async e=>{
   const cb=e.target.closest('[data-wq]');
   if(cb){ S.ui.wq=S.ui.wq||{}; if(cb.checked) S.ui.wq[cb.dataset.wq]=1; else delete S.ui.wq[cb.dataset.wq]; renderTab(); return; }
+  const tg=e.target.closest('[data-ttog]');
+  if(tg){ const side=tg.dataset.ttog; const arr=side==='A'?S.ui.tradeA:S.ui.tradeB; let asset=null; try{ asset=tg.dataset.asset?JSON.parse(tg.dataset.asset):{type:'player',pid:tg.dataset.pid}; }catch(x){ asset={type:'player',pid:tg.dataset.pid}; }
+    const k=assetKey(asset); const i=arr.findIndex(a=>assetKey(a)===k); if(tg.checked&&i<0) arr.push(asset); else if(!tg.checked&&i>=0) arr.splice(i,1);
+    const row=tg.closest('.rpick'); if(row) row.classList.toggle('on',tg.checked); const c=$('rpickCount'); if(c) c.textContent=arr.length+' in the trade · tick to add, untick to remove';
+    saveTradeState(); if(S.ui.tab==='trade') renderTab(); return; } // v5.8: roster picker — the desk underneath re-renders, the sheet stays open
   const th=e.target.closest('[data-wthr]');
   if(th){ const pid=th.dataset.wthr; S.watch=S.watch||{}; const w=S.watch[pid]; if(!w) return;
     const v=parseInt(th.value,10);
@@ -8860,7 +8976,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v5.7','store: '+Store.backend,
+    'FRONT OFFICE v5.8','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -8986,13 +9102,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v5.7</div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v5.8</div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot" id="hmFoot"></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v5.7 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v5.8 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -9009,7 +9125,7 @@ function setPhone(on){ const body=document.body; buildPhoneShell();
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); $('hmenu').insertBefore(dot,$('hmFoot')); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search');
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v5.7 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v5.8 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
