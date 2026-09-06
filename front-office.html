@@ -9002,7 +9002,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v6.0.1','store: '+Store.backend,
+    'FRONT OFFICE v6.0.2','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -9147,16 +9147,18 @@ function syncTabbar(){ const bar=$('tabbar'); if(!bar) return; const t=S.ui.tab;
   [['tdBadge','tdBadgeBar'],['wvBadge','wvBadgeBar']].forEach(([a,b])=>{ const x=$(a),y=$(b); if(x&&y){ if(y.textContent!==x.textContent) y.textContent=x.textContent; if(y.style.display!==x.style.display) y.style.display=x.style.display; } });
   try{ const bd=$('liveBarDot'); if(bd) bd.className='livedot '+liveState(); }catch(e){}
 }
-function setPhone(on){ const body=document.body; buildPhoneShell();
+function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(e){ console.error('phone shell',e); return; }
   const was=body.classList.contains('phone'); body.classList.toggle('phone',!!on);
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
-  if(on){ $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); $('hmenu').insertBefore(dot,$('hmFoot')); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search');
+  if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
     $('hmFoot').textContent='FRONT OFFICE v6.0 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
 }
+// a move that throws must never leave the phone class on with desktop DOM — retry once, then fall back to the desktop layout
+const _setPhone=setPhone; setPhone=function(on){ try{ _setPhone(on); }catch(e){ console.error('setPhone',e); try{ document.body.classList.remove('phone'); _setPhone(false); }catch(x){} } };
 function phoneInput(i,drop){ if(!i) return; try{ i.setAttribute('autocapitalize','off'); i.setAttribute('autocorrect','off'); i.setAttribute('spellcheck','false'); i.setAttribute('inputmode','search'); i.setAttribute('enterkeyhint',drop?'go':'search'); }catch(e){}
   if(drop&&!i.onkeydown) i.onkeydown=e=>{ if(e.key==='Enter'){ const first=drop.querySelector('button[data-act]:not([disabled])'); if(first){ e.preventDefault(); first.click(); } } else if(e.key==='Escape'){ drop.classList.remove('on'); i.blur(); } }; } // Enter/Search takes the top hit
 const CMD_ORDER=[[/^Live now/,-1],[/^Signals/,0],[/^My roster/,1],[/^Positional strength/,2],[/^Opportunity radar/,3],[/^Week /,3],[/^Watchlist/,4],[/^Trade wire/,5],[/^Picks|^Draft capital/,5],[/^Sell/,6],[/^Contention|^Playoff/,6],[/^NFL news wire/,7],[/^League DNA/,8],[/^My leagues/,8],[/^Sync ledger/,9],[/^Data status/,9]];
