@@ -1,7 +1,7 @@
 /* Front Office service worker — app shell only. Cross-origin requests (api.sleeper.app, *.espn.com, api.fantasycalc.com,
    api.open-meteo.com, sleepercdn.com, a.espncdn.com) are never intercepted: the app keeps its own multi-hour JSON caches in
    IndexedDB, and a second cache here would defeat its online detection and its live ticks. */
-const VERSION = 'fo-20260910-114531';                 // stamped by Deploy-Phone.ps1 on every build
+const VERSION = 'fo-20260910-130311';                 // stamped by Deploy-Phone.ps1 on every build
 const SHELL = ['./', './index.html', './front-office.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png', './icons/apple-touch-icon.png'];
 
