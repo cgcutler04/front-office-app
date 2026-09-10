@@ -2286,6 +2286,248 @@ body.phone .ssnote{font-size:12px;line-height:1.6}
 .hdfin{color:var(--gain);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 .hds.tot .hdpt{font-size:15px}
 .hds.tot .fine{display:block;margin-top:2px;color:var(--dim)}
+
+/* ===== v8.8 · HERO9 · V88_HERO9 — the club-coloured player hero, all three dossier surfaces =====
+   --h9w / --h9h size the bled headshot; every other measure keys off them, so one line per surface
+   re-scales the whole band. The gradient, accent, band colour and rule colour arrive per player as
+   inline custom properties from h9Skin, which has already guaranteed their contrast. */
+.h9{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:var(--h9g,#1E2739);
+    --h9w:158px;--h9h:200px;border-radius:var(--r-card,14px);margin:0 0 14px;min-height:calc(var(--h9h) + 30px);   /* the bled headshot is absolute — this stops a card with almost no content from cropping the top of his head */
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 18px 40px -26px rgba(0,0,0,.95)}
+.h9::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 82% 8%,rgba(255,255,255,.10),rgba(255,255,255,0) 62%)}
+.h9 .h9wm{position:absolute;z-index:0;right:-5%;top:50%;transform:translateY(-50%);width:52%;max-width:300px;height:auto;
+    opacity:.14;filter:grayscale(1) brightness(2.6) contrast(.9);pointer-events:none;user-select:none}
+.h9 .h9shot{position:absolute;z-index:3;left:0;bottom:0;width:var(--h9w);height:var(--h9h);pointer-events:none;
+    display:flex;align-items:flex-end;justify-content:center}
+.h9 .h9shot b{position:absolute;left:0;right:0;bottom:14%;text-align:center;font:800 40px/1 var(--sans);letter-spacing:.04em;color:rgba(255,255,255,.18)}
+.h9 .h9shot img{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 2%;
+    filter:drop-shadow(0 10px 16px rgba(0,0,0,.45));
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 84%,rgba(0,0,0,.55) 95%,rgba(0,0,0,0) 100%);
+            mask-image:linear-gradient(180deg,#000 0,#000 84%,rgba(0,0,0,.55) 95%,rgba(0,0,0,0) 100%)}
+.h9 .h9shot img.espn{object-position:50% 8%;transform:scale(1.12)}
+.h9 .h9shot.logo img{object-fit:contain;object-position:50% 62%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));-webkit-mask-image:none;mask-image:none}
+.h9 .h9in{position:relative;z-index:4;padding:13px 15px 0}
+.h9 .h9main{padding-left:calc(var(--h9w) + 10px);min-width:0}
+/* the owner line */
+.h9 .h9own{display:flex;align-items:center;gap:6px;font:700 12px/1.25 var(--sans);letter-spacing:.02em;color:var(--h9a,#8FB4FF);min-height:16px}
+.h9 .h9own .h9ar{font-size:13px;line-height:1;opacity:.9}
+.h9 .h9own .ilink{color:var(--h9a,#8FB4FF);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);cursor:pointer}
+.h9 .h9own .ilink:hover{border-bottom-color:currentColor}
+/* the name + the two controls */
+.h9 .h9nmrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:5px 0 0}
+.h9 .h9nm{font:800 40px/1.03 var(--sans);letter-spacing:-.025em;color:#fff;margin:0;overflow-wrap:anywhere;
+    text-shadow:0 2px 14px rgba(0,0,0,.45)}
+.h9 .h9acts{display:flex;align-items:center;gap:8px;flex:none}
+.h9 .h9star{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.30);background:rgba(0,0,0,.24);
+    color:#fff;font-size:17px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.h9 .h9star:hover{background:rgba(0,0,0,.42);border-color:rgba(255,255,255,.55)}
+.h9 .h9star.on{color:var(--h9a,#FFB612);border-color:var(--h9a,#FFB612);background:rgba(0,0,0,.38)}
+.h9 .h9act{flex:none;border-radius:99px;padding:8px 15px;min-height:34px;border:1px solid rgba(255,255,255,.30);
+    background:rgba(0,0,0,.24);color:#fff;font:700 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.h9 .h9act:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.62)}
+/* the quality tags */
+.h9 .h9chips{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 0}
+.h9 .h9c{display:inline-block;border-radius:var(--r-badge,6px);padding:3px 8px;font:700 9.5px/1.35 var(--sans);letter-spacing:.09em;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.26);background:rgba(0,0,0,.26);color:#fff}
+.h9 .h9c.bad{border-color:rgba(255,150,140,.75);background:rgba(226,91,78,.36);color:#FFE2DE}
+.h9 .h9c.warn{border-color:rgba(240,200,110,.70);background:rgba(227,169,60,.30);color:#FFEFCB}
+.h9 .h9c.go{border-color:rgba(120,240,190,.75);background:rgba(55,197,131,.34);color:#DCFFF1}
+.h9 .h9c.mid{border-color:rgba(240,200,110,.68);background:rgba(227,169,60,.26);color:#FFEFCB}
+.h9 .h9c.no{border-color:rgba(255,150,140,.60);background:rgba(226,91,78,.24);color:#FFE2DE}
+.h9 .h9c.mon{border-color:rgba(255,255,255,.30);background:rgba(0,0,0,.30);color:rgba(255,255,255,.88)}
+.h9 .h9c.spec{border-color:rgba(160,195,255,.70);background:rgba(91,141,239,.32);color:#E6EEFF}
+.h9 .h9chips .xchip{border-radius:var(--r-badge,6px);padding:3px 8px;font:700 9.5px/1.35 var(--sans);letter-spacing:.09em;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.34)!important;background:rgba(0,0,0,.30)!important;color:#fff!important}
+/* the vitals row and the rankings row — labelled columns split by thin rules */
+.h9 .h9row{margin:11px 0 0;overflow:hidden}
+.h9 .h9rowin{display:flex;flex-wrap:wrap;align-items:flex-start;margin-left:-12px;row-gap:9px}
+.h9 .h9v{flex:none;max-width:100%;padding:0 12px;border-left:1px solid var(--h9rule,rgba(255,255,255,.20))}
+.h9 .h9vk{font:700 8.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h9 .h9vv{font:700 17px/1.2 var(--sans);letter-spacing:-.01em;color:#fff;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h9 .h9rk .h9vv{margin-top:0;display:flex;align-items:baseline;gap:5px;min-height:26px}
+.h9 .h9vv i{flex:none;font:700 8.5px/1.2 var(--sans);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.h9 .h9ranks{margin-top:9px}
+/* the darker angled band */
+.h9 .h9band{position:relative;z-index:2;margin-top:13px;min-height:38px;display:flex;align-items:center;gap:9px;
+    padding:0 15px 0 calc(var(--h9w) + 10px);overflow:hidden;white-space:nowrap}
+.h9 .h9band::before{content:'';position:absolute;z-index:-1;top:0;bottom:0;left:-46px;right:-46px;
+    background:var(--h9bd,#0B0F18);transform:skewX(-13deg);transform-origin:bottom left;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.h9 .h9pos{flex:none;display:inline-block;min-width:36px;text-align:center;border-radius:6px;padding:5px 8px;
+    font:800 11px/1 var(--sans);letter-spacing:.06em;color:#06111B;background:#7C8698}
+.h9 .h9pos.QB{background:var(--qb)} .h9 .h9pos.RB{background:var(--rb)} .h9 .h9pos.WR{background:var(--wr)} .h9 .h9pos.TE{background:var(--te)}
+.h9 .h9pos.K{background:var(--k)} .h9 .h9pos.DEF{background:var(--def)}
+.h9 .h9pos.DL{background:#D08A62} .h9 .h9pos.LB{background:#9BC2FF} .h9 .h9pos.DB{background:#C9A9F5}
+.h9 .h9club{font:800 12px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:#fff;overflow:hidden;text-overflow:ellipsis}
+.h9 .h9no{font:800 12px/1 var(--sans);letter-spacing:.06em;color:var(--h9a,#8FB4FF)}
+.h9 .h9dep{font:700 9.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.30);border-radius:99px;padding:4px 8px}
+/* per surface: the sheet is 440px, the Intel tab is as wide as the room */
+#soBody>.h9,#soRead>.h9{--h9w:132px;--h9h:178px;border-radius:0;margin:0 -16px 14px;box-shadow:inset 0 -1px 0 rgba(255,255,255,.06)}
+#soBody>.h9:first-child{margin-top:-16px}
+#soBody>.h9 .h9nm,#soRead>.h9 .h9nm{font-size:32px}
+#intelBody>.h9{--h9w:170px;--h9h:212px}
+#intelBody>.h9 .h9nm{font-size:44px}
+@media(max-width:900px){#intelBody>.h9{--h9w:150px;--h9h:190px}#intelBody>.h9 .h9nm{font-size:36px}}
+/* phone — legible, and it must not eat the screen */
+@media(max-width:620px){
+  .h9,#soBody>.h9,#soRead>.h9,#intelBody>.h9{--h9w:98px;--h9h:134px}
+  .h9 .h9in{padding:10px 14px 0}
+  .h9 .h9nmrow{margin-top:4px;gap:9px}
+  .h9 .h9chips{margin-top:8px;gap:5px}
+  .h9 .h9row{margin-top:9px}
+  .h9 .h9ranks{margin-top:7px}
+  .h9 .h9rowin{row-gap:7px}
+  .h9 .h9band{margin-top:10px}
+  .h9 .h9main{padding-left:calc(var(--h9w) + 9px)}
+  .h9 .h9nm,#soBody>.h9 .h9nm,#soRead>.h9 .h9nm,#intelBody>.h9 .h9nm{font-size:26px;line-height:1.06}
+  .h9 .h9shot b{font-size:26px}
+  .h9 .h9star{width:44px;height:44px;font-size:19px}
+  .h9 .h9act{min-height:44px;padding:0 15px;display:inline-flex;align-items:center;font-size:11px}
+  .h9 .h9rowin{margin-left:-7px}
+  .h9 .h9v{padding:0 7px}
+  .h9 .h9vk,.h9 .h9vv i{letter-spacing:.10em}
+  .h9 .h9vv{font-size:15.5px}
+  .h9 .h9rk .h9vv{display:block;min-height:0}
+  .h9 .h9rk .h9vv i{display:block;margin-top:2px}
+  .h9 .h9band{min-height:40px;padding-right:12px;padding-left:calc(var(--h9w) + 9px)}
+  .h9 .h9wm{width:64%;right:-10%}
+  #intelBody>.h9{margin-inline:-12px;max-width:calc(100% + 24px);border-radius:0}   /* the phone card body pads 12px — the hero bleeds to its edge like the sheet does */
+}
+body.phone .h9,body.phone #soBody>.h9,body.phone #soRead>.h9,body.phone #intelBody>.h9{--h9w:98px;--h9h:134px}
+body.phone .h9 .h9in{padding:10px 14px 0}
+body.phone .h9 .h9nmrow{margin-top:4px;gap:9px}
+body.phone .h9 .h9chips{margin-top:8px;gap:5px}
+body.phone .h9 .h9row{margin-top:9px}
+body.phone .h9 .h9ranks{margin-top:7px}
+body.phone .h9 .h9rowin{row-gap:7px}
+body.phone .h9 .h9band{margin-top:10px}
+body.phone .h9 .h9main{padding-left:calc(var(--h9w) + 9px)}
+body.phone .h9 .h9nm,body.phone #soBody>.h9 .h9nm,body.phone #soRead>.h9 .h9nm,body.phone #intelBody>.h9 .h9nm{font-size:26px;line-height:1.06}
+body.phone .h9 .h9shot b{font-size:26px}
+body.phone .h9 .h9star{width:44px;height:44px;font-size:19px}
+body.phone .h9 .h9act{min-height:44px;padding:0 15px;display:inline-flex;align-items:center;font-size:11px}
+body.phone .h9 .h9rowin{margin-left:-7px}
+body.phone .h9 .h9v{padding:0 7px}
+body.phone .h9 .h9vk,body.phone .h9 .h9vv i{letter-spacing:.10em}
+body.phone .h9 .h9vv{font-size:15.5px}
+body.phone .h9 .h9rk .h9vv{display:block;min-height:0}
+body.phone .h9 .h9rk .h9vv i{display:block;margin-top:2px}
+body.phone .h9 .h9band{min-height:40px;padding-right:12px;padding-left:calc(var(--h9w) + 9px)}
+body.phone .h9 .h9wm{width:64%;right:-10%}
+body.phone #intelBody>.h9{margin-inline:-12px;max-width:calc(100% + 24px);border-radius:0}
+@media (prefers-reduced-motion:reduce){.h9 .h9star,.h9 .h9act{transition:none}}
+
+/* ===== v8.8 · LOG9 · V88_LOG9 — grouped game log + reference news panel ===== */
+.gl9{min-width:0;max-width:100%}
+.gl9sea{display:inline-flex;gap:4px;flex-wrap:wrap;margin:0 0 10px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;max-width:100%}
+.gl9pill{padding:8px 17px;border-radius:999px;border:0;background:transparent;color:var(--mut);white-space:nowrap;min-height:32px;
+  font:700 12px/1 var(--sans);letter-spacing:.05em;font-variant-numeric:tabular-nums;transition:background .12s ease,color .12s ease}
+.gl9pill:hover{color:var(--ink)}
+.gl9pill.on{background:var(--acc);color:#06131C;box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.gl9pill:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.gl9wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-box,12px);min-width:0;max-width:100%}
+table.gl9t{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;background:var(--panel2)}
+table.gl9t th,table.gl9t td{white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+
+/* the group band */
+table.gl9t th.gl9g{padding:10px 9px 6px;background:var(--panel2);color:var(--mut);text-align:center;
+  font:700 10px/1 var(--sans-sm,var(--sans));letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--line);
+  box-shadow:inset 0 0 0 99px rgba(255,255,255,.022)}
+/* the sub-column names */
+table.gl9t th.gl9c{padding:6px 9px 7px;background:var(--panel2);color:var(--mut);min-width:42px;
+  font:700 9.5px/1 var(--sans-sm,var(--sans));letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--line2)}
+table.gl9t th.gs,table.gl9t td.gs{border-left:1px solid var(--line2)}
+table.gl9t th.gl9c.gl9wxc{min-width:58px}
+
+/* the two frozen columns — OPAQUE, never translucent */
+table.gl9t .gl9k1{position:sticky;left:0;z-index:3;background:var(--panel2);text-align:left;
+  width:46px;min-width:46px;max-width:46px;padding-left:12px;padding-right:6px}
+table.gl9t .gl9k2{position:sticky;left:46px;z-index:3;background:var(--panel2);text-align:left;
+  width:86px;min-width:86px;max-width:86px;padding-left:8px;padding-right:10px}
+table.gl9t thead .gl9k1,table.gl9t thead .gl9k2{z-index:5;border-bottom:1px solid var(--line2)}
+table.gl9t .gl9k2::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:var(--line2);pointer-events:none}
+
+table.gl9t tbody td{padding:9px;border-bottom:1px solid var(--line);color:var(--ink);
+  font:600 12.5px/1.15 var(--mono)}
+table.gl9t tbody tr:last-child td{border-bottom:0}
+table.gl9t tbody td.gl9k1{font:700 12px/1.15 var(--mono);color:var(--mut)}
+table.gl9t tbody td.gl9k2{font:600 12px/1.15 var(--sans);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+table.gl9t tbody td.gl9k2 .tm{font-size:11.5px}
+table.gl9t tbody td.z{color:var(--dim)}
+table.gl9t tbody td.gl9fp{font-weight:800;font-size:13.5px}
+table.gl9t tbody td.gl9wxv{color:var(--mut);font:600 11px/1.15 var(--sans);text-align:right}
+table.gl9t tbody td.gl9span{text-align:left;color:var(--dim);
+  font:700 10px/1.15 var(--sans);letter-spacing:.16em;text-transform:uppercase}
+table.gl9t tbody tr.gl9fut td{color:var(--dim)}
+table.gl9t tbody tr.gl9now td.gl9k1{color:var(--acc)}
+table.gl9t tbody tr:hover td:not(.gl9k1):not(.gl9k2){background:rgba(255,255,255,.028)}
+.gl9note{margin-top:8px}
+
+/* the news panel, to the reference */
+.nw9 .nw9it{display:block;padding:14px 10px;margin:0 -10px;border-bottom:1px solid var(--line);border-radius:10px;
+  cursor:pointer;transition:background .12s ease}
+.nw9 .nw9it:last-child{border-bottom:0}
+.nw9 .nw9it:hover{background:rgba(108,155,255,.06)}
+.nw9 .nw9it:active{background:rgba(108,155,255,.12)}
+.nw9 .nw9it:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.nw9 .nw9top{display:flex;gap:12px;align-items:flex-start}
+.nw9 .nw9img{width:74px;height:52px;flex:none;border-radius:8px;object-fit:cover;border:1px solid var(--line2);background:var(--panel2)}
+.nw9 .nw9tx{flex:1;min-width:0}
+.nw9 .nw9h{font:800 19px/1.24 var(--sans);letter-spacing:-.012em;color:var(--ink);margin:0}
+.nw9 .nw9it:hover .nw9h{color:var(--acc)}
+.nw9 .nw9m{margin-top:5px;color:var(--dim);font:600 11.5px/1.35 var(--sans);letter-spacing:.02em}
+.nw9 .nw9x{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:30px;min-height:28px;padding:5px 8px;
+  border:1px solid var(--line2);border-radius:6px;color:var(--dim);font:700 11px/1 var(--mono)}
+.nw9 .nw9x:hover{color:var(--acc);border-color:var(--acc-dim)}
+.nw9 .nw9p{margin-top:9px;color:var(--mut);font:400 13px/1.62 var(--sans)}
+.nw9 .nw9p b{color:var(--ink);font-weight:800}
+.nw9 .nw9p+.nw9p{margin-top:8px}
+
+@media(max-width:620px){
+  .gl9pill{min-height:44px;padding:12px 18px;font-size:13px}
+  table.gl9t .gl9k1{width:40px;min-width:40px;max-width:40px;padding-left:10px}
+  table.gl9t .gl9k2{left:40px;width:78px;min-width:78px;max-width:78px}
+  table.gl9t th.gl9c{min-width:40px;padding:6px 8px 7px}
+  table.gl9t tbody td{padding:10px 8px}
+  .nw9 .nw9h{font-size:17.5px;line-height:1.28}
+  .nw9 .nw9img{width:62px;height:44px}
+  .nw9 .nw9p{font-size:13.5px;line-height:1.6}
+  .nw9 .nw9x{min-width:44px;min-height:44px;padding:0;font-size:13px}
+}
+body.phone .gl9pill{min-height:44px;padding:12px 18px;font-size:13px}
+body.phone .gl9sea{gap:6px}
+body.phone table.gl9t .gl9k1{width:40px;min-width:40px;max-width:40px;padding-left:10px}
+body.phone table.gl9t .gl9k2{left:40px;width:78px;min-width:78px;max-width:78px}
+body.phone table.gl9t th.gl9c{min-width:40px}
+body.phone table.gl9t tbody td{padding:11px 8px;font-size:13px}
+body.phone table.gl9t tbody td.gl9fp{font-size:14px}
+body.phone .nw9 .nw9h{font-size:18px}
+body.phone .nw9 .nw9p{font-size:14px;line-height:1.6}
+body.phone .nw9 .nw9it{padding:15px 10px}
+body.phone .nw9 .nw9x{min-width:44px;min-height:44px;padding:0;font-size:13px}
+
+
+/* ═══════════ v9.0 · the player card is a big centred card on desktop, a full view on phone ═══════════ */
+/* V9_SOVER_CENTER — the right-hand drawer became a centred overlay, the way the news reader already opens */
+@media(min-width:761px){
+  #sover{top:50%;left:50%;right:auto!important;bottom:auto;
+    width:min(980px,94vw);max-width:94vw;height:min(88vh,960px);max-height:88vh;
+    border:1px solid var(--line2);border-left:1px solid var(--line2);border-radius:16px;overflow:hidden;
+    box-shadow:0 40px 110px rgba(0,0,0,.72);
+    transform:translate(-50%,-50%) scale(.965);opacity:0;visibility:hidden;
+    transition:opacity .17s ease,transform .17s ease,visibility 0s linear .17s}
+  #sover.on{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible;transition:opacity .17s ease,transform .17s ease}
+  #sover .shd{border-radius:16px 16px 0 0}
+  #sover .sbd{padding:18px 20px 26px}
+  /* the card is wide now — let the dense blocks use the room instead of stretching one column */
+  #sover .dstats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  #sover .rtiles{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+}
+@media(min-width:1200px){ #sover{width:min(1080px,92vw)} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -2690,6 +2932,8 @@ async function fetchLeagueBundle(lid,force){ // fetch + cache a league without m
   return bundle;
 }
 async function loadLeague(lid,force){ const b=await fetchLeagueBundle(lid,force); if(b){ S.league=b; engineDirty(); try{ await reconcileModePin(); }catch(e){} } return b; } // settings may have changed under us — drop LP/lgFit memos; a global mode pin yields to the new league's own type
+const PDB_V=88;   // v8.8 · V88_HERO9 · bump whenever filterPlayers starts keeping a new field — a cache written before the bump is refetched once
+function pdbCur(c){ return !!(c&&Number(c.v||0)>=PDB_V); }   // an older cache still SERVES (offline, and until the refetch lands) — it just never counts as fresh
 function filterPlayers(raw){
   const out={}; let count=0;
   const keepPos={QB:1,RB:1,WR:1,TE:1,K:1,DEF:1,DL:1,LB:1,DB:1};
@@ -2708,13 +2952,14 @@ function filterPlayers(raw){
     const relevant = rostered.has(pid) || (p.team && p.status!=='Inactive'&&(!idp||(p.depth_chart_order&&p.depth_chart_order<=3)||(p.search_rank&&p.search_rank<1500))) || (p.search_rank && p.search_rank<1500) || (!idp&&p.years_exp!=null && p.years_exp<=2 && p.team);
     if(!relevant) continue;
     out[pid]={ id:pid, n:p.full_name||((p.first_name||'')+' '+(p.last_name||'')).trim(), t:p.team||null, p:pos,
-      a:p.age||null, x:p.years_exp, s:p.status||null, inj:p.injury_status||null, dco:p.depth_chart_order||null, sr:p.search_rank||null, e:p.espn_id||null };
+      a:p.age||null, x:p.years_exp, s:p.status||null, inj:p.injury_status||null, dco:p.depth_chart_order||null, sr:p.search_rank||null, e:p.espn_id||null,
+      ht:p.height||null, wt:p.weight||null, col:p.college||null, no:(p.number!=null&&p.number!==''?p.number:null) };   // v8.8 · V88_HERO9: the hero's vitals row — Sleeper carries all four and filterPlayers used to drop them
     count++;
   }
-  return { byId:out, ts:Date.now(), count };
+  return { byId:out, ts:Date.now(), count, v:PDB_V };
 }
 async function loadPlayers(force){
-  if(!force){ const c=await Store.get('players'); if(c && !stale(c.ts,24)){ S.players=c; newsRetag(); return c; } if(c && !S.net.sleeper){ S.players=c; newsRetag(); return c; } } // v8: the cached DB retags the wire too
+  if(!force){ const c=await Store.get('players'); if(c && pdbCur(c) && !stale(c.ts,24)){ S.players=c; newsRetag(); return c; } if(c && !S.net.sleeper){ S.players=c; newsRetag(); return c; } if(c && !pdbCur(c)){ S.players=c; newsRetag(); } } // v8: the cached DB retags the wire too // v8.8 · V88_HERO9: a pre-v8.8 cache paints immediately and is refetched underneath, so height/weight/college/number fill in instead of staying blank forever
   if(!S.net.sleeper){ const c=await Store.get('players'); if(c){S.players=c; newsRetag(); return c;} return null; }
   const raw=await slp('/players/nfl');
   S.players=filterPlayers(raw); valDirty(); newsRetag(); // v7.0.1 → v8: headlines merged before the DB existed get their player tags, from the cache path too, and in place before any refetch
@@ -14205,7 +14450,181 @@ function roleTilesHTML(pid){
 }
 
 /* ---------------- section builders — one source of truth for all three surfaces ---------------- */
-function heroHTML(pid){
+/* ================= v8.8 · HERO9 — the club-coloured player hero =================
+   V88_HERO9 · Items 1-6 of the owner's Sleeper reference, built ONCE and rendered on all three dossier
+   surfaces (the #sover slideover, the stacked Player Readout, the Intel tab), because all three run off
+   the same builders. Full-bleed club colour, the club logo as a watermark, the headshot cut out and bled
+   off the bottom-left corner over a darker angled band, the owner line, the big name, watch + the one
+   action we can genuinely perform, the vitals row, the rankings row, the position chip and the club/depth
+   band — plus the quality tags (injury, bye, roster role, the start/sit call) so the top of the card
+   answers "who is he and what do I do" before anything is scrolled. Every figure we lack is OMITTED
+   rather than printed as a zero, and heroHTMLv82 stays underneath as a real fallback.
+
+   THE CLUB COLOUR TABLE — the app had none. Primary is the club's own colour; accent is its secondary.
+   Neither is trusted raw: h9Skin caps the primary's luminance (Bengals orange, Chiefs red and Bucs red
+   would otherwise put white text on a bright ground) and lifts the accent until it clears 3.6:1 against
+   that primary (Panthers black, Saints black and Jets white would otherwise vanish). Free agents and
+   players with no club get the house neutral; a team defense keeps its club colour cooled toward it. */
+const CLUBSKIN={
+  ARI:{p:'#97233F',a:'#FFB612'}, ATL:{p:'#A71930',a:'#A5ACAF'}, BAL:{p:'#241773',a:'#9E7C0C'}, BUF:{p:'#00338D',a:'#C60C30'},
+  CAR:{p:'#0085CA',a:'#BFC0BF'}, CHI:{p:'#0B162A',a:'#C83803'}, CIN:{p:'#FB4F14',a:'#FFFFFF'}, CLE:{p:'#311D00',a:'#FF3C00'},
+  DAL:{p:'#041E42',a:'#869397'}, DEN:{p:'#002244',a:'#FB4F14'}, DET:{p:'#0076B6',a:'#B0B7BC'}, GB:{p:'#203731',a:'#FFB612'},
+  HOU:{p:'#03202F',a:'#A71930'}, IND:{p:'#002C5F',a:'#A2AAAD'}, JAX:{p:'#006778',a:'#D7A22A'}, KC:{p:'#E31837',a:'#FFB81C'},
+  LV:{p:'#0B0B0D',a:'#A5ACAF'},  LAC:{p:'#0080C6',a:'#FFC20E'}, LAR:{p:'#003594',a:'#FFA300'}, MIA:{p:'#008E97',a:'#FC4C02'},
+  MIN:{p:'#4F2683',a:'#FFC62F'}, NE:{p:'#002244',a:'#C60C30'},  NO:{p:'#101820',a:'#D3BC8D'},  NYG:{p:'#0B2265',a:'#A71930'},
+  NYJ:{p:'#125740',a:'#FFFFFF'}, PHI:{p:'#004C54',a:'#A5ACAF'}, PIT:{p:'#101820',a:'#FFB612'}, SF:{p:'#AA0000',a:'#B3995D'},
+  SEA:{p:'#002244',a:'#69BE28'}, TB:{p:'#D50A0A',a:'#B1BABF'},  TEN:{p:'#0C2340',a:'#4B92DB'}, WAS:{p:'#5A1414',a:'#FFB612'},
+  FA:{p:'#1E2739',a:'#8FB4FF'}   // free agents, pick assets and anyone off the 32 — the house neutral
+};
+function h9Rgb(hex){ let h=String(hex==null?'':hex).replace('#','').trim();
+  if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  const v=parseInt(h,16); if(h.length!==6||!isFinite(v)) return [30,39,57];
+  return [(v>>16)&255,(v>>8)&255,v&255]; }
+function h9Hex(a){ return '#'+a.map(function(x){ const v=Math.max(0,Math.min(255,Math.round(x))); return (v<16?'0':'')+v.toString(16); }).join(''); }
+function h9Lin(v){ v=v/255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); }
+function h9Lum(hex){ const c=h9Rgb(hex); return 0.2126*h9Lin(c[0])+0.7152*h9Lin(c[1])+0.0722*h9Lin(c[2]); }
+function h9Mix(a,b,t){ const A=h9Rgb(a),B=h9Rgb(b); t=Math.max(0,Math.min(1,t));
+  return h9Hex([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t]); }
+function h9Ratio(a,b){ const x=h9Lum(a),y=h9Lum(b); return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
+function h9Cap(hex,maxL){ let c=hex; for(let i=0;i<28&&h9Lum(c)>maxL;i++) c=h9Mix(c,'#000000',0.07); return c; }
+function h9Floor(hex,minL){ let c=hex; for(let i=0;i<28&&h9Lum(c)<minL;i++) c=h9Mix(c,'#2B3448',0.10); return c; }
+function h9Readable(fg,bg,want){ let c=fg; for(let i=0;i<26&&h9Ratio(c,bg)<want;i++) c=h9Mix(c,'#FFFFFF',0.10); return c; }
+function h9Skin(pid){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  const T=String(p.t||'').toUpperCase();
+  const base=(T&&CLUBSKIN[T])||null;
+  let pr=base?base.p:CLUBSKIN.FA.p, ac=base?base.a:CLUBSKIN.FA.a;
+  if(p.p==='DEF') pr=h9Mix(pr,CLUBSKIN.FA.p,0.34);          // a unit, not a man — the club colour cooled toward the house neutral
+  pr=h9Floor(h9Cap(pr,0.115),0.020);                        // bright clubs darken until white is safe; black clubs lift until the gradient reads
+  ac=h9Readable(ac,pr,3.6);
+  const ink=h9Lum(pr)>0.42?'#0A0D13':'#FFFFFF';
+  let club=''; try{ club=T?String(teamNick(T)).toUpperCase():''; }catch(e){ club=T; }
+  return { p:pr, a:ac, ink:ink,
+    g:'linear-gradient(118deg,'+h9Mix(pr,'#FFFFFF',0.14)+' 0%,'+pr+' 46%,'+h9Mix(pr,'#04060B',0.52)+' 100%)',
+    bd:h9Mix(pr,'#04060B',0.70), rule:'rgba(255,255,255,.20)',
+    logo:(T&&CLUBSKIN[T])?('https://sleepercdn.com/images/team_logos/nfl/'+T.toLowerCase()+'.png'):'',
+    club:club||'FREE AGENT', abbr:T };
+}
+function h9Height(v){ // Sleeper ships BOTH "76" (inches) and "6'2\"" — read either, print feet and inches, print nothing when absent
+  if(v==null) return ''; const t=String(v).trim(); if(!t) return '';
+  if(/[0-9]\s*['\u2032]/.test(t)) return t.replace(/\s+/g,'');
+  const nn=parseFloat(t); if(!isFinite(nn)||nn<48||nn>90) return '';
+  const f=Math.floor(nn/12), i=Math.round(nn-f*12);
+  return (i===12?(f+1)+"'0\"":f+"'"+i+'"'); }
+function h9Weight(v){ if(v==null) return ''; const t=String(v).trim(); if(!t) return '';
+  const nn=parseFloat(t); if(!isFinite(nn)||nn<100||nn>450) return ''; return Math.round(nn)+' lbs'; }
+function h9Exp(x){ if(x==null||x==='') return ''; const nn=Number(x); if(!isFinite(nn)||nn<0) return ''; return nn===0?'R':String(nn); }
+function h9ImgErr(el){ // the fallback chain: Sleeper cut-out -> Sleeper thumb -> ESPN full -> the monogram floor underneath
+  try{ const q=String(el.dataset.q||'').split('|').filter(Boolean);
+    if(!q.length){ el.remove(); return; }
+    const nx=q.shift(); el.dataset.q=q.join('|');
+    if(nx.indexOf('espncdn')>=0) el.classList.add('espn');
+    el.src=nx;
+  }catch(e){ try{ el.remove(); }catch(x){} } }
+function h9ShotHTML(pid){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  const init=String(p.n||'?').split(' ').map(function(w){ return w[0]||''; }).join('').slice(0,2).toUpperCase();
+  let src='', q=[];
+  if(p.p==='DEF'){ src='https://sleepercdn.com/images/team_logos/nfl/'+String(pid).toLowerCase()+'.png'; }
+  else { src='https://sleepercdn.com/content/nfl/players/'+encodeURIComponent(String(pid))+'.jpg';       // the full cut-out, not the row thumb
+         q.push('https://sleepercdn.com/content/nfl/players/thumb/'+encodeURIComponent(String(pid))+'.jpg');
+         if(p.e) q.push('https://a.espncdn.com/i/headshots/nfl/players/full/'+encodeURIComponent(String(p.e))+'.png'); }
+  return '<div class="h9shot'+(p.p==='DEF'?' logo':'')+'" aria-hidden="true"><b>'+esc(init||'?')+'</b>'
+    +'<img alt="" loading="lazy" decoding="async" src="'+esc(src)+'" data-q="'+esc(q.join('|'))+'" onerror="h9ImgErr(this)"></div>';
+}
+function h9VitHTML(lab,val){ return val?'<div class="h9v" title="'+esc(lab+': '+val)+'"><div class="h9vk">'+esc(lab)+'</div><div class="h9vv">'+esc(val)+'</div></div>':''; }
+function h9RkHTML(big,suf,ttl){ return big?'<div class="h9v h9rk"'+(ttl?' title="'+esc(ttl)+'"':'')+'><div class="h9vv">'+esc(big)+'<i>'+esc(suf)+'</i></div></div>':''; }
+function h9RowHTML(cls,cells){ // the clip wrapper lets the row WRAP without hiding a figure and without a stray rule opening a wrapped line
+  return cells.length?'<div class="h9row '+cls+'"><div class="h9rowin">'+cells.join('')+'</div></div>':''; }
+function h9VitalsHTML(pid){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  const cells=[ h9VitHTML('Age',p.a?String(p.a):''), h9VitHTML('Height',h9Height(p.ht)), h9VitHTML('Weight',h9Weight(p.wt)),
+                h9VitHTML('Exp',h9Exp(p.x)), h9VitHTML('College',p.col?String(p.col):'') ].filter(Boolean);
+  return h9RowHTML('h9vits',cells);   // a team defense has no age, height, weight or college — the row simply does not exist
+}
+function h9RanksHTML(pid){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  let fc=null; try{ fc=fcOf(pid); }catch(e){ fc=null; }
+  let ow=null; try{ ow=ownOf(pid); }catch(e){ ow=null; }
+  let src=''; try{ src=valueSource(pid).label; }catch(e){ src=''; }
+  const cells=[
+    h9RkHTML((fc&&fc.posRank)?('#'+fc.posRank):'',String(p.p||''),src?('Positional rank — '+src):''),
+    h9RkHTML((fc&&fc.rank)?('#'+fc.rank):'','Overall',src?('Overall market rank — '+src):''),
+    h9RkHTML(ow?(ow.owned+'%'):'','Rostered','Share of Sleeper leagues that roster him'),
+    h9RkHTML(ow?(ow.started+'%'):'','Started','Share of Sleeper leagues that started him this week')
+  ].filter(Boolean);
+  return h9RowHTML('h9ranks',cells);   // no market row for him and no research feed loaded: the row is omitted, never zeroed
+}
+function h9OwnRoster(pid){ try{ return (S.league&&S.league.rosters)?(S.league.rosters.find(function(r){ return (r.players||[]).includes(pid); })||null):null; }catch(e){ return null; } }
+function h9OwnerHTML(pid){
+  const oR=h9OwnRoster(pid);
+  let who='';
+  if(oR){ try{ who=rosterChip(oR.roster_id); }catch(e){ who=''; } }
+  if(!who){ let nm=null; try{ nm=ownerOf(pid); }catch(e){ nm=null; } who=nm?esc(nm):(S.league?'Free agent':'Not in a connected league'); }
+  return '<div class="h9own"><span class="h9ar" aria-hidden="true">&rarr;</span>'+who+'</div>';
+}
+function h9ChipsHTML(pid){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  const out=[];
+  if(p.inj) out.push('<span class="h9c bad">'+esc(p.inj)+'</span>');
+  if(p.s&&p.s!=='Active') out.push('<span class="h9c warn">'+esc(p.s)+'</span>');
+  let V=null; try{ V=weekVerdict(pid); }catch(e){ V=null; }
+  if(V&&V.call) out.push('<span class="h9c '+(V.cls==='go'?'go':(V.cls==='mid'?'mid':'no'))+'" title="'+esc(V.sub||'')+'">'+esc(V.call)+'</span>');
+  try{ const bw=byeOf(pid); if(bw&&!(V&&V.bye)) out.push('<span class="h9c mon">Bye wk '+esc(String(bw))+'</span>'); }catch(e){}
+  try{ const oR=h9OwnRoster(pid); if(oR){ const x=xTagHTML(pid,false,oR.roster_id); if(x) out.push(x); } }catch(e){}
+  if(p.x===0) out.push('<span class="h9c spec">Rookie</span>');
+  return out.length?'<div class="h9chips">'+out.join('')+'</div>':'';
+}
+function h9ActHTML(pid){
+  // Sleeper has no public write API, so the reference's DROP becomes the moves we can actually perform:
+  // the trade desk when a roster holds him, the Sleeper add screen when nobody does.
+  let onMine=false; try{ const my=myRoster(); onMine=!!(my&&(my.players||[]).includes(pid)); }catch(e){}
+  if(onMine) return '<button class="h9act" type="button" data-act="toTradeA" data-pid="'+esc(String(pid))+'" title="Put him on your side of the trade desk">Send in trade</button>';
+  if(h9OwnRoster(pid)) return '<button class="h9act" type="button" data-act="toTradeB" data-pid="'+esc(String(pid))+'" title="Target him on the trade desk">Target in trade</button>';
+  let u=''; try{ u=sleeperUrl('players')||''; }catch(e){ u=''; }
+  if(u) return '<button class="h9act" type="button" data-act="sleeperOpen" data-url="'+esc(u)+'" title="Sleeper has no public write API — this opens the add screen in Sleeper">Claim in Sleeper &#8599;</button>';
+  let pu=''; try{ pu=sleeperUrl('player',pid)||''; }catch(e){ pu=''; }
+  return pu?'<button class="h9act" type="button" data-act="sleeperOpen" data-url="'+esc(pu)+'" title="Open his Sleeper page">Open in Sleeper &#8599;</button>':'';
+}
+function h9StarHTML(pid){
+  const on=!!(S.watch&&S.watch[pid]);
+  return '<button class="h9star'+(on?' on':'')+'" type="button" data-act="h9watch" data-pid="'+esc(String(pid))+'" aria-pressed="'+(on?'true':'false')+'" '
+    +'title="'+(on?'Watching him — price alerts run every sync':'Watch him — price alerts run every sync')+'" aria-label="'+(on?'Stop watching':'Watch')+'">'+(on?'\u2605':'\u2606')+'</button>';
+}
+function h9BandHTML(pid,K){
+  let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } p=p||{};
+  const bits=['<span class="h9club">'+esc(K.club)+'</span>'];
+  if(p.no!=null&&p.no!==''&&K.abbr) bits.push('<span class="h9no">#'+esc(String(p.no))+'</span>');   // no club, no jersey — a released veteran's last number next to FREE AGENT would read as current
+  if(p.dco&&p.p&&p.p!=='DEF') bits.push('<span class="h9dep" title="His slot on the club\'s depth chart">'+esc(String(p.p)+String(p.dco))+'</span>');
+  return '<div class="h9band"><span class="h9pos '+esc(p.p||'FLEX')+'">'+esc(p.p||'\u2014')+'</span>'+bits.join('')+'</div>';
+}
+function heroHTML(pid,surf){
+  try{
+    const p=playerOf(pid); if(!p) return '';
+    const K=h9Skin(pid);
+    const st='--h9g:'+K.g+';--h9a:'+K.a+';--h9bd:'+K.bd+';--h9ink:'+K.ink+';--h9rule:'+K.rule;
+    return '<div class="h9 h9-'+esc(surf||'sover')+'" data-pid="'+esc(String(pid))+'" data-surf="'+esc(surf||'sover')+'" style="'+esc(st)+'">'
+      +(K.logo?'<img class="h9wm" alt="" aria-hidden="true" loading="lazy" decoding="async" src="'+esc(K.logo)+'" onerror="this.remove()">':'')
+      +h9ShotHTML(pid)
+      +'<div class="h9in"><div class="h9main">'
+        +h9OwnerHTML(pid)
+        +'<div class="h9nmrow"><h2 class="h9nm">'+esc(p.n||'')+'</h2><div class="h9acts">'+h9StarHTML(pid)+h9ActHTML(pid)+'</div></div>'
+        +h9ChipsHTML(pid)
+        +h9VitalsHTML(pid)
+        +h9RanksHTML(pid)
+      +'</div></div>'
+      +h9BandHTML(pid,K)
+      +'</div>';
+  }catch(e){ try{ return heroHTMLv82(pid); }catch(x){ return ''; } }   // degrade, never crash — the v8.2 hero is still here
+}
+function h9Surf(rootId){ return rootId==='soBody'?'sover':(rootId==='soRead'?'read':'intel'); }
+function h9Repaint(pid){ // the star flips in place on every surface that is showing him — no rebuild, no scroll jump
+  ['soBody','soRead','intelBody'].forEach(function(rootId){ const rt=$(rootId); if(!rt) return;
+    let el=null; try{ el=rt.querySelector('.h9[data-pid="'+CSS.escape(String(pid))+'"]'); }catch(e){ el=null; }
+    if(el) try{ el.outerHTML=heroHTML(pid,h9Surf(rootId)); }catch(e){} });
+}
+
+function heroHTMLv82(pid){
   const p=playerOf(pid); if(!p) return '';
   const line=[(p.a?p.a+' yrs':''),(p.x===0?'rookie season':(p.x!=null?p.x+' seasons in':'')),(p.s&&p.s!=='Active'?p.s:'')].filter(Boolean).join(' · ');
   return '<div class="dsxhero">'+avatarHTML(pid,'lg')+'<div class="dsxid">'
@@ -14565,6 +14984,265 @@ function dbHist(pid){
   const body=histBodyHTML(pid);
   return {v:v,h:body||dsecPendHTML('Pulling his season lines…')};
 }
+
+/* ================= v8.8 · LOG9 · V88_LOG9 — the grouped, position-aware game log =================
+   Raw Sleeper keys ONLY (the GLKEEP set): nothing here invents a stat the wire does not publish.
+   A rate stat with no key prints a dash; a counting stat on a PLAYED week prints 0, because Sleeper
+   omits a zero counter; a snap share with no team snap total still prints n/a, never 0%. */
+const GL9SEL={by:{},last:null};                    // the season pill choice, per session
+function gl9Box(pid,se){ try{ return (S.glog&&S.glog[String(se)]&&S.glog[String(se)].by&&S.glog[String(se)].by[String(pid)])||null; }catch(e){ return null; } }
+function gl9Pulled(pid,se){ return !!gl9Box(pid,se); }                    // his weekly file for that season has been fetched at least once
+function gl9Held(pid,se){ const P=gl9Box(pid,se); return !!(P&&(P.ws||[]).length); }
+function gl9Played(pid,se){ const P=gl9Box(pid,se); return !!(P&&(P.played||0)>0); }
+function gl9Seasons(pid){                          // the seasons we hold, plus the live one, plus any the SEASON file proves he played — live first, newest to oldest
+  try{
+    const list=(typeof glogSeasons==='function')?glogSeasons():[];
+    let live=null; try{ live=(typeof glogLiveSeason==='function')?glogLiveSeason():null; }catch(e){ live=null; }
+    const out=[];
+    list.forEach(function(se){
+      const K=String(se);
+      if(gl9Held(pid,K)){ out.push(K); return; }
+      if(live&&K===String(live)){ out.push(K); return; }                 // the live season always offers the slate ahead
+      const st=S.sstat&&S.sstat[K]&&S.sstat[K][String(pid)];             // a season line that year means a weekly log exists — pull it on tap
+      if(st&&(((st.gp||0)>0)||st.pts_ppr!=null)) out.push(K); });
+    return out;
+  }catch(e){ return []; }
+}
+function gl9SeasonFor(pid,ss){
+  ss=ss||gl9Seasons(pid); if(!ss.length) return null;
+  const want=GL9SEL.by[String(pid)];
+  if(want&&ss.indexOf(String(want))>=0) return String(want);
+  if(GL9SEL.last&&ss.indexOf(String(GL9SEL.last))>=0) return String(GL9SEL.last);
+  for(let i=0;i<ss.length;i++){ if(gl9Played(pid,ss[i])) return ss[i]; } // the newest season he has actually played a game in
+  return ss[0];
+}
+/* --- the column spec. c.k is a key or a list of fallbacks; d = decimals; z:0 = a missing key is a dash, not a 0 --- */
+function gl9Spec(pos){
+  const P=String(pos||'').toUpperCase();
+  const snap=(typeof snapPosOK==='function')?snapPosOK(P):(['QB','RB','WR','TE'].indexOf(P)>=0);
+  const FAN=function(){ const c=[{k:'proj',t:'PROJ',z:0},{k:'fpts',t:'FPTS',z:0}];
+    if(snap) c.push({k:'snp',t:'SNP%',z:0}); return {g:'FANTASY',c:c}; };
+  const FUM={g:'FUMBLE',c:[{k:'fum',t:'FUM'},{k:'fum_lost',t:'LOST'}]};
+  const WX={g:'CONDITIONS',c:[{k:'wx',t:'WX',z:0}]};
+  if(P==='QB') return [FAN(),
+    {g:'PASS',c:[{k:'pass_att',t:'ATT'},{k:'pass_cmp',t:'CMP'},{k:'pass_yd',t:'YD'},{k:'pass_td',t:'TD'},{k:'pass_int',t:'INT'}]},
+    {g:'RUSHING',c:[{k:'rush_att',t:'ATT'},{k:'rush_yd',t:'YD'},{k:'rush_ypa',t:'YPC',d:1,z:0},{k:'rush_td',t:'TD'}]},
+    {g:'SACKED',c:[{k:'pass_sack',t:'SK'},{k:'pass_sack_yds',t:'YDS'}]},FUM,WX];
+  if(P==='RB') return [FAN(),
+    {g:'RUSHING',c:[{k:'rush_att',t:'ATT'},{k:'rush_yd',t:'YD'},{k:'rush_ypa',t:'YPC',d:1,z:0},{k:'rush_td',t:'TD'},{k:'rush_btkl',t:'BTK'}]},
+    {g:'RECEIVING',c:[{k:'rec_tgt',t:'TGT'},{k:'rec',t:'REC'},{k:'rec_yd',t:'YD'},{k:'rec_td',t:'TD'}]},FUM,WX];
+  if(P==='WR'||P==='TE') return [FAN(),
+    {g:'RECEIVING',c:[{k:'rec_tgt',t:'TGT'},{k:'rec',t:'REC'},{k:'rec_yd',t:'YD'},{k:'rec_yar',t:'YAC'},{k:'rec_air_yd',t:'AIR'},{k:'rec_td',t:'TD'}]},
+    {g:'RUSHING',c:[{k:'rush_att',t:'ATT'},{k:'rush_yd',t:'YD'},{k:'rush_td',t:'TD'}]},FUM,WX];
+  if(P==='K') return [FAN(),
+    {g:'FG',c:[{k:'fgm',t:'M'},{k:'fga',t:'A'},{k:'fgm_50p',t:'50+'},{k:'fgm_lng',t:'LNG',z:0}]},
+    {g:'XP',c:[{k:'xpm',t:'M'},{k:'xpa',t:'A'}]},WX];
+  if(P==='DEF') return [FAN(),
+    {g:'DEFENSE',c:[{k:'sack',t:'SK',d:1},{k:'tkl_loss',t:'TFL'},{k:'qb_hit',t:'QBH'},{k:'pass_def',t:'PD'}]},
+    {g:'TAKEAWAYS',c:[{k:'int',t:'INT'},{k:['fum_rec','fr'],t:'FR'},{k:'ff',t:'FF'},{k:['def_td','def_st_td'],t:'TD'}]},
+    {g:'ALLOWED',c:[{k:'pts_allow',t:'PTS',z:0},{k:'yds_allow',t:'YDS',z:0}]},WX];
+  if(P==='DL'||P==='LB'||P==='DB') return [FAN(),
+    {g:'TACKLES',c:[{k:['idp_tkl','tkl'],t:'TOT'},{k:['idp_tkl_solo','tkl_solo'],t:'SOLO'},{k:['idp_tkl_ast','tkl_ast'],t:'AST'},{k:['idp_tkl_loss','tkl_loss'],t:'TFL'}]},
+    {g:'IMPACT',c:[{k:['idp_sack','sack'],t:'SK',d:1},{k:['idp_qb_hit','qb_hit'],t:'QBH'},{k:['idp_int','int'],t:'INT'},
+      {k:['idp_pass_def','pass_def'],t:'PD'},{k:['idp_ff','ff'],t:'FF'},{k:['idp_fr','fr'],t:'FR'},{k:['idp_def_td','def_td'],t:'TD'}]},WX];
+  return [FAN(),
+    {g:'RUSHING',c:[{k:'rush_att',t:'ATT'},{k:'rush_yd',t:'YD'},{k:'rush_td',t:'TD'}]},
+    {g:'RECEIVING',c:[{k:'rec_tgt',t:'TGT'},{k:'rec',t:'REC'},{k:'rec_yd',t:'YD'},{k:'rec_td',t:'TD'}]},FUM,WX];
+}
+function gl9Raw(st,k){ // the first fallback key the wire actually published
+  if(!st) return null;
+  const ks=Array.isArray(k)?k:[k];
+  for(let i=0;i<ks.length;i++){ const v=st[ks[i]]; if(v!=null&&isFinite(Number(v))) return Number(v); }
+  return null;
+}
+function gl9Num(v,dec){ if(v==null||!isFinite(v)) return '—';
+  if(dec) return (Math.round(v*Math.pow(10,dec))/Math.pow(10,dec)).toFixed(dec);
+  return (Math.abs(v)>=1000&&typeof fmtN==='function')?fmtN(v):String(Math.round(v*100)/100); }
+function gl9Cell(col,r,p,pid){ // -> {h:innerHTML, cls:''}
+  const st=r.stats||null;
+  if(col.k==='fpts'){ let v=null; try{ v=glRowPtsOf(r); }catch(e){ v=null; }
+    if(v==null) return {h:'—',cls:'gl9fp z'};
+    const c=v>=20?'glp b':(v>=10?'glp g':(v<5?'glp d':''));
+    return {h:esc(fmtPts1(v)),cls:'gl9fp '+c}; }
+  if(col.k==='proj'){ // S.proj holds exactly ONE (season,week) — never pretend to have a projection for any other row
+    try{ if(S.proj&&String(S.proj.season)===String(r.season)&&Number(S.proj.week)===Number(r.week)){
+        const v=projPts(pid); if(v!=null&&isFinite(v)) return {h:esc(fmtPts1(v)),cls:''}; } }catch(e){}
+    return {h:'—',cls:'z'}; }
+  if(col.k==='snp'){ // the enrichment law, unchanged: a real %, or n/a — never a 0% the wire never published
+    if(!r.played) return {h:'—',cls:'z'};
+    let v=null; try{ v=snapPctOf(st,p.p); }catch(e){ v=null; }
+    if(v==null) return {h:'n/a',cls:'z'};
+    return {h:Math.round(v*100)+'%',cls:''}; }
+  if(col.k==='wx'){ let h=''; try{ h=glWxOf(r); }catch(e){ h=''; }
+    return {h:h||'—',cls:'gl9wxv'+(h?'':' z')}; }
+  const raw=gl9Raw(st,col.k);
+  if(raw==null){ if(r.played&&col.z!==0) return {h:'0',cls:'z'};
+    return {h:'—',cls:'z'}; }
+  return {h:esc(gl9Num(raw,col.d||0)),cls:raw?'':'z'};
+}
+function gl9Rows(pid,se){ // resident rows for that season + the weeks still to come, from the schedule
+  const out=[];
+  try{
+    const rows=(typeof gameLog==='function')?gameLog(pid,{seasons:[String(se)],byes:1,dnp:1}):[];
+    rows.forEach(function(r){ out.push(r); });
+    const p=playerOf(pid);
+    let live=null; try{ live=(typeof glogLiveSeason==='function')?glogLiveSeason():null; }catch(e){ live=null; }
+    if(p&&p.t&&live&&String(live)===String(se)){
+      let last=0; out.forEach(function(r){ last=Math.max(last,Number(r.week)||0); });
+      const T=String(p.t).toUpperCase();
+      let bye=0; try{ bye=(S.byes&&String(S.byes.season)===String(se)&&S.byes.byTeam)?Number(S.byes.byTeam[T]||0):0; }catch(e){ bye=0; }
+      for(let w=last+1;w<=18;w++){
+        if(bye&&w===bye){ out.push({season:String(se),week:w,bye:true,dnp:false,played:false,fut:true,stats:null}); continue; }
+        let g=null; try{ g=(typeof scheduleGame==='function')?scheduleGame(T,se,w):null; }catch(e){ g=null; }
+        if(!g||!g.opp) continue;
+        out.push({season:String(se),week:w,opp:g.opp,home:g.isHome===true,away:g.isHome===false,
+          bye:false,dnp:false,played:false,fut:true,stats:null}); }
+    }
+  }catch(e){}
+  out.sort(function(a,b){ return (Number(a.week)||0)-(Number(b.week)||0); });
+  return out;
+}
+function gl9OppHTML(r){
+  if(!r.opp) return '<span class="tm">—</span>';
+  const pre=(r.away===true)?'@ ':((r.away===false||r.home===true)?'vs ':'');
+  try{ return esc(pre)+teamChip(r.opp); }catch(e){ return esc(pre+String(r.opp)); }
+}
+/* Sleeper returns null for a bye AND for a week a rostered player simply has no line in, and the parser has to
+   guess. The SCHEDULE settles it: if his club had a game that week, the null is a DNP, not a bye. When the
+   schedule cannot answer, the row keeps v8.7's reading and still says BYE — we never assert what we cannot see. */
+const GL9BYE={};
+function gl9ClubSked(T,se){ // {bye: the one week with no game, or null · blind: the schedule could not answer at all}
+  let g9=0; try{ g9=GLGEN; }catch(e){ g9=0; }                     // more resident logs = a better schedule answer, so the cache dies with them
+  const k=T+':'+se+':'+g9; if(k in GL9BYE) return GL9BYE[k];
+  let v={bye:null,blind:true};
+  try{
+    const miss=[];
+    for(let w=1;w<=18;w++){ let g=null; try{ g=scheduleGame(T,se,w); }catch(e){ g=null; }
+      if(!g||!g.opp) miss.push(w); }
+    v={bye:(miss.length===1)?miss[0]:null,blind:miss.length>=18};
+    if(v.bye==null&&S.byes&&String(S.byes.season)===String(se)&&S.byes.byTeam&&S.byes.byTeam[T])
+      v.bye=Number(S.byes.byTeam[T])||null;                       // the derived bye table wins whenever it covers this season
+  }catch(e){ v={bye:null,blind:true}; }
+  GL9BYE[k]=v; return v;
+}
+function gl9ByeCall(pid,r,se){ // -> {bye:1} | {dnp:1,opp,away,home} | {gap:1} for a log row the parser flagged as a bye
+  try{
+    const p=playerOf(pid); const T=p&&p.t?String(p.t).toUpperCase():null;
+    if(!T) return {bye:1};
+    const K=gl9ClubSked(T,se);
+    if(K.blind) return {bye:1};                                   // no schedule to argue with — v8.7's reading stands
+    let g=null; try{ g=scheduleGame(T,se,r.week); }catch(e){ g=null; }
+    if(g&&g.opp) return {dnp:1,opp:g.opp,away:g.isHome===false,home:g.isHome===true};
+    if(K.bye!=null) return Number(r.week)===Number(K.bye)?{bye:1}:{gap:1};
+    return {gap:1};                                               // several weeks unaccounted for: a club has ONE bye, so do not assert this is it
+  }catch(e){ return {bye:1}; }
+}
+function gl9TableHTML(pid,se){
+  const p=playerOf(pid); if(!p) return '';
+  const spec=gl9Spec(p.p);
+  const rows=gl9Rows(pid,se);
+  if(!rows.length){
+    if(!gl9Pulled(pid,se)&&typeof ensureGameLog==='function') return dsecPendHTML('Pulling his '+String(se)+' game log…');
+    return '<div class="fine">Nothing on the wire for him in '+esc(String(se))+'.</div>'; }
+  let NC=0; spec.forEach(function(G){ NC+=G.c.length; });
+  /* --- the two header bands: group names spanning their sub-columns --- */
+  let hg='<tr><th class="gl9k1" rowspan="2" scope="col">WK</th><th class="gl9k2" rowspan="2" scope="col">OPP</th>';
+  let hc='<tr>';
+  spec.forEach(function(G,gi){
+    hg+='<th class="gl9g'+(gi?' gs':'')+'" colspan="'+G.c.length+'" scope="colgroup">'+esc(G.g)+'</th>';
+    G.c.forEach(function(c,ci){
+      hc+='<th class="gl9c'+((gi&&!ci)?' gs':'')+(c.k==='wx'?' gl9wxc':'')+'" scope="col">'+esc(c.t)+'</th>'; }); });
+  const head='<thead>'+hg+'</tr>'+hc+'</tr></thead>';
+  /* --- the body --- */
+  let naSnap=false, naSnapLive=false, anyProj=false;
+  const snapOK=(typeof snapPosOK==='function')?snapPosOK(p.p):false;
+  const liveWk=(String(se)===String(S.nfl&&S.nfl.season))?Number((S.nfl&&S.nfl.week)||0):0;
+  const body=rows.map(function(r){
+    const wk=String(r.week);
+    const now=(liveWk&&Number(r.week)===liveWk)?' gl9now':'';
+    let rr=r, gap=false;
+    if(r.bye&&!r.fut){ const call=gl9ByeCall(pid,r,se);
+      if(call.dnp) rr={week:r.week,season:r.season,dnp:true,opp:call.opp,away:call.away,home:call.home};
+      else if(call.gap){ rr={week:r.week,season:r.season}; gap=true; } }
+    if(gap) return '<tr class="gl9r gl9gap'+now+'"><td class="gl9k1">'+esc(wk)+'</td>'
+      +'<td class="gl9span" colspan="'+(NC+1)+'">No game on the wire</td></tr>';
+    if(rr.bye) return '<tr class="gl9r gl9bye'+now+'"><td class="gl9k1">'+esc(wk)+'</td>'
+      +'<td class="gl9span" colspan="'+(NC+1)+'">Bye week</td></tr>';
+    if(rr.dnp) return '<tr class="gl9r gl9dnp'+now+'"><td class="gl9k1">'+esc(wk)+'</td>'
+      +'<td class="gl9k2">'+gl9OppHTML(rr)+'</td><td class="gl9span" colspan="'+NC+'">DNP</td></tr>';
+    let tds='';
+    spec.forEach(function(G,gi){ G.c.forEach(function(c,ci){
+      const cell=(r.played||c.k==='proj')?gl9Cell(c,r,p,pid):{h:'—',cls:'z'};
+      if(r.played&&c.k==='snp'&&cell.h==='n/a'&&snapOK){ naSnap=true; if(String(r.season)===String(S.nfl.season)) naSnapLive=true; }
+      if(c.k==='proj'&&cell.h!=='—') anyProj=true;
+      tds+='<td class="'+((gi&&!ci)?'gs ':'')+cell.cls+'">'+cell.h+'</td>'; }); });
+    return '<tr class="gl9r'+(r.played?'':' gl9fut')+now+'"><td class="gl9k1">'+esc(wk)+'</td>'
+      +'<td class="gl9k2">'+gl9OppHTML(r)+'</td>'+tds+'</tr>';
+  }).join('');
+  const wxOn=!!(S.wxh&&Object.keys(S.wxh).length);
+  const note='<div class="railnote gl9note">Points are scored with this league\'s exact rules. '
+    +(naSnap?('Snap counts have not been published for some of these weeks — those cells read n/a, never a zero.'
+      +(naSnapLive?' Sleeper adds snap enrichment after the game; the app keeps re-pulling until it lands.':' Sleeper never enriched those games, so they will stay n/a.')+' '):'')
+    +(anyProj?'PROJ is this week\'s Sleeper projection — no earlier week has a stored projection, so those cells stay dashed. ':'')
+    +'Weeks still to come read as dashes across the row. '
+    +'Source: Sleeper per-player weekly logs'+(wxOn?' · weather by Open-Meteo.com':'')+'.</div>';
+  return '<div class="gl9wrap"><table class="gl9t">'+head+'<tbody>'+body+'</tbody></table></div>'+note;
+}
+function gl9InnerHTML(pid,se,ss){
+  ss=ss||gl9Seasons(pid);
+  const pills='<div class="gl9sea" role="tablist" aria-label="Season">'+ss.map(function(x){
+      const on=String(x)===String(se);
+      return '<button class="gl9pill'+(on?' on':'')+'" type="button" role="tab" aria-selected="'+(on?'true':'false')+'"'
+        +' data-act="gl9Se" data-pid="'+esc(String(pid))+'" data-se="'+esc(String(x))+'">'+esc(String(x))+'</button>'; }).join('')+'</div>';
+  let tab=''; try{ tab=gl9TableHTML(pid,se); }catch(e){ tab=''; }
+  if(!tab){ try{ tab=gameLogTableHTML(pid,10); }catch(e){ tab='<div class="fine">Game log unavailable.</div>'; } }   // the v8.7 table is the fallback, never a blank
+  return pills+tab;
+}
+function gl9BlockHTML(pid){
+  const p=playerOf(pid); if(!p) return '';
+  const ss=gl9Seasons(pid);
+  if(!ss.length){
+    let ready=true; try{ ready=(typeof glogReady!=='function')||glogReady(pid,1); }catch(e){ ready=true; }
+    const inner=(!ready&&typeof ensureGameLog==='function')?dsecPendHTML('Pulling his game log…')
+      :'<div class="fine">No game log on the wire for him in the last four seasons.</div>';
+    return '<div class="gl9" data-pid="'+esc(String(pid))+'">'+inner+'</div>'; }
+  return '<div class="gl9" data-pid="'+esc(String(pid))+'">'+gl9InnerHTML(pid,gl9SeasonFor(pid,ss),ss)+'</div>';
+}
+/* ---- the news panel, to the reference: big headline, "N days ago via Source", body, bold Analysis lead-in ---- */
+function ago9(ts){
+  try{ const t=Number(ts); if(!isFinite(t)||!t) return '';
+    const sec=Math.max(0,Math.round((Date.now()-t)/1000));
+    if(sec<90) return 'just now';
+    const mi=Math.round(sec/60); if(mi<60) return mi+' minute'+(mi===1?'':'s')+' ago';
+    const hr=Math.round(mi/60); if(hr<24) return hr+' hour'+(hr===1?'':'s')+' ago';
+    const dy=Math.round(hr/24); if(dy<31) return dy+' day'+(dy===1?'':'s')+' ago';
+    const mo=Math.round(dy/30.4); if(mo<12) return mo+' month'+(mo===1?'':'s')+' ago';
+    const yr=Math.round(mo/12); return yr+' year'+(yr===1?'':'s')+' ago';
+  }catch(e){ return ''; }
+}
+function nw9Key(x){ return String(x==null?'':x).toLowerCase().replace(/[^a-z0-9]+/g,''); }
+function nw9BodyHTML(d,h){
+  const t=String(d==null?'':d).trim(); if(!t) return '';
+  if(h&&nw9Key(t)===nw9Key(h)) return '';                                // several ESPN rows repeat the headline as the blurb — print it once
+  const m=t.match(/\bAnalysis\s*:\s*/i);
+  if(m&&m.index>0){ const lead=t.slice(0,m.index).trim(); const rest=t.slice(m.index+m[0].length).trim();
+    return (lead?'<p class="nw9p">'+esc(lead)+'</p>':'')+(rest?'<p class="nw9p"><b>Analysis:</b> '+esc(rest)+'</p>':''); }
+  if(m&&m.index===0){ const rest=t.slice(m[0].length).trim();
+    return rest?'<p class="nw9p"><b>Analysis:</b> '+esc(rest)+'</p>':''; }
+  return '<p class="nw9p">'+esc(t)+'</p>';
+}
+function news9HTML(it){ // the whole card opens the in-app reader — no bare anchor, so the installed PWA never hands a tap to Safari
+  let k=''; try{ k=newsKey(it); }catch(e){ k=''; }
+  let ext=false; try{ ext=!!(it.u&&RD_ESPN.test(it.u)); }catch(e){ ext=false; }
+  const when=ago9(it.t); const src=it.src||'ESPN';
+  return '<article class="nw9it rdrow" role="button" tabindex="0" data-act="newsOpen" data-nkey="'+esc(k)+'">'
+    +'<div class="nw9top">'
+    +(it.img?'<img class="nw9img" loading="lazy" decoding="async" alt="" src="'+esc(it.img)+'" onerror="this.remove()">':'')
+    +'<div class="nw9tx"><div class="nw9h">'+esc(it.h||'')+'</div>'
+    +'<div class="nw9m">'+esc((when?when+' via ':'via ')+src)+'</div></div>'
+    +(ext?'<button class="nw9x" type="button" data-act="espnOpen" data-url="'+esc(it.u)+'" title="Open on ESPN" aria-label="Open on ESPN">&#8599;</button>':'')
+    +'</div>'+nw9BodyHTML(it.d,it.h)+'</article>';
+}
 function dbLog(pid){
   const rows=glogRowsFor(pid,10).filter(function(r){ return r.played; });
   let v='';
@@ -14572,7 +15250,8 @@ function dbLog(pid){
     if(pts.length){ const avg=sum(pts)/pts.length; const boom=pts.filter(function(x){ return x>=20; }).length;
       v=esc('L'+pts.length+' '+fmtPts1(avg)+' ppg'+(boom?' · '+boom+' boom':'')); } }
   let ready=true; try{ ready=(typeof glogReady!=='function')||glogReady(pid,1); }catch(e){ ready=true; }
-  const table=(!rows.length&&!ready&&typeof ensureGameLog==='function')?dsecPendHTML('Pulling his game log…'):gameLogTableHTML(pid,10);
+  let table=''; try{ table=gl9BlockHTML(pid); }catch(e){ table=''; }                       // v8.8 LOG9: grouped, position-aware, season-pilled
+  if(!table) table=(!rows.length&&!ready&&typeof ensureGameLog==='function')?dsecPendHTML('Pulling his game log…'):gameLogTableHTML(pid,10);
   const h=table
     +'<div class="dsec"><span class="lb">Weekly scoring timelines '+helpBtn('wkt')+'</span></div>'
     +'<div class="pwkt" data-pid="'+esc(String(pid))+'">'+dsecPendHTML('Pulling weekly game logs…')+'</div>';
@@ -14622,7 +15301,7 @@ function dbNews(pid){
   const fresh=!!(S.news&&!stale(S.news.ts,1));
   const h='<div class="inlinebtns" style="margin-bottom:8px"><span class="src '+(fresh?'live':'stale')+'">'+(S.news?esc(agoShort(S.news.ts)+' ago'):'—')+'</span>'
     +'<button class="btn sm" data-act="newsRefreshP" data-pid="'+esc(String(pid))+'">Refresh</button></div>'
-    +'<div class="pnews" data-pid="'+esc(String(pid))+'">'+dsecPendHTML('Pulling the latest…')+'</div>';
+    +'<div class="pnews nw9" data-pid="'+esc(String(pid))+'">'+dsecPendHTML('Pulling the latest…')+'</div>';
   return {v:v,h:h};
 }
 function dbTrade(pid,surf){
@@ -14670,13 +15349,13 @@ function dossierBodyHTML(pid,surf,order){
   return '<div class="dslist'+(surf==='read'?' rdlist':'')+'">'+dsJumpHTML(keys)+parts.join('')+'</div>';
 }
 function dossierHTML(pid,surf){
-  return (surf==='sover'?heroHTML(pid):'')+dossierBodyHTML(pid,surf,DSEC_ORDER);
+  return heroHTML(pid,surf)+dossierBodyHTML(pid,surf,DSEC_ORDER);   // v8.8 · V88_HERO9: the Intel tab used to get intelHeroHTML's four value tiles here — they are the SAME four the Snapshot section right below already builds, so nothing is lost
 }
 function readoutHTML(pid){
   const p=playerOf(pid)||{};
   return '<div class="rdbar"><button class="btn sm" data-act="readBack">‹ Back</button><span class="rdname">'+esc((p.n||'')+' — readout')+'</span>'
     +'<button class="btn sm" data-act="fullIntel" data-pid="'+esc(String(pid))+'">Intel tab ↗</button></div>'
-    +heroHTML(pid)+dossierBodyHTML(pid,'read',DSEC_READ);
+    +heroHTML(pid,'read')+dossierBodyHTML(pid,'read',DSEC_READ);
 }
 
 /* ---------------- loaders: openPlayer finally pulls what the card displays, per-section and double-stamped ---------------- */
@@ -14720,7 +15399,7 @@ async function fillDossierNews(pid,rootId,gen,force){
     else if(!S.news||stale(S.news.ts,0.5)) await loadNews().catch(function(){});
     const items=await playerNews(pid,6);
     const m=find(); if(!m) return;
-    m.innerHTML=(items&&items.length)?items.map(newsItemHTML).join('')
+    m.innerHTML=(items&&items.length)?items.map(function(it){ try{ return news9HTML(it); }catch(e){ return newsItemHTML(it); } }).join('')
       :'<div class="railnote">Nothing on the wire for him, even reaching back through his athlete feed — genuinely quiet. Injury flag and depth chart stay live from Sleeper.</div>';
     dsecSum(rootId,pid,gen,'news',esc((items?items.length:0)+' items · '+(S.news?agoShort(S.news.ts):'—')));
   }catch(e){ const m=find(); if(m) m.innerHTML='<div class="railnote">News wire unreachable in this environment. Values, injury status and depth chart remain live via Sleeper/FantasyCalc.</div>'; }
@@ -14848,7 +15527,7 @@ function intelHeroHTML(pid){
 function renderIntelBodyV8(pid){
   const p=playerOf(pid); if(!p){ $('intelBody').innerHTML='<div class="empty">Player not in the local database — run Full Sync.</div>'; return; }
   const bd=$('intelBody');
-  bd.innerHTML=intelHeroHTML(pid)+dossierHTML(pid,'intel');
+  bd.innerHTML=dossierHTML(pid,'intel');   // v8.8 · V88_HERO9: dossierHTML now carries the hero on every surface (intelHeroHTML stays defined as the backstop)
   bd.dataset.pid=String(pid);
   if(S.ui.cmpPid&&S.ui.cmpPid!==pid){ try{ fillCompareTimelines(pid,S.ui.cmpPid); }catch(e){} }
   if(isPhone()){ try{ phoneHdSplit(bd); }catch(e){} }
@@ -15200,6 +15879,16 @@ document.addEventListener('click',async e=>{
     if(!sec) return;
     if(!dsecOpen(k)){ dsecSet(k,true); dsecApply(k); }
     dsecScrollTo(sec); return; }
+  if(act==='gl9Se'){ // v8.8 LOG9 — swap the season the game log shows, remembered for the session
+    const gse=b.dataset.se; const wrap=b.closest('.gl9'); if(!gse||!wrap) return;
+    const gp=wrap.dataset.pid||pid; if(!gp) return;
+    GL9SEL.by[String(gp)]=String(gse); GL9SEL.last=String(gse);
+    try{ wrap.innerHTML=gl9InnerHTML(gp,String(gse)); }catch(e){}
+    if(!gl9Pulled(gp,gse)&&typeof ensureGameLog==='function'){                       // a season we have never fetched: pull it, then repaint THIS mount only
+      try{ await ensureGameLog([String(gp)],{seasons:[String(gse)]}); }catch(e){}
+      if(wrap.isConnected&&String(wrap.dataset.pid)===String(gp)&&String(GL9SEL.by[String(gp)])===String(gse)){
+        try{ wrap.innerHTML=gl9InnerHTML(gp,String(gse)); }catch(e){} } }
+    return; }
   if(act==='dsecAll'){ const on=b.dataset.v==='1'; const root=b.closest('#soRead,#soBody,#intelBody')||document;
     root.querySelectorAll('section.dsecx[data-sec]').forEach(sec=>{ const k=sec.dataset.sec; if(!k) return; dsecSet(k,on); dsecApply(k); });
     b.dataset.v=on?'0':'1'; b.textContent=on?'Collapse all':'Expand all'; return; }
@@ -15211,6 +15900,13 @@ document.addEventListener('click',async e=>{
   if(act==='cmpOpen'){ const a=S.ui.soverPid; const d=$('soCmpD'); if(d) d.classList.remove('on');
     if(a&&pid&&a!==pid) await openCompare(a,pid); return; }
   if(act==='fullIntel'){ closeOver(); S.ui.intelPid=pid; switchTab('intel'); return; }
+  if(act==='h9watch'){ S.watch=S.watch||{};   // v8.8 · V88_HERO9 · the hero's star — the real watchlist, flipped in place on every surface showing him
+    if(S.watch[pid]) delete S.watch[pid];
+    else S.watch[pid]={added:Date.now(),thr:null,dir:'below',base:marketValue(pid,'dyn')};
+    try{ await Store.set('watchlist',S.watch); }catch(e){}
+    try{ h9Repaint(pid); }catch(e){}
+    try{ if($('sover').classList.contains('on')||readoutOpen()||S.ui.tab==='intel') dsecRepaintAll(pid,['trade']); }catch(e){}
+    toast(S.watch[pid]?'Watching '+((playerOf(pid)||{}).n||'')+' \u2014 set a price target on Command':'Removed from watchlist','good'); return; }
   if(act==='toTradeA'){ loadTrade(null,[{type:'player',pid}],null,{append:true,scroll:false}); return; }
   if(act==='toTradeB'){ loadTrade(null,null,[{type:'player',pid}],{append:true,retarget:true,keepB:true,scroll:false}); return; }
   if(act==='scnLoad'){ const s=(S.scenarios||[]).find(x=>String(x.id)===b.dataset.id); if(!s)return;
@@ -15385,7 +16081,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.9','store: '+Store.backend,
+    'FRONT OFFICE v9.0','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -15514,13 +16210,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.9 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v9.0 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.9 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v9.0 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -15539,7 +16235,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.9 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v9.0 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
