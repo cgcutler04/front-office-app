@@ -2049,6 +2049,14 @@ body.phone header.top{background:#0A0E17}
 .btn.help{width:19px;height:19px;font-size:11px}
 body.phone .btn.help{width:26px;height:26px;font-size:13px}
 .hd .btn.help,.lb .btn.help{position:relative;top:-1px}
+
+/* ═══════════ v8.7 · the depth chart, findable ═══════════ */
+.dpjump{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(91,141,239,.42);background:rgba(91,141,239,.14);color:var(--ink);border-radius:99px;padding:4px 10px;margin-right:6px;font:700 11px/1 var(--sans);letter-spacing:.04em;cursor:pointer;vertical-align:middle}
+.dpjump:hover{border-color:rgba(91,141,239,.75);background:rgba(91,141,239,.22)}
+.dpjump .dpof{color:var(--mut);font-weight:600}
+body.phone .dpjump{min-height:32px;padding:6px 12px;font-size:12px}
+.dpof{font-weight:600;color:var(--mut)}
+.dsecx[data-sec="depth"] .dsx-v{font:700 11.5px/1 var(--sans);letter-spacing:.04em}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -12035,7 +12043,7 @@ function renderIntelBodyLegacy(pid){
     <div class="did">
       <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">${ptag(p.p)}<span style="font:700 20px/1.1 var(--sans)">${esc(p.n)}</span></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-size:12px">${teamChip(p.t)}</span><span class="fine">${p.a?p.a+' yrs · ':''}${p.x===0?'rookie season':(p.x!=null?p.x+' seasons in':'')}</span>${p.inj?`<span class="tier must">${esc(p.inj)}</span>`:''}${p.x===0?'<span class="tier spec">Rookie</span>':''}</div>
-      <div class="fine" style="max-width:340px">${depthChartHTML(pid)||(p.dco?p.p+p.dco+' on the depth chart':'')}</div>
+      <div class="fine" style="max-width:340px">${depthJumpHTML(pid)}${depthChartHTML(pid)||(p.dco?p.p+p.dco+' on the depth chart':'')}</div>
     </div>
     <div class="dstats" style="flex:1;min-width:250px">
       ${tile(fmtN(dv),'Dynasty value',fc&&fc.rank?'#'+fc.rank+' overall · '+esc(p.p)+String(fc.posRank||''):'')}
@@ -13162,10 +13170,10 @@ function sleeperBtn(kind,label,x,cls){ const u=sleeperUrl(kind,x); if(!u) return
    Intel tab. Sections are toggled by CLASS only — the DOM never leaves the tree, so every pid-stamped async mount
    (.pnews / .pwkt / .livePlayer / .cmpwk) survives a collapse. Nothing here fetches; fillDossier owns every await. */
 const DSECS=[{k:'verdict',t:'The call',c:'Verdict'},{k:'snap',t:'Snapshot',c:'Snapshot'},{k:'week',t:'This week',c:'Week'},
-  {k:'role',t:'Role & usage',c:'Role'},{k:'off',t:'Offense & the room',c:'Offense'},{k:'hist',t:'History & production',c:'History'},
+  {k:'role',t:'Role & usage',c:'Role'},{k:'depth',t:'Depth chart',c:'Depth'},{k:'off',t:'Team offense',c:'Offense'},{k:'hist',t:'History & production',c:'History'},   // V87_DEPTH_MARK: the room was buried inside Offense and folded shut on phones
   {k:'log',t:'Game log',c:'Log'},{k:'val',t:'Value & league fit',c:'Value'},{k:'news',t:'News',c:'News'},
   {k:'trade',t:'Trade & actions',c:'Trade'},{k:'cmp',t:'Compare',c:'Compare'}];
-const DSEC_PHONE_OPEN={snap:1,week:1,role:1,verdict:1};   // phone opens three; desktop opens everything, exactly as the card reads today
+const DSEC_PHONE_OPEN={snap:1,week:1,role:1,verdict:1,depth:1};   // phone opens three; desktop opens everything, exactly as the card reads today
 let DSAVE=null;
 function dsecTitle(k){ const d=DSECS.find(x=>x.k===k); return d?d.t:k; }
 function dsecOpen(k){ const d=(S.ui.dsec=S.ui.dsec||{}); if(k in d) return !!d[k]; return isPhone()?!!DSEC_PHONE_OPEN[k]:true; }
@@ -13211,6 +13219,7 @@ function dbOf(k,pid,surf){
     if(k==='snap') return dbSnap(pid,surf);
     if(k==='week') return dbWeek(pid,surf);
     if(k==='role') return dbRole(pid);
+    if(k==='depth') return dbDepth(pid);
     if(k==='off') return dbOff(pid);
     if(k==='hist') return dbHist(pid);
     if(k==='log') return dbLog(pid);
@@ -13678,14 +13687,38 @@ function dbRole(pid){
   if(!R&&!st) h=dsecPendHTML('Pulling his role and usage…');
   return {v:v,h:h};
 }
+function depthRoomSize(pid){ // how many men the wire lists at his position on his team
+  const p=playerOf(pid); if(!p||!p.p||!p.t) return 0;
+  const db=S.players&&S.players.byId; if(!db) return 0;
+  const T=String(p.t).toUpperCase(), P=String(p.p); let room=0;
+  for(const id in db){ const q=db[id]; if(q&&q.p===P&&String(q.t||'').toUpperCase()===T&&q.dco) room++; }
+  return room;
+}
+function depthBadge(pid){ // "RB2 of 4" — his standing in the room, readable without opening anything
+  const p=playerOf(pid); if(!p||!p.p||!p.dco) return '';
+  const room=depthRoomSize(pid);
+  return esc(String(p.p)+p.dco)+(room>1?' <span class="dpof">of '+room+'</span>':'');
+}
+function depthJumpHTML(pid){ // the badge as a control that jumps to the depth chart section
+  const b=depthBadge(pid); if(!b) return '';
+  return '<button class="dpjump" type="button" data-act="dsecJump" data-sec="depth" title="Jump to the depth chart">'+b+'</button> ';
+}
+function dbDepth(pid){ // the room at his position — its own section, one tap from the chip row
+  const p=playerOf(pid); if(!p) return null;
+  const dc=depthChartCardHTML(pid);
+  const line=depthChartHTML(pid)||'';
+  const v=depthBadge(pid);
+  let h=dc?('<div class="rsec">'+dc+'</div>'):'';
+  if(!h&&line) h='<div class="rsec"><div class="fine">'+line+'</div></div>';
+  if(!h) h='<div class="railnote">No depth chart on the wire for '+esc(String(p.t||'his team'))+' at '+esc(String(p.p||''))+' yet.</div>';
+  return {v:v,h:h};
+}
 function dbOff(pid){
   const p=playerOf(pid); if(!p) return null;
   const TR=teamReadouts(); const tm=(TR&&p.t)?TR.by[String(p.t).toUpperCase()]:null;
   const v=tm?esc(String(p.t).toUpperCase()+' '+fmtPts1(tm.ppg)+' pts/gm')+(tm.r_ppg?' #'+tm.r_ppg:''):'';
   const off=teamOffTilesHTML(pid);
-  const dc=depthChartCardHTML(pid);                                    // THE ONE depth chart in the dossier
-  let h=(off?'<div class="rsec">'+off+'</div>':'')
-    +(dc?'<div class="dsec"><span class="lb">The room</span></div><div class="rsec">'+dc+'</div>':'');
+  let h=(off?'<div class="rsec">'+off+'</div>':'');                    // V87: the depth chart is its own section now
   if(!h) h=dsecPendHTML('Pulling his offense readout…');
   return {v:v,h:h};
 }
@@ -13842,8 +13875,8 @@ function dbVerdict(pid){
 }
 
 /* ---------------- the two dossiers + the readout, from ONE builder set ---------------- */
-const DSEC_ORDER=['snap','week','role','off','hist','log','val','news','trade'];
-const DSEC_READ=['verdict','snap','week','role','off','log','hist','val','news','trade'];
+const DSEC_ORDER=['snap','week','role','depth','off','hist','log','val','news','trade'];
+const DSEC_READ=['verdict','snap','week','role','depth','off','log','hist','val','news','trade'];
 function dossierBodyHTML(pid,surf,order){
   const parts=[]; const keys=[];
   order.forEach(function(k){ let r=null; try{ r=dbOf(k,pid,surf); }catch(e){ r=null; }
@@ -14564,7 +14597,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.6','store: '+Store.backend,
+    'FRONT OFFICE v8.7','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -14693,13 +14726,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.6 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.7 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.6 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.7 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -14718,7 +14751,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.6 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.7 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
