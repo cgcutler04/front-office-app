@@ -1806,6 +1806,227 @@ body.phone .dsjump{padding-top:10px;padding-bottom:8px}
 #sover.read .shd{background:#0F1626}
 body.phone #sover .shd{box-shadow:0 8px 16px -12px rgba(0,0,0,.95)}
 #sover .sbd{background:linear-gradient(180deg,#0F1626,#0B1120)}
+
+/* =========== v8.2 . home82 - Command + league hub, phone density =========== */
+/* The hub header cost 142px: an uppercase title, a "5 leagues . 3 need attention"
+   chip and ADD LEAGUE / SWITCH ACCOUNT / SHOW PAST wrapping into three rows.
+   On phone it is one nowrap line: title + count pill on the left, ? / Refresh /
+   overflow on the right. The wordy count keeps its sentence in the footer note. */
+.hubcount{display:none}
+.hubmorebtn{display:none}
+.hubmoreg{display:flex;flex-direction:column;gap:8px}
+.hubmoreg .btn{width:100%;text-align:center}
+body.phone .hubmoreg .btn{min-height:46px;font-size:13px}
+body.phone #leagueHub>.hd{flex-wrap:nowrap;align-items:center;gap:8px;padding:8px 12px;row-gap:0}
+body.phone #leagueHub>.hd>.lb{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10.5px;letter-spacing:.06em;line-height:1.3}
+body.phone #leagueHub>.hd .right{flex:none;flex-wrap:nowrap;gap:6px;row-gap:0}
+body.phone #leagueHub>.hd .btn.sm{min-height:32px;padding:6px 9px;font-size:10.5px}
+body.phone .hubcount{display:inline-block;margin-left:5px;padding:2px 7px;border-radius:99px;border:1px solid var(--line2);background:var(--panel2);color:var(--mut);font:700 10px/1.5 var(--mono);letter-spacing:0;text-transform:none;vertical-align:1px}
+body.phone .hubcount.warn{border-color:rgba(245,179,66,.55);color:var(--watch)}
+body.phone .hubmorebtn{display:inline-flex;align-items:center;justify-content:center;width:32px;min-width:32px;padding:0;font-size:15px;line-height:1}
+/* the hub card: three lines - name+record, matchup, tag rail - instead of a stack */
+body.phone .hubgrid{grid-template-columns:1fr;padding:8px 12px 4px;gap:8px}
+body.phone .hubcard.hubc2{padding:9px 11px 10px;min-height:44px}
+body.phone .hubc2 .hubtop{align-items:center;gap:8px}
+body.phone .hubc2 .hubname{flex:1 1 auto;display:flex;align-items:baseline;gap:6px;min-width:0}
+body.phone .hubc2 .hubname b{font:800 14.5px/1.25 var(--sans);letter-spacing:-.01em;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* the league NAME wins the row - the format string gives up its characters first */
+body.phone .hubc2 .hubfmt{display:block;margin:0;flex:0 6 auto;min-width:0;font:500 9.5px/1.3 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.phone .hubc2 .hubrec{display:flex;align-items:center;gap:5px;flex:none;font:700 12px/1.2 var(--mono);color:var(--mut);text-align:right}
+body.phone .hubc2 .hubrec .hubact{margin:0;padding:2px 5px;font-size:8px;letter-spacing:.04em}
+body.phone .hubc2 .hubchev{margin:0;font:700 12px/1 var(--sans);color:var(--acc);letter-spacing:0}
+body.phone .hubc2 .hubchevtxt{display:none}
+body.phone .hubc2 .hubmu{display:grid;grid-template-columns:1fr 62px 1fr;gap:7px;align-items:center;margin:8px 0 0}
+body.phone .hubc2 .hubt{flex-direction:row;align-items:center;gap:7px;min-width:0}
+body.phone .hubc2 .hubt.them{flex-direction:row-reverse;text-align:right}
+body.phone .hubc2 .hubtb{width:auto;min-width:0;flex:1 1 auto}
+body.phone .hubc2 .hava{width:26px;height:26px;font-size:9.5px;border-width:1.5px}
+/* the manager name gives up characters, the record never does */
+body.phone .hubc2 .hubtn{display:flex;align-items:baseline;gap:4px;-webkit-line-clamp:none;white-space:nowrap;overflow:hidden;font:600 10.5px/1.25 var(--sans);min-height:0}
+body.phone .hubc2 .hubt.them .hubtn{justify-content:flex-end}
+body.phone .hubc2 .hubtnm{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.phone .hubc2 .hubtn .rec{flex:none;font-size:10px}
+body.phone .hubc2 .hubsc{font:800 17px/1.15 var(--sans);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.phone .hubc2 .hubsc .fine{font-size:9px}
+body.phone .hubc2 .hubpct{min-width:62px;align-self:center;padding:0;gap:3px}
+body.phone .hubc2 .hubpct b{font-size:12.5px}
+body.phone .hubc2 .hubbar{width:56px;height:5px;margin:0}
+body.phone .hubc2 .hubwait{margin:8px 0 0;font-size:11px}
+/* the tag rail: three visible plus a pinned +N that expands the rest in place */
+body.phone .hubc2 .hubtags{display:flex;flex-wrap:nowrap;gap:6px;margin-top:8px;padding-bottom:2px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+body.phone .hubc2 .hubtags::-webkit-scrollbar{display:none}
+body.phone .hubc2 .hubtags.open{flex-wrap:wrap;overflow:visible}
+body.phone .hubc2 .hubtag{display:inline-block;flex:0 0 auto;min-height:0;max-width:208px;padding:5px 9px;border-radius:99px;font:600 10.5px/20px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.phone .hubc2 .hubtags.open .hubtag{max-width:100%;white-space:normal;line-height:1.35;padding:6px 10px}
+body.phone .hubc2 .hubtag.hubmore{position:sticky;right:0;border-color:var(--acc);color:var(--acc);font-weight:800;cursor:pointer;background:#0E1526}
+/* -- card chrome across #p-command: the airiness was internal padding, not margins -- */
+body.phone #p-command .cmdflow>.card{margin-bottom:8px}
+body.phone #p-command .card>.hd{padding:9px 12px 8px;row-gap:4px}
+body.phone #p-command .card>.hd .lb{font-size:11.5px;line-height:1.3}
+body.phone #p-command .card>.hd .lb .hdsub{font-size:11px;line-height:1.35;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body.phone #p-command .card>.bd{padding:10px 12px}
+body.phone #p-command .card>.bd.tight{padding:4px 0 2px}
+body.phone #p-command .alert{padding:8px 12px;gap:9px}
+body.phone #p-command .alert .t{font-size:12px;line-height:1.3}
+body.phone #p-command .alert .d{font-size:11px;line-height:1.45;margin-top:2px}
+body.phone #p-command table.led th{padding:6px 10px;font-size:9.5px}
+body.phone #p-command table.led td{padding:6px 10px;font-size:12px}
+/* a roster row was 51px for one 15px name and an 12.5px age/exp/bye line - the row still
+   clears the 44px tap floor, the name stays large, only the second line gives up 1.5px */
+body.phone #p-command table.led .pname{font-size:14px;line-height:1.2}
+body.phone #p-command table.led .pname .meta{font-size:11px;line-height:1.25;margin-top:2px}
+body.phone #p-command table.led .ava{width:26px;height:26px}
+body.phone #p-command .railnote.foot{padding:7px 12px}
+body.phone #p-command .newsit{padding:8px 0;gap:9px}
+body.phone #p-command .newsit .nd{font-size:11px;line-height:1.4;-webkit-line-clamp:2}
+body.phone #p-command .bd.tight>table.led th:first-child,body.phone #p-command .bd.tight>table.led td:first-child{padding-left:12px}
+body.phone #p-command .bd.tight>table.led th:last-child,body.phone #p-command .bd.tight>table.led td:last-child{padding-right:12px}
+body.phone #p-command .syncled .sr{padding:6px 12px;font-size:11.5px;gap:7px}
+body.phone #p-command .syncled .sr .k{width:110px}
+body.phone #p-command .kv{grid-template-columns:100px 1fr;gap:3px 9px;font-size:11.5px;line-height:1.4}
+body.phone #p-command .dstats{grid-template-columns:1fr 1fr;gap:7px}
+body.phone #p-command .dstat{padding:7px 9px}
+body.phone #p-command .dstat .v{font-size:15px}
+body.phone #p-command .dstat .s{font-size:9.5px;line-height:1.35}
+body.phone #p-command .osgrid{grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+body.phone #p-command .oscell{padding:7px 9px}
+body.phone #p-command .fitnotes{gap:4px;margin-top:8px}
+body.phone #p-command .fitnotes .fn{font-size:11.5px;line-height:1.45}
+body.phone #p-command .rdpkg{padding:9px 12px}
+body.phone #p-command .rdwhy{font-size:11px;line-height:1.45;margin-bottom:8px}
+body.phone #p-command .rdhd{gap:6px}
+body.phone #p-command .rdchip{font-size:11.5px;padding:5px 9px}
+body.phone #p-command .rdpkg .inlinebtns{gap:7px}
+body.phone #p-command .rdpkg .btn.sm,body.phone #p-command table.led .btn.sm{min-height:34px;padding:7px 10px}
+body.phone #p-command .chips{gap:5px}
+/* -- folded lists + clamped railnotes -- */
+body.phone #p-command .cmdhid{display:none!important}
+body.phone #p-command .cmdmore{display:block;padding:8px 12px 10px;border-top:1px solid var(--line)}
+body.phone #p-command .cmdmore .btn{width:100%;text-align:center;min-height:38px}
+body.phone #p-command .rnfold>.rntxt{display:block}
+body.phone #p-command .rnfold.on>.rntxt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body.phone #p-command .rnfold>.rnmore{display:inline-block;min-height:0;margin:2px 0 0;padding:2px 0;border:0;background:none;color:var(--acc);font:700 10px/1.4 var(--sans);letter-spacing:.09em;text-transform:uppercase;cursor:pointer}
+
+/* =====================================================================
+   v8.2 . live82 - FULL-SCREEN GAME CENTER on the phone
+   The Game Center still lives in #modal, so closeModal keeps owning the poll.
+   On a phone it wears .gvfs and becomes a real full-screen surface:
+     .gvtop   fixed   - safe-area top bar (back, both team chips, both scores,
+                        possession, clock, live dot, down+distance, red zone)
+     .gvseg   fixed   - the same tabs as a full-width segmented control
+     .gvmain  scrolls - everything else, padded clear of the home indicator
+   Both fixed bars are FLEX ITEMS, not position:sticky - there is no vertical
+   offset to get wrong, and no gradient for scrolled content to ghost through.
+   Nothing here references var(--hh): on a phone the header scrolls away.
+   ===================================================================== */
+body.phone #modal.gvfs{align-items:stretch;justify-content:stretch;padding:0!important;background:#070A15;backdrop-filter:none;-webkit-backdrop-filter:none}
+body.phone #modal.gvfs .mbox{width:100%;max-width:100%;height:var(--vvh,100vh);max-height:var(--vvh,100vh);
+  border:0;border-radius:0;box-shadow:none;overflow:hidden;display:flex;flex-direction:column;
+  background:#0B1024;animation:gvFsIn .2s cubic-bezier(.2,.7,.3,1)}
+@supports(height:100dvh){body.phone #modal.gvfs .mbox{height:var(--vvh,100dvh);max-height:var(--vvh,100dvh)}}
+@keyframes gvFsIn{from{transform:translateY(16px)}to{transform:none}}   /* transform only - the surface is opaque from the first frame, nothing ghosts through it */
+body.phone #modal.gvfs .mhd{display:none}                       /* the top bar below replaces it - and #mBody's observer sheds .gvfs for every other modal, so mClose can never end up hidden */
+body.phone #modal.gvfs .mbd{flex:1 1 auto;min-height:0;padding:0;display:flex;flex-direction:column}
+body.phone #modal.gvfs #gvBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+body.phone #modal.gvfs .gvmain{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding:12px 12px calc(30px + env(safe-area-inset-bottom,0px))}
+body.phone #modal.gvfs .gvscroll{max-height:none;overflow-y:visible}   /* one scroller, not two */
+
+/* --- the bar that stays put --- */
+body.phone #modal.gvfs .gvtop{flex:none;background:#131B37;border-bottom:1px solid rgba(255,255,255,.10);
+  padding:calc(6px + env(safe-area-inset-top,0px)) 8px 8px}
+body.phone #modal.gvfs .gvtoprow{display:flex;align-items:center;gap:6px;min-height:44px}
+body.phone #modal.gvfs .gvback{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:12px;color:var(--ink);font:300 30px/1 var(--sans);padding:0 0 4px}
+body.phone #modal.gvfs .gvback:active{background:rgba(255,255,255,.09)}
+body.phone #modal.gvfs .gvsc{flex:1 1 auto;min-width:0;align-self:stretch;display:flex;align-items:center;justify-content:center;gap:7px}
+  /* no overflow:hidden here - it would clip the team chips' 44px hit area below; the content is 2-3 letter abbreviations and a score, it cannot overrun */
+body.phone #modal.gvfs .gvscT{display:flex;align-items:center;gap:5px;min-width:0}
+body.phone #modal.gvfs .gvscT b{font:800 25px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--mut)}
+body.phone #modal.gvfs .gvscT.lead b{color:var(--ink)}
+body.phone #modal.gvfs .gvscT .tm{font:700 12px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+body.phone #modal.gvfs .gvscT .tm.tmlink{position:relative;display:inline-block;padding:6px;margin:0;border-radius:8px;border:1px solid rgba(255,255,255,.14)}
+body.phone #modal.gvfs .gvscT .tm.tmlink::after{content:'';position:absolute;left:-3px;right:-3px;top:50%;height:44px;transform:translateY(-50%)} /* the chip stays small so a mis-tap can't drop him out of the game; the hit area is still 44px tall */
+body.phone #modal.gvfs .gvat{flex:none;font:600 11px/1 var(--sans);color:var(--dim)}
+body.phone #modal.gvfs .gvpo{flex:none;display:block;width:7px;height:7px;border-radius:50%;background:var(--gain);animation:lpulse 1.6s ease infinite}
+body.phone #modal.gvfs .gvclk{flex:none;max-width:104px;text-align:right;color:var(--dim);
+  font:700 10.5px/1.35 var(--mono);letter-spacing:.05em;text-transform:uppercase}
+body.phone #modal.gvfs .gvclk.in{color:var(--gain)}
+body.phone #modal.gvfs .gvclk .livedot{margin-right:5px}
+body.phone #modal.gvfs .gvsit{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:7px;padding-left:2px}
+body.phone #modal.gvfs .gvdd{font:600 11px/1.25 var(--mono);color:var(--mut);letter-spacing:.02em}
+
+/* --- the segmented control, directly under it --- */
+body.phone #modal.gvfs .gvseg{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;
+  padding:7px 10px 9px;background:#131B37;border-bottom:1px solid rgba(255,255,255,.07)}
+body.phone #modal.gvfs .gvsegb{min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;
+  border:1px solid transparent;border-radius:11px;background:rgba(255,255,255,.045);color:var(--dim);
+  font:700 10.5px/1.15 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:6px 3px}
+body.phone #modal.gvfs .gvsegb.on{color:var(--ink);border-color:rgba(108,155,255,.45);
+  background:linear-gradient(180deg,rgba(108,155,255,.22),rgba(108,155,255,.08))}
+body.phone #modal.gvfs .gvsegb:active{background:rgba(255,255,255,.11)}
+
+/* --- what this one game is worth, per league --- */
+body.phone #modal.gvfs .gvtot{display:flex;flex-direction:column;gap:4px;margin:0 0 12px}
+body.phone #modal.gvfs .gvtotr{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:baseline;
+  padding:7px 10px;border-radius:10px;background:#131B37;border:1px solid rgba(255,255,255,.06)}
+body.phone #modal.gvfs .gvtotn{font:700 9.5px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--acc)}
+body.phone #modal.gvfs .gvtotp{font:800 16px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+body.phone #modal.gvfs .gvtotm{font:600 10px/1.2 var(--sans);color:var(--dim);letter-spacing:.02em}
+body.phone #modal.gvfs .gvtotc{font:700 10.5px/1 var(--mono);color:var(--mut);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+
+/* --- my players: one row each, big number, pace beside it, 44px+ tap target --- */
+body.phone #modal.gvfs .gvsec{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 2px 8px;
+  font:700 10px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
+body.phone #modal.gvfs .gvsec2{margin-top:16px}
+body.phone #modal.gvfs .gvpl{display:flex;flex-direction:column;gap:8px}
+body.phone #modal.gvfs .gvpr{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:start;
+  min-height:60px;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:#151C36}
+body.phone #modal.gvfs .gvpr.on{border-color:rgba(61,214,140,.45);box-shadow:inset 3px 0 0 var(--gain)}
+body.phone #modal.gvfs .gvpr.opp{opacity:.74}
+body.phone #modal.gvfs .gvpr:active{background:#1A2244}
+body.phone #modal.gvfs .gvpa{padding-top:1px}
+body.phone #modal.gvfs .gvpb{min-width:0}
+body.phone #modal.gvfs .gvpn{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font:700 14px/1.25 var(--sans);color:var(--ink)}
+body.phone #modal.gvfs .gvpn .gvtm{font:700 10px/1 var(--mono);letter-spacing:.06em;color:var(--dim)}
+body.phone #modal.gvfs .gvpn .gvbn{font:700 9px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line2);border-radius:5px;padding:3px 5px}
+body.phone #modal.gvfs .gvpm{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px}
+body.phone #modal.gvfs .gvpline{margin-top:5px;font:600 11px/1.45 var(--mono);color:var(--mut);overflow-wrap:anywhere}
+body.phone #modal.gvfs .gvpc{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+body.phone #modal.gvfs .gvlp{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+  font:700 9.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line2);border-radius:6px;padding:4px 6px}
+body.phone #modal.gvfs .gvlp.st{border-color:rgba(108,155,255,.45);color:var(--acc);background:rgba(108,155,255,.10)}
+body.phone #modal.gvfs .gvlp.bn{opacity:.62}
+body.phone #modal.gvfs .gvlp b{font:700 11px/1 var(--mono);color:var(--ink)}
+body.phone #modal.gvfs .gvpv{flex:none;min-width:64px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right}
+body.phone #modal.gvfs .gvpts{font:800 22px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+body.phone #modal.gvfs .gvpace{font:700 9.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+body.phone #modal.gvfs .gvpdv{font:700 11px/1 var(--mono);font-variant-numeric:tabular-nums}
+body.phone #modal.gvfs .gvpdv.up{color:var(--gain)}
+body.phone #modal.gvfs .gvpdv.dn{color:var(--loss)}
+
+/* --- the feed, at 375px: the clock column WRAPS, it never runs under the play text --- */
+body.phone #modal.gvfs .lplays,body.phone #modal.gvfs .lplays.big{padding:0;border-top:0}
+body.phone #modal.gvfs .lplays.big .lplay{grid-template-columns:52px minmax(0,1fr);gap:9px;padding:8px;font-size:12px;line-height:1.42;border-radius:10px}
+body.phone #modal.gvfs .lplays.big .lplay .lpwho{grid-column:2;padding-top:2px;white-space:normal}
+body.phone #modal.gvfs .lplays.big .lpclk{white-space:normal;overflow-wrap:anywhere;font-size:9.5px;letter-spacing:.02em;line-height:1.4;padding-top:1px}
+body.phone #modal.gvfs .lplay.mine{background:rgba(108,155,255,.10)}
+
+/* --- the box score: never wider than the phone; it pans inside its own frame,
+       first column sticky and OPAQUE (a see-through column ghosted once) --- */
+body.phone #modal.gvfs .gvtbl{max-width:100%;margin-bottom:12px;background:#10172F;overscroll-behavior-x:contain}
+body.phone #modal.gvfs .gvbox th,body.phone #modal.gvfs .gvbox td{white-space:nowrap;font-size:11.5px;padding:7px 9px}
+body.phone #modal.gvfs .gvbox td:first-child,body.phone #modal.gvfs .gvbox th:first-child{background:#10172F;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+body.phone #modal.gvfs .rpickpos{margin:2px 0 6px}
+
+/* --- win probability, the drive line and the footer, all inside the one scroller --- */
+body.phone #modal.gvfs .lwp{padding:2px 0 14px!important}
+body.phone #modal.gvfs .gvfoot{flex-wrap:wrap;gap:10px;margin-top:16px;padding-top:12px}
+body.phone #modal.gvfs .gvfoot .inlinebtns{display:flex;flex-wrap:wrap;gap:8px}
+body.phone #modal.gvfs .gvfoot .btn{min-height:44px;display:inline-flex;align-items:center}
+body.phone #modal.gvfs #gvHelpBox{margin:0 0 12px}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -9750,6 +9971,176 @@ function leagueHubHTML(){ const Ls=hubLeagues(); if(!Ls.length) return '';
     return '<div class="hubcard'+(i.active?' active':'')+(op?' open':'')+'" data-act="hubOpen" data-id="'+esc(i.lid)+'" role="button" aria-expanded="'+(op?'true':'false')+'"><div class="hubtop"><div class="hubname"><b>'+esc(i.name)+'</b><span class="hubfmt">'+esc(i.fmt.join(' · '))+(i.loaded?'':' · not loaded — Full Sync')+'</span></div><div class="hubrec">'+esc(i.rec)+(i.rank?' · #'+i.rank:'')+(i.active?'<div class="src live" style="margin-top:4px">active</div>':'')+'<div class="hubchev">'+(op?'▴ matchup':'▾ matchup')+'</div></div></div>'+mu+(tags?'<div class="hubtags">'+tags+'</div>':'')+'</div>'+(op?hubMatchupHTML(i):''); }).join('');
   return '<div class="card wide" id="leagueHub"><div class="hd"><span class="lb">My leagues'+(reg?' — week '+wk:'')+' '+helpBtn('hub')+'</span><span class="right inlinebtns"><span class="src">'+Ls.length+' league'+(Ls.length>1?'s':'')+(needs?' · '+needs+' need'+(needs>1?'':'s')+' attention':'')+'</span>'+(past.length?'<button class="btn sm" data-act="togglePast">'+(S.ui.showPast?'Hide':'Show')+' past ('+past.length+')</button>':'')+'<button class="btn sm" data-act="addLeague">Add league</button><button class="btn sm" data-act="switchAccount">Switch account</button><button class="btn sm" data-act="hubRefresh"'+(HUB.busy?' disabled':'')+'>'+(HUB.busy?'Pulling…':'Refresh')+'</button></span></div><div class="hubgrid">'+cards+'</div>'
     +'<div class="railnote foot">Tap a league to open its matchup — slot by slot, both sides. Make it the active scope from inside. Tap a team name for that roster, a highlighted tag for that player.</div>'+'</div>'; }
+
+/* === v8.2 home82 - phone density: Command + league hub ===
+   The hub header was 142px (title, count chip and three buttons that wrapped into
+   three rows) and each hub card 216-371px for ~150 characters. On phone the hub is
+   now rebuilt by hubPhoneHTML: one header line with an overflow button, and one
+   dense card per league - name+record, the matchup, then a capped tag rail.
+   Desktop still runs the original leagueHubHTML, untouched. */
+function hubTagsHTML(i){
+  var A=(i.alerts||[]).slice();
+  var chip=function(a){ return '<span class="hubtag '+a.k+'"'+(a.pid?' data-act="pv" data-pid="'+esc(a.pid)+'"':'')+'>'+esc(a.t)+'</span>'; };
+  var faab=(i.faab!=null)?'<span class="hubtag hubfaab">$'+i.faab+' FAAB</span>':'';
+  if(!A.length&&!faab) return '';
+  var cap=isPhone()?3:4;
+  var open=!!(S.ui.hubTags&&S.ui.hubTags[i.lid]);
+  var more=A.length-cap;
+  var body;
+  if(open||more<=0) body=A.map(chip).join('')+faab+((open&&more>0)?'<span class="hubtag hubmore" data-act="hubTags" data-id="'+esc(i.lid)+'">&minus; less</span>':'');
+  else body=A.slice(0,cap).map(chip).join('')+faab+'<span class="hubtag hubmore" data-act="hubTags" data-id="'+esc(i.lid)+'">+'+more+'</span>';
+  return '<div class="hubtags'+(open?' open':'')+'">'+body+'</div>';
+}
+function hubCardPhone(i){
+  var op=HUB.open===i.lid, b=i.b, W=null;
+  try{ W=hubWinPct(i); }catch(e){ W=null; }
+  var wpv=W?W.p:null;
+  var av=function(rid,name){ var r=b&&b.rosters.find(function(x){ return x.roster_id===rid; });
+    var u=r&&(b.users||[]).find(function(x){ return x.user_id===r.owner_id; }); var a=u&&u.avatar;
+    var ini=String(name||'?').split(/\s+/).map(function(w){ return Array.from(w)[0]||''; }).join('').slice(0,2).toUpperCase();
+    return '<span class="hava">'+esc(ini)+(a?'<img alt="" loading="lazy" src="https://sleepercdn.com/avatars/thumbs/'+esc(a)+'" onerror="this.remove()">':'')+'</span>'; };
+  var rec=function(rid){ var r=b&&b.rosters.find(function(x){ return x.roster_id===rid; }); var st=(r&&r.settings)||{};
+    return r?'('+(st.wins||0)+'-'+(st.losses||0)+(st.ties?'-'+st.ties:'')+')':''; };
+  var side=function(rid,name,now,proj,them){
+    var big=(now>0)?fmtPts1(now):(proj!=null?fmtPts1(proj):'\u2014');
+    var sub=(now>0&&proj!=null)?('proj '+fmtPts1(proj)):(now>0?'now':(proj!=null?'proj':''));
+    /* my own record already sits in the card's top-right corner, so only the
+       opponent's is repeated here - the name gets those characters instead */
+    var rc=them?('<span class="rec">'+rec(rid)+'</span>'):'';
+    return '<div class="hubt'+(them?' them':'')+'">'+av(rid,name)+'<div class="hubtb"><div class="hubtn"><span class="hubtnm">'+rosterChip(rid,name,'',i.lid)+'</span>'+(rc?' '+rc:'')+'</div>'
+      +'<div class="hubsc">'+big+(sub?' <span class="fine">'+esc(sub)+'</span>':'')+'</div></div></div>'; };
+  var myName=(i.mine&&b)?hubTeamName(b,i.mine.roster_id):'You';
+  var mu;
+  if(i.mine){
+    mu='<div class="hubmu">'+side(i.mine.roster_id,myName,i.myNow,i.myT,false)
+      +'<div class="hubpct">'+(wpv!=null?'<b class="'+(wpv>=0.5?'up':'dn')+'">'+Math.round(wpv*100)+'%</b><div class="hubbar'+(wpv>=0.5?'':' dn')+'"><i style="width:'+Math.round(wpv*100)+'%"></i></div>':'<b>vs</b>')+'</div>'
+      +(i.opp?side(i.opp.roster_id,i.oppName||'Opponent',i.oppNow,i.oppT,true)
+        :'<div class="hubt them"><span class="hava">\u2014</span><div class="hubtb"><div class="hubtn">Bye week</div><div class="hubsc">\u2014</div></div></div>')
+      +'</div>';
+  } else {
+    mu=(S.nfl.season_type==='regular'&&i.loaded)?('<div class="fine hubwait">'+((HUB.busy||!HUB.byLid[i.lid])?('Pulling week '+i.wk+'\u2026'):'No matchup this week')+'</div>'):'';
+  }
+  return '<div class="hubcard hubc2'+(i.active?' active':'')+(op?' open':'')+'" data-act="hubOpen" data-id="'+esc(i.lid)+'" role="button" aria-expanded="'+(op?'true':'false')+'">'
+    +'<div class="hubtop"><div class="hubname"><b>'+esc(i.name)+'</b><span class="hubfmt">'+esc(i.fmt.join(' \u00B7 '))+(i.loaded?'':' \u00B7 not loaded \u2014 Full Sync')+'</span></div>'
+    +'<div class="hubrec"><span class="hubrecn">'+esc(i.rec)+(i.rank?' \u00B7 #'+i.rank:'')+'</span>'+(i.active?'<span class="src live hubact">live</span>':'')
+    +'<span class="hubchev">'+(op?'\u25B4':'\u25BE')+' <span class="hubchevtxt">matchup</span></span></div></div>'
+    +mu+hubTagsHTML(i)+'</div>'+(op?hubMatchupHTML(i):'');
+}
+function hubPhoneHTML(){
+  var Ls=hubLeagues(); if(!Ls.length) return '';
+  var past=((S.conn&&S.conn.leagues)||[]).filter(function(l){ return !leagueIsActive(l); });
+  var wk=Math.max(1,S.nfl.week||1), reg=S.nfl.season_type==='regular';
+  var isStale=!HUB.ts||Date.now()-HUB.ts>600e3||Ls.some(function(l){ return !HUB.byLid[l.league_id]; });
+  if(isStale&&!HUB.busy&&S.net.sleeper) setTimeout(function(){ hubFetch(false).catch(function(){}); },30);
+  var infos=Ls.map(hubInfo);
+  var needs=infos.filter(function(i){ return i.alerts.some(function(a){ return a.k==='red'||a.k==='amb'; }); }).length;
+  var cards=infos.map(function(i){ try{ return hubCardPhone(i); }catch(e){ return ''; } }).join('');
+  var cnt='<span class="hubcount'+(needs?' warn':'')+'">'+Ls.length+(needs?' \u00B7 '+needs+'\u26A0':'')+'</span>';
+  return '<div class="card wide" id="leagueHub"><div class="hd hubhd"><span class="lb">My leagues'+(reg?' \u00B7 wk '+wk:'')+' '+cnt+'</span>'
+    +'<span class="right inlinebtns">'+helpBtn('hub')
+    +'<button class="btn sm" data-act="hubRefresh"'+(HUB.busy?' disabled':'')+'>'+(HUB.busy?'\u2026':'Refresh')+'</button>'
+    +'<button class="btn sm hubmorebtn" data-act="hubMore" aria-label="League options" title="Add league, past seasons, switch account">\u22EF</button>'
+    +'</span></div><div class="hubgrid">'+cards+'</div>'
+    +'<div class="railnote foot">'+Ls.length+' league'+(Ls.length>1?'s':'')+(needs?' \u00B7 '+needs+' need'+(needs>1?'':'s')+' attention':'')
+    +'. Tap a league to open its matchup \u2014 slot by slot, both sides. Make it the active scope from inside. Tap a team name for that roster, a highlighted tag for that player.'
+    +(past.length?(' '+past.length+' past-season league'+(past.length>1?'s':'')+' sit under the \u22EF button.'):'')+'</div></div>';
+}
+function openHubMore(){
+  var past=((S.conn&&S.conn.leagues)||[]).filter(function(l){ return !leagueIsActive(l); });
+  $('mTitle').textContent='League options';
+  $('mBody').innerHTML='<div class="hubmoreg">'
+    +'<button class="btn" data-act="addLeague">Add league by ID</button>'
+    +(past.length?('<button class="btn" data-act="togglePast">'+(S.ui.showPast?'Hide':'Show')+' past seasons ('+past.length+')</button>'):'')
+    +'<button class="btn" data-act="hubRefresh">Refresh every league</button>'
+    +'<button class="btn" data-act="switchAccount">Switch Sleeper account</button></div>'
+    +'<div class="railnote" style="margin-top:12px">Everything the hub header used to spell out. Past seasons open read-only. Switching accounts disconnects Sleeper but keeps every cached league on this device.</div>';
+  var g=$('mBody').querySelector('.hubmoreg');
+  if(g) g.addEventListener('click',function(ev){ if(ev.target.closest('button[data-act]')) $('modal').classList.remove('on'); },false);
+  $('modal').classList.add('on');
+}
+/* -- phone-only fold of the long Command lists. State lives in S.ui.cmdOpen,
+      because renderCommand is a full innerHTML rebuild. -- */
+function cmdRowsFor(card,k){
+  var q=[];
+  try{
+    if(k==='alerts') q=card.querySelectorAll('#alertsBox>.alert');
+    else if(k==='radar') q=card.querySelectorAll('#radarPkgs>.rdpkg,.bd>.alert');
+    else if(k==='sync') q=card.querySelectorAll('.syncled>.sr');
+    else { var tb=card.querySelector('table.led>tbody'); q=tb?tb.rows:[]; }
+  }catch(e){ q=[]; }
+  return Array.prototype.slice.call(q);
+}
+function cmdFoldOne(card,k,n){
+  var rows=cmdRowsFor(card,k); if(!rows.length) return;
+  var old=card.querySelector('.cmdmore'); if(old&&old.parentNode) old.parentNode.removeChild(old);
+  var open=!!(S.ui.cmdOpen&&S.ui.cmdOpen[k]);
+  var lim=n;
+  if(k==='roster'){ var di=-1;
+    for(var q2=0;q2<rows.length;q2++){ var cs=rows[q2].cells; if(cs&&cs.length===1&&cs[0].hasAttribute('colspan')){ di=q2; break; } }
+    lim=(di<0)?rows.length:Math.min(rows.length,di+1+3); }
+  for(var j=0;j<rows.length;j++){ if(rows[j].classList) rows[j].classList.toggle('cmdhid',!open&&j>=lim); }
+  if(rows.length<=lim) return;
+  var parent=null,anchor=null;
+  if(k==='alerts') parent=card.querySelector('#alertsBox');
+  else if(k==='radar') parent=card.querySelector('.bd');
+  else if(k==='sync'){ var sl=card.querySelector('.syncled'); if(sl){ parent=sl.parentNode; anchor=sl.nextSibling; } }
+  else { var t2=card.querySelector('table.led'); if(t2){ parent=t2.parentNode; anchor=t2.nextSibling; } }
+  if(!parent) return;
+  var d=document.createElement('div'); d.className='cmdmore';
+  d.innerHTML='<button class="btn sm" type="button" data-act="cmdMore" data-k="'+k+'">'+(open?('Show fewer \u2014 first '+lim):('Show all ('+rows.length+')'))+'</button>';
+  parent.insertBefore(d,anchor);
+}
+/* long explanatory railnotes: clamped to two lines with a "more" toggle - never deleted */
+function cmdRail(root){
+  if(!root||!isPhone()) return;
+  var rs=root.querySelectorAll('.railnote:not([data-rn])');
+  for(var i=0;i<rs.length;i++){ var r=rs[i];
+    if(!r.offsetHeight) continue;            // panel not laid out yet - stay unmarked, try again next paint
+    r.setAttribute('data-rn','1');
+    if(r.querySelector('button')) continue;
+    var lh=0; try{ lh=parseFloat(getComputedStyle(r).lineHeight)||0; }catch(e){ lh=0; }
+    if(!lh) lh=15;
+    if(!(r.scrollHeight>lh*2.4)) continue;
+    var sp=document.createElement('span'); sp.className='rntxt';
+    while(r.firstChild) sp.appendChild(r.firstChild);
+    r.appendChild(sp);
+    var bt=document.createElement('button'); bt.type='button'; bt.className='rnmore'; bt.setAttribute('data-act','rnMore'); bt.textContent='more';
+    r.appendChild(bt);
+    r.classList.add('rnfold','on');
+  }
+}
+function cmdDense(){
+  if(!isPhone()) return;
+  var m=document.getElementById('p-command'); if(!m) return;
+  var cards=m.querySelectorAll('.card');
+  for(var i=0;i<cards.length;i++){ var c=cards[i];
+    if(c.id==='leagueHub') continue;
+    var hd=c.firstElementChild; if(!hd||!hd.classList||!hd.classList.contains('hd')) continue;
+    var lb=hd.querySelector('.lb'); if(!lb) continue;
+    var t=(lb.textContent||'').toLowerCase().replace(/^\s+/,'');
+    var k=null,nn=0;
+    if(t.indexOf('signals')===0){ k='alerts'; nn=4; }
+    else if(t.indexOf('opportunity radar')===0){ k='radar'; nn=3; }
+    else if(t.indexOf('my roster')===0){ k='roster'; nn=0; }
+    else if(t.indexOf('draft capital')===0){ k='picks'; nn=5; }
+    else if(t.indexOf('sell window')===0){ k='sell'; nn=5; }
+    else if(t.indexOf('sync ledger')===0){ k='sync'; nn=5; }
+    else if(t.indexOf('watchlist')===0){ k='watch'; nn=5; }
+    if(!k) continue;
+    try{ cmdFoldOne(c,k,nn); }catch(e){}
+  }
+  try{ cmdRail(m); }catch(e){}
+}
+/* wrappers - the originals stay intact and still run on desktop */
+var _h82_lhh=leagueHubHTML;
+leagueHubHTML=function(){ if(isPhone()){ try{ return hubPhoneHTML(); }catch(e){ try{ console.error('hubPhoneHTML',e); }catch(x){} } } return _h82_lhh.apply(this,arguments); };
+var _h82_par=phoneAfterRender;
+phoneAfterRender=function(t){ var r=_h82_par.apply(this,arguments); if(t==='command'){ try{ cmdDense(); }catch(e){} } return r; };
+var _h82_hrp=hubRepaint;
+hubRepaint=function(){ var r=_h82_hrp.apply(this,arguments); if(isPhone()){ try{ cmdRail(document.getElementById('leagueHub')); }catch(e){} } return r; };
+var _h82_rdf=radarFill;
+radarFill=function(){ var r=_h82_rdf.apply(this,arguments); if(isPhone()){ try{ cmdDense(); }catch(e){} } return r; };
+
 function portfolioHTML(){
   if(!S.conn||!S.conn.leagues.length) return '';
   const past=S.conn.leagues.filter(l=>!leagueIsActive(l));
@@ -11623,20 +12014,169 @@ const GV={timer:null};
 function gameOf(gid){ return ((S.live&&S.live.games)||[]).find(g=>String(g.id)===String(gid))||null; }
 async function liveFetchSummary(gid,force){ const s0=LIVE.sum[gid]; if(!force&&s0&&Date.now()-s0.ts<20000) return s0;
   try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+gid,12000); if(j) LIVE.sum[gid]=liveParseSummary(j); }catch(e){} return LIVE.sum[gid]||null; }
+/* ===== v8.2 . live82 - FULL-SCREEN GAME CENTER (phone) =====
+   Nothing below forks the game-view state machine. openGame / closeModal / GV.timer /
+   GV.gen stay the single owners of the poll; this layer only re-arranges what
+   gameViewHTML already builds and adds a phone-first "my players" list on top of the
+   very same mlSides / mlGameRows / mlPts spine. Desktop output is unchanged. */
+const GVNAV={on:false};
+function gvPhone(){ try{ return document.body.classList.contains('phone'); }catch(e){ return false; } }
+function gvFsNow(){ try{ return gvPhone()&&$('modal').classList.contains('gvfs'); }catch(e){ return false; } }
+function gvNavPush(){ if(GVNAV.on) return; try{ history.pushState({fogv:1},''); GVNAV.on=true; }catch(e){ GVNAV.on=false; } } // file:// throws - the gesture simply does nothing there
+function gvNavPop(){ if(!GVNAV.on) return; GVNAV.on=false; try{ history.back(); }catch(e){} }
+function gvFsOn(){ if(!gvPhone()) return; GVNAV.ph=true; try{ $('modal').classList.add('gvfs'); }catch(e){} gvNavPush(); }
+function gvFsOff(){ try{ const m=$('modal'); if(m) m.classList.remove('gvfs'); }catch(e){} gvNavPop(); }
+window.addEventListener('popstate',function(){ if(!GVNAV.on) return; GVNAV.on=false;   // the back gesture leaves the game view, never the app
+  try{ if($('gvBody')&&$('modal').classList.contains('on')) closeModal(); else gvFsOff(); }catch(e){} });
+try{ new MutationObserver(function(){ try{ if($('modal').classList.contains('gvfs')&&!$('gvBody')) gvFsOff(); }catch(e){} })
+  .observe($('mBody'),{childList:true}); }catch(e){}                                   // any OTHER modal reusing #mBody sheds the full-screen skin with it - mClose can never end up hidden
+window.addEventListener('resize',function(){ if(GVNAV.rz) return;                          // rotate mid-game: swap layouts on the spot, WITHOUT unwinding history
+  GVNAV.rz=setTimeout(function(){ GVNAV.rz=null;                                          // DEFERRED on purpose: the app's own resize handler owns body.phone and is registered after this one
+    try{ const ph=gvPhone(); if(GVNAV.ph===ph) return; GVNAV.ph=ph;
+      if(!S.ui.gameView||!$('gvBody')||!$('modal').classList.contains('on')) return;
+      const m=$('modal'); if(ph) m.classList.add('gvfs'); else m.classList.remove('gvfs');
+      gameViewRepaint(); }catch(e){} },160); });
+function gvOpenTab(gid){ const t=S.ui.gvTab;                                            // on a phone the question he opened for is "how are my guys doing"
+  try{ if(!gvPhone()) return t||'feed';
+    if(t&&t!=='feed') return t;                                                         // he picked a tab this session - keep it
+    const g=gameOf(gid); const RW=g?mlGameRows(g):null;
+    if(RW&&RW.mine&&RW.mine.length) return 'mine';
+  }catch(e){}
+  return t||'feed'; }
+const GV_SEG={mine:'Mine',feed:'Plays',box:'Box',scoring:'Scores',recap:'Recap'};
+const GV_SEG_ORD=['mine','feed','box','scoring','recap'];
+function gvSegHTML(TABS,cur){                                                           // the same four (five) tabs, short labels, 44px targets, my players first
+  let ks=[]; try{ ks=(TABS||[]).map(function(x){ return x[0]; }); }catch(e){ ks=['feed']; }
+  const ord=GV_SEG_ORD.filter(function(k){ return ks.indexOf(k)>=0; });
+  const use=ord.length?ord:ks;
+  return '<div class="gvseg" role="tablist">'+use.map(function(k){
+    return '<button class="gvsegb'+(cur===k?' on':'')+'" data-act="gvTab" data-v="'+esc(k)+'" role="tab" aria-selected="'+(cur===k?'true':'false')+'">'+esc(GV_SEG[k]||k)+'</button>'; }).join('')+'</div>'; }
+function gvKickLab(g){ try{ const ms=new Date(g.date).getTime()-Date.now();
+    if(!isFinite(ms)) return liveKickoff(g);
+    return ms>20*3600e3?liveKickoff(g):('in '+(liveCountdown(g)||liveKickoff(g))); }catch(e){ return ''; } }
+function gvTopHTML(g){                                                                  // the bar that never scrolls: back, both team chips, both scores, possession, clock, red zone
+  const live=g.state==='in', pre=g.state==='pre', fin=g.state==='post';
+  const clk=live?((g.period>4?'OT':'Q'+g.period)+' '+String(g.clock||'')):fin?'Final':gvKickLab(g);
+  const poss=function(t){ return (live&&g.poss===t)?'<i class="gvpo" title="has the ball"></i>':''; };
+  const dash='\u2014', mid=' \u00b7 ';
+  return '<div class="gvtop"><div class="gvtoprow">'
+    +'<button class="gvback" data-act="gvBack" aria-label="Close the game view" title="Back">\u2039</button>'
+    +'<div class="gvsc">'
+      +'<span class="gvscT'+(!pre&&g.as>g.hs?' lead':'')+'">'+poss(g.away)+teamChip(g.away,g.away)+'<b>'+(pre?dash:g.as)+'</b></span>'
+      +'<span class="gvat">@</span>'
+      +'<span class="gvscT'+(!pre&&g.hs>g.as?' lead':'')+'"><b>'+(pre?dash:g.hs)+'</b>'+teamChip(g.home,g.home)+poss(g.home)+'</span>'
+    +'</div>'
+    +'<div class="gvclk'+(live?' in':'')+'">'+(live?'<i class="livedot in"></i>':'')+esc(clk)+'</div>'
+    +'</div>'
+    +((live&&(g.rz||g.dd))?'<div class="gvsit">'+(g.rz?'<span class="tier must lpulse">RED ZONE</span>':'')
+      +(g.dd?'<span class="gvdd">'+esc(g.dd)+(g.spot?mid+esc(g.spot):'')+'</span>':'')+'</div>':'')
+    +((pre&&(g.tv||g.venue))?'<div class="gvsit"><span class="gvdd">'+esc([g.tv,g.venue].filter(Boolean).join(mid))+'</span></div>':'')
+    +'</div>'; }
+function gvSleeperBtn(){ try{ return sleeperBtn('matchup','Sleeper')||''; }catch(e){ return ''; } }
+function gvShell(g,head,head2,tabs,body,foot,TABS,cur){                                 // desktop: exactly what it printed before
+  if(!gvFsNow()) return head+head2+tabs+body+foot;
+  return gvTopHTML(g)+gvSegHTML(TABS,cur)+'<div class="gvmain">'+head2+body+foot+'</div>'; }
+/* ---- my players in this game, phone-first: one row each, a big live number, the pace beside it ---- */
+function gvLgPillsHTML(pid,side){                                                       // his points in EACH league's own scoring - the reason five leagues is hard on a phone
+  if(side==='opp') return '';
+  let ML=null; try{ ML=mlSides(); }catch(e){}
+  const rec=(ML&&ML.byPid)?ML.byPid[pid]:null;
+  if(!rec||!rec.in.length||ML.n<2) return '';                                           // one league: the big number already said it
+  let h=rec.in.slice(0,6).map(function(x){ let v=null; try{ v=mlPts(pid,x.L); }catch(e){}
+    return '<span class="gvlp '+(x.start?'st':'bn')+'" title="'+esc(String(x.L.name||'')+' \u2014 '+(x.start?'starting':'bench'))+'">'
+      +esc(x.L.short)+' <b>'+(v!=null?esc(fmtPts(v)):'\u2014')+'</b></span>'; }).join('');
+  if(rec.in.length>6) h+='<span class="gvlp">+'+(rec.in.length-6)+'</span>';
+  return h; }
+function gvLgTotalsHTML(g,mine){                                                        // what this ONE game is worth to each league I start someone in
+  let ML=null; try{ ML=mlSides(); }catch(e){}
+  if(!ML||!ML.n||!mine||!mine.length) return '';
+  const rows=[];
+  ML.leagues.forEach(function(L){ let cnt=0,st=0,pt=0,pc=0,any=false;
+    mine.forEach(function(pid){ const rec=ML.byPid[pid]; if(!rec) return;
+      let inL=null; for(let i=0;i<rec.in.length;i++){ if(rec.in[i].L===L){ inL=rec.in[i]; break; } }
+      if(!inL) return; cnt++; if(!inL.start) return; st++;
+      let v=null,q=null; try{ v=mlPts(pid,L); }catch(e){} try{ q=mlPace(pid,L); }catch(e){}
+      if(v!=null){ pt+=v; any=true; }
+      if(typeof q==='number'&&isFinite(q)) pc+=q; });
+    if(st) rows.push({L:L,cnt:cnt,st:st,pt:pt,pc:pc,any:any}); });
+  if(!rows.length) return '';
+  return '<div class="gvtot">'+rows.map(function(r){
+    return '<div class="gvtotr"><span class="gvtotn">'+esc(r.L.short)+'</span>'
+      +'<b class="gvtotp">'+(r.any?esc(fmtPts(r.pt)):'\u2014')+'</b>'
+      +'<span class="gvtotm">'+r.st+(r.st===1?' starter':' starters')+(r.cnt>r.st?' \u00b7 '+(r.cnt-r.st)+' bench':'')+'</span>'
+      +'<span class="gvtotc">'+(g.state==='pre'?'proj ':'pace ')+esc(fmtPts(r.pc))+'</span></div>'; }).join('')+'</div>'; }
+function gvRowHTML(pid,g,side,starter){                                                 // taps straight into the existing per-player live sheet (act liveCard)
+  let p=null; try{ p=playerOf(pid); }catch(e){}
+  if(!p) return '';
+  let L=null; try{ L=mlPrimaryLeague(pid); }catch(e){}
+  const pre=g.state==='pre', fin=g.state==='post';
+  let pts=null,pace=null,exp=null,bm=null,on=false,line='',sp=null;
+  try{ pts=mlPts(pid,L); }catch(e){}
+  try{ pace=mlPace(pid,L); }catch(e){}
+  try{ exp=mlExp(pid,L); }catch(e){}
+  try{ bm=mlBoom(pid,L); }catch(e){}
+  try{ on=liveOnField(pid,g); }catch(e){}
+  try{ line=liveLine(pid)||''; }catch(e){}
+  try{ sp=liveSnap(pid); }catch(e){}
+  const rz=on&&!!g.rz;
+  const dv=(typeof pace==='number'&&typeof exp==='number'&&isFinite(pace-exp))?(pace-exp):null;
+  const idp=['DL','LB','DB','DEF'].indexOf(p.p)>=0;
+  const tag=pre?'<span class="tier mon">'+esc(gvKickLab(g))+'</span>'
+    :fin?'<span class="tier mon">final</span>'
+    :rz?'<span class="tier must lpulse">RED ZONE</span>'
+    :on?'<span class="tier gain lpulse">ON FIELD</span>'
+    :'<span class="tier spec">'+(idp?'offense on':'sideline')+'</span>';
+  const bmTag=(bm&&bm.tag==='boom')?'<span class="tier gain lpulse">BOOM</span>':(bm&&bm.tag==='bust')?'<span class="tier must">BUST</span>':'';
+  let ava=''; try{ ava=avatarHTML(pid,'sm'); }catch(e){}
+  let pt=''; try{ pt=ptag(p.p); }catch(e){}
+  const bits=[]; if(line) bits.push(esc(line)); else if(!pre) bits.push('no touches yet');
+  if(sp!=null&&!pre) bits.push(Math.round(sp*100)+'% snaps');
+  const sub=bits.join(' \u00b7 ');
+  let pills=''; try{ pills=gvLgPillsHTML(pid,side); }catch(e){}
+  const paceN=(typeof pace==='number'&&isFinite(pace))?pace:((typeof exp==='number'&&isFinite(exp))?exp:0);
+  return '<div class="gvpr'+(on?' on':'')+(side==='opp'?' opp':'')+'" data-act="liveCard" data-pid="'+esc(pid)+'" role="button" tabindex="0" title="Open his live stat sheet">'
+    +'<div class="gvpa">'+ava+'</div>'
+    +'<div class="gvpb">'
+      +'<div class="gvpn">'+pt+'<b>'+esc(p.n)+'</b><span class="gvtm">'+esc(String(p.t||'FA'))+'</span>'
+        +(starter?'':'<span class="gvbn">bench</span>')+(side==='opp'?'<span class="gvbn">theirs</span>':'')+'</div>'
+      +'<div class="gvpm">'+tag+bmTag+'</div>'
+      +(sub?'<div class="gvpline">'+sub+'</div>':'')
+      +(pills?'<div class="gvpc">'+pills+'</div>':'')
+    +'</div>'
+    +'<div class="gvpv"><b class="gvpts">'+(pts!=null?esc(fmtPts(pts)):'\u2014')+'</b>'
+      +'<span class="gvpace">'+(pre?'proj ':'pace ')+esc(fmtPts(paceN))+'</span>'
+      +((!pre&&dv!=null)?'<span class="gvpdv '+(dv>=0?'up':'dn')+'">'+(dv>=0?'+':'')+esc(fmtPts(dv))+'</span>':'')
+    +'</div></div>'; }
+function gvMineHTML(g,mine,opp,starterSet){                                             // desktop keeps the 5-column ledger; the phone gets rows that fit 375px
+  const has=(mine&&mine.length)||(opp&&opp.length);
+  const none='<div class="empty">None of your players are in this game</div>';
+  if(!gvFsNow()) return has?('<div class="bd tight"><table class="led lled"><thead><tr><th>Player</th><th>Now</th><th>Live line</th><th class="r">Pts</th><th class="r">Pace</th></tr></thead><tbody>'
+      +mine.map(function(pid){ return livePlayerRowHTML(pid,g,'mine',starterSet.has(pid)); }).join('')
+      +opp.map(function(pid){ return livePlayerRowHTML(pid,g,'opp',true); }).join('')+'</tbody></table></div>'):none;
+  if(!has) return none;
+  let h='';
+  try{ h+=gvLgTotalsHTML(g,mine); }catch(e){}
+  if(mine.length) h+='<div class="gvsec"><span>My players \u00b7 '+mine.length+'</span><span>'+(g.state==='pre'?'projected':'live \u00b7 pace')+'</span></div>'
+    +'<div class="gvpl">'+mine.map(function(pid){ return gvRowHTML(pid,g,'mine',!!(starterSet&&starterSet.has&&starterSet.has(pid))); }).join('')+'</div>';
+  if(opp.length) h+='<div class="gvsec gvsec2"><span>Opponent starters \u00b7 '+opp.length+'</span><span></span></div>'
+    +'<div class="gvpl">'+opp.map(function(pid){ return gvRowHTML(pid,g,'opp',true); }).join('')+'</div>';
+  return h; }
 function openGame(gid){ const g=gameOf(gid); if(!g){ toast('That game is not on the board right now','warn'); return; }
-  S.ui.gameView=String(gid); S.ui.gvTab=S.ui.gvTab||'feed';
+  S.ui.gameView=String(gid); S.ui.gvTab=gvOpenTab(gid); gvFsOn(); // v8.2: the skin goes on first, so the very first paint is already full screen
   $('mTitle').textContent=g.an+' @ '+g.hn; $('mBody').innerHTML='<div id="gvBody">'+gameViewHTML(g)+'</div>'; $('modal').classList.add('on'); if($('modal').querySelector('.mbox')) $('modal').querySelector('.mbox').scrollTop=0;
   liveFetchSummary(gid,!LIVE.sum[gid]||Date.now()-LIVE.sum[gid].ts>20000).then(()=>gameViewRepaint()); gameViewArm(); }
 function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+1; const gen=GV.gen; // v7.0.1: generation token — only the newest arm may re-arm
   const tick=async()=>{ if(gen!==GV.gen) return; GV.timer=null; if(!$('gvBody')||!$('modal').classList.contains('on')||!S.ui.gameView){ S.ui.gameView=null; return; }
     const g=gameOf(S.ui.gameView); if(g&&g.state==='in'){ if(!document.hidden){ await liveFetchSummary(g.id,true); if(gen!==GV.gen) return; gameViewRepaint(); } GV.timer=setTimeout(tick,20000); } else GV.timer=setTimeout(tick,60000); };
   GV.timer=setTimeout(tick,20000); }
-function gvHelpMount(){ const b=$('gvBody'); if(!b) return; const x=$('gvHelpBox'); if(!GV.help){ if(x) x.remove(); return; } if(x) return; const h=HELP.gamecenter||{};
+function gvHelpMount(){ const b0=$('gvBody'); const b=(b0&&b0.querySelector('.gvmain'))||b0; if(!b) return; const x=$('gvHelpBox'); if(!GV.help){ if(x) x.remove(); return; } if(x) return; const h=HELP.gamecenter||{};
   const d=document.createElement('div'); d.id='gvHelpBox'; d.className='card'; d.style.cssText='margin:0 0 10px'; d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><b>'+esc(h.t||'Game Center')+'</b><button class="btn sm" data-act="gvHelp">Close</button></div><div class="railnote">'+(h.b||'Live feed, box score, scoring plays and your players in this game.')+'</div>'; b.prepend(d); }
-function closeModal(){ $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
+function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
 function gameViewRepaint(){ gameViewRepaintInner(); if(GV.help) gvHelpMount(); }
 function gameViewRepaintInner(){ const m=$('gvBody'); if(!m||!S.ui.gameView){ S.ui.gameView=null; return; } const g=gameOf(S.ui.gameView); if(!g) return;
-  const sc=m.querySelector('.gvscroll'); const top=sc?sc.scrollTop:0; m.innerHTML=gameViewHTML(g); const sc2=m.querySelector('.gvscroll'); if(sc2) sc2.scrollTop=top; $('mTitle').textContent=g.an+' @ '+g.hn; }
+  const sc=m.querySelector('.gvmain')||m.querySelector('.gvscroll'); const tabNow=S.ui.gvTab||'feed';
+  const top=(sc&&GV.tab===tabNow)?sc.scrollTop:0; GV.tab=tabNow;                                   // v8.2: a live tick keeps his place, a tab change starts at the top
+  m.innerHTML=gameViewHTML(g); const sc2=m.querySelector('.gvmain')||m.querySelector('.gvscroll'); if(sc2) sc2.scrollTop=top; $('mTitle').textContent=g.an+' @ '+g.hn; }
 function gameViewHTML(g){ const sm=LIVE.sum[g.id]; const tab=S.ui.gvTab||'feed'; const sd=liveSides(); const ML=mlSides(); const GR=mlGameRows(g);
   const mine=GR.mine, opp=GR.opp, watch=[...mine,...opp]; const mineSet=new Set(mine);
   const starterSet=(ML&&ML.n)?ML.startPids:(sd?sd.starters:new Set()); // v8: "mine" now means mine in ANY league
@@ -11644,13 +12184,13 @@ function gameViewHTML(g){ const sm=LIVE.sum[g.id]; const tab=S.ui.gvTab||'feed';
   const head='<div class="gvhead"><div class="gvteam'+(g.state!=='pre'&&g.as>g.hs?' lead':'')+'"><span class="gvname">'+teamChip(g.away,g.an)+(g.state==='in'&&g.poss===g.away?' <span class="lposs">●</span>':'')+'</span><b class="gvscore">'+(g.state==='pre'?'—':g.as)+'</b></div>'
     +'<div class="gvmid">'+liveStatusChip(g)+(g.state==='in'&&g.dd?'<div class="fine">'+esc(g.dd)+(g.spot?' · '+esc(g.spot):'')+'</div>':'')+(g.state==='in'&&g.rz?'<div><span class="tier must lpulse">RED ZONE</span></div>':'')+'</div>'
     +'<div class="gvteam them'+(g.state!=='pre'&&g.hs>g.as?' lead':'')+'"><span class="gvname">'+teamChip(g.home,g.hn)+(g.state==='in'&&g.poss===g.home?' <span class="lposs">●</span>':'')+'</span><b class="gvscore">'+(g.state==='pre'?'—':g.hs)+'</b></div></div>'
-    +(wp!=null?'<div class="lwp" style="padding:0 0 8px"><div class="lwpbar"><i style="width:'+Math.round((1-wp)*100)+'%"></i></div><div class="lwplab"><span>'+esc(g.an)+' '+Math.round((1-wp)*100)+'%</span><span>'+Math.round(wp*100)+'% '+esc(g.hn)+'</span></div></div>':'')
+  ; const head2=(wp!=null?'<div class="lwp" style="padding:0 0 8px"><div class="lwpbar"><i style="width:'+Math.round((1-wp)*100)+'%"></i></div><div class="lwplab"><span>'+esc(g.an)+' '+Math.round((1-wp)*100)+'%</span><span>'+Math.round(wp*100)+'% '+esc(g.hn)+'</span></div></div>':'')
     +(sm&&sm.drive&&g.state==='in'?'<div class="fine" style="margin:0 0 8px">Drive: '+esc(sm.drive)+'</div>':'');
   const TABS=[['feed','Play by play'],['box','Box score'],['scoring','Scoring'],['mine','My players']]; if(g.state==='post') TABS.push(['recap','Recaps']);
   const tab2=(tab==='recap'&&g.state!=='post')?'feed':tab;
   const tabs='<div class="tabsub gvtabs">'+TABS.map(([k,l])=>'<button class="btn sm'+(tab2===k?' pri':'')+'" data-act="gvTab" data-v="'+k+'">'+l+'</button>').join('')+'</div>';
   let body='';
-  if(!sm) body='<div class="empty"><span class="spin"></span> Pulling the game feed…</div>';
+  if(!sm&&tab2!=='mine') body='<div class="empty"><span class="spin"></span> Pulling the game feed…</div>';
   else if(tab2==='feed'){ const plays=livePlaysFor(g,160);
     body=plays.length?'<div class="lplays big gvscroll">'+plays.map(p=>{ const hit=livePlayMentions(p.text,watch); return '<div class="lplay'+(hit.length?' mine':'')+(p.score?' score':'')+'"><span class="lpclk">'+(p.period?('Q'+p.period+' '):'')+esc(p.clock||'')+(p.team?' · '+esc(p.team):'')+'</span><span>'+esc(p.text)+(p.score&&p.hs!=null?' <b class="vnum">'+p.as+'-'+p.hs+'</b>':'')+'</span>'+(hit.length?'<span class="lpwho">'+hit.map(x=>whoHTML(x,mockShortName((playerOf(x)||{}).n||''))).join(', ')+'</span>':'')+'</div>'; }).join('')+'</div>'
       :'<div class="empty">'+(g.state==='pre'?'Kickoff '+esc(liveKickoff(g))+' — the feed starts with the first snap':'No plays logged yet')+'</div>'; }
@@ -11661,8 +12201,9 @@ function gameViewHTML(g){ const sm=LIVE.sum[g.id]; const tab=S.ui.gvTab||'feed';
       +gp.rows.map(r=>{ const pid=eidPid[r.id]; const isMine=pid&&mineSet.has(pid); const isOpp=pid&&opp.includes(pid); return '<tr'+(pid?' class="rowbtn'+(isMine?' gvmine':'')+'" data-act="pv" data-pid="'+esc(pid)+'"':'')+'><td>'+esc(r.name)+(isMine?' <span class="tier gain">mine</span>':isOpp?' <span class="fine">theirs</span>':'')+'</td>'+r.stats.map(v=>'<td class="r vnum">'+esc(String(v==null?'':v))+'</td>').join('')+'</tr>'; }).join('')+'</tbody></table></div>').join('')).join('')+'</div>'
       :'<div class="empty">The box score fills in once the game is under way</div>'; }
   else if(tab2==='recap'){ body=mlRecapSectionHTML(g.id)||'<div class="empty">No recaps for this game — none of your players recorded a stat line.</div>'; }
-  else { body=(mine.length||opp.length)?'<div class="bd tight"><table class="led lled"><thead><tr><th>Player</th><th>Now</th><th>Live line</th><th class="r">Pts</th><th class="r">Pace</th></tr></thead><tbody>'+mine.map(pid=>livePlayerRowHTML(pid,g,'mine',starterSet.has(pid))).join('')+opp.map(pid=>livePlayerRowHTML(pid,g,'opp',true)).join('')+'</tbody></table></div>':'<div class="empty">None of your players are in this game</div>'; }
-  return head+tabs+body+'<div class="gvfoot"><span class="fine">'+(sm?'updated '+esc(ago(sm.ts))+(g.state==='in'?' · refreshes every 20s while it is on':''):'')+'</span><span class="inlinebtns"><button class="btn sm" data-act="gvHelp" title="How to read Game Center">?</button><button class="btn sm" data-act="espnOpen" data-url="https://www.espn.com/nfl/game/_/gameId/'+esc(g.id)+'">ESPN Gamecast ↗</button></span></div>'; }
+  else { body=gvMineHTML(g,mine,opp,starterSet); }
+  const foot='<div class="gvfoot"><span class="fine">'+(sm?'updated '+esc(ago(sm.ts))+(g.state==='in'?' · refreshes every 20s while it is on':''):'')+'</span><span class="inlinebtns"><button class="btn sm" data-act="gvHelp" title="How to read Game Center">?</button>'+gvSleeperBtn()+'<button class="btn sm" data-act="espnOpen" data-url="https://www.espn.com/nfl/game/_/gameId/'+esc(g.id)+'">ESPN Gamecast ↗</button></span></div>';
+  return gvShell(g,head,head2,tabs,body,foot,TABS,tab2); }
 function liveSides(){ // my active players + my opponent's starters, by NFL team
   const my=myRoster(); if(!my) return null;
   const mu=S.live&&S.live.matchup;
@@ -13562,6 +14103,10 @@ document.addEventListener('click',async e=>{
   if(act==='newsRefresh'){ b.disabled=true; try{ await loadNews(true);}catch(e){} b.disabled=false; renderTab(); return; }
   if(act==='newsOpen'){ const rd=$('reader'); // v8: every wire row, in-story link and Related row opens the in-app reader
     openReader(b.dataset.nkey||null,{id:b.dataset.nid||null,u:b.dataset.nu||null,h:b.dataset.nh||(b.textContent||'').trim().slice(0,140)},(rd&&rd.classList.contains('on'))?'push':null); return; }
+  if(act==='hubTags'){ var _ht=b.dataset.id; S.ui.hubTags=S.ui.hubTags||{}; S.ui.hubTags[_ht]=!S.ui.hubTags[_ht]; hubRepaint(); return; }
+  if(act==='hubMore'){ openHubMore(); return; }
+  if(act==='cmdMore'){ var _ck=b.dataset.k; S.ui.cmdOpen=S.ui.cmdOpen||{}; S.ui.cmdOpen[_ck]=!S.ui.cmdOpen[_ck]; try{ cmdDense(); }catch(e){} return; }
+  if(act==='rnMore'){ var _rn=b.closest('.rnfold'); if(_rn) b.textContent=_rn.classList.toggle('on')?'more':'less'; return; }
   if(act==='rescan'){ await loadTrending(); await scanWaivers(true); renderTab(); toast('Waiver scan refreshed','good'); return; }
   if(act==='gotoWaiver'){ $('modal').classList.remove('on'); switchTab('waiver'); return; }
   if(act==='rmAsset'){ (b.dataset.side==='A'?S.ui.tradeA:S.ui.tradeB).splice(Number(b.dataset.i),1); saveTradeState(); renderTab(); return; }
@@ -13623,6 +14168,7 @@ document.addEventListener('click',async e=>{
   if(act==='nrR'){ S.pnewsCache={}; S.nrCache=null; let ok=true; try{ ok=!!(await loadNews(true)); }catch(e){ ok=false; }
     renderTab(); toast(ok?'Every wire re-pulled':'Wires unreachable — showing what\'s cached',ok?'good':'warn'); return; }
   if(act==='goLive'){ switchTab('live'); return; }
+  if(act==='gvBack'){ closeModal(); return; }  // v8.2: the full-screen chevron routes through the SAME close as Esc, the backdrop and the back gesture
   if(act==='liveOpp'){ S.ui.liveOpp=!S.ui.liveOpp; liveRepaint(); return; }
   if(act==='livePull'){ S.cfg.livePull=!livePullOn(); try{ await Store.set('cfg',S.cfg); }catch(e){}
     if(livePullOn()){ liveArm(); LIVE.last={sb:0,mu:0,st:0,ml:0}; LIVE.finKey=''; MLIVE.memo=null; try{ await liveRefresh(); }catch(e){} toast('Live pull on — the feed keeps itself current from here.','good'); }
@@ -13846,7 +14392,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.3','store: '+Store.backend,
+    'FRONT OFFICE v8.4','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -13975,13 +14521,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.3 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.4 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.3 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.4 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -14000,7 +14546,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.3 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.4 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
