@@ -2027,6 +2027,13 @@ body.phone #modal.gvfs .gvfoot{flex-wrap:wrap;gap:10px;margin-top:16px;padding-t
 body.phone #modal.gvfs .gvfoot .inlinebtns{display:flex;flex-wrap:wrap;gap:8px}
 body.phone #modal.gvfs .gvfoot .btn{min-height:44px;display:inline-flex;align-items:center}
 body.phone #modal.gvfs #gvHelpBox{margin:0 0 12px}
+
+/* ===== v8.5 · missing-data language: n/a is a first-class value, never a silent zero ===== */
+.rtile .rv .rna,.rtile .rv.na{color:var(--dim);font-weight:600;letter-spacing:.02em}
+.rtile .rv.na{font-size:.9em}
+.rna{color:var(--dim);font-weight:600}
+.snapna{color:var(--dim);border-bottom:1px dotted currentColor;cursor:help}
+.rsec+.rsec .lb{opacity:.92}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -7361,7 +7368,8 @@ function glPump(){
 }
 /* --- the season window --- */
 function glogLiveSeason(){ const y=Number(S.nfl.season)||2026, ty=S.nfl.season_type;
-  if((ty==='regular'&&(S.nfl.week||1)>1)||ty==='post') return String(y);
+  if(ty==='post') return String(y);
+  if(ty==='regular'&&liveSeasonScored()) return String(y);   // v8.5: week 1 with games already played IS a live season — the old week>1 gate marked every 2026 log "complete" on the first pull
   if(S.glog&&S.glog[String(y)]&&Object.keys(S.glog[String(y)].by||{}).length) return String(y);
   return null; }
 function glogLiveWeek(){ const ty=S.nfl.season_type; return ty==='post'?18:(ty==='regular'?Math.max(0,(S.nfl.week||1)-1):0); }
@@ -7379,12 +7387,24 @@ function trimGlogStats(st){ const o={};
   for(const k in st){ const v=st[k]; if(v==null) continue;
     if(GLKEEPSET.has(k)||k.indexOf('bonus_')===0||k.indexOf('pts_allow_')===0||k.indexOf('yds_allow_')===0) o[k]=v; }
   return o; }
+function glogByeCutoff(season){ // v8.5 · the first week of THIS season that has not been played yet.
+  /* Sleeper returns null for a bye AND for a week that simply has not happened, and they are indistinguishable in the
+     file. Now that glogLiveSeason() correctly reports 2026 in week 1, the live-season log came back as 17 nulls and the
+     table opened with seventeen phantom "'26 wN BYE" rows burying the one real line. A completed season keeps every
+     null as a genuine bye, exactly as before. */
+  try{
+    if(String(season)!==String(S.nfl&&S.nfl.season)) return 19;          // a past season: every null in it really is a bye
+    const ty=S.nfl.season_type;
+    if(ty==='post') return 19;                                           // the regular season is over — all 18 weeks are real
+    if(ty!=='regular') return 1;                                         // pre/off season: nothing has been played, so nothing is a bye
+    return Math.max(1,Number(S.nfl.week)||1);                            // in-season: weeks 1..week-1 are done; the current week is still being played
+  }catch(e){ return 19; } }
 function parsePlayerWeekMap(obj,season){
   const ws=[]; let upto=0, played=0;
   if(obj&&typeof obj==='object'){
     Object.keys(obj).map(Number).filter(x=>x>=1&&x<=18).sort((a,b)=>a-b).forEach(w=>{
       const v=obj[String(w)];
-      if(v==null){ ws.push({w,b:1}); return; }                       // BYE
+      if(v==null){ if(w<glogByeCutoff(season)) ws.push({w,b:1}); return; }   // v8.5: BYE — but only for a week that has actually been played; see glogByeCutoff
       upto=Math.max(upto,w);
       const st=v.stats||null;
       const meta={w,d:v.date||null,tm:(String(v.team||'').toUpperCase())||null,o:(String(v.opponent||'').toUpperCase())||null};
@@ -7392,7 +7412,8 @@ function parsePlayerWeekMap(obj,season){
       if(!st||st.gp==null){ meta.x=1; ws.push(meta); return; }        // DNP — stats.gp is the played flag, NEVER gms_active
       meta.st=trimGlogStats(st); ws.push(meta); played++; });
   }
-  return {ws,upto,played}; }
+  // v8.5.1: a bye only means something if he was on an NFL roster that season — a player with zero played weeks was simply not in the league, so his nulls are absence, not byes
+  return {ws:played?ws:ws.filter(function(r){ return !r.b; }),upto,played}; }
 /* --- memory + persistence --- */
 function glogPut(season,pid,P){
   season=String(season); pid=String(pid);
@@ -7469,6 +7490,24 @@ async function hydrateHistory(seasons){ // Store -> memory, NO network. One shar
   return list;
 }
 /* --- fetch --- */
+function glogSnapPending(pid,P){ // v8.5 · his MOST RECENT played week has no snap columns at all, and is young enough to still get them.
+  /* Sleeper publishes snap enrichment hours (sometimes a day) after the game. This asks again on the 1.5 h bound below
+     instead of the 6 h one — but ONLY for QB/RB/WR/TE. A kicker, a team defense and an IDP defender never receive an
+     off_snp or a tm_off_snp of their own, so an ungated version of this test was true forever for all of them and
+     re-pulled every one of those logs on the short bound for the rest of the season. That is the hammering the brief
+     forbade. And it terminates: only the LATEST played week is considered, so once that one week is enriched (or ages
+     past the cutoff) the answer is false and stays false until the next game. */
+  try{
+    if(!snapPosPid(pid)) return false;                                          // no offensive-snap concept — there is nothing to come back for
+    if(!P||!Array.isArray(P.ws)) return false;
+    const now=Date.now(), MAXAGE=9*24*3600e3;
+    for(let i=P.ws.length-1;i>=0;i--){ const r=P.ws[i]; if(!r||!r.st) continue; // walk back to the newest PLAYED week, then stop
+      if(r.st.tm_off_snp!=null||r.st.off_snp!=null) return false;               // it is enriched — done, and done for good
+      const t=r.d?Date.parse(String(r.d)+'T12:00:00Z'):NaN;
+      return isFinite(t)&&(now-t)<=MAXAGE;                                      // undated or older than 9 days: enrichment is never coming, stop asking
+    }
+    return false;
+  }catch(e){ return false; } }
 function glogNeeds(pid,season,force){
   try{
     season=String(season); pid=String(pid);
@@ -7477,7 +7516,7 @@ function glogNeeds(pid,season,force){
     if(!P) return true;
     if(P.empty&&Date.now()-(P.ts||0)<24*3600e3) return false;      // an unknown id and an unplayed season are indistinguishable — cache the emptiness for a day
     if(String(season)!==String(glogLiveSeason())) return !P.full;   // a completed season: one good pull is forever
-    return (P.upto||0)<glogLiveWeek()||stale(P.ts,6);
+    return (P.upto||0)<glogLiveWeek()||stale(P.ts,6)||(glogSnapPending(pid,P)&&stale(P.ts,1.5)); // v8.5: come back for a played week whose snap columns have not landed yet
   }catch(e){ return false; }
 }
 async function fetchPlayerLog(pid,season,opts){ // resolves the stored record when it actually fetched, null when it did not, rejects on a network error
@@ -7997,7 +8036,12 @@ function statLineHTML(p,st){ // position-appropriate volume line (canonical v2 s
   return b.join(' · ');
 }
 /* --- v3.9 · dossier usage & graph helpers --- */
-function snapPctOf(st){ return (st&&st.off_snp&&st.tm_off_snp)?st.off_snp/st.tm_off_snp:null; }
+function snapPctOf(st,pos){ // v8.5 · tm_off_snp present means the row IS enriched, so a missing off_snp is a genuine zero —
+  if(!st) return null;                                                   // but ONLY for QB/RB/WR/TE. A K, team DEF or IDP defender carries tm_off_snp and
+  if(pos!=null&&!snapPosOK(pos)) return null;                            // never an off_snp, so the same arithmetic would print a confident, false 0%.
+  const t=Number(st.tm_off_snp); if(!(t>0)) return null;                 // no team snap total = Sleeper has not published snaps for this row yet -> n/a, never 0%
+  const o=st.off_snp!=null?Number(st.off_snp):(pos!=null?0:null);        // no position declared = v8.4's conservative read, so an un-updated caller can never invent a zero
+  return (o!=null&&isFinite(o))?o/t:null; }
 function donutSVG(slices,center,sub,size){ // dependency-free pie: ring segments via stroke-dasharray
   const tot=slices.reduce((a,s)=>a+s.v,0); if(!(tot>0)) return '';
   size=size||132; const r=size/2-11, C=2*Math.PI*r; let off=0;
@@ -8010,15 +8054,65 @@ function donutSVG(slices,center,sub,size){ // dependency-free pie: ring segments
     +'<text x="50%" y="'+(size/2-1)+'" text-anchor="middle" style="font:700 18px var(--mono);fill:var(--ink)">'+esc(center)+'</text>'
     +(sub?'<text x="50%" y="'+(size/2+14)+'" text-anchor="middle" style="font:600 8px var(--sans);letter-spacing:.09em;fill:var(--dim)">'+esc(String(sub).toUpperCase())+'</text>':'')+'</svg>';
 }
-function usageShareSeason(){ // which season the usage visuals read: the live one as soon as real games exist, else last
+const USAGE_MIN_TEAMS=30;   // v8.5: of 32 — two teams on a Monday night never blank the other thirty
+function usageShareSeason(){ // which season the LEAGUE-WIDE usage comparisons read: the live one only once nearly every team has kicked off, else last
   const y=Number(S.nfl.season)||2026;
-  if(liveSeasonWanted()&&S.sstat&&S.sstat[y]&&Object.keys(S.sstat[y]).length>=150) return y;
+  /* v8.5 · the old gate was a ROW count (>=150). The season file grows ~51 rows per game, so it cleared after the
+     THIRD game of the season — about 1:15pm ET on Sunday, with 12 of 32 teams still to kick off — and every player on
+     those teams went blank in every league-wide pie, donut and rank. Team COVERAGE is the honest test for a
+     league-wide comparison. Per-player surfaces (usageSeasonFor, roleReadouts) still prefer his own live row. */
+  if(liveSeasonWanted()){ const TR=teamReadoutsFor(y); if(TR&&(TR.cov||0)>=USAGE_MIN_TEAMS) return y; }
   return y-1;
 }
-function liveSeasonWanted(){ return S.nfl.season_type==='regular'&&(S.nfl.week||1)>1; } // week 1 complete = current-season rows exist on the wire
-function usageDonutHTML(pid){ // target/carry competition across his CURRENT roster — the vacated-volume lens
+/* --- v8.5 · V85_LIVE_MARK · ONE evidence test for "the live season already has real games on the wire".
+   The old rule was a hardcoded week>1, so on the season's first game the whole app still read LAST season —
+   and a rookie who had just played had no season at all. Pre-season and off-season are untouched: no live season. --- */
+const LSS={stamp:'',v:false};
+function liveSeasonScored(){
+  try{
+    if(!S.nfl||S.nfl.season_type!=='regular') return false;              // pre/off season: exactly as v8.4
+    const y=Number(S.nfl.season)||0;
+    const stamp=y+':'+(S.nfl.week||0)+':'+(S.nfl.season_has_scores===true?1:0)
+      +':'+((S.sstatTs&&S.sstatTs[y])||0)+':'+((S.glogTs&&S.glogTs[String(y)])||0);
+    if(LSS.stamp===stamp) return LSS.v;                                  // the scans below are O(map) — never per render
+    /* every source is gathered and weighed; none of them returns early. */
+    let mapLoaded=false, mapHas=false;
+    const m=S.sstat&&S.sstat[y];
+    if(m){ for(const pid in m){ mapLoaded=true; const r=m[pid]; if(r&&(r.gp||0)>0){ mapHas=true; break; } } }
+    let logHas=false;
+    const b=S.glog&&S.glog[String(y)];
+    if(b&&b.by){ for(const pid in b.by){ const P=b.by[pid]; if(P&&(P.played||0)>0){ logHas=true; break; } } }
+    const wkHas=(S.nfl.week||1)>1;                                       // the old week rule survives as one source, never as the only one
+    const flag=S.nfl.season_has_scores===true;                           // Sleeper's own flag on /v1/state/nfl — a source, not a verdict
+    let v;
+    if(mapHas||logHas||wkHas) v=true;                                    // resident, corroborating evidence wins outright
+    else if(flag) v=!mapLoaded;                                          // the flag alone only while nothing stronger is resident:
+    else v=false;                                                        // a LOADED live map with no played row in it overrules it
+    LSS.stamp=stamp; LSS.v=v; return v;                                  // (and loading that map is gated on this answer, so the flag has to be able to open the door)
+  }catch(e){ return false; }
+}
+function liveSeasonWanted(){ return liveSeasonScored(); } // v8.5: evidence, not a week number
+function liveSeasonRow(pid){ // his LIVE-season season-total row, or null — the single "has he played this year" test
+  try{ if(!liveSeasonWanted()) return null; const y=Number(S.nfl.season)||0;
+    const r=S.sstat&&S.sstat[y]&&S.sstat[y][String(pid)]; return r||null; }catch(e){ return null; } }
+/* --- v8.5 · THE SNAP LAW, in one place, position-gated at the root ---
+   off_snp is an OFFENSIVE snap count. Kickers, team defenses and IDP defenders carry their team's tm_off_snp on the
+   same row but never an off_snp of their own, so "enriched row + missing off_snp = a real zero" is true for QB/RB/WR/TE
+   and a lie for everyone else. Outside those four positions every snap surface in this app goes silent, exactly as v8.4. */
+const SNAP_NA='snaps not published yet';
+const SNAPPOS={QB:1,RB:1,WR:1,TE:1};
+function snapPosOK(pos){ return SNAPPOS[String(pos||'').toUpperCase()]===1; }
+function snapPosPid(pid){ const p=playerOf(pid); return !!(p&&snapPosOK(p.p)); }
+function snapPlayed(st){ return !!(st&&(((st.gp||0)>0)||st.off_snp!=null||st.tm_off_snp!=null)); }
+function snapNote(st,pos){ // WHY a snap number is missing — the single source of that reason for every surface. '' = nothing to say.
+  if(pos!=null&&!snapPosOK(pos)) return '';                              // no offensive-snap concept: there is nothing to wait for
+  if(!st) return 'no stat row for him yet';
+  if(!snapPlayed(st)) return 'he has not played yet';
+  return snapPctOf(st,pos)==null?SNAP_NA:''; }
+function usageDonutHTML(pid,seIn){ // target/carry competition across his CURRENT roster — the vacated-volume lens
   const p=playerOf(pid); if(!p||!p.t) return '';
-  const se=usageShareSeason(); const m=S.sstat&&S.sstat[se]; if(!m) return '';
+  const se=(seIn==null||seIn==='')?usageShareSeason():seIn;   // v8.5: the caller names the season, so a heading that says 2026 can never sit above "No carry volume for him in 2025"
+  const m=S.sstat&&S.sstat[se]; if(!m) return '';
   const CFG=p.p==='RB'?[[['rush_att'],'carry'],[['rec_tgt'],'target']]
     :(p.p==='WR'||p.p==='TE')?[[['rec_tgt'],'target']]
     :['DL','LB','DB'].includes(p.p)?[[['idp_tkl','tkl'],'tackle']]:null; // v5.1: defenders fight over the team's tackle pie
@@ -8077,7 +8171,7 @@ function usageTilesHTML(pid,st,se){ // position-appropriate opportunity + effici
   const G4=(x,F)=>(x.gp||0)>=(F==null||F>=1?4:Math.max(1,Math.min(4,Math.round(F*17/2)))), // floors scale with weeks played in the live season
     PA=(x,F)=>(x.pass_att||0)>=150*(F||1), RA=(x,F)=>(x.rush_att||0)>=50*(F||1), TG=(x,F)=>(x.rec_tgt||0)>=30*(F||1);
   const perG=(f)=>x=>(x.gp?(x[f]||0)/x.gp:null);
-  const sp=snapPctOf(st);
+  const sp=snapPctOf(st,p.p);   // v8.5 position-gated: K/DEF/IDP have no offensive-snap concept, so no tile at all (the rank pool below stays on v8.4's conservative read)
   if(sp!=null) t(Math.round(sp*100)+'<span class="u">%</span>','Snap share',st.gs?st.gs+' starts':'',{fn:x=>snapPctOf(x),q:G4});
   if(p.p==='QB'){
     if(st.pass_att!=null&&g) t(pg(st.pass_att),'Att / game',fmtN(st.pass_yd||0)+' yds',{fn:perG('pass_att'),q:G4});
@@ -8142,14 +8236,16 @@ function usageTilesHTML(pid,st,se){ // position-appropriate opportunity + effici
 function usageSeasonFor(pid){ // the most recent season that actually has a stat row for him
   const se0=usageShareSeason(); if(S.sstat&&S.sstat[se0]&&S.sstat[se0][pid]) return se0;
   const y=(Number(S.nfl.season)||2026)-1;
-  return (S.sstat&&S.sstat[y]&&S.sstat[y][pid])?y:se0;
+  if(S.sstat&&S.sstat[y]&&S.sstat[y][pid]) return y;
+  if(liveSeasonRow(pid)) return Number(S.nfl.season)||2026;  // v8.5: a rookie has ONLY this season's row — the old code reported an empty last season for him
+  return se0;
 }
 function usagePanelHTML(pid,opts){ // ranked usage tiles (+ optional competition donut) for ANY surface
   opts=opts||{};
   const se=usageSeasonFor(pid);
   const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid];
   const tiles=st?usageTilesHTML(pid,st,se):'';
-  const donut=opts.donut?usageDonutHTML(pid):'';
+  const donut=opts.donut?usageDonutHTML(pid,se):'';   // v8.5: same season as the title line below
   if(!tiles&&!donut) return opts.quiet?'':'<div class="fine">No '+se+' usage on the wire for him yet.</div>';
   return (opts.title?'<div class="lb" style="display:block;margin:8px 0 6px">'+esc(opts.title)+' — '+se+'</div>':'')+donut+tiles;
 }
@@ -8274,7 +8370,7 @@ function leagueFitHTML(pid){ // what THIS league's point structure does to him
   const y=Number(S.nfl.season)||2026;
   const rows=[];
   const isDfn=['DL','LB','DB','DEF'].includes(p.p);
-  const fitSeasons=liveSeasonWanted()?[y,y-1]:[y-1,y-2];
+  const fitSeasons=liveSeasonWanted()?[y,y-1,y-2]:[y-1,y-2];   // v8.5: ~95% of the league has no live row yet — prepending the live season must not cost anyone the y-2 line
   for(const se of fitSeasons){ const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) continue;
     if(isDfn){ // v5.1: defenders/DEF have no PPR index — judge the league-scored line against this league's own positional bars
       const lg=lgScoreRow(st); if(lg==null) continue;
@@ -8366,7 +8462,7 @@ async function fillPlayerHistory(pid){
     if(!r.st) return '<tr><td class="fine">'+r.se+'</td><td colspan="'+((lgCol?7:6)-((isIdp||isDef)?1:0))+'" style="color:var(--dim);font-size:11.5px">'+(r.none?'season data unavailable':'no stat lines — did not play or marginal role')+'</td></tr>';
     const pts=sPts(r); const ppg=(r.st.gp&&pts!=null)?(pts/r.st.gp):null;
     const lg=lgCol?lgScoreRow(r.st):null;
-    const sp=snapPctOf(r.st);
+    const sp=snapPctOf(r.st,p.p);   // v8.5 position-gated — a K keeps v8.4's dash instead of a fabricated 0%
     return '<tr><td class="fine">'+r.se+'</td>'
       +(lgCol?'<td class="r vnum" style="color:var(--ink)">'+(lg!=null?fmtN(lg):'—')+'</td>':'')
       +'<td class="r vnum">'+fmtN(pts)+'</td><td class="r vnum">'+(ppg!=null?ppg.toFixed(1):'—')+'</td>'
@@ -8387,7 +8483,7 @@ async function fillPlayerHistory(pid){
   const trajArr=(marketValue(pid,'dyn')||0)?[0,1,2,3].map(yy=>({lab:yy?'+'+yy:'now',v:yy?(projValue(pid,yy)||0):(marketValue(pid,'dyn')||0),hot:!yy})):[];
   const usageSe=(S.sstat[usageShareSeason()]&&S.sstat[usageShareSeason()][pid])?usageShareSeason():(rows.find(r=>r.st)||{}).se;
   const usageSt=usageSe?(S.sstat[usageSe]&&S.sstat[usageSe][pid]):null;
-  const usageHTML=usageDonutHTML(pid)+(usageSt?usageTilesHTML(pid,usageSt,usageSe):'');
+  const usageHTML=usageDonutHTML(pid,usageSe)+(usageSt?usageTilesHTML(pid,usageSt,usageSe):'');   // v8.5: the "Usage & opportunity — <usageSe>" heading and the donut now agree
   bd.innerHTML='<div class="kv" style="grid-template-columns:150px 1fr;margin-bottom:10px">'
     +'<span class="k">'+y+' projection</span><span>'+(projV?'<b class="vnum">'+fmtN(projV)+' pts</b> · '+(projV/17).toFixed(1)+' ppg'+(projRank?' · projected '+esc(p.p)+projRank:'')+(projLg?' · <span class="fine">scored with your league\'s '+esc(p.p)+' settings</span>':''):'<span style="color:var(--dim)">not published yet — lands closer to the season</span>')+'</span>'
     +'<span class="k">Depth chart now</span><span style="font-size:11.5px">'+(depthChartHTML(pid)||'<span style="color:var(--dim)">—</span>')+'</span>'
@@ -11705,10 +11801,12 @@ function wirePlayerSearch(inpId,dropId,act){
 /* ===== v6.1 · READOUTS — every NFL team's offense and defense from the live season's stat file, this week's matchup, and each player's role ===== */
 const TEAMS={memo:null};
 function teamNick(ab){ const w=(TEAMW[ab]||[])[0]||ab; return w.replace(/\b\w/g,c=>c.toUpperCase()); }
-function teamReadouts(){ // per team: offense summed from every skill/K row, defense from the DEF row — the live season once games exist, else last season
-  const se=usageShareSeason(); const m=S.sstat&&S.sstat[se]; if(!m) return null;
+function teamReadouts(){ return teamReadoutsFor(usageShareSeason()); } // per team: offense summed from every skill/K row, defense from the DEF row — the live season once games exist, else last season
+function teamReadoutsFor(se){ // v8.5: ANY season, memoised per season, so a live-season Role section has real team denominators
+  const m=S.sstat&&S.sstat[se]; if(!m) return null;
   const stamp=se+':'+((S.sstatTs&&S.sstatTs[se])||0)+':'+((S.dvp&&S.dvp.ts)||0)+':'+((S.players&&S.players.ts)||0);
-  if(TEAMS.memo&&TEAMS.memo.stamp===stamp) return TEAMS.memo;
+  TEAMS.m=TEAMS.m||{};
+  const hit=TEAMS.m[se]; if(hit&&hit.stamp===stamp) return (TEAMS.memo=hit);
   const T={}; const blank=t=>({t,gp:0,pass_att:0,rush_att:0,pass_yd:0,rush_yd:0,pass_td:0,rush_td:0,rec_tgt:0,rec:0,fgm:0,xpm:0,rush_2pt:0,rec_2pt:0,sack_taken:0,rz_pass:0,rz_rush:0,air:0,def:null});
   for(const pid in m){ const p=playerOf(pid); if(!p||!p.t) continue; const t=String(p.t).toUpperCase(); const st=m[pid]; if(!st) continue;
     const r=T[t]=T[t]||blank(t);
@@ -11726,7 +11824,9 @@ function teamReadouts(){ // per team: offense summed from every skill/K row, def
   const rank=(key,desc)=>{ const arr=rows.filter(r=>r[key]!=null).sort((a,b)=>desc?b[key]-a[key]:a[key]-b[key]); arr.forEach((r,i)=>{ r['r_'+key]=i+1; }); };
   rank('ppg',true); rank('plays',true); rank('passRate',true); rank('ypp',true); rank('rzAtt',true); rank('dPpg',false); rank('dYpg',false); rank('dSacks',true); rank('dTo',true);
   const by={}; rows.forEach(r=>by[r.t]=r);
-  return TEAMS.memo={stamp,se,by,n:rows.length,live:se===(Number(S.nfl.season)||0)};
+  let cov=0; for(const t in T){ const r=T[t]; if((r.gp||0)>0||(r.def&&(r.def.gp||0)>0)) cov++; }   // v8.5: how many of the 32 teams have actually kicked off in this season file
+  const OUT={stamp,se,by,n:rows.length,cov,live:String(se)===String(S.nfl.season)};
+  TEAMS.m[se]=OUT; return (TEAMS.memo=OUT);
 }
 function teamMatchup(t){ // this week's game for an NFL team: opponent, venue, market, weather, kickoff
   if(S.nfl.season_type!=='regular') return null; const w=S.nfl.week||0; const T=String(t||'').toUpperCase(); if(!T) return null;
@@ -11740,23 +11840,33 @@ function matchupLine(mu){ if(!mu) return ''; if(mu.bye) return '<span class="tie
   if(mu.total!=null) b.push('O/U '+mu.total+(mu.imp!=null?' · implied '+mu.imp:'')); if(mu.dome) b.push('dome'); else if(mu.wx) b.push((mu.wx.temp!=null?Math.round(mu.wx.temp)+'°':'')+(mu.wx.wind!=null?' · wind '+Math.round(mu.wx.wind)+' mph':'')+(mu.wx.precip>=40?' · rain '+Math.round(mu.wx.precip)+'%':''));
   return esc(b.join(' · ')); }
 function dvpChip(team,pos){ const D=dvpOf(team,pos); if(!D) return ''; const soft=D.rank<=8, hard=D.rank>=D.n-7; return '<span class="chip mono '+(soft?'dvsoft':hard?'dvhard':'')+'" title="Fantasy points allowed per game to '+pos+' — '+ordinal(D.rank)+'-most of '+D.n+'">'+pos+' '+ordinal(D.rank)+'</span>'; }
-function roleReadout(pid){ // the player's share of his own offense — snaps, targets, air yards, red zone, carries — plus a first-read proxy
-  const p=playerOf(pid); if(!p||!p.t) return null; const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return null;
-  const TR=teamReadouts(); const tm=TR&&TR.se===se?TR.by[String(p.t).toUpperCase()]:null; const g=st.gp||1;
-  const out={se,g,items:[]}; const snap=snapPctOf(st); const it=(lab,v,sub,cls)=>out.items.push({lab,v,sub,cls});
+function roleReadout(pid){ return roleReadoutFor(pid,usageSeasonFor(pid)); } // the player's share of his own offense — snaps, targets, air yards, red zone, carries — plus a first-read proxy
+function roleReadouts(pid){ // v8.5 · the LIVE season FIRST (one game is enough), the prior season kept underneath as the historical baseline
+  const out=[]; const seen={}; const y=Number(S.nfl.season)||2026;
+  const add=se=>{ const k=String(se); if(seen[k]) return; seen[k]=1; const r=roleReadoutFor(pid,se); if(r) out.push(r); };
+  if(liveSeasonRow(pid)) add(y);            // even ONE game this year gets its own section, at the top — this is the rookie case
+  add(usageSeasonFor(pid));                 // whatever the app would have shown on its own — nobody loses what they see today
+  add(y-1);                                 // and last season underneath, when he has one
+  return out; }
+function roleReadoutFor(pid,se){
+  const p=playerOf(pid); if(!p||!p.t) return null; const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return null;
+  const TR=teamReadoutsFor(se); const tm=(TR&&String(TR.se)===String(se))?TR.by[String(p.t).toUpperCase()]:null; const g=st.gp||1;
+  const out={se,g,live:String(se)===String(S.nfl.season),items:[]}; const it=(lab,v,sub,cls)=>out.items.push({lab,v,sub,cls});
+  const snap=snapPosOK(p.p)?snapPctOf(st,p.p):null;   // v8.5: a K, team DEF or IDP defender has no offensive-snap concept — no tile, no n/a, no promise
   if(snap!=null) it('Snap share',Math.round(snap*100)+'%',(st.off_snp||0)+' of '+(st.tm_off_snp||0)+' snaps',snap>=0.8?'up':snap<0.5?'dn':'');
+  else if(snapPosOK(p.p)&&snapNote(st,p.p)===SNAP_NA) it('Snap share',null,SNAP_NA,'na');   // v8.5: n/a with the reason — never a silent 0%, never a dropped tile
   if(['WR','TE','RB'].includes(p.p)&&tm&&tm.tgt){ const tg=Math.max(1,tm.g||1); const ts=((st.rec_tgt||0)/g)/(tm.tgt/tg); it('Target share',Math.round(ts*100)+'%',((st.rec_tgt||0)/g).toFixed(1)+' targets/gm',ts>=0.22?'up':ts<0.12?'dn':'');
-    if(tm.air&&st.rec_air_yd!=null){ const as=(st.rec_air_yd/g)/(tm.air/tg); it('Air-yard share',Math.round(as*100)+'%',fmtN(Math.round(st.rec_air_yd/g))+' air yds/gm',as>=0.3?'up':''); }
+    if(tm.air>0&&st.rec_air_yd>0){ const as=(st.rec_air_yd/g)/(tm.air/tg); it('Air-yard share',Math.round(as*100)+'%',fmtN(Math.round(st.rec_air_yd/g))+' air yds/gm',as>=0.3?'up':''); } // v8.5: a one-game sample can go negative — that is noise, not a role
     if(st.off_snp&&tm.passRate!=null){ const passSnaps=st.off_snp*tm.passRate; const tprr=passSnaps?(st.rec_tgt||0)/passSnaps:null; if(tprr!=null) it('First-read proxy',Math.round(tprr*100)+'%','targets per pass snap — how often the ball is looking for him',tprr>=0.24?'up':tprr<0.14?'dn':''); }
     if(tm.rzPass&&st.rec_rz_tgt!=null) it('Red-zone target share',Math.round(100*(st.rec_rz_tgt/g)/(tm.rzPass/tg))+'%',st.rec_rz_tgt+' RZ targets',''); }
   if(['RB','QB'].includes(p.p)&&tm&&tm.rush){ const tg=Math.max(1,tm.g||1); const cs=((st.rush_att||0)/g)/(tm.rush/tg); it(p.p==='QB'?'Designed-run share':'Carry share',Math.round(cs*100)+'%',((st.rush_att||0)/g).toFixed(1)+' carries/gm',p.p==='RB'?(cs>=0.55?'up':cs<0.3?'dn':''):'');
     if(tm.rzRush&&st.rush_rz_att!=null) it('Red-zone carry share',Math.round(100*(st.rush_rz_att/g)/(tm.rzRush/tg))+'%',st.rush_rz_att+' RZ carries',''); }
   if(p.p==='QB'&&st.pass_att) it('Dropbacks / gm',((st.pass_att+(st.pass_sack||0))/g).toFixed(1),(tm&&tm.r_passRate?'offense passes '+ordinal(tm.r_passRate)+'-most':''),'');
-  return out.items.length?out:null;
+  return out.items.some(x=>x.v!=null)?out:null;   // v8.5: a section whose ONLY content is an n/a tile is not a readout — v8.4 showed nothing there, and that was right
 }
 function roleMod(pid){ // v6.1 weighting: a starter's share of the offense — big roles hold up, part-time roles are fragile; plus the team's scoring environment
   const p=playerOf(pid); if(!p||!['RB','WR','TE'].includes(p.p)) return 0; const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st||(st.gp||0)<2) return 0;
-  let m=0; const snap=snapPctOf(st); if(snap!=null) m+=snap>=0.8?0.03:snap>=0.6?0:snap>=0.4?-0.05:-0.12;
+  let m=0; const snap=snapPctOf(st,p.p); if(snap!=null) m+=snap>=0.8?0.03:snap>=0.6?0:snap>=0.4?-0.05:-0.12;
   const TR=teamReadouts(); const tm=TR&&TR.se===se?TR.by[String(p.t).toUpperCase()]:null;
   if(tm&&['WR','TE'].includes(p.p)&&st.off_snp&&tm.passRate!=null){ const tprr=(st.rec_tgt||0)/Math.max(1,st.off_snp*tm.passRate); m+=tprr>=0.24?0.03:tprr<0.14?-0.04:0; }
   if(m<0&&p.dco===1&&String(se)!==String(S.nfl&&S.nfl.season)) m=0; // v7.0.1: a listed starter whose only rows are last season's part-time role is not penalized for them
@@ -11766,7 +11876,7 @@ function depthChartCardHTML(pid){ // the room at his position on his team, by de
   const p=playerOf(pid); if(!p||!p.t||!S.players) return ''; const se=usageShareSeason(); const m=S.sstat&&S.sstat[se];
   const mates=[]; for(const q in S.players.byId){ const qq=S.players.byId[q]; if(qq.t===p.t&&qq.p===p.p) mates.push(q); }
   if(mates.length<1) return '';
-  const info=q=>{ const st=m&&m[q]; const snap=st?snapPctOf(st):null; const ppg=st&&st.gp?((lgScoreRow(st)!=null?lgScoreRow(st):st.pts)||0)/st.gp:null; return {q,dco:(playerOf(q)||{}).dco||99,snap,ppg,inj:(playerOf(q)||{}).inj}; };
+  const info=q=>{ const st=m&&m[q]; const snap=st?snapPctOf(st,p.p):null; /* v8.5 position-gated: a kicker room would otherwise show five confident 0% bars */ const ppg=st&&st.gp?((lgScoreRow(st)!=null?lgScoreRow(st):st.pts)||0)/st.gp:null; return {q,dco:(playerOf(q)||{}).dco||99,snap,ppg,inj:(playerOf(q)||{}).inj}; };
   const rows=mates.map(info).sort((a,b)=>(a.dco-b.dco)||((b.snap||0)-(a.snap||0))||((b.ppg||0)-(a.ppg||0))).slice(0,6);
   if(!rows.some(r=>r.q===pid)) rows.push(info(pid));
   const mx=Math.max(0.01,...rows.map(r=>r.snap||0));
@@ -11793,8 +11903,13 @@ function roleEnvHTML(pid){ // dossier block: this week's matchup, his offense, t
   let off=''; if(tm){ off='<div class="rsec"><div class="lb">'+teamChip(T)+' offense readout <span class="fine">('+(TR.live?'this season':tm.se+" · what today's roster produced")+')</span></div><div class="rtiles">'
       +tile('Points / gm',fmtPts1(tm.ppg)+rk(tm.r_ppg,TR.n),'','')+tile('Plays / gm',Math.round(tm.plays)+rk(tm.r_plays,TR.n),'pace','')
       +tile('Pass rate',Math.round((tm.passRate||0)*100)+'%'+rk(tm.r_passRate,TR.n),'dropbacks ÷ plays','')+tile('Yards / play',(tm.ypp||0).toFixed(1)+rk(tm.r_ypp,TR.n),Math.round(tm.passYpg)+' pass · '+Math.round(tm.rushYpg)+' rush /gm','')+'</div></div>'; }
-  const role=roleReadout(pid); const rm=roleMod(pid);
-  const roleH=role?'<div class="rsec"><div class="lb">Role readout <span class="fine">('+(role.se===(Number(S.nfl.season)||0)?'this season':role.se)+' · '+role.g+' gm'+(rm?' · start/sit role weight '+(rm>0?'+':'')+Math.round(rm*100)+'%':'')+')</span></div><div class="rtiles">'+role.items.map(x=>tile(esc(x.lab),esc(String(x.v)),esc(x.sub||''),x.cls)).join('')+'</div></div>':'';
+  const roles=roleReadouts(pid); const rm=roleMod(pid); const rmSe=String(usageSeasonFor(pid));
+  const roleH=roles.map(function(role,i){   // v8.5: one section per season — the live one first, the prior season below it as the baseline
+    const lab=(role.live?'this season · '+role.se:role.se+' season')+' · '+role.g+' gm'
+      +((rm&&String(role.se)===rmSe)?' · start/sit role weight '+(rm>0?'+':'')+Math.round(rm*100)+'%':'');
+    return '<div class="rsec"><div class="lb">'+(i===0?'Role readout':'Role readout — baseline')+' <span class="fine">('+esc(lab)+')</span></div><div class="rtiles">'
+      +role.items.map(x=>tile(esc(x.lab),x.v==null?'<span class="rna">n/a</span>':esc(String(x.v)),esc(x.sub||''),x.cls)).join('')
+      +'</div></div>'; }).join('');
   const dc=depthChartCardHTML(pid);
   if(!mk&&!off&&!roleH&&!dc) return '';
   return '<div class="card rocard"><div class="hd"><span class="lb">Readouts — matchup, offense, role, depth chart '+helpBtn('readouts')+'</span></div><div class="bd">'+mk+off+roleH+(dc?'<div class="rsec">'+dc+'</div>':'')+'</div></div>';
@@ -12110,14 +12225,13 @@ function gvRowHTML(pid,g,side,starter){                                         
   if(!p) return '';
   let L=null; try{ L=mlPrimaryLeague(pid); }catch(e){}
   const pre=g.state==='pre', fin=g.state==='post';
-  let pts=null,pace=null,exp=null,bm=null,on=false,line='',sp=null;
+  let pts=null,pace=null,exp=null,bm=null,on=false,line='';
   try{ pts=mlPts(pid,L); }catch(e){}
   try{ pace=mlPace(pid,L); }catch(e){}
   try{ exp=mlExp(pid,L); }catch(e){}
   try{ bm=mlBoom(pid,L); }catch(e){}
   try{ on=liveOnField(pid,g); }catch(e){}
   try{ line=liveLine(pid)||''; }catch(e){}
-  try{ sp=liveSnap(pid); }catch(e){}
   const rz=on&&!!g.rz;
   const dv=(typeof pace==='number'&&typeof exp==='number'&&isFinite(pace-exp))?(pace-exp):null;
   const idp=['DL','LB','DB','DEF'].indexOf(p.p)>=0;
@@ -12130,7 +12244,7 @@ function gvRowHTML(pid,g,side,starter){                                         
   let ava=''; try{ ava=avatarHTML(pid,'sm'); }catch(e){}
   let pt=''; try{ pt=ptag(p.p); }catch(e){}
   const bits=[]; if(line) bits.push(esc(line)); else if(!pre) bits.push('no touches yet');
-  if(sp!=null&&!pre) bits.push(Math.round(sp*100)+'% snaps');
+  if(!pre){ let sn=''; try{ sn=liveSnapNote(pid); }catch(e){} if(sn) bits.push(sn); }   // v8.5: n/a instead of an omitted snap — and nothing at all for K/DEF/IDP
   const sub=bits.join(' \u00b7 ');
   let pills=''; try{ pills=gvLgPillsHTML(pid,side); }catch(e){}
   const paceN=(typeof pace==='number'&&isFinite(pace))?pace:((typeof exp==='number'&&isFinite(exp))?exp:0);
@@ -12274,7 +12388,38 @@ function liveLine(pid){ // position-appropriate live stat line: Sleeper's live r
   } else { const tk=v('idp_tkl','defensive.totalTackles')!=null?v('idp_tkl','defensive.totalTackles'):v('tkl'); if(tk!=null) b.push(tk+' tkl'); const sk=v('idp_sack','defensive.sacks')!=null?v('idp_sack','defensive.sacks'):v('sack'); if(sk) b.push(sk+' sack'); const tf=v('idp_tkl_loss','defensive.tacklesForLoss'); if(tf) b.push(tf+' TFL'); const it=v('idp_int','interceptions.interceptions'); if(it) b.push(it+' INT'); const pd=v('idp_pass_def','defensive.passesDefended'); if(pd) b.push(pd+' PD'); const ff=v('idp_ff'); if(ff) b.push(ff+' FF'); }
   return b.join(' · ');
 }
-function liveSnap(pid){ const sr=S.live&&S.live.stats&&S.live.stats[pid]; return (sr&&sr.off_snp&&sr.tm_off_snp)?sr.off_snp/sr.tm_off_snp:null; }
+function liveSnap(pid){ // v8.5: the missing-key law — a played row with no off_snp is n/a, not 0% — and only where offensive snaps exist at all
+  if(!snapPosPid(pid)) return null;                                      // K / team DEF / DL / LB / DB carry tm_off_snp and never off_snp: mlSnapPct would read a false 0
+  const sr=S.live&&S.live.stats&&S.live.stats[pid]; return sr?mlSnapPct(sr):null; }
+function liveSnapNote(pid){ // the snap fragment a live surface prints: a real %, or 'snaps n/a' with the reason, or NOTHING for a position with no snap concept
+  const p=playerOf(pid); if(!p||!snapPosOK(p.p)) return '';              // v8.5: a kicker's line read "0/1 FG · 5/5 XP · 0% snaps" and a team defense was promised an n/a that could never arrive
+  const g=liveGameOf(pid); if(!g||g.state==='pre') return '';
+  const s=liveSnap(pid); if(s!=null) return Math.round(s*100)+'% snaps';
+  const sr=S.live&&S.live.stats&&S.live.stats[pid];
+  return (sr&&snapNote(sr,p.p)===SNAP_NA)?'<span class="snapna" title="'+esc(SNAP_NA)+'">snaps n/a</span>':''; }
+const LKEEP={stamp:'',set:null};
+function liveKeepSet(){ // every key a live row can be read through: the game-log keep list PLUS every connected league's own scoring keys,
+  const stamp=((S.conn&&S.conn.leagueId)||'')+'|'+Object.keys(S.bundles||{}).sort().join(','); // so lgScoreRowFor stays exact in all five leagues (6/10/12 redraft, SF dynasty, SF+IDP)
+  if(LKEEP.set&&LKEEP.stamp===stamp) return LKEEP.set;
+  const set=new Set(GLKEEP);
+  const add=sc=>{ if(sc&&typeof sc==='object') for(const k in sc) set.add(k); };
+  try{ add(S.league&&S.league.league&&S.league.league.scoring_settings); }catch(e){}
+  try{ const B=S.bundles||{}; for(const lid in B){ const b=B[lid]; add(b&&b.league&&b.league.scoring_settings); } }catch(e){}
+  LKEEP.stamp=stamp; LKEEP.set=set; return set; }
+function liveTrimWeek(raw){ // v8.5 · the trim is KEY-wise now, not PLAYER-wise.
+  // Memory, measured on the real wire: a full NFL week is ~2,100 rows / ~500 KB of JSON; after this key trim ~250 KB
+  // (~1 MB of live objects) — about one extra season map next to the two the app already holds, and the file was already
+  // downloaded and parsed either way. Throwing away 2,000 players to save that was the whole reason a free agent,
+  // another manager's player, or anyone opened in a dossier showed no live points.
+  const K=liveKeepSet(); const db=S.players&&S.players.byId; const out={}; let n=0;
+  for(const pid in raw){ const r=raw[pid]; if(!r||typeof r!=='object') continue;
+    if(db&&!db[pid]) continue;                                    // a row the app can never render is dead weight (team DEF pids ARE the abbreviation, and they are in the DB)
+    const o={}; let any=false;
+    for(const k in r){ const v=r[k]; if(v==null) continue;
+      if(K.has(k)||k.indexOf('bonus_')===0||k.indexOf('pts_allow_')===0||k.indexOf('yds_allow_')===0){ o[k]=v; any=true; } }
+    if(any){ out[pid]=o; n++; } }
+  try{ S.live.statsN=n; }catch(e){}
+  return out; }
 function liveNameMatchers(pid){ const hit=NMmemo.get(pid); if(hit) return hit; // v5.5: memoised until the player DB changes (valDirty clears) — rebuilt per play × player before
   const p=playerOf(pid); let m; if(!p||p.p==='DEF') m=[]; else { const parts=String(p.n).trim().split(/\s+/); const last=parts[parts.length-1]; const fi=(parts[0]||'')[0];
     m=[String(p.n).toLowerCase(),(fi+'.'+last).toLowerCase(),(fi+'. '+last).toLowerCase()]; }
@@ -12308,9 +12453,9 @@ async function liveRefresh(){ // one polling pass — each feed on its own caden
     try{ await mlFetchMatchups(now,inGames.length>0); }catch(e){}
     const finKey=mlFinalKey(gi,wk); const finDue=!!finKey&&LIVE.finKey!==finKey; // v8: exactly one extra pull per newly-finished game of interest, so a recap reads the finished line
     if(S.net.sleeper&&S.nfl.season_type==='regular'&&(inGames.length||finDue)&&now-LIVE.last.st>(heavy?60000:S.ui.tab==='command'?150000:300000)){ // Sleeper weekly rows: snaps, targets, carries, red zone, YAC — every league's players
-      try{ const raw=await slp('/stats/nfl/regular/'+y+'/'+wk); if(raw&&typeof raw==='object'){ const sd=liveSides(); const keep={};
-          const ML=mlSides(); const want=new Set([...(sd?sd.mine:[]),...(sd?sd.opp:[]),...(ML?ML.myPids:[]),...(ML?ML.oppPids:[])]); want.forEach(pid=>{ if(raw[pid]) keep[pid]=raw[pid]; });
-          S.live.stats=keep; LIVE.last.st=now; if(finDue) LIVE.finKey=finKey; } }catch(e){} } // finKey only on success — a failed fetch retries next pass
+      try{ const raw=await slp('/stats/nfl/regular/'+y+'/'+wk); if(raw&&typeof raw==='object'){
+          S.live.stats=liveTrimWeek(raw);                          // v8.5: EVERY player's row is kept now — a free agent, another manager's player, anyone in a dossier gets live points
+          LIVE.last.st=now; if(finDue) LIVE.finKey=finKey; } }catch(e){} } // finKey only on success — a failed fetch retries next pass
     if(heavy){ const need=g=>{ const s=LIVE.sum[g.id]; return g.state==='post'?liveSumPending(g):!(s&&now-s.ts<45000); };
       const due=gi.filter(g=>g.state!=='pre'&&need(g)).sort((a,b)=>((b.state==='in')-(a.state==='in'))||(((LIVE.sum[a.id]||{}).ts||0)-((LIVE.sum[b.id]||{}).ts||0))).slice(0,2); // ESPN summary: box lines, drives, win probability — in-progress first, then ONE finished game per pass so a recap gets its box score
       for(const g of due){
@@ -12371,7 +12516,7 @@ function livePlayerRowHTML(pid,g,side,starter,L){ // v8: same 5 columns, now lea
     if(rec&&rec.in.length){ const st0=rec.in.find(x=>x.start); L=(st0&&st0.L)||((rec.in.find(x=>x.L.active)||{}).L)||rec.in[0].L; }
     else if(ML&&ML.leagues.length) L=ML.leagues.find(x=>x.active)||null; }
   if(starter===undefined) starter=ML?ML.startPids.has(pid):true;
-  const on=liveOnField(pid,g); const rz=on&&g.rz; const pts=mlPts(pid,L); const pace=mlPace(pid,L); const line=liveLine(pid); const sp=liveSnap(pid); const exp=mlExp(pid,L);
+  const on=liveOnField(pid,g); const rz=on&&g.rz; const pts=mlPts(pid,L); const pace=mlPace(pid,L); const line=liveLine(pid); const exp=mlExp(pid,L);
   const bm=mlBoom(pid,L); const dv=(typeof pace==='number'&&typeof exp==='number')?pace-exp:null;
   const gm=g?g.state:'pre';
   const msTo=g?new Date(g.date).getTime()-Date.now():0; // hours-away countdown for today, the day/time otherwise — "217h 38m" helps nobody
@@ -12381,7 +12526,7 @@ function livePlayerRowHTML(pid,g,side,starter,L){ // v8: same 5 columns, now lea
     +'<td>'+avatarHTML(pid,'sm')+' '+ptag(p.p)+teamChip(p.t)+' <b>'+esc(p.n)+'</b>'+(starter?'':' <span class="fine">bench</span>')+(side==='opp'?' <span class="fine">theirs</span>':'')
       +((side!=='opp'&&mlChipsHTML(pid))||bmTag?'<span class="lgchips">'+(side==='opp'?'':mlChipsHTML(pid))+bmTag+'</span>':'')+'</td>' // chips + boom/bust drop to their own line on a phone
     +'<td>'+status+'</td>'
-    +'<td class="lline">'+(line?esc(line):'<span class="fine">'+(gm==='pre'?'—':'no touches yet')+'</span>')+(sp!=null&&gm!=='pre'?' <span class="fine">· '+Math.round(sp*100)+'% snaps</span>':'')+'</td>'
+    +'<td class="lline">'+(line?esc(line):'<span class="fine">'+(gm==='pre'?'—':'no touches yet')+'</span>')+(function(){ const sn=(gm==='pre')?'':liveSnapNote(pid); return sn?' <span class="fine">· '+sn+'</span>':''; })()+'</td>'
     +'<td class="r vnum lpts">'+(pts!=null?fmtPts(pts):'—')+'</td>'
     +'<td class="r vnum" style="color:var(--mut)" title="points so far plus the unplayed share of this week\'s expectation ('+fmtPts(exp)+')">'+fmtPts(pace)+(gm!=='pre'&&dv!=null&&isFinite(dv)?'<div class="fine '+(dv>=0?'up':'dn')+'">'+(dv>=0?'+':'')+fmtPts(dv)+'</div>':'')+'</td></tr>';
 }
@@ -12972,17 +13117,17 @@ function livePlayerInnerHTML(pid){ // dossier / slideover: only while he is actu
   const g=liveGameOf(pid); if(!g||g.state==='pre') return '';
   liveArm();
   if(g.state==='post'){ const p2=playerOf(pid)||{}; const d=mlRecapView(pid,liveWeek()); const L2=mlPrimaryLeague(pid);
-    const pts2=mlPts(pid,L2); const sp2=liveSnap(pid); const ln2=liveLine(pid);
+    const pts2=mlPts(pid,L2); const ln2=liveLine(pid);
     return '<div class="card lgame lmini"><div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+'</div></div>'
-      +'<div class="bd"><div class="lminirow"><span class="tier mon">FINAL</span><span class="lbig vnum">'+(pts2!=null?fmtPts(pts2):'—')+'</span><span class="fine">pts'+(sp2!=null?' · '+Math.round(sp2*100)+'% snaps':'')+'</span></div>'
+      +'<div class="bd"><div class="lminirow"><span class="tier mon">FINAL</span><span class="lbig vnum">'+(pts2!=null?fmtPts(pts2):'—')+'</span><span class="fine">pts'+(function(){ const sn=liveSnapNote(pid); return sn?' · '+sn:''; })()+'</span></div>'
       +'<div class="lline" style="margin-top:6px">'+(ln2?esc(ln2):'<span class="fine">no stat line</span>')+'</div>'
       +(d?'<div style="margin-top:8px"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span> '+(d.reasons||[]).slice(0,2).map(mlReasonChip).join('')+'</div>':'')
       +'<div class="inlinebtns" style="margin-top:8px"><button class="btn sm" data-act="liveCard" data-pid="'+esc(pid)+'">View full game stats</button></div></div></div>'; }
-  const p=playerOf(pid); const on=liveOnField(pid,g); const pts=livePts(pid); const line=liveLine(pid); const sp=liveSnap(pid); const pace=livePace(pid);
+  const p=playerOf(pid); const on=liveOnField(pid,g); const pts=livePts(pid); const line=liveLine(pid); const pace=livePace(pid);
   const plays=livePlaysFor(g,40).filter(x=>livePlayMentions(x.text,[pid]).length).slice(0,3);
   return '<div class="card lgame in lmini"><div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+(g.dd?' <span class="chip mono">'+esc(g.dd)+'</span>':'')+'</div></div>'
     +'<div class="bd"><div class="lminirow">'+(on&&g.rz?'<span class="tier must lpulse">RED ZONE</span>':on?'<span class="tier gain lpulse">ON FIELD</span>':'<span class="tier spec">'+(['DL','LB','DB','DEF'].includes(p.p)?'offense on the field':'on the sideline')+'</span>')
-    +'<span class="lbig vnum">'+(pts!=null?fmtPts(pts):'—')+'</span><span class="fine">pts so far · pace <b class="vnum">'+fmtPts(pace)+'</b>'+(sp!=null?' · '+Math.round(sp*100)+'% snaps':'')+'</span></div>'
+    +'<span class="lbig vnum">'+(pts!=null?fmtPts(pts):'—')+'</span><span class="fine">pts so far · pace <b class="vnum">'+fmtPts(pace)+'</b>'+(function(){ const sn=liveSnapNote(pid); return sn?' · '+sn:''; })()+'</span></div>'
     +'<div class="lline" style="margin-top:6px">'+(line?esc(line):'<span class="fine">no touches yet</span>')+'</div>'
     +(plays.length?'<div class="lplays" style="margin-top:8px">'+plays.map(x=>'<div class="lplay mine'+(x.score?' score':'')+'"><span class="lpclk">'+(x.period?'Q'+x.period+' ':'')+esc(x.clock||'')+'</span><span>'+esc(x.text)+'</span></div>').join('')+'</div>':'')
     +'</div></div>';
@@ -13252,7 +13397,8 @@ function gameLogTableHTML(pid,limit){
   const p=playerOf(pid); if(!p) return '';
   const rows=glogRowsFor(pid,limit||10);
   if(!rows.length) return '<div class="fine">No game log on the wire for him in the last three seasons.</div>';
-  let anySnap=false;
+  let naSnap=false, naSnapLive=false;   // v8.5.1: only the LIVE season is actually re-pulled, so only it may promise that
+  const snapOK=snapPosOK(p.p);   // v8.5: a kicker, team defense or IDP defender is never owed an off_snp — v8.4 printed a dash for them and that stays
   const body=rows.slice().reverse().map(function(r){
     const wk='\''+String(r.season).slice(2)+' w'+r.week;
     if(r.bye) return '<tr><td class="fine">'+esc(wk)+'</td><td colspan="7" style="color:var(--dim)">BYE</td></tr>';
@@ -13260,8 +13406,9 @@ function gameLogTableHTML(pid,limit){
     if(!r.played) return '<tr><td class="fine">'+esc(wk)+'</td><td>'+opp+'</td><td colspan="6" style="color:var(--dim)">did not play</td></tr>';
     const st=r.stats||{}; const pts=glRowPtsOf(r);
     const pc=(pts==null)?'':(pts>=20?'glp b':(pts>=10?'glp g':(pts<5?'glp d':'')));
-    let snap='—';
-    if(typeof st.off_snp==='number'&&typeof st.tm_off_snp==='number'&&st.tm_off_snp>0){ snap=Math.round(st.off_snp/st.tm_off_snp*100)+'%'; anySnap=true; }
+    let snap=snapOK?'n/a':'—';
+    const spv=snapOK?snapPctOf(st,p.p):null;                       // v8.5: the enrichment law — a real %, or n/a; never a 0% the wire never published
+    if(spv!=null){ snap=Math.round(spv*100)+'%'; } else if(snapOK){ naSnap=true; if(String(r.season)===String(S.nfl.season)) naSnapLive=true; }
     const td=(st.pass_td||0)+(st.rush_td||0)+(st.rec_td||0);
     return '<tr><td class="fine">'+esc(wk)+'</td><td>'+opp+'</td>'
       +'<td class="r vnum '+pc+'">'+(pts==null?'—':fmtPts1(pts))+'</td>'
@@ -13274,7 +13421,7 @@ function gameLogTableHTML(pid,limit){
   return '<div class="gltab"><table class="led"><thead><tr><th>Wk</th><th>Opp</th><th class="r">Pts</th><th class="r" title="his offensive snaps over his team\'s total">Snp</th>'
     +'<th class="r" title="the volume stat his position lives on">Vol</th><th class="r">Yds</th><th class="r">TD</th><th>Wx</th></tr></thead><tbody>'+body+'</tbody></table></div>'
     +'<div class="railnote">Points are scored with this league\'s exact rules. '
-    +(anySnap?'':'Snap counts are genuinely absent from some weeks on the wire — those cells show a dash, never a zero. ')
+    +(naSnap?('Snap counts have not been published for some of these weeks — those cells read n/a, never a zero.'+(naSnapLive?' Sleeper adds snap enrichment after the game; the app keeps re-pulling until it lands.':' Sleeper never enriched those games, so they will stay n/a.')+' '):'')
     +'Source: Sleeper per-player weekly logs'+((S.wxh&&Object.keys(S.wxh).length)?' · weather by Open-Meteo.com':'')+'.</div>';
 }
 
@@ -13403,16 +13550,25 @@ const ROLESPEC={ // the league-wide spec behind each role item, so every tile ca
   'Dropbacks / gm':{fn:function(x){ return x.gp?((x.pass_att||0)+(x.pass_sack||0))/x.gp:null; },q:function(x,F){ return (x.pass_att||0)>=100*(F||1); }}
 };
 function roleTilesHTML(pid){
+  /* v8.5 · this is the player card's Role block, and it was the one surface the old patch forgot: it still called the
+     single-season roleReadout() and still ran esc(String(x.v)), so a missing snap share printed the literal word "null"
+     and a veteran got only last season here. It now mirrors the dossier: one tile block per season, live season first,
+     a null value rendered as n/a, and no percentile context computed for a value that does not exist. */
   try{
-    const role=roleReadout(pid); if(!role) return '';
-    const rm=roleMod(pid); const se=role.se;
-    return '<div class="lb" style="display:block;margin-bottom:6px">Role readout <span class="fine">('
-      +esc((role.se===(Number(S.nfl.season)||0)?'this season':String(role.se))+' · '+role.g+' gm'+(rm?' · start/sit role weight '+(rm>0?'+':'')+Math.round(rm*100)+'%':''))
-      +')</span></div><div class="rtiles">'
-      +role.items.map(function(x){ const spec=ROLESPEC[x.lab]||null; const c=spec?statCtx(pid,spec,se,x.lab):null;
-        return '<div class="rtile"><div class="lb">'+esc(x.lab)+'</div><div class="rv '+(x.cls||'')+'">'+esc(String(x.v))+'</div>'
-          +(x.sub?'<div class="fine">'+esc(x.sub)+'</div>':'')+pctBarHTML(c)+medLineHTML(c)+'</div>'; }).join('')
-      +'</div>';
+    const roles=roleReadouts(pid); if(!roles.length) return '';
+    const rm=roleMod(pid); const rmSe=String(usageSeasonFor(pid));
+    return roles.map(function(role,i){
+      const se=role.se;
+      const lab=(role.live?'this season · '+se:se+' season')+' · '+role.g+' gm'
+        +((rm&&String(se)===rmSe)?' · start/sit role weight '+(rm>0?'+':'')+Math.round(rm*100)+'%':'');
+      return '<div class="lb" style="display:block;margin:'+(i?'14px 0 6px':'0 0 6px')+'">'+(i===0?'Role readout':'Role readout — baseline')
+        +' <span class="fine">('+esc(lab)+')</span></div><div class="rtiles">'
+        +role.items.map(function(x){ const spec=(x.v!=null&&ROLESPEC[x.lab])||null; const c=spec?statCtx(pid,spec,se,x.lab):null;
+          return '<div class="rtile"><div class="lb">'+esc(x.lab)+'</div><div class="rv '+(x.cls||'')+'">'
+            +(x.v==null?'<span class="rna">n/a</span>':esc(String(x.v)))+'</div>'
+            +(x.sub?'<div class="fine">'+esc(x.sub)+'</div>':'')+pctBarHTML(c)+medLineHTML(c)+'</div>'; }).join('')
+        +'</div>';
+    }).join('');
   }catch(e){ return ''; }
 }
 
@@ -13490,13 +13646,14 @@ function dbWeek(pid,surf){
 }
 function dbRole(pid){
   const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid];
-  const R=roleReadout(pid);
-  let v=''; try{ v=R?esc(R.items.slice(0,2).map(function(x){ return x.v+' '+String(x.lab).toLowerCase().replace(' share',''); }).join(' · ')):''; }catch(e){ v=''; }
+  const RS=roleReadouts(pid); const R=RS[0]||null;                       // v8.5: the LIVE section drives the summary line
+  let v=''; try{ v=R?esc(R.items.filter(function(x){ return x.v!=null; }).slice(0,2)   // v8.5: an n/a tile never becomes the words "null snap"
+    .map(function(x){ return x.v+' '+String(x.lab).toLowerCase().replace(' share',''); }).join(' · ')):''; }catch(e){ v=''; }
   const parts=[];
   const rt=roleTilesHTML(pid); if(rt) parts.push('<div class="rsec">'+rt+'</div>');
   const rz=rzShareHTML(pid); if(rz) parts.push(rz);
   parts.push('<div class="dsec"><span class="lb">Usage &amp; opportunity — '+esc(String(se))+' '+helpBtn('usage')+'</span></div>');
-  const don=usageDonutHTML(pid); if(don) parts.push(don);
+  const don=usageDonutHTML(pid,se); if(don) parts.push(don);   // v8.5: the heading above says <se> — the donut now reads the same season instead of usageShareSeason()
   if(st) parts.push(usageTilesHTML(pid,st,se));
   try{ const sp=styleProfile(pid);
     if(sp&&sp.tags.length) parts.push('<div style="margin:10px 0 12px"><span class="lb" style="display:block;margin-bottom:6px">Play style</span><div class="chips">'
@@ -13534,7 +13691,7 @@ function histBodyHTML(pid){ // SYNCHRONOUS — reads only what already sits in S
     const trH=rows.map(function(r){
       if(!r.st) return '<tr><td class="fine">'+r.se+'</td><td colspan="'+((lgCol?7:6)-((isIdp||isDef)?1:0))+'" style="color:var(--dim);font-size:11.5px">'+(r.none?'season data unavailable':'no stat lines — did not play or marginal role')+'</td></tr>';
       const pts=sPts(r); const ppg=(r.st.gp&&pts!=null)?(pts/r.st.gp):null;
-      const lg=lgCol?lgScoreRow(r.st):null; const sp=snapPctOf(r.st);
+      const lg=lgCol?lgScoreRow(r.st):null; const sp=snapPctOf(r.st,p.p);   // v8.5 position-gated
       return '<tr><td class="fine">'+r.se+'</td>'
         +(lgCol?'<td class="r vnum" style="color:var(--ink)">'+(lg!=null?fmtN(lg):'—')+'</td>':'')
         +'<td class="r vnum">'+fmtN(pts)+'</td><td class="r vnum">'+(ppg!=null?ppg.toFixed(1):'—')+'</td>'
@@ -13894,7 +14051,7 @@ function openPlayerLegacy(pid){
       ${LP()?(()=>{const aj=adjValue(pid,{mode:modeNow()});return '<span class="k">In this league</span><span class="vnum">'+fmtN(aj.v)+(aj.mods.length?' <span style="font-size:10.5px;color:var(--mut)">'+aj.mods.map(md=>esc(md[0])+' '+fmtPct(md[1])).join(' · ')+'</span>':' <span style="font-size:10.5px;color:var(--dim)">market — no rule quirks</span>')+'</span>';})():''}
       ${(()=>{const A=adpFor(pid,p.n,p.p); const o=ownOf(pid); return (A?'<span class="k">ADP · '+(A.src==='sleeper'?'Sleeper':'ESPN')+'</span><span class="vnum">'+A.v.toFixed(1)+'</span>':'')+(o?'<span class="k">Rostered</span><span class="vnum">'+o.owned+'% <span class="fine">of Sleeper leagues · started '+o.started+'%</span></span>':'');})()}
       ${(()=>{const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return '';
-        const g=st.gp||0; const bits=[]; const sp=snapPctOf(st);
+        const g=st.gp||0; const bits=[]; const sp=snapPctOf(st,p.p);   // v8.5 position-gated — a kicker's line read "0/1 FG · 5/5 XP · 0% snaps"
         const iv=(a2,b2)=>st[a2]!=null?st[a2]:(st[b2]!=null?st[b2]:null);
         if(p.p==='QB'&&st.pass_att&&g) bits.push((st.pass_att/g).toFixed(1)+' att/gm');
         else if(p.p==='RB'&&g&&(st.rush_att||st.rec)) bits.push((((st.rush_att||0)+(st.rec||0))/g).toFixed(1)+' touches/gm');
@@ -14055,7 +14212,7 @@ document.addEventListener('click',async e=>{
   if(act==='hubRefresh'){ hubFetch(true).catch(()=>{}); return; }
   if(act==='rosterPick'){ openRosterPick(b.dataset.side); return; }
   if(act==='teamsF'){ S.ui.teamsF=b.dataset.v; S.ui.teamFocus=null; renderTab(); return; }
-  if(act==='teamsRefresh'){ b.disabled=true; b.textContent='Pulling…'; try{ await Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false),liveSeasonWanted()?loadSeasonStats(Number(S.nfl.season)||2026,true):Promise.resolve()]); }catch(e){} TEAMS.memo=null; miBust(); valDirty(); renderTab(); return; }
+  if(act==='teamsRefresh'){ b.disabled=true; b.textContent='Pulling…'; try{ await Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false),liveSeasonWanted()?loadSeasonStats(Number(S.nfl.season)||2026,true):Promise.resolve()]); }catch(e){} TEAMS.memo=null; TEAMS.m={}; miBust(); valDirty(); renderTab(); return; }
   if(act==='togglePast'){ S.ui.showPast=!S.ui.showPast; renderHeader(); renderTab(); return; }
   if(act==='rpickDone'){ closeOver(); return; }
   if(act==='openGame'){ openGame(b.dataset.gid); return; }
@@ -14392,7 +14549,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.4','store: '+Store.backend,
+    'FRONT OFFICE v8.5','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -14521,13 +14678,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.4 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.5 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.4 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.5 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -14546,7 +14703,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.4 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.5 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
