@@ -2634,7 +2634,7 @@ async function loadHistWeather(season,opts){ // archive conditions at each resid
       await glPool(batches,2,400,async bt=>{
         const url='https://archive-api.open-meteo.com/v1/archive?latitude='+bt.map(p=>p.la).join(',')
           +'&longitude='+bt.map(p=>p.lo).join(',')
-          +'&start_date='+season+'-09-01&end_date='+(Number(season)+1)+'-01-15'
+          +'&start_date='+season+'-09-01&end_date='+wxArchiveEnd(season)                 // v8.3: open-meteo rejects a future end_date outright — clamp to yesterday for the live season
           +'&hourly='+OM_HOURLY_A
           +'&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=GMT&timeformat=unixtime';
         const plan=bt.map(p=>({vk:p.vk,games:p.games}));
@@ -2662,10 +2662,10 @@ async function loadWeather(force){ // v8.0 · Open-Meteo, no key — the HOURLY 
   if(S.nfl.season_type!=='regular') return null;
   const season=String(S.nfl.season), week=S.nfl.week||0; if(!week) return null;
   let cached=null; try{ cached=await Store.get('wx'); }catch(e){}
+  try{ await loadSchedule(season,[week],!!force); }catch(e){}   // v8.3: venue, roof and the neutral-site flag come from the schedule, so it loads even when the weather cache is warm
   if(!force&&cached&&cached.v===2&&cached.season===season&&cached.week===week&&!stale(cached.ts,wxTtlHours(cached))){ S.wx=cached; return cached; }
-  const serveCache=()=>{ if(cached&&cached.season===season&&cached.week===week&&cached.byHome){ S.wx=cached; return cached; } return S.wx||null; };
+  const serveCache=()=>{ if(cached&&cached.v===2&&cached.season===season&&cached.week===week&&cached.byHome){ S.wx=cached; return cached; } return S.wx||null; };   // v8.3: a v1 record is next-Sunday daily maxima — never serve it as kickoff-hour weather
   if(!S.net.sleeper&&!navigatorOnlineish()) return serveCache();
-  try{ await loadSchedule(season,[week],!!force); }catch(e){}
   let gs=[]; try{ gs=schedWeek(season,week); }catch(e){ gs=[]; }
   if(!gs.length) gs=schedGuessWeek(season,week);          // ESPN down: today's behaviour, from S.byes
   if(!gs.length) return serveCache();
@@ -2903,7 +2903,19 @@ function matchupHist(pid,opp,dvpMult,pos){ // ±6% · what THIS player has done 
       line:'vs '+opp+': '+g+' game'+(g===1?'':'s')+', '+ppg.toFixed(1)+' ppg'+(isD?' as a unit':'')+', '+(pct>=0?'+':'')+pct+'% vs '+(isD?'its':'his')+' average ('+B.ppg.toFixed(1)+')'};
   }catch(e){ return null; } }
 const GLRAIN=[51,53,55,56,57,61,63,65,66,67,80,81,82], GLSNOW=[71,73,75,77,85,86];
-const ENVLAB={dome:'domes',outdoor:'outdoor games',cold:'cold games (≤32°F)',hot:'hot games (≥85°F)',wind:'games in 15+ mph wind',rain:'wet games',snow:'games in snow'};
+const ENVLAB={dome:'domes',outdoor:'outdoor games',cold:'cold games (≤35°F)',hot:'hot games (≥85°F)',wind:'games in 15+ mph wind',rain:'wet games',snow:'games in snow'};
+function wxArchiveEnd(season){ // open-meteo's archive refuses a future end_date — the live season stops at yesterday
+  const wanted=Date.parse((Number(season)+1)+'-01-15T00:00:00Z');
+  const yest=Date.now()-24*3600*1000;
+  const d=new Date(Math.min(isFinite(wanted)?wanted:yest,yest));
+  const p=x=>(x<10?'0':'')+x;
+  return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate());
+}
+function genAll(gen){ // the product of every generic weather multiplier charged for this game
+  if(!gen) return 1; let g=1;
+  ['wind','rain','snow','cold','hot'].forEach(function(k){ const v=gen[k]; if(v!=null&&isFinite(v)&&v>0) g*=v; });
+  return g>0?g:1;
+}
 function envTargets(env){ // which envSplits buckets THIS game falls in — most specific first, roof last as the always-available floor
   if(!env) return null;
   if(env.indoor) return ['dome'];
@@ -2911,7 +2923,7 @@ function envTargets(env){ // which envSplits buckets THIS game falls in — most
   if((env.snowIn!=null&&env.snowIn>0)||(env.code!=null&&GLSNOW.indexOf(env.code)>=0)) out.push('snow');
   if((env.precipIn!=null&&env.precipIn>=0.02)||(env.rainIn!=null&&env.rainIn>0)||(env.precipPct!=null&&env.precipPct>=60)||(env.code!=null&&GLRAIN.indexOf(env.code)>=0)) out.push('rain');
   if(w!=null&&w>=15) out.push('wind');
-  if(t!=null&&t<=32) out.push('cold');
+  if(t!=null&&t<=35) out.push('cold');            // v8.3: one cold threshold — the bucket is built at 35F, so select and label at 35F too
   if(t!=null&&t>=85) out.push('hot');
   out.push('outdoor');
   return out; }
@@ -2925,7 +2937,7 @@ function matchupEnv(pid,env,gen){ // ±5% · his own record in THIS game's condi
     for(let i=0;i<want.length;i++){
       const key=want[i], b=E[key];
       if(!b||b.idx==null||!(b.n>=3)||b.ppg==null) continue;
-      const g=(gen&&gen[key]!=null&&isFinite(gen[key])&&gen[key]>0)?gen[key]:1;   // the generic multiplier this week already charged for the SAME condition
+      const g=(key==='dome'||key==='outdoor')?genAll(gen):((gen&&gen[key]!=null&&isFinite(gen[key])&&gen[key]>0)?gen[key]:1);   // v8.3: the roof floor must net out EVERY generic charge (wind/rain/cold), not gen[roof] which is always 1
       const cw=b.n/(b.n+6);                                            // how much of the gap between the generic rule and HIS record we are willing to apply
       const mult=clamp(1+((b.idx/g)-1)*cw,0.95,1.05);                  // net effect of the condition = g × mult: at cw=0 the generic rule stands, at cw=1 his own index replaces it
       const pct=Math.round(((b.raw!=null?b.raw:b.idx)-1)*100);
@@ -4194,9 +4206,9 @@ function slotDemand(){
   const now=Date.now(); const key=needKeyBase()+'|'+lgSig();
   if(SLOTmemo&&SLOTmemo.key===key&&now-SLOTmemo.ts<NEEDTTL) return SLOTmemo.D;
   const slots=starterSlots(); const ns=slots.length;
-  const strict={}, flex=[], fill={};
+  const strict={}, flex=[], fill={}, flexN={};
   slots.forEach(function(sl){ const E=FLEX_ELIG[sl]||[sl];
-    if(E.length>1){ if(flex.indexOf(sl)<0) flex.push(sl); fill[sl]=fill[sl]||{}; }
+    if(E.length>1){ if(flex.indexOf(sl)<0) flex.push(sl); flexN[sl]=(flexN[sl]||0)+1; fill[sl]=fill[sl]||{}; }   // v8.3: a league with three FLEX slots must book three slots of demand, not one
     else strict[E[0]]=(strict[E[0]]||0)+1; });
   const need={}; Object.keys(strict).forEach(function(k){ need[k]=strict[k]; });
   const rs=(S.league&&S.league.rosters)||[]; const mode=modeNow();
@@ -4209,8 +4221,9 @@ function slotDemand(){
   }
   flex.forEach(function(sl){ const E=FLEX_ELIG[sl]||[sl]; const f=fill[sl]||{};
     const tot=sum(Object.keys(f).map(function(k){ return f[k]; }));
-    if(!tot) E.forEach(function(p){ need[p]=(need[p]||0)+1/E.length; });                 // cold start / empty league
-    else Object.keys(f).forEach(function(p){ need[p]=(need[p]||0)+f[p]/tot; }); });
+    const mult=flexN[sl]||1;                                                            // v8.3: one full slot of demand per repeated flex slot
+    if(!tot) E.forEach(function(p){ need[p]=(need[p]||0)+mult/E.length; });                 // cold start / empty league
+    else Object.keys(f).forEach(function(p){ need[p]=(need[p]||0)+mult*f[p]/tot; }); });
   const tot=sum(Object.keys(need).map(function(k){ return need[k]; }));                  // a broken league must not skew the vector
   if(tot>0&&Math.abs(tot-ns)>ns*0.02){ const k2=ns/tot; Object.keys(need).forEach(function(p){ need[p]*=k2; }); }
   Object.keys(need).forEach(function(p){ need[p]=Math.round(need[p]*100)/100; });
@@ -4245,7 +4258,10 @@ function posPools(mode){
 }
 function posPct(pos,v){ const P=posPools(); const a=P.asc[pos]; if(!a||!a.length) return 0.5;
   let lo=0,hi=a.length; while(lo<hi){ const m=(lo+hi)>>1; if(a[m]<=v) lo=m+1; else hi=m; } return lo/a.length; }
-function lgPct(a,v){ if(!a||!a.length) return 0.5; let lo=0,hi=a.length; while(lo<hi){ const m=(lo+hi)>>1; if(a[m]<=v) lo=m+1; else hi=m; } return lo/a.length; }
+function lgPct(a,v){ if(!a||!a.length) return 0.5;                                       // v8.3: mid-rank — the upper bound biased every roster +1/n and gave tied rosters a perfect 1.0
+  let lo=0,hi=a.length; while(lo<hi){ const m=(lo+hi)>>1; if(a[m]<v) lo=m+1; else hi=m; }     // first index >= v
+  let up=lo; while(up<a.length&&a[up]===v) up++;                                             // first index > v
+  return (lo+(up-lo)/2)/a.length; }
 function zOf(a,v){ return 2*lgPct(a,v)-1; }
 /* --- the position universe THIS league actually plays --- */
 function needPOSU(){ const L=LP()||{}; const u=['QB','RB','WR','TE'];
@@ -13830,7 +13846,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.2','store: '+Store.backend,
+    'FRONT OFFICE v8.3','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -13959,13 +13975,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.2 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.3 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.2 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.3 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -13984,7 +14000,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.2 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.3 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
