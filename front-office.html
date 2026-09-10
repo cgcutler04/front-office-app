@@ -1715,9 +1715,9 @@ body.phone #liveRoot>.railnote.foot{order:4}
 body.phone .dsx-h{min-height:56px;padding:15px 2px}
 body.phone .dsx-t{font-size:16px}
 body.phone .dsx-v{font-size:12.5px;max-width:46%}
-body.phone .dsjump{top:var(--hh,56px)}
+body.phone .dsjump{top:calc(env(safe-area-inset-top,0px) + 2px)}   /* v8.1: the phone header scrolls away — sticking at --hh left a tall gap */
 body.phone #sover .dsjump,body.phone #soRead .dsjump{top:0}
-body.phone .dsecx{scroll-margin-top:calc(var(--hh,56px) + 52px)}
+body.phone .dsecx{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 56px)}
 body.phone #sover .dsecx,body.phone #soRead .dsecx{scroll-margin-top:56px}
 body.phone .vcall{font-size:24px} body.phone .vcall.sm{font-size:17px}
 body.phone .fvpr{grid-template-columns:64px 1fr 48px}
@@ -1765,6 +1765,36 @@ body.phone .rpi{min-width:38px;min-height:38px}
 .rpick .tm.tmlink{pointer-events:none;cursor:default;border-style:dashed}
 /* the hub matchup detail already hides the avatar and badge on phone — hide the chip too */
 body.phone .hubdet table.hdslots td.hdsp .who .tm.tmlink{display:none}
+
+/* ═══════════ v8.1 · iPhone placement + sizing ═══════════ */
+/* header: two rows cost 122px on a 375px screen — a 27px title plus a 44px pill row is more than the room deserves */
+body.phone header.top{row-gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px}
+body.phone #pTitle{font-size:22px;letter-spacing:-.01em}
+body.phone .brand img.mark{width:30px;height:30px}
+body.phone #btnPal,body.phone #hmenuBtn{width:38px;height:38px;min-height:38px}
+body.phone select.hsel{min-height:40px;padding:9px 34px 9px 14px;font-size:14px}
+/* cards: less dead space between and inside them */
+body.phone .cmdflow>.card{margin-bottom:10px}
+body.phone .card>.hd{padding:11px 12px 9px}
+body.phone .card>.bd{padding:12px}
+body.phone .card>.bd.tight{padding:8px 0 4px}
+body.phone .grid3{gap:8px}
+body.phone .grid3 .card>.bd{padding:10px}
+body.phone .stat .v{font-size:20px}
+/* the league hub leads the page — give it room, but not a whole screen */
+body.phone #leagueHub{margin-bottom:10px}
+body.phone .hubcard{padding:11px 12px}
+/* tap targets: every row-shaped control clears 44px */
+body.phone .alert,body.phone .rowbtn,body.phone .hubtag,body.phone .lvseg>button,body.phone .tabsub>button{min-height:44px}
+body.phone .btn.sm{min-height:36px;padding:8px 11px}
+body.phone .inlinebtns{gap:8px}
+/* live: game cards stack cleanly and the segmented control never squeezes */
+body.phone .lgrid,body.phone .lggrid{grid-template-columns:1fr;gap:10px}
+body.phone .lvseg{width:100%}
+body.phone .lvseg>button{flex:1 1 0;min-width:0;font-size:12.5px;padding:10px 6px}
+body.phone .lvsegwrap{margin-bottom:10px}
+/* sheets clear the tab bar instead of hiding under it */
+body.phone #lsheet .lsbody,body.phone #reader .rdscroll{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -9982,6 +10012,7 @@ function renderCommand(){
   const bench=my?activeIds(my).filter(pid=>!luSet.has(pid)).map(pid=>({pid,v:adjValue(pid,{mode}).v})).sort((a,b)=>b.v-a.v):[];
   const stash=my?[...(my.taxi||[]).map(pid=>({pid,tag:'TAXI'})),...(my.reserve||[]).map(pid=>({pid,tag:'IR'}))].filter(x=>playerOf(x.pid)).map(x=>({...x,v:adjValue(x.pid,{mode}).v})).sort((a,b)=>b.v-a.v):[];
   m.innerHTML=`
+  ${leagueHubHTML()}
   ${liveCommandCardHTML()||'<div id="liveCmd" hidden></div>'}
   <div class="grid3">
     <div class="card"><div class="bd"><div class="stat"><div class="v">${myPR?esc(myPR.wins+'-'+myPR.losses+(myPR.ties?'-'+myPR.ties:'')):'—'}</div><div class="k">Record${myPR&&myPR.pf?' · '+fmtN(myPR.pf)+' PF':''}</div></div></div></div>
@@ -10011,7 +10042,6 @@ function renderCommand(){
     </div></div>`:''}
     ${tradeWireCardHTML()}
     ${leagueDNACardHTML()}
-    ${leagueHubHTML()}
       <div class="card"><div class="hd"><span class="lb">Sync ledger</span></div><div class="bd tight"><div class="syncled">
         ${['League','Player DB','Market values','Last season','Game logs','Trending','Projections','Matchups','Transactions','Portfolio','News wire'].map(k=>{const L=SyncLog[k];return `<div class="sr"><span class="k">${k}</span><span style="color:${L?(L.ok?'var(--gain)':'var(--loss)'):'var(--dim)'}">${L?(L.ok?'OK':'Failed'):'—'}</span><span style="color:var(--dim);font-size:11px">${L?esc(L.note):''}</span><span class="ts">${L?ago(L.ts):''}</span></div>`;}).join('')}
         ${histDepthHTML()}<div class="sr"><span class="k">Waiver scan</span><span style="color:${WV.ts?'var(--gain)':'var(--dim)'}">${WV.ts?'OK':'—'}</span><span style="color:var(--dim);font-size:11px">${WV.rows?WV.rows.length+' trending FAs':''}</span><span class="ts">${WV.ts?ago(WV.ts):''}</span></div>
@@ -11627,7 +11657,7 @@ function liveGamesOfInterest(){ // games involving my players (starters first), 
     const st=[...a.mine,...b.mine].filter(p=>starters.has(p)).length, mn=a.mine.length+b.mine.length, op=a.opp.length+b.opp.length;
     return {st,mn,op}; };
   return L.games.map(g=>({g,r:rank(g)})).filter(x=>x.r.mn||(S.ui.liveOpp&&x.r.op))
-    .sort((x,y)=>(y.g.state==='in')-(x.g.state==='in')||y.r.st-x.r.st||y.r.mn-x.r.mn||new Date(x.g.date)-new Date(y.g.date)).map(x=>x.g);
+    .sort((x,y)=>{ const a=Date.parse(x.g.date)||0, b=Date.parse(y.g.date)||0; return (a-b)||(y.r.st-x.r.st)||(y.r.mn-x.r.mn); }).map(x=>x.g); // v8.1: kickoff order — the first game of the week on top, the last at the bottom
 }
 function liveGameOf(pid){ const p=playerOf(pid); if(!p||!p.t||!S.live||!S.live.games) return null; const t=String(p.t).toUpperCase(); return S.live.games.find(g=>g.home===t||g.away===t)||null; }
 function liveState(){ // 'in' = a game of interest is being played · 'soon' = one kicks off within 45 min · 'today' = later today · 'idle'
@@ -13789,7 +13819,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.0','store: '+Store.backend,
+    'FRONT OFFICE v8.1','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -13918,13 +13948,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.0 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.1 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.0 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.1 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -13943,7 +13973,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.0 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.1 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
