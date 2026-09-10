@@ -2057,6 +2057,230 @@ body.phone .btn.help{width:26px;height:26px;font-size:13px}
 body.phone .dpjump{min-height:32px;padding:6px 12px;font-size:12px}
 .dpof{font-weight:600;color:var(--mut)}
 .dsecx[data-sec="depth"] .dsx-v{font:700 11.5px/1 var(--sans);letter-spacing:.04em}
+/* ═══════════ v8.6.1 · deskdense86 — Command density on the desktop, the last fringes on the phone ═══════════ */
+/* ---- DESKTOP · the masonry the flow always needed.
+   .cmdflow was grid auto-fill minmax(430px,1fr) + align-items:start: cards are placed
+   row-major, so a short card beside a long one leaves a hole the height of the difference.
+   Measured at 1440x900 with five leagues loaded: 2966px of a 5510px flow was empty air.
+   dd86Balance() re-parents the cards into shortest-first columns; these are the columns. ---- */
+body:not(.phone) .cmdflow.ddmason{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+body:not(.phone) .cmdflow.ddmason>.ddgrid{display:flex;align-items:flex-start;gap:14px}
+body:not(.phone) .cmdflow.ddmason>.ddgrid>.ddcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:14px}
+body:not(.phone) .cmdflow.ddmason>.ddgrid>.ddcol>.card,body:not(.phone) .cmdflow.ddmason>.card{margin-bottom:0}
+body.phone .cmdflow.ddmason,body.phone .cmdflow.ddmason>.ddgrid{display:block}   /* belt and braces: a stale wrapper can never stack the phone sideways */
+
+/* ---- DESKTOP · card chrome read at desk distance, not at arm's length.
+   Every number below is the desktop value minus what the phone pass already proved
+   readable; the phone keeps its own numbers because every selector is body:not(.phone). ---- */
+body:not(.phone) #p-command .card>.hd{padding:8px 13px;gap:9px}
+body:not(.phone) #p-command .card>.bd{padding:11px 13px}
+body:not(.phone) #p-command .card>.bd.tight{padding:0 0 2px}
+body:not(.phone) #p-command .alert{padding:9px 14px;gap:10px}
+body:not(.phone) #p-command .alert .d{line-height:1.45}
+body:not(.phone) #p-command table.led th{padding:6px 10px}
+body:not(.phone) #p-command table.led td{padding:5px 10px}
+body:not(.phone) #p-command table.led .pname .meta{margin-top:1px;line-height:1.25}
+body:not(.phone) #p-command .syncled .sr{padding:5px 14px}
+body:not(.phone) #p-command .rdpkg{padding:10px 14px}
+body:not(.phone) #p-command .rdwhy{margin-bottom:8px}
+body:not(.phone) #p-command .railnote.foot{padding:7px 14px}
+body:not(.phone) #p-command .newsit{padding:8px 0}
+body:not(.phone) #p-command>.grid3{gap:12px;margin-bottom:12px}
+body:not(.phone) #p-command>.grid3 .card>.bd{padding:11px 13px}
+
+/* ---- DESKTOP · the same fold-with-Show-all the phone got, with desktop-sized limits.
+   The rows are the phone's own cmdRowsFor() sets; only the limit, the label and the
+   open-state key differ, so a card can never fold on one surface and not the other. ---- */
+body:not(.phone) #p-command .cmdhid{display:none!important}
+body:not(.phone) #p-command .cmdmore{display:block;padding:7px 14px;border-top:1px solid var(--line);text-align:center}
+body:not(.phone) #p-command .cmdmore .btn{min-width:196px}
+
+/* ---- IPHONE · the Command identity cell could not break a line.
+   td:has(>.ava,>.who) carries white-space:nowrap, so [avatar][POS][CLUB][name] had to sit
+   on ONE line inside a ~228px column that the chips already eat 130px of. The name box
+   collapsed to 65-78px: at 375px that ellipsed 9 of 14 surnames and cut "bye N" off 13 of
+   14 meta lines — the one fact those two lines exist to carry. Letting the CELL break a
+   line moves the name onto its own full-width line: measured at 375px the identity rows go
+   46px -> 72px and the clipping goes 13 names + 18 bios -> 0 and 0. That is the whole trade,
+   and it is the right way round for a row whose job is to name a player. ---- */
+body.phone #p-command table.led td:has(>.ava,>.who){white-space:normal}
+body.phone #p-command table.led td .who{min-width:0}
+body.phone #p-command table.led td:has(>.ava,>.who) .pname{max-width:100%;white-space:normal;overflow:hidden;text-overflow:clip;overflow-wrap:break-word}
+body.phone #p-command table.led td:has(>.ava,>.who) .pname .meta{white-space:normal;overflow:visible;text-overflow:clip}
+body.phone #p-command table.led td:has(>.ava,>.who) .ptag,body.phone #p-command table.led td:has(>.ava,>.who) .tm,body.phone #p-command table.led td:has(>.ava,>.who) .ava{white-space:nowrap}
+/* a two-word column heading may now use two lines, and the identity cell gives back 2px of
+   padding and 3px of gap — 27px of track reclaimed on every Command ledger. */
+body.phone #p-command table.led th{white-space:normal;line-height:1.2}
+body.phone #p-command table.led td:has(>.ava,>.who){padding-left:10px;gap:5px}
+body.phone #p-command .bd.tight>table.led th:last-child,body.phone #p-command .bd.tight>table.led td:last-child{padding-right:10px}
+/* ...and a floor under the identity column, because a breakable cell is a COLLAPSIBLE one:
+   with none, the auto-layout squeezed Sell-windows' Veteran column to 83px and every row of
+   it grew to 122px ("Rico / Dowdle" over two lines). 128px keeps those rows at 72px and the
+   card at 594px instead of 844px. */
+body.phone #p-command .bd.tight>table.led td:has(>.ava,>.who),body.phone #p-command .bd.tight>table.led th:first-child{min-width:128px}
+
+/* ---- IPHONE · a ledger that pans sideways with nothing to say so.
+   The Sell-windows table was 509px of track inside a 349px frame at 375px, and its
+   "Shop him" button sat at x=446 — 71px off the glass with no affordance at all. The rules
+   above take the track to 394px; the last 45px still pan, so they now announce themselves.
+   A mask (not a background — a background paints BEHIND the text) fades the content at the
+   frame's right edge; .ddend, set by dd86Pan's scroll listener, clears it at the end. ---- */
+body.phone #p-command .card>.bd.tight.ddpan{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 38px),rgba(0,0,0,.12));mask-image:linear-gradient(90deg,#000 calc(100% - 38px),rgba(0,0,0,.12))}
+body.phone #p-command .card>.bd.tight.ddpan.ddend{-webkit-mask-image:none;mask-image:none}
+body.phone #p-command .ddswipe{display:block;padding:2px 12px 4px;text-align:right;font:700 9px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+body.phone #p-command .card>.bd.tight.ddend+.ddswipe,body.phone #p-command .ddswipe.off{display:none}
+
+/* ---- IPHONE · the ? dot was still an ELLIPSE.
+   v8.6 sized it 26x26 and centred it, but .card>.hd .btn.sm{min-height:36px} and
+   #leagueHub>.hd .btn.sm{min-height:32px} both sit later in the cascade and win over
+   height, so the header dots measured 26x36 and 26x32 under border-radius:50%.
+   The 44x44 hit area (.btn.help::after{inset:-9px}) is untouched. ---- */
+body.phone .btn.help,body.phone .btn.sm.help,body.phone .card>.hd .btn.sm.help,body.phone #leagueHub>.hd .btn.sm.help{min-height:0;height:26px;width:26px;flex:none}
+
+/* ---- IPHONE · a hub tag that cut a number in half.
+   "Waiver: Michael Mayer (+1,584,477 adds)" needs 213px and the chip capped at 208px,
+   so the rail printed "+1,584,4…". The rail already scrolls, so a wider chip costs nothing. ---- */
+body.phone .hubc2 .hubtag{max-width:min(76vw,272px)}
+
+/* ═══════════ v8.6 · ML_TAGS_V86 — per-league side chips, the stake line, the chip key ═══════════
+   Colour says the stake, the glyph says it too: nothing here depends on colour alone. */
+.mltags{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:4px;line-height:1}
+.lgchips.mltags{display:flex}
+.lled td .lgchips.mltags{margin-top:5px;max-width:100%}
+body.phone .lled td .lgchips.mltags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.mltags .lbm,.mltags .tier{margin-left:0}
+.mlc{display:inline-flex;align-items:center;gap:3px;padding:2px 5px;border-radius:6px;border:1px solid var(--line2);
+  background:rgba(255,255,255,.03);color:var(--mut);white-space:nowrap;max-width:100%;vertical-align:middle;min-width:0}
+.mlc .mlcg{font:400 10px/1 var(--sans);font-style:normal;display:inline-flex;align-items:center;justify-content:center;
+  width:11px;height:11px;flex:0 0 11px;text-align:center}
+.mlc .mlcn{font:700 9px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mlc .mlcp{font:700 10px/1 var(--mono);letter-spacing:0;color:var(--ink)}
+.mlc.k-ms{border-color:rgba(55,229,167,.55);background:rgba(55,229,167,.14);color:var(--gain)}
+.mlc.k-ms .mlcp{color:var(--gain)}
+.mlc.k-mb{border-color:rgba(55,229,167,.26);color:var(--gain);opacity:.8}
+.mlc.k-mb .mlcp{color:var(--gain)}
+.mlc.k-os{border-color:rgba(255,95,141,.55);background:rgba(255,95,141,.14);color:var(--loss)}
+.mlc.k-os .mlcp{color:var(--loss)}
+.mlc.k-ob{border-color:rgba(255,95,141,.26);color:var(--loss);opacity:.8}
+.mlc.k-ob .mlcp{color:var(--loss)}
+.mlc.k-th{color:var(--dim);opacity:.9}
+.mlc.k-fa{color:var(--dim);border-style:dashed;opacity:.85}
+.mlc.k-x{border-color:rgba(255,198,92,.6);background:rgba(255,198,92,.15);color:var(--watch)}
+.mlc.cur{box-shadow:0 0 0 2px rgba(59,227,255,.30)}
+/* the ledger cell is only ~200px wide on both skins — there the chip is the league CODE, and the points live in its tooltip and the sheet */
+.mlc.t{gap:2px;padding:2px 4px}
+.mlc.t .mlcn{letter-spacing:.02em}
+.lrow.opp .mlc.k-ms,.gvpr.opp .mlc.k-ms{opacity:1}
+/* the key */
+.mlleg{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-ctl,10px);background:var(--panel2)}
+.mlleg .mllegb{appearance:none;-webkit-appearance:none;background:none;border:0;padding:0;cursor:pointer;color:var(--dim);
+  font:700 10.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;min-height:26px;display:inline-flex;align-items:center;gap:6px}
+.mlleg .mllegb:hover{color:var(--ink)}
+.mlleg .mllegk{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mlleg .mllegk .mlc{padding:3px 7px}
+.mlleg .mllegk .mlc .mlcn{font:600 10.5px/1.25 var(--sans);letter-spacing:.01em;text-transform:none;white-space:normal;overflow:visible}
+.mlleg .mllegl{display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.mlleg .mllegli{display:inline-flex;align-items:baseline;gap:5px;font:500 11px/1.3 var(--sans);color:var(--dim);min-width:0}
+.mlleg .mllegli b{font:700 10px/1 var(--mono);letter-spacing:.05em;color:var(--ink);padding:2px 4px;border:1px solid var(--line2);border-radius:5px}
+.mlleg .mllegn{margin-top:7px;line-height:1.45}
+.mlleg.gv{margin:8px 12px 10px}
+.mlleg.lr{margin:0 0 10px}
+/* the stake line on each By-league card */
+.mlstake{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 2px;padding:8px 10px;
+  border:1px solid var(--line);border-radius:var(--r-ctl,10px);background:var(--panel2)}
+.mlsk{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:var(--mut);font:600 11.5px/1.15 var(--sans)}
+.mlsk i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;flex:0 0 11px}
+.mlsk b{font:700 13px/1 var(--mono);color:inherit}
+.mlsk.for{color:var(--gain)}
+.mlsk.vs{color:var(--loss)}
+.mlsk.net{color:var(--mut)}
+.mlsk.net.up b{color:var(--gain)}
+.mlsk.net.dn b{color:var(--loss)}
+.mlskx{margin-left:auto;appearance:none;-webkit-appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  padding:6px 10px;min-height:30px;border:1px solid rgba(255,198,92,.45);border-radius:999px;background:rgba(255,198,92,.10);
+  color:var(--watch);font:700 10.5px/1 var(--sans);letter-spacing:.04em;white-space:nowrap}
+.mlstakex{width:100%;display:flex;flex-direction:column;gap:7px;margin-top:2px;padding-top:8px;border-top:1px solid var(--line)}
+.mlxr{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font:500 12px/1.45 var(--sans);color:var(--mut);min-width:0}
+.mlxr .mlxg{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;flex:0 0 13px;font:400 11px/1 var(--sans)}
+.mlxr .mlxg.for{color:var(--gain)}
+.mlxr .mlxg.vs{color:var(--loss)}
+.mlxr .mlxt{min-width:0;overflow-wrap:anywhere}
+/* the grouped ledger headings — my players always read first */
+tr.mlgrp>td{padding:9px 10px 5px;background:var(--panel2);border-bottom:1px solid var(--line)}
+tr.mlgrp .mlgrpin{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+tr.mlgrp .mlgrpt{font:700 10px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+tr.mlgrp .mlgrpn{font:600 10.5px/1 var(--mono);color:var(--dim);white-space:nowrap}
+tr.mlgrp.me .mlgrpt{color:var(--gain)}
+tr.mlgrp.them .mlgrpt{color:var(--loss)}
+body.phone tr.mlgrp>td{padding:8px 8px 4px}
+/* the ledger scrolls sideways on a narrow phone — the heading rides along so its count is never parked off-screen */
+body.phone tr.mlgrp .mlgrpin{position:sticky;left:0;justify-content:flex-start;gap:8px;width:max-content;max-width:100%}
+/* the per-player live sheet's league table */
+.mlsheetlg{margin:10px 0 8px;border:1px solid var(--line);border-radius:var(--r-box,12px);background:var(--panel2);overflow:hidden}
+.mlshdr{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 11px;border-bottom:1px solid var(--line);font:600 12.5px/1.3 var(--sans)}
+.mlshdr .up{color:var(--gain)}
+.mlshdr .dn{color:var(--loss)}
+.mlsrows{display:flex;flex-direction:column}
+.mlsrow{display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 11px;border-top:1px solid var(--line)}
+.mlsrow:first-child{border-top:0}
+.mlsg{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;font:400 12px/1 var(--sans);color:var(--dim)}
+.mlsn{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mlsn b{font:600 13px/1.25 var(--sans);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mlsm{font:500 11px/1.35 var(--sans);color:var(--dim);overflow-wrap:anywhere}
+.mlss{font-style:normal;font-weight:700}
+.mlsp{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right;white-space:nowrap}
+.mlsp b{font:700 15px/1 var(--mono);color:var(--ink)}
+.mlsrow.k-ms .mlsg,.mlsrow.k-ms .mlss{color:var(--gain)}
+.mlsrow.k-mb .mlsg,.mlsrow.k-mb .mlss{color:var(--gain);opacity:.85}
+.mlsrow.k-os .mlsg,.mlsrow.k-os .mlss{color:var(--loss)}
+.mlsrow.k-ob .mlsg,.mlsrow.k-ob .mlss{color:var(--loss);opacity:.85}
+.mlsrow.k-ms{box-shadow:inset 3px 0 0 var(--gain)}
+.mlsrow.k-os{box-shadow:inset 3px 0 0 var(--loss)}
+.mlsfoot{padding:8px 11px;border-top:1px solid var(--line);line-height:1.45}
+/* the phone game-center rows already wrap; give the chip strip the same room on every skin */
+.gvpc{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+@media (max-width:430px){
+  .mlc{padding:2px 4px;gap:2px}
+  .mlc .mlcn{font-size:8.5px}
+  .mlc .mlcp{font-size:9.5px}
+  .mlleg{padding:7px 9px}
+  .mlleg .mllegk{gap:4px;margin-top:6px}
+  .mlleg .mllegk .mlc{padding:2px 6px}
+  .mlleg .mllegk .mlc .mlcn{font-size:10px}
+  .mlleg .mllegl{gap:3px 10px;margin-top:6px;padding-top:6px}
+  .mlleg .mllegli{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10.5px}
+  .mlleg .mllegn{margin-top:6px;font-size:10.5px}
+  .mlstake{gap:6px;padding:8px}
+  .mlsk{font-size:11px}
+  .mlskx{margin-left:0;width:100%;justify-content:center}
+  .mlsrow{grid-template-columns:14px minmax(0,1fr) auto;gap:7px;padding:8px 9px}
+  .mlsn b{font-size:12.5px}
+  .mlsp b{font-size:14px}
+}
+
+/* ===== v8.7 · SEASONS86 · V87_SEASONS86 — a season section nested inside a dossier section ===== */
+.sswrap{display:flex;flex-direction:column;margin:2px 0 8px}
+.sswrap>.dsecx{border-top:1px solid var(--line);border-left:2px solid var(--line2);padding-left:10px}
+.sswrap>.dsecx:first-child{border-top:0}
+.sswrap>.dsecx.op{border-left-color:var(--acc)}
+.sswrap>.dsecx>.dsx-h{padding:11px 2px;min-height:46px;gap:8px}
+.sswrap>.dsecx>.dsx-h .dsx-t{font:700 13.5px/1.25 var(--sans);letter-spacing:.01em;color:var(--ink)}
+.sswrap>.dsecx>.dsx-h .dsx-v{font-size:11.5px;max-width:58%}
+.sswrap>.dsecx>.dsx-h .dsx-v .tier{margin-right:5px}
+.sswrap>.dsecx>.dsx-b{padding:0 0 14px}
+.sswrap .rsec:first-child{margin-top:0}
+.ssnote{font:500 11.5px/1.55 var(--sans);color:var(--dim);border-left:2px solid var(--line2);padding:3px 0 3px 9px;margin:2px 0 10px}
+@media(max-width:620px){
+  .sswrap>.dsecx{padding-left:8px}
+  .sswrap>.dsecx>.dsx-h{padding:10px 2px;min-height:44px}
+  .sswrap>.dsecx>.dsx-h .dsx-v{max-width:42%}
+  .sswrap>.dsecx>.dsx-h .dsx-v .sstxt{display:none}
+}
+body.phone .sswrap>.dsecx{padding-left:8px}
+body.phone .sswrap>.dsecx>.dsx-h{padding:10px 2px;min-height:44px}
+body.phone .sswrap>.dsecx>.dsx-h .dsx-v{max-width:42%}
+body.phone .sswrap>.dsecx>.dsx-h .dsx-v .sstxt{display:none}
+body.phone .ssnote{font-size:12px;line-height:1.6}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -8185,7 +8409,7 @@ function rankChipsHTML(r){
   return '<div class="rk"><span class="'+(r.nfl<=10?'top':'')+'" title="Rank among '+r.n+' qualifying NFL '+esc(r.pos)+'s (rate stats need a volume floor)">#'+r.nfl+' '+esc(r.pos)+'</span>'
     +(r.lg?'<span class="lg" title="Rank among the '+r.ln+' '+esc(r.pos)+'s rostered in your league, him included">#'+r.lg+' in lg</span>':'')+'</div>';
 }
-function usageTilesHTML(pid,st,se){ // position-appropriate opportunity + efficiency tiles from one season row — every tile ranked vs the NFL + your league
+function usageTilesHTML(pid,st,se,opts){ // position-appropriate opportunity + efficiency tiles from one season row — every tile ranked vs the NFL + your league
   const p=playerOf(pid); if(!p||!st) return '';
   se=se||usageShareSeason();
   const g=st.gp||0; const T=[];
@@ -8252,7 +8476,8 @@ function usageTilesHTML(pid,st,se){ // position-appropriate opportunity + effici
     if(st.xpm!=null) t(st.xpm+'/'+(st.xpa!=null?st.xpa:st.xpm),'Extra points','',{fn:x=>x.xpm});
   }
   if(!T.length) return '';
-  return '<div class="dstats">'+T.slice(0,8).map(x=>{ const c=x[3]?statCtx(pid,x[3],se,x[1]):null;   // v8.2: statCtx is a cached superset of statRank — rank, median and percentile in one pass
+  const SSNR=!!(opts&&opts.norank);   // v8.7 · V87_SEASONS86: a one-game live season is not a rank pool — the tiles stay, the ranks go
+  return '<div class="dstats">'+T.slice(0,8).map(x=>{ const c=(x[3]&&!SSNR)?statCtx(pid,x[3],se,x[1]):null;   // v8.2: statCtx is a cached superset of statRank — rank, median and percentile in one pass
     return '<div class="dstat"><div class="v">'+x[0]+'</div><div class="k">'+esc(x[1])+'</div>'+(x[2]?'<div class="s">'+esc(x[2])+'</div>':'')+rankChipsHTML(c)+pctBarHTML(c)+medLineHTML(c)+'</div>'; }).join('')+'</div>';
 }
 /* --- v4.0 · shared player analytics: one panel + one compare modal, reused by trade, lineup and both draft flows --- */
@@ -10259,6 +10484,179 @@ var _h82_hrp=hubRepaint;
 hubRepaint=function(){ var r=_h82_hrp.apply(this,arguments); if(isPhone()){ try{ cmdRail(document.getElementById('leagueHub')); }catch(e){} } return r; };
 var _h82_rdf=radarFill;
 radarFill=function(){ var r=_h82_rdf.apply(this,arguments); if(isPhone()){ try{ cmdDense(); }catch(e){} } return r; };
+
+/* ═══════════ v8.6.1 · deskdense86 · DD86_MARK ═══════════
+   DESKTOP got no density pass. Measured on a five-league account before writing this:
+     1440x900 — flow 1156px, 2x571px columns, 12 cards, 5510px tall, 2966px of it empty
+     1280x800 — flow 1028px, 2x499px columns, 5729px tall, 3073px empty
+   .cmdflow is grid auto-fill minmax(430px,1fr) + align-items:start, so cards fill
+   ROW-major: card 4 sits beside card 3 no matter how tall card 3 is, and the short one
+   leaves a hole. Two things fix it: put each card in the SHORTEST column instead of the
+   next one (dd86Balance), and fold the longest lists behind Show all (dd86Fold), reusing
+   the phone's own cmdRowsFor() so a card can never fold differently on the two surfaces.
+   Everything is additive: renderCommand and every card renderer are untouched. */
+var DD86={sig:'',ro:null,t:0,busy:false,hold:false};
+function dd86ColCount(w){ var k=Math.floor((w+14)/444); return Math.max(1,Math.min(3,k)); } /* the flow's own minmax(430px,1fr)+14px gap, read back as a number */
+function dd86Key(t){
+  if(t.indexOf('signals')===0) return ['alerts',6];
+  if(t.indexOf('opportunity radar')===0) return ['radar',4];
+  if(t.indexOf('my roster')===0) return ['roster',8];
+  if(t.indexOf('draft capital')===0) return ['picks',8];
+  if(t.indexOf('sell window')===0) return ['sell',4];
+  if(t.indexOf('sync ledger')===0) return ['sync',8];
+  if(t.indexOf('watchlist')===0) return ['watch',8];
+  return null;
+}
+function dd86Clear(card){ /* a card we do not fold must never inherit a hidden row from the other surface */
+  var old=card.querySelector('.cmdmore'); if(old&&old.parentNode) old.parentNode.removeChild(old);
+  var h=card.querySelectorAll('.cmdhid'); for(var i=0;i<h.length;i++) h[i].classList.remove('cmdhid');
+}
+function dd86FoldOne(card,k,nn){
+  var rows=[]; try{ rows=cmdRowsFor(card,k); }catch(e){ rows=[]; }
+  if(!rows.length){ dd86Clear(card); return; }
+  var old=card.querySelector('.cmdmore'); if(old&&old.parentNode) old.parentNode.removeChild(old);
+  var open=!!(S.ui.ddOpen&&S.ui.ddOpen[k]);
+  var lim=nn;
+  if(k==='roster'){ var di=-1;   /* the fold starts AFTER the Bench divider — the optimal lineup is never folded away */
+    for(var q=0;q<rows.length;q++){ var cs=rows[q].cells; if(cs&&cs.length===1&&cs[0].hasAttribute('colspan')){ di=q; break; } }
+    lim=(di<0)?rows.length:Math.min(rows.length,di+1+nn); }
+  for(var j=0;j<rows.length;j++){ if(rows[j].classList) rows[j].classList.toggle('cmdhid',!open&&j>=lim); }
+  if(rows.length<=lim) return;
+  var parent=null,anchor=null;
+  if(k==='alerts') parent=card.querySelector('#alertsBox');
+  else if(k==='radar') parent=card.querySelector('.bd');
+  else if(k==='sync'){ var sl=card.querySelector('.syncled'); if(sl){ parent=sl.parentNode; anchor=sl.nextSibling; } }
+  else { var t2=card.querySelector('table.led'); if(t2){ parent=t2.parentNode; anchor=t2.nextSibling; } }
+  if(!parent) return;
+  var d=document.createElement('div'); d.className='cmdmore';
+  d.innerHTML='<button class="btn sm" type="button" data-act="ddMore" data-k="'+esc(k)+'">'+(open?('Show fewer \u2014 first '+lim):('Show all ('+rows.length+')'))+'</button>';
+  parent.insertBefore(d,anchor);
+}
+function dd86Fold(){
+  if(isPhone()) return;                                  /* the phone has cmdDense() and its own limits */
+  var m=document.getElementById('p-command'); if(!m) return;
+  var cards=m.querySelectorAll('.card');
+  for(var i=0;i<cards.length;i++){ var c=cards[i];
+    if(c.id==='leagueHub') continue;
+    var hd=c.firstElementChild; if(!hd||!hd.classList||!hd.classList.contains('hd')) continue;
+    var lb=hd.querySelector('.lb'); if(!lb) continue;
+    var kk=dd86Key((lb.textContent||'').toLowerCase().replace(/^\s+/,''));
+    if(!kk){ dd86Clear(c); continue; }
+    try{ dd86FoldOne(c,kk[0],kk[1]); }catch(e){}
+  }
+}
+/* --- the shortest-column placement itself --- */
+function dd86Items(f){ /* every card in ORIGINAL order, wherever a previous pass parked it */
+  var a=[].slice.call(f.querySelectorAll('.ddcol>*'));
+  if(!a.length) a=[].slice.call(f.children).filter(function(x){ return !x.classList||(!x.classList.contains('ddgrid')&&!x.classList.contains('ddcol')); });
+  for(var i=0;i<a.length;i++) if(!a[i].getAttribute('data-ddi')) a[i].setAttribute('data-ddi',String(i+1));
+  a.sort(function(x,y){ return (+x.getAttribute('data-ddi'))-(+y.getAttribute('data-ddi')); });
+  return a;
+}
+function dd86Unwrap(f){
+  if(!f.querySelector('.ddgrid')) return;
+  var a=dd86Items(f);
+  for(var i=0;i<a.length;i++) f.appendChild(a[i]);
+  var w=f.querySelectorAll('.ddgrid'); for(var j=0;j<w.length;j++) if(w[j].parentNode) w[j].parentNode.removeChild(w[j]);
+}
+function dd86Imbalance(f){
+  var cols=f.querySelectorAll('.ddgrid>.ddcol'); if(cols.length<2) return 0;
+  var lo=1e9,hi=0; for(var i=0;i<cols.length;i++){ var h=cols[i].getBoundingClientRect().height; if(h<lo) lo=h; if(h>hi) hi=h; }
+  return Math.round(hi-lo);
+}
+function dd86Balance(){
+  var f=document.getElementById('cmdflow'); if(!f) return;
+  if(isPhone()){ dd86Unwrap(f); f.classList.remove('ddmason'); DD86.sig=''; return; }
+  var items=dd86Items(f);
+  /* the flow's own @media(max-width:1100px) rule drops it to ONE column — respect that exactly,
+     so nothing between the phone breakpoint and 1100px changes shape */
+  var cols=(window.innerWidth>1100)?dd86ColCount(f.clientWidth):1;
+  if(cols<2||items.length<3){ dd86Unwrap(f); f.classList.remove('ddmason'); DD86.sig=''; return; }
+  /* heights are read in the CURRENT layout — the native grid and this masonry give a card
+     the same column width ((flow - gaps)/cols), so the first pass measures true heights too */
+  var H=[],i; for(i=0;i<items.length;i++) H.push(Math.round(items[i].getBoundingClientRect().height));
+  var sig=cols+'|'+f.clientWidth+'|'+H.join(',');
+  if(DD86.hold){ DD86.sig=sig; return; }   /* the reader just hit Show all — the card grows where it stands, it does not jump columns under the cursor */
+  if(sig===DD86.sig&&f.classList.contains('ddmason')) return;                       /* nothing grew, nothing moves */
+  if(f.classList.contains('ddmason')&&sig!==DD86.sig&&dd86Imbalance(f)<130){ DD86.sig=sig; return; } /* a late fill that costs almost nothing must not re-shuffle under the reader */
+  var ae=document.activeElement; if(ae&&ae!==document.body&&f.contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)) return;
+  DD86.sig=sig; DD86.busy=true;
+  var bands=[],cur=[];
+  for(i=0;i<items.length;i++){
+    if(items[i].classList&&items[i].classList.contains('wide')){ if(cur.length){ bands.push({t:'g',a:cur}); cur=[]; } bands.push({t:'w',a:[items[i]]}); }
+    else cur.push(items[i]);
+  }
+  if(cur.length) bands.push({t:'g',a:cur});
+  var frag=document.createDocumentFragment();
+  var idx=0;
+  for(var b=0;b<bands.length;b++){
+    if(bands[b].t==='w'){ frag.appendChild(bands[b].a[0]); idx++; continue; }
+    var g=document.createElement('div'); g.className='ddgrid';
+    var cs=[],tot=[];
+    for(i=0;i<cols;i++){ var cd=document.createElement('div'); cd.className='ddcol'; cs.push(cd); tot.push(0); g.appendChild(cd); }
+    for(i=0;i<bands[b].a.length;i++){
+      var m=0; for(var j=1;j<cols;j++) if(tot[j]<tot[m]-0.5) m=j;   /* shortest column wins; ties keep reading order left-to-right */
+      cs[m].appendChild(bands[b].a[i]); tot[m]+=H[idx]+14; idx++;
+    }
+    frag.appendChild(g);
+  }
+  while(f.firstChild) f.removeChild(f.firstChild);
+  f.appendChild(frag);
+  f.classList.add('ddmason');
+  DD86.busy=false;
+  dd86Watch(f);
+}
+function dd86Watch(f){
+  if(typeof ResizeObserver==='undefined') return;
+  if(!DD86.ro) DD86.ro=new ResizeObserver(function(){ if(DD86.busy) return; clearTimeout(DD86.t); DD86.t=setTimeout(function(){ try{ dd86Apply(); }catch(e){} },150); });
+  try{ DD86.ro.disconnect(); }catch(e){}
+  try{ DD86.ro.observe(f); }catch(e){}
+  var a=f.querySelectorAll('.ddcol>.card,:scope>.card'); for(var i=0;i<a.length;i++){ try{ DD86.ro.observe(a[i]); }catch(e){} }
+}
+/* --- iPhone: a ledger that pans sideways now says so, and keeps saying so until you reach the end --- */
+function dd86Pan(){
+  if(!isPhone()) return;
+  var m=document.getElementById('p-command'); if(!m) return;
+  var ps=m.querySelectorAll('.card>.bd.tight');
+  for(var i=0;i<ps.length;i++){
+    var p=ps[i]; var pan=p.scrollWidth>p.clientWidth+6;
+    p.classList.toggle('ddpan',pan);
+    if(!pan){ p.classList.remove('ddend'); var s0=p.nextElementSibling; if(s0&&s0.classList&&s0.classList.contains('ddswipe')) s0.classList.add('off'); continue; }
+    p.classList.toggle('ddend',p.scrollLeft>=p.scrollWidth-p.clientWidth-4);
+    if(!p.__ddpan){ p.__ddpan=1;
+      p.addEventListener('scroll',(function(el){ return function(){ el.classList.toggle('ddend',el.scrollLeft>=el.scrollWidth-el.clientWidth-4); }; })(p),{passive:true}); }
+    var sw=p.nextElementSibling;
+    if(!(sw&&sw.classList&&sw.classList.contains('ddswipe'))){
+      sw=document.createElement('div'); sw.className='ddswipe'; sw.textContent='swipe the table \u2192';
+      if(p.parentNode) p.parentNode.insertBefore(sw,p.nextSibling);
+    }
+    sw.classList.remove('off');
+  }
+}
+function dd86Apply(force){
+  if(force) DD86.sig='';
+  if(!document.getElementById('cmdflow')){ try{ dd86Pan(); }catch(e){} return; }
+  try{ dd86Fold(); }catch(e){}
+  try{ dd86Balance(); }catch(e){}
+  try{ dd86Pan(); }catch(e){}
+}
+function dd86Toggle(k){   /* Show all / Show fewer: fold in place, never re-shuffle the columns under the reader */
+  S.ui.ddOpen=S.ui.ddOpen||{}; S.ui.ddOpen[k]=!S.ui.ddOpen[k];
+  if(isPhone()){ S.ui.cmdOpen=S.ui.cmdOpen||{}; S.ui.cmdOpen[k]=S.ui.ddOpen[k]; try{ cmdDense(); }catch(e){} return; }
+  DD86.hold=true; try{ dd86Fold(); }catch(e){} try{ dd86Balance(); }catch(e){}
+}
+/* wrappers — the originals are untouched and still do all of the work */
+var _dd86_rc=renderCommand;
+renderCommand=function(){ var r=_dd86_rc.apply(this,arguments);
+  DD86.sig=''; DD86.hold=false;
+  try{ dd86Apply(); }catch(e){}
+  setTimeout(function(){ try{ dd86Apply(); }catch(e){} },60);     /* the radar mount fills on a 0ms timer */
+  setTimeout(function(){ try{ dd86Apply(); }catch(e){} },700);    /* and the wire/news caches land a beat later */
+  return r; };
+var _dd86_rf=radarFill;
+radarFill=function(){ var r=_dd86_rf.apply(this,arguments); if(!isPhone()){ try{ dd86Apply(); }catch(e){} } return r; };
+var _dd86_cd=cmdDense;
+cmdDense=function(){ var r=_dd86_cd.apply(this,arguments); try{ dd86Pan(); }catch(e){} return r; };
 
 function portfolioHTML(){
   if(!S.conn||!S.conn.leagues.length) return '';
@@ -12269,7 +12667,8 @@ function gvRowHTML(pid,g,side,starter){                                         
   const bits=[]; if(line) bits.push(esc(line)); else if(!pre) bits.push('no touches yet');
   if(!pre){ let sn=''; try{ sn=liveSnapNote(pid); }catch(e){} if(sn) bits.push(sn); }   // v8.5: n/a instead of an omitted snap — and nothing at all for K/DEF/IDP
   const sub=bits.join(' \u00b7 ');
-  let pills=''; try{ pills=gvLgPillsHTML(pid,side); }catch(e){}
+  let pills=''; try{ pills=mlTagsHTML(pid,{}); }catch(e){}                                   // v8.6: side-aware, and opponent rows get them too
+  if(!pills){ try{ pills=gvLgPillsHTML(pid,side); }catch(e){} }
   const paceN=(typeof pace==='number'&&isFinite(pace))?pace:((typeof exp==='number'&&isFinite(exp))?exp:0);
   return '<div class="gvpr'+(on?' on':'')+(side==='opp'?' opp':'')+'" data-act="liveCard" data-pid="'+esc(pid)+'" role="button" tabindex="0" title="Open his live stat sheet">'
     +'<div class="gvpa">'+ava+'</div>'
@@ -12287,11 +12686,12 @@ function gvRowHTML(pid,g,side,starter){                                         
 function gvMineHTML(g,mine,opp,starterSet){                                             // desktop keeps the 5-column ledger; the phone gets rows that fit 375px
   const has=(mine&&mine.length)||(opp&&opp.length);
   const none='<div class="empty">None of your players are in this game</div>';
-  if(!gvFsNow()) return has?('<div class="bd tight"><table class="led lled"><thead><tr><th>Player</th><th>Now</th><th>Live line</th><th class="r">Pts</th><th class="r">Pace</th></tr></thead><tbody>'
+  const leg86=(function(){ try{ return mlLegendHTML('gv'); }catch(e){ return ''; } })();     // v8.6: the chip key, once, above the first chips
+  if(!gvFsNow()) return has?(leg86+'<div class="bd tight"><table class="led lled"><thead><tr><th>Player</th><th>Now</th><th>Live line</th><th class="r">Pts</th><th class="r">Pace</th></tr></thead><tbody>'
       +mine.map(function(pid){ return livePlayerRowHTML(pid,g,'mine',starterSet.has(pid)); }).join('')
       +opp.map(function(pid){ return livePlayerRowHTML(pid,g,'opp',true); }).join('')+'</tbody></table></div>'):none;
   if(!has) return none;
-  let h='';
+  let h=leg86;
   try{ h+=gvLgTotalsHTML(g,mine); }catch(e){}
   if(mine.length) h+='<div class="gvsec"><span>My players \u00b7 '+mine.length+'</span><span>'+(g.state==='pre'?'projected':'live \u00b7 pace')+'</span></div>'
     +'<div class="gvpl">'+mine.map(function(pid){ return gvRowHTML(pid,g,'mine',!!(starterSet&&starterSet.has&&starterSet.has(pid))); }).join('')+'</div>';
@@ -12534,7 +12934,7 @@ function liveStatusChip(g){
 }
 function livePlayerRowHTML(pid,g,side,starter,L){ // v8: same 5 columns, now league-aware — L optional, derived from mlSides when omitted
   const p=playerOf(pid); if(!p) return '';
-  const ML=mlSides();
+  const ML=mlSides(); const curLid=(L&&L.lid)||null;   // v8.6: the league this row is painted FOR, so its own chip can be ringed
   if(L==null){ const rec=ML&&ML.byPid[pid];
     if(rec&&rec.in.length){ const st0=rec.in.find(x=>x.start); L=(st0&&st0.L)||((rec.in.find(x=>x.L.active)||{}).L)||rec.in[0].L; }
     else if(ML&&ML.leagues.length) L=ML.leagues.find(x=>x.active)||null; }
@@ -12547,7 +12947,8 @@ function livePlayerRowHTML(pid,g,side,starter,L){ // v8: same 5 columns, now lea
   const bmTag=(bm&&bm.tag==='boom')?' <span class="tier gain lbm lpulse">BOOM</span>':(bm&&bm.tag==='bust')?' <span class="tier must lbm">BUST</span>':'';
   return '<tr class="rowbtn lrow'+(on?' on':'')+(side==='opp'?' opp':'')+'" data-act="liveCard" data-pid="'+esc(pid)+'">'
     +'<td>'+avatarHTML(pid,'sm')+' '+ptag(p.p)+teamChip(p.t)+' <b>'+esc(p.n)+'</b>'+(starter?'':' <span class="fine">bench</span>')+(side==='opp'?' <span class="fine">theirs</span>':'')
-      +((side!=='opp'&&mlChipsHTML(pid))||bmTag?'<span class="lgchips">'+(side==='opp'?'':mlChipsHTML(pid))+bmTag+'</span>':'')+'</td>' // chips + boom/bust drop to their own line on a phone
+      +(function(){ let tg=''; try{ tg=mlTagsHTML(pid,{cur:curLid,tight:1}); }catch(e){} if(!tg){ try{ tg=(side==='opp'?'':mlChipsHTML(pid)); }catch(e){} }
+          return (tg||bmTag)?'<span class="lgchips mltags">'+tg+bmTag+'</span>':''; })()+'</td>' // v8.6: every league he is in AND which side he is on there — opponent rows carry them too
     +'<td>'+status+'</td>'
     +'<td class="lline">'+(line?esc(line):'<span class="fine">'+(gm==='pre'?'—':'no touches yet')+'</span>')+(function(){ const sn=(gm==='pre')?'':liveSnapNote(pid); return sn?' <span class="fine">· '+sn+'</span>':''; })()+'</td>'
     +'<td class="r vnum lpts">'+(pts!=null?fmtPts(pts):'—')+'</td>'
@@ -12829,6 +13230,151 @@ function mlStatGridHTML(pid,row,base,limit){ // the advanced line, each tile aga
   const list=limit?T.slice(0,limit):T;
   return list.length?'<div class="lsgrid">'+list.join('')+'</div>':''; }
 /* ── DIAGNOSIS: grade a finished game, then attribute it against his own baselines and this week's context ── */
+/* ═══════════ v8.6 · ML_TAGS_V86 — where is this player, in EVERY league, and on which side? ═══════════
+   Six states, computed per (player, league) from the same bundles mlSides already holds:
+     ms my starter · mb my bench · os starting AGAINST me · ob my opponent's bench · th a third team · fa free agent
+   Colour carries the stake (green = for me, red = against me, grey = neither) and a glyph carries it too,
+   so the chips still read on a 375px phone with the colour ignored. */
+const ML_SIDE={
+  ms:{g:'\u25B2',t:'Starting for you',s:'yours, starting'},
+  mb:{g:'\u25B3',t:'On your bench',s:'yours, benched'},
+  os:{g:'\u25BC',t:'Starting against you',s:'against you'},
+  ob:{g:'\u25BD',t:'On your opponent\u2019s bench',s:'their bench'},
+  th:{g:'\u25E6',t:'Another team owns him',s:'another team'},
+  fa:{g:'\u25CB',t:'Free agent',s:'free agent'}};
+const ML_KRANK={ms:0,os:1,mb:2,ob:3,th:4,fa:5};
+const ML_TG={stamp:'',map:null};
+function mlOwnIdx(L){ // pid -> roster_id for ONE league, built once per league object (mlSides rebuilds them on every stamp change)
+  if(L._own) return L._own;
+  const m=Object.create(null);
+  try{ ((L.b&&L.b.rosters)||[]).forEach(function(r){ (r.players||[]).forEach(function(pid){ if(m[pid]==null) m[pid]=r.roster_id; }); }); }catch(e){}
+  L._own=m; return m; }
+function mlSideIn(pid,L){ // the six states, in the order that decides the stake
+  try{
+    if(!L) return null;
+    if(L.starters&&L.starters.has&&L.starters.has(pid)) return 'ms';
+    const own=mlOwnIdx(L); const rid=own[pid];
+    if(rid!=null&&L.roster&&rid===L.roster.roster_id) return 'mb';
+    if(L.oppStart&&L.oppStart.indexOf(pid)>=0) return 'os';
+    if(L.opp&&rid!=null&&rid===L.opp.roster_id) return 'ob';
+    if(rid!=null) return 'th';
+    return 'fa';
+  }catch(e){ return null; } }
+function mlSidesAll(pid){ // the side per league — memoised on mlSides' own stamp, so it costs one pass per player per refresh
+  const ML=mlSides(); if(!ML||!ML.leagues) return [];
+  if(ML_TG.stamp!==ML.stamp||!ML_TG.map){ ML_TG.stamp=ML.stamp; ML_TG.map=Object.create(null); }
+  let a=ML_TG.map[pid]; if(a) return a;
+  a=[]; ML.leagues.forEach(function(L){ const k=mlSideIn(pid,L); if(!k) return;
+    a.push({L:L,k:k,mine:(k==='ms'||k==='mb'),vs:(k==='os'||k==='ob'),live:(k==='ms'||k==='os')}); });
+  a.sort(function(x,y){ return (ML_KRANK[x.k]-ML_KRANK[y.k])||String(x.L.short||'').localeCompare(String(y.L.short||'')); });
+  ML_TG.map[pid]=a; return a; }
+function mlStatusAll(pid){ // the same list with each league's own live number attached — points are NEVER estimated here
+  return mlSidesAll(pid).map(function(x){ let pv=null; try{ pv=mlPts(pid,x.L); }catch(e){}
+    return {L:x.L,k:x.k,mine:x.mine,vs:x.vs,live:x.live,pts:pv}; }); }
+function mlConflict(A){ return !!(A&&A.some(function(x){ return x.mine; })&&A.some(function(x){ return x.vs; })); } // the owner's exact case
+function mlCodes(){ // a 3-letter code per league, unique across the five \u2014 a full name will not fit a 199px ledger cell
+  const ML=mlSides(); if(!ML||!ML.leagues) return {};
+  if(ML._codes) return ML._codes;
+  const out={}, seen={};
+  ML.leagues.forEach(function(L){
+    let c=String(L.short||L.name||'LG').replace(/[^A-Za-z0-9]/g,'').slice(0,3).toUpperCase()||'LG';
+    if(seen[c]){ let i=2; while(seen[c+i]) i++; c=c+i; }
+    seen[c]=1; out[L.lid]=c; });
+  ML._codes=out; return out; }
+function mlCode(L){ const m=mlCodes(); return (L&&m[L.lid])||String((L&&L.short)||'LG').slice(0,3).toUpperCase(); }
+function mlTagTitle(pid,x){ const d=ML_SIDE[x.k]||ML_SIDE.fa; let pv=null; try{ pv=mlPts(pid,x.L); }catch(e){}
+  return mlCode(x.L)+' \u2014 '+String(x.L.name||'League')+' \u2014 '+d.t+(pv!=null?' \u00b7 '+fmtPts(pv)+' pts in THIS league\u2019s scoring':'')
+    +(x.L.fmt&&x.L.fmt.length?' \u00b7 '+x.L.fmt.join(' \u00b7 '):''); }
+function mlTagChip(pid,x,cur,tight){ const d=ML_SIDE[x.k]||ML_SIDE.fa; let pv=null; try{ pv=mlPts(pid,x.L); }catch(e){}
+  return '<span class="mlc k-'+x.k+(tight?' t':'')+((cur&&String(cur)===String(x.L.lid))?' cur':'')+'" title="'+esc(mlTagTitle(pid,x))+'">'
+    +'<i class="mlcg">'+d.g+'</i><span class="mlcn">'+esc(tight?mlCode(x.L):(x.L.short||'LG'))+'</span>'
+    +((pv!=null&&!tight)?'<b class="mlcp">'+esc(fmtPts(pv))+'</b>':'')+'</span>'; }
+function mlTagsHTML(pid,o){ // the compact chip strip: every league he MATTERS in, plus a rollup for the rest
+  o=o||{};
+  const ML=mlSides(); if(!ML||!ML.n||(ML.n<2&&!o.full)) return '';   // one league has nothing to disambiguate
+  const A=mlSidesAll(pid); if(!A.length) return '';
+  const rel=A.filter(function(x){ return x.mine||x.vs; });
+  const oth=A.filter(function(x){ return !(x.mine||x.vs); });
+  if(!rel.length&&!o.full) return '';
+  let h='';
+  if(mlConflict(A)){
+    const forL=A.filter(function(x){ return x.mine; }).map(function(x){ return x.L.short; }).join(', ');
+    const vsL=A.filter(function(x){ return x.vs; }).map(function(x){ return x.L.short; }).join(', ');
+    h+='<span class="mlc k-x'+(o.tight?' t':'')+'" title="'+esc('He is on your side in '+forL+' and starting against you in '+vsL+' \u2014 the same player, both ways, this week.')+'">'
+      +'<i class="mlcg">\u2194</i><span class="mlcn">both</span></span>'; }
+  h+=(o.full?A:rel).map(function(x){ return mlTagChip(pid,x,o.cur,o.tight); }).join('');
+  if(!o.full&&oth.length){
+    h+='<span class="mlc k-th'+(o.tight?' t':'')+'" title="'+esc(oth.map(function(x){ return mlCode(x.L)+' '+String(x.L.short)+' \u2014 '+(ML_SIDE[x.k]||ML_SIDE.fa).t; }).join(' \u00b7 '))+'">'
+      +'<i class="mlcg">\u25E6</i><span class="mlcn">'+oth.length+'</span></span>'; }
+  return h; }
+function mlLegendHTML(cls){ // the key, once per surface, collapsible and remembered
+  const ML=mlSides(); if(!ML||ML.n<2) return '';
+  const open=!(S.cfg&&S.cfg.mlLeg===0);
+  let sh=false; try{ sh=(typeof isPhone==='function')&&isPhone(); }catch(e){}   // a 375px key uses the short wording
+  const keys=['ms','os','mb','ob','th','fa'];
+  const body=open?('<div class="mllegk">'
+      +keys.map(function(k){ return '<span class="mlc k-'+k+'"><i class="mlcg">'+ML_SIDE[k].g+'</i><span class="mlcn">'+esc(sh?ML_SIDE[k].s:ML_SIDE[k].t)+'</span></span>'; }).join('')
+      +'<span class="mlc k-x"><i class="mlcg">\u2194</i><span class="mlcn">'+(sh?'both ways':'both ways \u2014 yours in one league, against you in another')+'</span></span></div>'
+    +'<div class="mllegl">'+ML.leagues.map(function(L){ return '<span class="mllegli"><b>'+esc(mlCode(L))+'</b>'+esc(String(L.name||''))+'</span>'; }).join('')+'</div>'
+    +'<div class="fine mllegn">One chip per league. In the ledger it is the league code; elsewhere it also carries his points in <b>that</b> league\u2019s scoring \u2014 a 6-point-pass-TD league and an IDP league will not agree. Tap any row for all '+ML.n+', spelled out.</div>'):'';
+  return '<div class="mlleg'+(cls?' '+cls:'')+(open?' on':'')+'"><button class="mllegb" data-act="mlLegend" aria-expanded="'+(open?'true':'false')+'">'
+    +(open?'\u25BE':'\u25B8')+' League chip key</button>'+body+'</div>'; }
+function mlGrpRowHTML(txt,cls,cnt,sum){ // my players read first, and the table says so out loud
+  return '<tr class="mlgrp'+(cls?' '+cls:'')+'"><td colspan="5"><div class="mlgrpin"><span class="mlgrpt">'+esc(txt)+'</span>'
+    +'<span class="mlgrpn">'+cnt+(cnt===1?' starter':' starters')+(sum!=null?' \u00b7 '+esc(fmtPts(sum))+' pts':'')+'</span></div></td></tr>'; }
+function mlCrossOf(L){ // players in THIS league who are on the other side of one of my other leagues
+  const out=[];
+  try{
+    (L.startersArr||[]).forEach(function(pid){ const o=mlSidesAll(pid).filter(function(x){ return x.L!==L&&x.vs; });
+      if(o.length) out.push({pid:pid,here:'mine',other:o}); });
+    (L.oppStart||[]).forEach(function(pid){ const o=mlSidesAll(pid).filter(function(x){ return x.L!==L&&x.mine; });
+      if(o.length) out.push({pid:pid,here:'opp',other:o}); });
+  }catch(e){}
+  return out; }
+function mlStakeHTML(L){ // what this league is actually worth to me right now, in plain words
+  try{
+    const ML=mlSides(); if(!ML||!L) return '';
+    const sum=function(a){ let t=0; (a||[]).forEach(function(p){ const v=mlPts(p,L); if(v!=null) t+=v; }); return t; };
+    const forMe=sum(L.startersArr), vsMe=sum(L.oppStart);
+    const net=forMe-vsMe;
+    const word=!L.opp?'no head-to-head this week':net>0?'you are ahead':net<0?'you are behind':'dead level';
+    const cross=mlCrossOf(L);
+    const open=!!(S.ui.mlStk&&S.ui.mlStk[L.lid]);
+    let h='<div class="mlstake"><span class="mlsk for"><i>\u25B2</i>helping you <b>'+esc(fmtPts(forMe))+'</b></span>'
+      +(L.opp?'<span class="mlsk vs"><i>\u25BC</i>hurting you <b>'+esc(fmtPts(vsMe))+'</b></span>':'')
+      +'<span class="mlsk net '+(net>=0?'up':'dn')+'"><i>=</i>'+esc(word)+' <b>'+(net>=0?'+':'')+esc(fmtPts(net))+'</b></span>'
+      +(cross.length?'<button class="mlskx" data-act="mlStake" data-lid="'+esc(L.lid)+'" aria-expanded="'+(open?'true':'false')+'">\u2194 '+cross.length+' player'+(cross.length===1?'':'s')+' cut both ways '+(open?'\u25BE':'\u25B8')+'</button>':'');
+    if(open&&cross.length){
+      h+='<div class="mlstakex">'+cross.map(function(c){ const p=playerOf(c.pid)||{n:'Player'};
+        const others=c.other.map(function(x){ let pv=null; try{ pv=mlPts(c.pid,x.L); }catch(e){}
+          return esc(String(x.L.short))+(pv!=null?' ('+esc(fmtPts(pv))+')':''); }).join(', ');
+        let pv2=null; try{ pv2=mlPts(c.pid,L); }catch(e){}
+        return '<div class="mlxr"><span class="mlxg '+(c.here==='mine'?'for':'vs')+'">'+(c.here==='mine'?'\u25B2':'\u25BC')+'</span>'
+          +whoHTML(c.pid,p.n)+'<span class="mlxt">'+(c.here==='mine'
+            ? 'yours here'+(pv2!=null?' ('+esc(fmtPts(pv2))+')':'')+' \u2014 but starting <b class="dn">against you</b> in '+others
+            : 'against you here'+(pv2!=null?' ('+esc(fmtPts(pv2))+')':'')+' \u2014 and <b class="up">yours</b> in '+others)+'</span></div>'; }).join('')+'</div>'; }
+    return h+'</div>';
+  }catch(e){ return ''; } }
+function mlSheetLeaguesHTML(pid){ // the per-player live sheet: all five leagues, side, points and pace, one row each
+  try{
+    const ML=mlSides(); if(!ML||!ML.n) return '';
+    const A=mlSidesAll(pid); if(!A.length) return '';
+    const mine=A.filter(function(x){ return x.mine; }), vs=A.filter(function(x){ return x.vs; }), rest=A.length-mine.length-vs.length;
+    const head='<div class="mlshdr">'
+      +(mine.length?'<b class="up">Yours in '+mine.length+' of '+A.length+'</b>':'<span class="fine">Not on your roster in any league</span>')
+      +(vs.length?'<b class="dn">Against you in '+vs.length+'</b>':'')
+      +(rest?'<span class="fine">'+rest+' elsewhere</span>':'')
+      +(mlConflict(A)?'<span class="mlc k-x"><i class="mlcg">\u2194</i><span class="mlcn">both ways</span></span>':'')+'</div>';
+    const rows=A.map(function(x){ const d=ML_SIDE[x.k]||ML_SIDE.fa;
+      let pv=null,pc=null; try{ pv=mlPts(pid,x.L); }catch(e){} try{ pc=mlPace(pid,x.L); }catch(e){}
+      return '<div class="mlsrow k-'+x.k+'"><span class="mlsg">'+d.g+'</span>'
+        +'<span class="mlsn"><b>'+esc(String(x.L.name||'League'))+'</b><span class="mlsm"><i class="mlss">'+esc(d.t)+'</i>'
+          +(x.L.fmt&&x.L.fmt.length?' \u00b7 '+esc(x.L.fmt.join(' \u00b7 ')):'')+'</span></span>'
+        +'<span class="mlsp"><b class="vnum">'+(pv!=null?esc(fmtPts(pv)):'\u2014')+'</b>'
+          +'<span class="fine">'+((pc!=null&&isFinite(pc))?'pace '+esc(fmtPts(pc)):'\u2014')+'</span></span></div>'; }).join('');
+    return '<div class="mlsheetlg">'+head+'<div class="mlsrows">'+rows+'</div>'
+      +'<div class="fine mlsfoot">Each number is that league\u2019s own scoring \u2014 Sleeper\u2019s live matchup feed where it has him, this league\u2019s exact settings over the live stat line otherwise.</div></div>'; }
+  catch(e){ return ''; } }
 function mlPrimaryLeague(pid){ const ML=mlSides(); const rec=ML&&ML.byPid[pid];
   if(rec&&rec.in.length){ const st=rec.in.find(x=>x.start); return (st&&st.L)||((rec.in.find(x=>x.L.active)||{}).L)||rec.in[0].L; }
   if(ML&&ML.leagues.length) return ML.leagues.find(x=>x.active)||ML.leagues[0];
@@ -13009,11 +13555,16 @@ function mlLeagueCardHTML(L){
       : ((d>=0?'+':'')+fmtPts(d)+' pace · '+Math.round(w.wp*100)+'% to win · '+Math.round(w.rem*100)+'% of the week still to play'))+'</div>'):'';
   const ord=(a,b)=>{ const ga=liveGameOf(a), gb=liveGameOf(b);
     return ((gb&&gb.state==='in')-(ga&&ga.state==='in'))||((mlPts(b,L)||0)-(mlPts(a,L)||0)); };
-  const rows=mine.slice().sort(ord).map(pid=>livePlayerRowHTML(pid,liveGameOf(pid),'mine',true,L)).join('')
-    +(S.ui.liveOpp?them.slice().sort(ord).map(pid=>livePlayerRowHTML(pid,liveGameOf(pid),'opp',true,L)).join(''):'');
+  const mineS2=mine.slice().sort(ord), themS2=them.slice().sort(ord);                       // v8.6: mine ALWAYS read first, under their own heading
+  const sumIn=a=>a.reduce((t,p)=>t+(mlPts(p,L)||0),0);
+  const rows=(mineS2.length?mlGrpRowHTML('Yours','me',mineS2.length,sumIn(mineS2)):'')
+    +mineS2.map(pid=>livePlayerRowHTML(pid,liveGameOf(pid),'mine',true,L)).join('')
+    +((S.ui.liveOpp&&themS2.length)?(mlGrpRowHTML('Against you','them',themS2.length,sumIn(themS2))
+      +themS2.map(pid=>livePlayerRowHTML(pid,liveGameOf(pid),'opp',true,L)).join('')):'');
   const table='<div class="bd tight"><table class="led lled"><thead><tr><th>Player</th><th>Now</th><th>Live line</th><th class="r">Pts</th><th class="r" title="points so far + unplayed share of this week\'s expectation">Pace</th></tr></thead><tbody>'
     +(rows||'<tr><td colspan="5" class="empty">No starters posted for this week yet.</td></tr>')+'</tbody></table></div>';
-  return '<div class="card lgcard" id="lg_'+esc(L.lid)+'">'+head+'<div class="bd">'+sides+verdict+'</div>'+table+'</div>'; }
+  let stake=''; try{ stake=mlStakeHTML(L); }catch(e){}                                       // v8.6: helping you / hurting you / both, and by how much
+  return '<div class="card lgcard" id="lg_'+esc(L.lid)+'">'+head+'<div class="bd">'+sides+verdict+stake+'</div>'+table+'</div>'; }
 /* ── ORDER 3 · post-game recaps ── */
 const ML_GRANK={boom:0,bust:1,meh:2,solid:3};
 function mlReasonChip(r){ return '<span class="rchip '+(r.good?'good':'bad')+'" title="'+esc(r.s)+'"><span class="rsev"><i style="width:'+Math.round(Math.min(1,r.sev)*100)+'%"></i></span>'+esc(r.label)+'</span>'; }
@@ -13045,9 +13596,10 @@ function mlRecapSectionHTML(gid){
     return '<div class="lrrow'+(open?' open':'')+'" data-act="lrTog" data-pid="'+esc(pid)+'" role="button" tabindex="0">'
       +'<div class="lrtop"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span>'+avatarHTML(pid,'sm')+' '+ptag(p.p)
       +'<span class="nm">'+esc(p.n)+'</span><span class="rt"><b class="vnum">'+fmtPts(d.pts||0)+'</b><span class="fine">vs '+fmtPts(d.exp||0)+'</span></span></div>'
+      +(function(){ let tg=''; try{ tg=mlTagsHTML(pid,{}); }catch(e){} return tg?'<div class="mltags lrtags">'+tg+'</div>':''; })()   // v8.6
       +((top&&!open)?'<div style="margin-top:2px">'+top+'</div>':'')+body+'</div>'; }).join(''); // open rows show the full chip set below, so the teaser line would only repeat it
   return '<div class="card lrcard"><div class="hd"><span class="lb">Post-game recaps — week '+wk+' '+helpBtn('recap')+'</span><span class="right inlinebtns">'+filt+'</span></div>'
-    +'<div class="bd"><div class="lrlist">'+(rows||'<div class="empty">Nothing in that filter yet.</div>')+'</div>'
+    +'<div class="bd">'+(gid?(function(){ try{ return mlLegendHTML('lr'); }catch(e){ return ''; } })():'')+'<div class="lrlist">'+(rows||'<div class="empty">Nothing in that filter yet.</div>')+'</div>'
     +'<div class="railnote" style="margin-top:8px">Each grade compares his points with this week\'s expectation and his own weekly volatility; the reasons are measured against his own per-game season rates (Sleeper), the defense he faced (DvP), his offense\'s scoring average, the quarter-by-quarter score and the kickoff weather. Recaps are kept for four weeks.</div></div></div>'; }
 /* ── the player game sheet ── */
 function mlStatCardHTML(pid){
@@ -13062,7 +13614,8 @@ function mlStatCardHTML(pid){
     +'<div class="lteams"><span class="lteam'+(g.state!=='pre'&&g.as>g.hs?' lead':'')+'">'+esc(g.an)+' <b class="vnum">'+(g.state==='pre'?'':g.as)+'</b></span><span class="lat">@</span>'
     +'<span class="lteam'+(g.state!=='pre'&&g.hs>g.as?' lead':'')+'">'+esc(g.hn)+' <b class="vnum">'+(g.state==='pre'?'':g.hs)+'</b></span></div>'
     +'<div class="lmeta">'+liveStatusChip(g)+(g.state==='in'&&g.dd?' <span class="chip mono">'+esc(g.dd)+'</span>':'')+(g.state==='in'&&g.rz?' <span class="tier must lpulse">RED ZONE</span>':'')+'</div></div>';
-  const lgRow=(rec&&rec.in.length)?('<div style="margin:10px 0 4px">'+rec.in.map(x=>{ const pv=mlPts(pid,x.L), pc2=mlPace(pid,x.L);
+  let lgRow=''; try{ lgRow=mlSheetLeaguesHTML(pid); }catch(e){}                              // v8.6: every league, every side, each in its own scoring
+  if(!lgRow) lgRow=(rec&&rec.in.length)?('<div style="margin:10px 0 4px">'+rec.in.map(x=>{ const pv=mlPts(pid,x.L), pc2=mlPace(pid,x.L);
       return '<span class="lgchip '+(x.start?'st':'bn')+'" title="'+esc(x.L.name)+'">'+esc(x.L.short)+' · '+(x.start?'starting':'bench')+' · '+(pv!=null?fmtPts(pv):'—')+' pts · '+fmtPts(pc2)+' pace</span>'; }).join('')+'</div>'):'';
   const cap=Math.max(exp*(1+1.10*mlCv(pid)),exp,pts||0,1);
   const fill=clamp((pts||0)/cap,0,1)*100, mark=clamp((exp*fr)/cap,0,1)*100;
@@ -13104,7 +13657,8 @@ function liveBodyHTML(){
   const gs=liveGamesOfInterest(); const st=liveState();
   const toggle='<div class="inlinebtns" style="margin-bottom:10px;flex-wrap:wrap"><button class="btn sm '+(S.ui.liveOpp?'pri':'')+'" data-act="liveOpp">'+(S.ui.liveOpp?'Showing':'Show')+' my opponent\'s starters</button><button class="btn sm" data-act="liveNow">Pull once now</button><span class="fine">updated '+esc(ago(L.ts||Date.now()))+' · '+(!livePullOn()?'live pull is OFF — nothing updates until you turn it back on':st==='in'?'pulling every 20s while games are on':st==='soon'?'kickoff soon — pulling every minute':st==='today'?'games later today — checking every 5 min':'no games of yours today — checking every 15 min')+'</span></div>';
   const view=(S.cfg.liveView==='league'||S.cfg.liveView==='recap')?S.cfg.liveView:'game';
-  const seg='<div class="lvsegwrap"><div class="lvseg">'+[['game','By game'],['league','By league'],['recap','Recaps']].map(x=>'<button class="'+(view===x[0]?'on':'')+'" data-act="liveView" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div>';
+  const seg='<div class="lvsegwrap"><div class="lvseg">'+[['game','By game'],['league','By league'],['recap','Recaps']].map(x=>'<button class="'+(view===x[0]?'on':'')+'" data-act="liveView" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div>'
+    +(function(){ try{ return mlLegendHTML('lv'); }catch(e){ return ''; } })();                // v8.6: the chip key, once, above the first chips
   const ML=mlSides();
   if(!gs.length&&view!=='recap') return mlStripHTML()+seg+toggle+emptyHTML('lineup','No games this week','None of your active players\' teams appear on this week\'s scoreboard — a bye-week roster, or Sleeper\'s week hasn\'t rolled over yet.')+mlRecapSectionHTML();
   const body=view==='league'
@@ -13668,19 +14222,192 @@ function dbWeek(pid,surf){
   if(!h||(!wk&&!haveStats)) h=(h||'')+dsecPendHTML('Pulling this week\'s readouts…');
   return {v:v,h:h};
 }
+
+/* ================= v8.7 · SEASONS86 — the in-depth detail, one labelled section per season =================
+   V87_SEASONS86 · The owner keeps 2025 AND 2026 side by side. Every season-scoped block in the dossier now emits
+   ONE collapsible dsecx per season — the live season first, titled "2026 · 1 gm", the prior season underneath as
+   the baseline — and because all three surfaces (the #sover slideover, the stacked Player Readout and the Intel
+   tab) run off the same db* builders, fixing the builder fixes all three. A one-game live sample keeps its real
+   per-game numbers but loses every league-wide rank/percentile, with one short line saying why. A rookie with
+   only 2026 gets one section and no empty 2025 shell. Nothing a veteran shows today is dropped. */
+const SS_THIN=4;                       // fewer than four games is not a season — no league-wide rank comes off it
+function ssGm(g){ return g?(g+' gm'):'no games logged'; }
+function ssTitle(sec){ return String(sec.se)+' \u00b7 '+ssGm(sec.g); }
+function ssBadge(sec){ return sec.live?'<span class="tier gain">live</span>':'<span class="tier mon">baseline</span>'; }
+function ssSum(sec,txt){ return ssBadge(sec)+(txt?' <span class="sstxt">'+txt+'</span>':''); }
+function ssCov(se){ try{ const TR=teamReadoutsFor(se); return TR?(TR.cov||0):0; }catch(e){ return 0; } }
+function ssSeasons(pid){ // the seasons that actually carry a row FOR HIM — live first, prior underneath
+  try{
+    const y=Number(S.nfl.season)||2026; const out=[]; const seen={};
+    const add=function(se){ se=Number(se); if(!se||seen[se]) return;
+      const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return; seen[se]=1;
+      const live=String(se)===String(y); const g=st.gp||0;
+      out.push({se:se,st:st,g:g,live:live,thin:live&&g<SS_THIN,
+        wide:!live||(g>=SS_THIN&&ssCov(se)>=USAGE_MIN_TEAMS)}); };
+    if(liveSeasonRow(pid)) add(y);       // even ONE game this year earns its own section — this is the rookie case
+    add(usageSeasonFor(pid));            // whatever the app would have shown on its own — nobody loses today's view
+    add(y-1);                            // and last season underneath, when he has one
+    if(!seen[y-1]) add(y-2);             // ONLY when he missed all of last season — then y-2 is his real baseline, not clutter
+    return out;
+  }catch(e){ return []; }
+}
+function ssTeamSeasons(pid){ // the same two sections, but for his OFFENSE — team rows, not his own
+  try{
+    const p=playerOf(pid); if(!p||!p.t) return []; const T=String(p.t).toUpperCase();
+    const y=Number(S.nfl.season)||2026; const out=[];
+    const add=function(se){ const TR=teamReadoutsFor(se); const tm=TR&&TR.by[T]; if(!tm) return;
+      const live=String(se)===String(y); const g=Math.min(tm.g||0,17);   // team gp is a max over his roster and can read 18 — no club plays 18
+      out.push({se:Number(se),tm:tm,TR:TR,g:g,live:live,thin:live&&g<SS_THIN,
+        wide:!live||(g>=SS_THIN&&(TR.cov||0)>=USAGE_MIN_TEAMS)}); };
+    if(liveSeasonWanted()) add(y);
+    add(y-1);
+    return out;
+  }catch(e){ return []; }
+}
+function ssThinNote(sec,rest){ // WHY a rank is missing — one short line, never a misleading number
+  if(sec.wide) return '';
+  const base=(rest||[]).filter(function(x){ return x.wide; })[0]||null;
+  const cov=sec.live?ssCov(sec.se):32;
+  return '<div class="ssnote">'+esc(sec.se+' is '+ssGm(sec.g)+' old'+(cov<USAGE_MIN_TEAMS?' and only '+cov+' of 32 clubs have kicked off':'')
+    +' \u2014 the per-game numbers here are his real ones, but a rank or percentile off that sample would be noise, so they are held back'
+    +(base?'. The '+base.se+' section below carries the league-wide comparison.':'.'))+'</div>';
+}
+function ssSecHTML(k,pid,sec,sumHTML,bodyHTML,first){ // the SAME collapsible primitive the dossier already uses
+  if(!bodyHTML) return '';
+  try{ if(first) DSEC_PHONE_OPEN[k]=1; }catch(e){}   // the live section opens on the phone; the baseline folds under it
+  return dsecHTML(k,pid,ssTitle(sec),sumHTML,bodyHTML,{});
+}
+function ssRoleTiles(pid,sec){ // role readout tiles for ONE season, percentile bars gated on a real sample
+  try{
+    const role=roleReadoutFor(pid,sec.se); if(!role||!role.items.length) return '';
+    return '<div class="rtiles">'+role.items.map(function(x){
+      const spec=(x.v!=null&&sec.wide&&ROLESPEC[x.lab])?ROLESPEC[x.lab]:null;
+      const c=spec?statCtx(pid,spec,sec.se,x.lab):null;
+      return '<div class="rtile"><div class="lb">'+esc(x.lab)+'</div><div class="rv '+(x.cls||'')+'">'
+        +(x.v==null?'<span class="rna">n/a</span>':esc(String(x.v)))+'</div>'
+        +(x.sub?'<div class="fine">'+esc(x.sub)+'</div>':'')+pctBarHTML(c)+medLineHTML(c)+'</div>'; }).join('')+'</div>';
+  }catch(e){ return ''; }
+}
+function ssRzShare(pid,se){ // rzShareHTML, but for a NAMED season and with that season's own team denominators
+  try{
+    const p=playerOf(pid); if(!p||!p.t) return '';
+    const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return '';
+    const his=(st.rec_rz_tgt||0)+(st.rush_rz_att||0)+(st.pass_rz_att||0);
+    const TR=teamReadoutsFor(se); const tm=(TR&&String(TR.se)===String(se))?TR.by[String(p.t).toUpperCase()]:null;
+    const team=tm?((tm.rzPass||0)+(tm.rzRush||0)):0;
+    if(!his&&!team) return '';
+    if(!his) return '<div class="rzb"><div class="rzhead"><span class="lb">Red-zone share</span><span class="rzv dn">0%</span></div>'
+      +'<div class="fine">0% \u2014 no red-zone work in '+esc(String(se))+'.</div></div>';
+    const share=team?clamp(his/team,0,1):null;
+    const cls=share==null?'':(share>=0.20?'up':(share<0.08?'dn':''));
+    return '<div class="rzb"><div class="rzhead"><span class="lb">Red-zone share</span>'
+      +'<span class="rzv '+cls+'">'+(share!=null?Math.round(share*100)+'%':his+' plays')+'</span></div>'
+      +(share!=null?'<div class="rzbar"><i style="width:'+Math.max(2,Math.round(share*100))+'%"></i></div>':'')
+      +'<div class="fine">'+esc(his+' of '+(team||'\u2014')+' team red-zone plays \u00b7 '+se)+'</div></div>';
+  }catch(e){ return ''; }
+}
+function ssRoleSum(pid,sec){
+  try{ const role=roleReadoutFor(pid,sec.se);
+    const t=role?role.items.filter(function(x){ return x.v!=null; }).slice(0,2)
+      .map(function(x){ return x.v+' '+String(x.lab).toLowerCase().replace(' share',''); }).join(' \u00b7 '):'';
+    return ssSum(sec,t?esc(t):''); }catch(e){ return ssSum(sec,''); }
+}
+function ssRoleBody(pid){ // Role & usage: role tiles + red-zone share + competition donut + usage tiles, PER SEASON
+  try{
+    const list=ssSeasons(pid); if(!list.length) return '';
+    const rm=roleMod(pid); const rmSe=String(usageSeasonFor(pid));
+    const secs=list.map(function(sec,i){
+      const bits=[]; let real=0;
+      const note=ssThinNote(sec,list.slice(i+1)); if(note) bits.push(note);
+      const rt=ssRoleTiles(pid,sec); if(rt){ bits.push('<div class="rsec">'+rt+'</div>'); real++; }
+      if(rm&&String(sec.se)===rmSe) bits.push('<div class="ssnote">'+esc('The start/sit role weight is carried off this '+sec.se+' sample: '+(rm>0?'+':'')+Math.round(rm*100)+'%')+'</div>');
+      const rz=ssRzShare(pid,sec.se); if(rz){ bits.push(rz); real++; }
+      const don=usageDonutHTML(pid,sec.se); if(don){ bits.push(don); real++; }
+      let ut=''; try{ ut=usageTilesHTML(pid,sec.st,sec.se,{norank:!sec.wide}); }catch(e){ ut=''; }
+      if(ut){ bits.push('<div class="dsec"><span class="lb">Usage &amp; opportunity \u2014 '+esc(String(sec.se))+' '+helpBtn('usage')+'</span></div>'+ut); real++; }
+      if(!real) return '';
+      return ssSecHTML('role:'+sec.se,pid,sec,ssRoleSum(pid,sec),bits.filter(Boolean).join(''),i===0);
+    }).filter(Boolean).join('');
+    return secs?'<div class="sswrap">'+secs+'</div>':'';
+  }catch(e){ return ''; }
+}
+function ssOffTiles(pid,sec){ // teamOffTilesHTML for ONE season — rank chips only where the file has the breadth
+  try{
+    const tm=sec.tm, TR=sec.TR; if(!tm||!TR) return '';
+    const wide=!!sec.wide&&(TR.n||0)>=USAGE_MIN_TEAMS;
+    const rk=function(r,nn){ return (wide&&r)?'<span class="rrk">#'+r+(nn?'/'+nn:'')+'</span>':''; };
+    return '<div class="rtiles">'
+      +roTile('Points / gm',fmtPts1(tm.ppg)+rk(tm.r_ppg,TR.n),'','')
+      +roTile('Plays / gm',Math.round(tm.plays)+rk(tm.r_plays,TR.n),'pace','')
+      +roTile('Pass rate',Math.round((tm.passRate||0)*100)+'%'+rk(tm.r_passRate,TR.n),'dropbacks \u00f7 plays','')
+      +roTile('Yards / play',(tm.ypp||0).toFixed(1)+rk(tm.r_ypp,TR.n),Math.round(tm.passYpg)+' pass \u00b7 '+Math.round(tm.rushYpg)+' rush /gm','')
+      +'</div>';
+  }catch(e){ return ''; }
+}
+function ssOffSecsHTML(pid){ // the team offense readout, one collapsible section per season
+  try{
+    const p=playerOf(pid); if(!p||!p.t) return '';
+    const list=ssTeamSeasons(pid); if(!list.length) return '';
+    const secs=list.map(function(sec,i){
+      const t=ssOffTiles(pid,sec); if(!t) return '';
+      const sum=ssSum(sec,esc(fmtPts1(sec.tm.ppg)+' pts/gm')+((sec.wide&&sec.tm.r_ppg)?' <span class="rrk">#'+sec.tm.r_ppg+'</span>':''));
+      return ssSecHTML('off:'+sec.se,pid,sec,sum,ssThinNote(sec,list.slice(i+1))+'<div class="rsec">'+t+'</div>',i===0);
+    }).filter(Boolean).join('');
+    if(!secs) return '';
+    return '<div class="lb" style="display:block;margin:0 0 4px">'+teamChip(String(p.t).toUpperCase())+' offense readout</div><div class="sswrap">'+secs+'</div>';
+  }catch(e){ return ''; }
+}
+function ssTeamTR(pid){ // his club's LIVE team row when it exists — else let the caller fall back
+  try{ const p=playerOf(pid); if(!p||!p.t) return null; const T=String(p.t).toUpperCase();
+    const y=Number(S.nfl.season)||2026;
+    if(liveSeasonWanted()){ const TR=teamReadoutsFor(y); const tm=TR&&TR.by[T]; if(tm&&(tm.g||0)>0) return TR; }
+    return null; }catch(e){ return null; }
+}
+function ssRoomNote(){ // the depth chart deliberately keeps the season that HAS coverage — say so instead of forcing 2026
+  try{ const y=Number(S.nfl.season)||2026; if(!liveSeasonWanted()) return '';
+    const se=usageShareSeason(); if(String(se)===String(y)) return '';
+    return '<div class="ssnote">'+esc('The room ranks on '+se+' snap shares on purpose: a depth ladder only means something once most of the league has kicked off, and '
+      +ssCov(y)+' of 32 clubs carry a '+y+' row so far. It swaps to '+y+' the week that coverage lands.')+'</div>';
+  }catch(e){ return ''; }
+}
+function ssStyleSeasonHTML(pid,sp){ // play style is NOT a two-section block — it reads one full season, so name it
+  try{ const y=Number(S.nfl.season)||2026; let se=null;
+    for(const s2 of [y-1,y-2]){ const m=S.sstat&&S.sstat[s2]; if(m&&m[pid]&&(m[pid].gp||0)>=6){ se=s2; break; } }
+    return ' <span class="fine">'+esc(se?'(his last full season \u2014 '+se+' \u00b7 '+((sp&&sp.g)||0)+' gm)':'(his last full season)')+'</span>';
+  }catch(e){ return ''; }
+}
+function ssRankOK(se,st){ // may a positional FINISH come off this season's file yet?
+  try{ const y=Number(S.nfl.season)||2026; if(String(se)!==String(y)) return true;
+    return !!(st&&(st.gp||0)>=SS_THIN)&&ssCov(se)>=USAGE_MIN_TEAMS; }catch(e){ return true; }
+}
+function ssLedgerNote(pid){ // the season ledger keeps its live row — it just refuses to call one game a finish
+  try{
+    const y=Number(S.nfl.season)||2026; if(!liveSeasonWanted()) return '';
+    const st=S.sstat&&S.sstat[y]&&S.sstat[y][pid]; if(!st) return '';
+    if(ssRankOK(y,st)) return '';
+    const cov=ssCov(y); const prev=(S.sstat&&S.sstat[y-1]&&S.sstat[y-1][pid])?(y-1):null;
+    return '<div class="ssnote">'+esc(y+' is '+ssGm(st.gp||0)+' old'+(cov<USAGE_MIN_TEAMS?' and only '+cov+' of 32 clubs have kicked off':'')
+      +' \u2014 its points and PPG are his real ones, but a positional Finish off that file would rank him against a handful of players, so that cell stays blank'
+      +(prev?'. The '+prev+' row underneath is the finish that means something.':'.'))+'</div>';
+  }catch(e){ return ''; }
+}
+
 function dbRole(pid){
   const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid];
   const RS=roleReadouts(pid); const R=RS[0]||null;                       // v8.5: the LIVE section drives the summary line
   let v=''; try{ v=R?esc(R.items.filter(function(x){ return x.v!=null; }).slice(0,2)   // v8.5: an n/a tile never becomes the words "null snap"
     .map(function(x){ return x.v+' '+String(x.lab).toLowerCase().replace(' share',''); }).join(' · ')):''; }catch(e){ v=''; }
   const parts=[];
-  const rt=roleTilesHTML(pid); if(rt) parts.push('<div class="rsec">'+rt+'</div>');
-  const rz=rzShareHTML(pid); if(rz) parts.push(rz);
-  parts.push('<div class="dsec"><span class="lb">Usage &amp; opportunity — '+esc(String(se))+' '+helpBtn('usage')+'</span></div>');
-  const don=usageDonutHTML(pid,se); if(don) parts.push(don);   // v8.5: the heading above says <se> — the donut now reads the same season instead of usageShareSeason()
-  if(st) parts.push(usageTilesHTML(pid,st,se));
+  let ssb=''; try{ ssb=ssRoleBody(pid); }catch(e){ ssb=''; }   // v8.7 · V87_SEASONS86: one collapsible section per season, live first
+  if(ssb) parts.push(ssb);
+  else {                                                        // degrade, never crash — v8.5's single-season block is still here
+    const rt=roleTilesHTML(pid); if(rt) parts.push('<div class="rsec">'+rt+'</div>');
+    const rz=rzShareHTML(pid); if(rz) parts.push(rz);
+    parts.push('<div class="dsec"><span class="lb">Usage &amp; opportunity — '+esc(String(se))+' '+helpBtn('usage')+'</span></div>');
+    const don=usageDonutHTML(pid,se); if(don) parts.push(don);
+    if(st) parts.push(usageTilesHTML(pid,st,se)); }
   try{ const sp=styleProfile(pid);
-    if(sp&&sp.tags.length) parts.push('<div style="margin:10px 0 12px"><span class="lb" style="display:block;margin-bottom:6px">Play style</span><div class="chips">'
+    if(sp&&sp.tags.length) parts.push('<div style="margin:10px 0 12px"><span class="lb" style="display:block;margin-bottom:6px">Play style'+ssStyleSeasonHTML(pid,sp)+'</span><div class="chips">'
       +sp.tags.map(function(t){ return '<span class="tier '+t[1]+'">'+esc(t[0])+'</span>'; }).join('')+'</div>'
       +(sp.age?'<div class="fine" style="margin-top:5px">Style-aware aging: '+(sp.age>=0?'+':'')+esc((sp.age*100).toFixed(1))+'%/yr bends every value projection, trajectory and sell window for him</div>':'')+'</div>'); }catch(e){}
   let h=parts.filter(Boolean).join('');
@@ -13715,10 +14442,11 @@ function dbDepth(pid){ // the room at his position — its own section, one tap 
 }
 function dbOff(pid){
   const p=playerOf(pid); if(!p) return null;
-  const TR=teamReadouts(); const tm=(TR&&p.t)?TR.by[String(p.t).toUpperCase()]:null;
-  const v=tm?esc(String(p.t).toUpperCase()+' '+fmtPts1(tm.ppg)+' pts/gm')+(tm.r_ppg?' #'+tm.r_ppg:''):'';
-  const off=teamOffTilesHTML(pid);
-  let h=(off?'<div class="rsec">'+off+'</div>':'');                    // V87: the depth chart is its own section now
+  const TR=ssTeamTR(pid)||teamReadouts(); const tm=(TR&&p.t)?TR.by[String(p.t).toUpperCase()]:null;   // v8.7: his club's LIVE row leads the collapsed header when it exists
+  const v=tm?esc(String(p.t).toUpperCase()+' '+fmtPts1(tm.ppg)+' pts/gm · '+TR.se)+((tm.r_ppg&&(TR.cov||0)>=USAGE_MIN_TEAMS)?' #'+tm.r_ppg:''):'';
+  let ssoff=''; try{ ssoff=ssOffSecsHTML(pid); }catch(e){ ssoff=''; }   // v8.7 · V87_SEASONS86: one offense section per season
+  const off=ssoff||teamOffTilesHTML(pid);
+  let h=(off?(ssoff?off:'<div class="rsec">'+off+'</div>'):'');       // V87: the depth chart is its own section now
   if(!h) h=dsecPendHTML('Pulling his offense readout…');
   return {v:v,h:h};
 }
@@ -13730,7 +14458,7 @@ function histBodyHTML(pid){ // SYNCHRONOUS — reads only what already sits in S
     const isIdp=['DL','LB','DB'].includes(p.p); const isDef=p.p==='DEF'||p.p==='K';
     const rows=seasons.map(function(se){ const m=S.sstat&&S.sstat[se];
       return {se:se,st:m?m[pid]:null,none:!m,
-        rank:(m&&m[pid])?((isIdp||isDef)?lgPosRankIn(m,pid):((((m[pid].pos_rank_ppr||0)>0&&m[pid].pos_rank_ppr<600)?m[pid].pos_rank_ppr:posRankIn(m,pid,'pts')))):null}; });
+        rank:(m&&m[pid]&&ssRankOK(se,m[pid]))?((isIdp||isDef)?lgPosRankIn(m,pid):((((m[pid].pos_rank_ppr||0)>0&&m[pid].pos_rank_ppr<600)?m[pid].pos_rank_ppr:posRankIn(m,pid,'pts')))):null}; });   // v8.7 · V87_SEASONS86
     const proj=(S.sproj&&S.sproj[y])||null;
     const P=LP();
     const sPts=function(r){ if(!r.st) return null; if(isIdp){ const v=idpSeasonPts(pid,String(r.se)); if(v!=null) return v; }
@@ -13765,7 +14493,7 @@ function histBodyHTML(pid){ // SYNCHRONOUS — reads only what already sits in S
       +bars('Production trend · ppg',trendArr,function(v){ return v?v.toFixed(1):'—'; })
       +bars('Value forecast · age curve',trajArr,function(v){ return v?fmtN(v):'—'; })
       +'</div>'
-      +'<div class="dsec"><span class="lb">Season ledger</span></div>'
+      +'<div class="dsec"><span class="lb">Season ledger</span></div>'+ssLedgerNote(pid)
       +'<div class="gltab"><table class="led"><thead><tr><th>Season</th>'+(lgCol?'<th class="r" title="scored with this league\'s exact settings — bonuses included via per-game counters">Your league</th>':'')
       +'<th class="r"'+(((isIdp||isDef)&&P)?' title="scored with this league\'s exact '+(p.p==='K'?'kicking':'defensive')+' point values"':'')+'>'+(((isIdp||isDef)&&P)?'Your league':'PPR')+'</th><th class="r">PPG</th>'
       +'<th class="r" title="games played · games started">GP · GS</th><th class="r"'+((isIdp||isDef)?' title="positional finish by league-scored points"':'')+'>Finish</th>'
@@ -13778,8 +14506,8 @@ function dbHist(pid){
   let v='';
   try{ for(let se=y;se>=y-4;se--){ const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) continue;
       const lg=lgScoreRow(st); const pts=(lg!=null?lg:st.pts);
-      const m=S.sstat[se]; const rk=(['DL','LB','DB','DEF','K'].includes(p.p))?lgPosRankIn(m,pid):((((st.pos_rank_ppr||0)>0&&st.pos_rank_ppr<600)?st.pos_rank_ppr:posRankIn(m,pid,'pts')));
-      v=esc(se+' · '+fmtN(pts)+' pts'+(rk?' · '+p.p+rk:'')); break; } }catch(e){ v=''; }
+      const m=S.sstat[se]; const rk=ssRankOK(se,st)?((['DL','LB','DB','DEF','K'].includes(p.p))?lgPosRankIn(m,pid):((((st.pos_rank_ppr||0)>0&&st.pos_rank_ppr<600)?st.pos_rank_ppr:posRankIn(m,pid,'pts')))):null;   // v8.7 · V87_SEASONS86
+      v=esc(se+' · '+fmtN(pts)+' pts'+(rk?' · '+p.p+rk:(st.gp?' · '+st.gp+' gm':''))); break; } }catch(e){ v=''; }
   const body=histBodyHTML(pid);
   return {v:v,h:body||dsecPendHTML('Pulling his season lines…')};
 }
@@ -14312,6 +15040,7 @@ document.addEventListener('click',async e=>{
   if(act==='hubMore'){ openHubMore(); return; }
   if(act==='cmdMore'){ var _ck=b.dataset.k; S.ui.cmdOpen=S.ui.cmdOpen||{}; S.ui.cmdOpen[_ck]=!S.ui.cmdOpen[_ck]; try{ cmdDense(); }catch(e){} return; }
   if(act==='rnMore'){ var _rn=b.closest('.rnfold'); if(_rn) b.textContent=_rn.classList.toggle('on')?'more':'less'; return; }
+  if(act==='ddMore'){ try{ dd86Toggle(b.dataset.k); }catch(e){} return; } // v8.6.1 deskdense86
   if(act==='rescan'){ await loadTrending(); await scanWaivers(true); renderTab(); toast('Waiver scan refreshed','good'); return; }
   if(act==='gotoWaiver'){ $('modal').classList.remove('on'); switchTab('waiver'); return; }
   if(act==='rmAsset'){ (b.dataset.side==='A'?S.ui.tradeA:S.ui.tradeB).splice(Number(b.dataset.i),1); saveTradeState(); renderTab(); return; }
@@ -14380,6 +15109,11 @@ document.addEventListener('click',async e=>{
     else { liveDisarm(); toast('Live pull paused — nothing will update until you turn it back on.','warn'); }
     liveRepaint(); liveNextPaint(); return; }
   if(act==='liveView'){ S.cfg.liveView=(b.dataset.v==='league'||b.dataset.v==='recap')?b.dataset.v:'game'; try{ await Store.set('cfg',S.cfg); }catch(e){} liveRepaint(); return; }
+  if(act==='mlLegend'){ S.cfg.mlLeg=(S.cfg.mlLeg===0)?1:0; try{ await Store.set('cfg',S.cfg); }catch(e){}   // v8.6 · the chip key, remembered
+    if(S.ui.gameView&&$('gvBody')) gameViewRepaint(); else liveRepaint(); return; }
+  if(act==='mlStake'){ const lid86=String(b.dataset.lid||''); S.ui.mlStk=S.ui.mlStk||{};      // v8.6 · who cuts both ways in this league
+    if(S.ui.mlStk[lid86]) delete S.ui.mlStk[lid86]; else S.ui.mlStk[lid86]=1;
+    liveRepaint(); setTimeout(()=>{ try{ const t=$('lg_'+lid86); if(t&&t.scrollIntoView) t.scrollIntoView({behavior:'smooth',block:'nearest'}); }catch(e){} },40); return; }
   if(act==='liveCard'){ if(pid) openLiveCard(pid); return; }   // deliberately does NOT touch #modal — the Game Center stays open behind the sheet
   if(act==='lsClose'){ closeLiveCard(); return; }
   if(act==='lsIntel'){ closeLiveCard(); if(pid) openPlayer(pid); return; }
@@ -14597,7 +15331,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.7','store: '+Store.backend,
+    'FRONT OFFICE v8.8','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -14726,13 +15460,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.7 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.8 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.7 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.8 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -14751,7 +15485,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.7 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.8 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
