@@ -2281,6 +2281,11 @@ body.phone .sswrap>.dsecx>.dsx-h{padding:10px 2px;min-height:44px}
 body.phone .sswrap>.dsecx>.dsx-h .dsx-v{max-width:42%}
 body.phone .sswrap>.dsecx>.dsx-h .dsx-v .sstxt{display:none}
 body.phone .ssnote{font-size:12px;line-height:1.6}
+
+/* ═══════════ v8.9 · projected final ═══════════ */
+.hdfin{color:var(--gain);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.hds.tot .hdpt{font-size:15px}
+.hds.tot .fine{display:block;margin-top:2px;color:var(--dim)}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -9989,9 +9994,39 @@ async function activateLeague(nid){ // v8: ONE league-switch path — the header
   HUB.medc={};
   return true;
 }
+function hubPace(pid,lg,now,hasNow){ // V89_PROJ_MARK: what this slot is really worth by the final whistle
+  const out={now:hasNow?(Number(now)||0):0,proj:null,exp:0,state:'pre',frac:0,final:false};
+  if(!pid||pid==='0') return out;
+  let p=null; try{ p=hubProj(pid,lg); }catch(e){ p=null; }
+  out.proj=(p!=null&&isFinite(p))?p:null;
+  let g=null; try{ g=liveGameOf(pid); }catch(e){ g=null; }
+  const st=g&&g.state?String(g.state):'pre';
+  out.state=st; out.frac=g?liveGameFrac(g):0; out.final=(st==='post');
+  if(st==='post'){ out.exp=out.now; return out; }                       // he is done — his actual points ARE the projection now
+  if(st==='in'){ out.exp=out.now+(1-out.frac)*(out.proj!=null?out.proj:0); return out; }
+  out.exp=(out.proj!=null?out.proj:out.now);                            // not kicked off — his projection stands
+  return out;
+}
+function hubSideExp(mu,lg){ // a side's expected final score, slot by slot
+  const o={exp:0,now:0,proj:0,left:0,allFinal:true,any:false};
+  if(!mu) return o;
+  const ids=mu.starters||[]; const sp=mu.starters_points; const pp=mu.players_points;
+  for(let ix=0;ix<ids.length;ix++){ const pid=ids[ix]; if(!pid||pid==='0') continue;
+    let nowv=0, has=false;
+    if(Array.isArray(sp)&&sp[ix]!=null){ nowv=Number(sp[ix])||0; has=true; }
+    else if(pp&&pp[pid]!=null){ nowv=Number(pp[pid])||0; has=true; }
+    const r=hubPace(pid,lg,nowv,has);
+    o.exp+=r.exp; o.now+=r.now; if(r.proj!=null) o.proj+=r.proj; o.any=true;
+    if(!r.final) { o.allFinal=false; o.left+=Math.max(0,r.exp-r.now); } }
+  if(!o.any){ o.allFinal=false; }
+  return o;
+}
 function hubWinPct(i){ // sigma scales with the league's own scoring and collapses as the week completes
   if(!i||i.myT==null||i.oppT==null) return null;
-  const myE=Math.max(i.myNow||0,i.myT), oppE=Math.max(i.oppNow||0,i.oppT);
+  if(i.myE!=null&&i.oppE!=null&&i.allFinal){                            // V89: nothing left to play — the result IS the answer
+    const d0=(i.myE||0)-(i.oppE||0);
+    return {p:d0>0?1:(d0<0?0:0.5),sigma:0,myE:i.myE,oppE:i.oppE,done:1,final:true}; }
+  const myE=(i.myE!=null?i.myE:Math.max(i.myNow||0,i.myT)), oppE=(i.oppE!=null?i.oppE:Math.max(i.oppNow||0,i.oppT));
   const tot=myE+oppE; if(!(tot>0)) return null;
   const done=clamp(((i.myNow||0)+(i.oppNow||0))/tot,0,1);
   const sigma=Math.max(12,0.16*tot)*Math.sqrt(Math.max(0.06,1-done));
@@ -10093,12 +10128,22 @@ function hubMatchupHTML(i){ // my roster vs theirs, slot by slot — rendered as
     if(Array.isArray(a)&&a[ix]!=null) return Number(a[ix])||0;
     const m2=mu.players_points; return (m2&&pid&&m2[pid]!=null)?(Number(m2[pid])||0):0; };
   const pj=function(pid){ if(!pid||pid==='0') return null; try{ return hubProj(pid,lg); }catch(e){ return null; } };
-  const val=function(mu,ix,pid){ if(!pid||pid==='0') return 0; const p=pj(pid); return liveOn?lp(mu,ix,pid):(p!=null?p:0); };
+  const paceOf=function(mu,ix,pid){ if(!pid||pid==='0') return null;   // V89: final -> his actual, in-progress -> banked + the rest, pre -> projection
+    const a=mu&&mu.starters_points, m2=mu&&mu.players_points;
+    let nowv=0, has=false;
+    if(Array.isArray(a)&&a[ix]!=null){ nowv=Number(a[ix])||0; has=true; }
+    else if(m2&&m2[pid]!=null){ nowv=Number(m2[pid])||0; has=true; }
+    try{ return hubPace(pid,lg,nowv,has); }catch(e){ return null; } };
+  const val=function(mu,ix,pid){ const r=paceOf(mu,ix,pid); return r?r.exp:0; };
   const cell=function(mu,ix,pid,them){
     if(!pid||pid==='0') return '<td class="hdsp'+(them?' them':'')+'"><span style="color:var(--dim)">— open —</span></td>';
-    const p=pj(pid); const shown=liveOn?lp(mu,ix,pid):(p!=null?p:0);
+    const r=paceOf(mu,ix,pid); const p=r?r.proj:null;
+    const shown=r?r.exp:0; let sub='';
+    if(r&&r.final) sub=' <span class="fine hdfin">final</span>';        // V89: he is done — the number IS his result
+    else if(r&&r.state==='in') sub=' <span class="fine">'+fmtPts1(r.now)+' now'+(p!=null?' · proj '+fmtPts1(p):'')+'</span>';
+    else if(p!=null) sub=' <span class="fine">proj</span>';
     return '<td class="hdsp'+(them?' them':'')+'">'+playerRow(pid)
-      +'<span class="hdpt">'+fmtPts1(shown)+(liveOn?' <span class="fine">now'+(p!=null?' · proj '+fmtPts1(p):'')+'</span>':'')+'</span></td>'; };
+      +'<span class="hdpt">'+fmtPts1(shown)+sub+'</span></td>'; };
   const slots=(lg.roster_positions||[]).filter(function(p){ return !['BN','IR','TAXI'].includes(p); });
   const myS=i.mine.starters||[]; const opS=(i.opp&&i.opp.starters)||[];
   const aligned=slots.length===myS.length&&(!i.opp||slots.length===opS.length);
@@ -10114,8 +10159,11 @@ function hubMatchupHTML(i){ // my roster vs theirs, slot by slot — rendered as
       +(i.opp?('<td class="hdse '+cls+'">'+arw+' '+(d>0?'+':'')+fmtPts1(d)+'</td>'+cell(i.opp,ix,op,true)):'')+'</tr>');
   }
   const dT=myTot-opTot;
-  trs.push('<tr class="hds tot"><td class="hdsl lb">Total</td><td class="hdsp"><span class="hdpt">'+fmtPts1(myTot)+'</span></td>'
-    +(i.opp?('<td class="hdse '+(dT>=1?'up':(dT<=-1?'dn':'ev'))+'">'+(dT>0?'+':'')+fmtPts1(dT)+'</td><td class="hdsp them"><span class="hdpt">'+fmtPts1(opTot)+'</span></td>'):'')+'</tr>');
+  const bankedMe=(i.myNow||0), bankedOp=(i.oppNow||0);              // V89: the projected final, with the banked score under it
+  const totSub=function(v){ return liveOn?('<span class="fine">'+fmtPts1(v)+' banked</span>'):''; };
+  const totLab=(i.allFinal?'Final':(liveOn?'Projected final':'Projected'));
+  trs.push('<tr class="hds tot"><td class="hdsl lb">'+esc(totLab)+'</td><td class="hdsp"><span class="hdpt">'+fmtPts1(myTot)+'</span>'+totSub(bankedMe)+'</td>'
+    +(i.opp?('<td class="hdse '+(dT>=1?'up':(dT<=-1?'dn':'ev'))+'">'+(dT>0?'+':'')+fmtPts1(dT)+'</td><td class="hdsp them"><span class="hdpt">'+fmtPts1(opTot)+'</span>'+totSub(bankedOp)+'</td>'):'')+'</tr>');
   const tbl='<div style="overflow-x:auto"><table class="led hdslots"><thead><tr><th class="hdsl">Slot</th><th>You</th>'
     +(i.opp?'<th class="hdse">Edge</th><th class="r">Them</th>':'')+'</tr></thead><tbody>'+trs.join('')+'</tbody></table></div>';
   let odds='';
@@ -10281,6 +10329,12 @@ function hubInfo(l){ const lid=l.league_id; const b=S.bundles[lid]; const lg=hub
   const starters=me?(me.starters||[]):null;
   if(me){ info.mine=me; info.myT=pts(starters); info.myNow=me.points||0; }
   if(opp){ info.opp=opp; info.oppName=hubTeamName(b,opp.roster_id); info.oppT=pts(opp.starters); info.oppNow=opp.points||0; }
+  try{                                                                   // V89: expected FINAL score — banked where a game is done, projection where it is not
+    const eM=me?hubSideExp(me,lg):null, eO=opp?hubSideExp(opp,lg):null;
+    if(eM){ info.myE=eM.exp; info.myLeft=eM.left; }
+    if(eO){ info.oppE=eO.exp; info.oppLeft=eO.left; }
+    info.allFinal=!!(eM&&eM.any&&eM.allFinal&&(!opp||(eO&&eO.allFinal)));
+  }catch(e){}
   const A=info.alerts; const slots=rp.filter(p=>!['BN','IR','TAXI'].includes(p)); const BAD=/^(out|ir|pup|sus|cov|doubtful)/i;
   if(starters&&S.nfl.season_type==='regular'){
     const empty=starters.filter(p=>!p||p==='0').length; if(empty) A.push({k:'red',t:'Lineup: '+empty+' empty slot'+(empty>1?'s':'')});
@@ -15331,7 +15385,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v8.8','store: '+Store.backend,
+    'FRONT OFFICE v8.9','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -15460,13 +15514,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.8 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v8.9 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.8 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v8.9 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -15485,7 +15539,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v8.8 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v8.9 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
