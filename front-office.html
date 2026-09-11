@@ -2581,6 +2581,15 @@ body:not(.phone) .gvtop2 .gvTsc{font-size:38px}
 body.phone #modal.gvfs .gvtop.gvtop2{padding:calc(env(safe-area-inset-top,0px) + 12px) 8px 9px}
 .gvtop2 .gvsit2{margin-top:7px}
 body:not(.phone) .gvtop2 .gvboard{grid-template-columns:1fr auto 1fr}
+
+/* ═══════════ v9.3 · logo-only club panels + a visible refresh ═══════════ */
+.gvtop2 .gvlogob{display:inline-flex;align-items:center;justify-content:center;background:none;border:0;padding:2px;margin:0;border-radius:10px;cursor:pointer;min-width:44px;min-height:44px}
+.gvtop2 .gvlogob:active{background:rgba(255,255,255,.08)}
+.gvtop2 .gvlogo{width:40px;height:40px}
+.gvtop2 .gvlogofb{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.06);font:800 12px/1 var(--sans);letter-spacing:.06em;color:var(--ink)}
+.gvtop2 .gvTab{display:none}
+.gvtop2 .gvfresh{display:block;font:700 8.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--gain);opacity:.8}
+.gvtop2 .gvfresh.bad{color:var(--watch)}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -10236,7 +10245,9 @@ function hubProj(pid,lg){ if(!S.proj||!S.proj.map) return null; const row=S.proj
   const rec=sc&&sc.rec!=null?Number(sc.rec):1; const v=rec>=1?row.pts_ppr:rec>=0.5?row.pts_half_ppr:row.pts_std; return v!=null?v:(row.pts_ppr!=null?row.pts_ppr:null); }
 function fmtPts1(n){ return (Math.round(n*10)/10).toFixed(1); }
 async function hubFetch(force,onlyLid){ if(HUB.busy||!S.net.sleeper||!S.conn) return; const wk=Math.max(1,S.nfl.week||1); const reg=S.nfl.season_type==='regular';
-  const due=hubLeagues().filter(l=>{ if(onlyLid&&l.league_id!==onlyLid) return false; const h=HUB.byLid[l.league_id]; return force||!h||h.wk!==wk||Date.now()-h.ts>600e3; }); if(!due.length) return; HUB.busy=true; hubRepaint();
+  const due=hubLeagues().filter(l=>{ if(onlyLid&&l.league_id!==onlyLid) return false; const h=HUB.byLid[l.league_id];
+    if(h&&h.wk===wk&&Array.isArray(h.m)&&Date.now()-h.ts<8000) return false;   // V93: even a forced refresh skips a league fetched in the last 8s — the live poller and the hub were pulling the same rows twice
+    return force||!h||h.wk!==wk||Date.now()-h.ts>600e3; }); if(!due.length) return; HUB.busy=true; hubRepaint();
   try{ await Promise.all(due.map(async l=>{ const lid=l.league_id; try{ if(!S.bundles[lid]) await fetchLeagueBundle(lid,false); }catch(e){}
       let m=null; if(reg){ try{ m=await slp('/league/'+lid+'/matchups/'+wk); }catch(e){} }
       HUB.byLid[lid]={ts:Date.now(),wk,m:Array.isArray(m)?m:null}; })); HUB.ts=Date.now(); }
@@ -12901,7 +12912,29 @@ function liveParseSummary(j){ // ESPN game summary → per-athlete box map, play
 const GV={timer:null};
 function gameOf(gid){ return ((S.live&&S.live.games)||[]).find(g=>String(g.id)===String(gid))||null; }
 async function liveFetchSummary(gid,force){ const s0=LIVE.sum[gid]; if(!force&&s0&&Date.now()-s0.ts<20000) return s0;
-  try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+gid,12000); if(j) LIVE.sum[gid]=liveParseSummary(j); }catch(e){} return LIVE.sum[gid]||null; }
+  try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+gid,12000);
+    if(j){ const P=liveParseSummary(j); try{ P.hdr=gvHeaderOf(j); }catch(e){} LIVE.sum[gid]=P; } }catch(e){}   // V93: stays non-throwing for every caller; the focus poll detects a failed pull by its timestamp
+  return LIVE.sum[gid]||null; }
+function gvHeaderOf(j){ // V93_GVFOCUS: the live game state from the SAME summary call — no extra request
+  const c=j&&j.header&&j.header.competitions&&j.header.competitions[0]; if(!c) return null;
+  const o={}; const st=c.status||{}; const ty=st.type||{};
+  if(ty.state) o.state=String(ty.state);
+  if(st.period!=null) o.period=Number(st.period)||o.period;
+  if(st.displayClock!=null) o.clock=String(st.displayClock);
+  (c.competitors||[]).forEach(function(t){ const ab=liveTeamKey(t.team&&t.team.abbreviation); const sc=Number(t.score);
+    if(t.homeAway==='home'){ o.home=ab; if(isFinite(sc)) o.hs=sc; } else if(t.homeAway==='away'){ o.away=ab; if(isFinite(sc)) o.as=sc; }
+    if(t.possession===true) o.poss=ab; });
+  const sit=j.situation||c.situation||null;
+  if(sit){ if(sit.downDistanceText||sit.shortDownDistanceText) o.dd=String(sit.shortDownDistanceText||sit.downDistanceText);
+    if(sit.possessionText&&!o.spot) o.spot=String(sit.possessionText);
+    if(sit.isRedZone!=null) o.rz=!!sit.isRedZone;
+    if(sit.possession&&!o.poss){ (c.competitors||[]).forEach(function(t){ if(String(t.id)===String(sit.possession)) o.poss=liveTeamKey(t.team&&t.team.abbreviation); }); } }
+  return o;
+}
+function gvApplyHeader(gid){ // fold the freshest summary header into the scoreboard game object
+  const sm=LIVE.sum[gid]; const h=sm&&sm.hdr; if(!h) return false; let g=null; try{ g=gameOf(gid); }catch(e){ g=null; } if(!g) return false;
+  let changed=false; ['state','period','clock','hs','as','poss','dd','spot','rz'].forEach(function(k){ if(h[k]!=null&&g[k]!==h[k]){ g[k]=h[k]; changed=true; } });
+  return changed; }
 /* ===== v8.2 . live82 - FULL-SCREEN GAME CENTER (phone) =====
    Nothing below forks the game-view state machine. openGame / closeModal / GV.timer /
    GV.gen stay the single owners of the poll; this layer only re-arranges what
@@ -12959,8 +12992,10 @@ function gvTopHTML(g){ // V92_GVTOP: a scoreboard, not a strip of abbreviations
       const lg=gvClubLogo(t);
       return '<div class="gvT '+which+(lead(which==='gvA'?'a':'h')?' lead':'')+(has?' poss':'')+'" style="--tint:'+gvClubTint(t)+'">'
         +'<div class="gvTid">'
-          +(lg?'<img class="gvlogo" alt="" loading="eager" decoding="async" src="'+lg+'" onerror="this.remove()">':'')
-          +'<span class="gvTab">'+teamChip(t,t)+'</span>'
+          +'<button class="gvlogob" type="button" data-act="teamOpen" data-tm="'+esc(t)+'" aria-label="'+esc(t)+' — team readout" title="'+esc(t)+'">'
+            +(lg?'<img class="gvlogo" alt="'+esc(t)+'" loading="eager" decoding="async" src="'+lg+'" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'inline-flex\'">':'')
+            +'<span class="gvlogofb"'+(lg?' style="display:none"':'')+'>'+esc(t)+'</span>'
+          +'</button>'
           +(has?'<i class="gvball" title="has the ball" aria-label="has the ball"></i>':'')
         +'</div>'
         +'<b class="gvTsc">'+(pre?dash:esc(String(score)))+'</b>'
@@ -13092,10 +13127,31 @@ function openGame(gid){ const g=gameOf(gid); if(!g){ toast('That game is not on 
   S.ui.gameView=String(gid); S.ui.gvTab=gvOpenTab(gid); gvFsOn(); // v8.2: the skin goes on first, so the very first paint is already full screen
   $('mTitle').textContent=g.an+' @ '+g.hn; $('mBody').innerHTML='<div id="gvBody">'+gameViewHTML(g)+'</div>'; $('modal').classList.add('on'); if($('modal').querySelector('.mbox')) $('modal').querySelector('.mbox').scrollTop=0;
   liveFetchSummary(gid,!LIVE.sum[gid]||Date.now()-LIVE.sum[gid].ts>20000).then(()=>gameViewRepaint()); gameViewArm(); }
+const GVF={fast:8000, pts:2, stats:4, maxBack:30000};   // V93: summary every 8s, Sleeper points every 2nd tick (16s), the weekly stat file every 4th (32s)
 function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+1; const gen=GV.gen; // v7.0.1: generation token — only the newest arm may re-arm
+  let n=0, back=0;
   const tick=async()=>{ if(gen!==GV.gen) return; GV.timer=null; if(!$('gvBody')||!$('modal').classList.contains('on')||!S.ui.gameView){ S.ui.gameView=null; return; }
-    const g=gameOf(S.ui.gameView); if(g&&g.state==='in'){ if(!document.hidden){ await liveFetchSummary(g.id,true); if(gen!==GV.gen) return; gameViewRepaint(); } GV.timer=setTimeout(tick,20000); } else GV.timer=setTimeout(tick,60000); };
-  GV.timer=setTimeout(tick,20000); }
+    const gid=S.ui.gameView; const g=gameOf(gid); const st=g?g.state:'pre';
+    if(document.hidden){ GV.timer=setTimeout(tick,st==='in'?GVF.fast:30000); return; }             // hidden: no network, just stay armed
+    if(st==='post'){ GV.timer=setTimeout(tick,60000); return; }                                    // final: nothing left to chase
+    const t0=(LIVE.sum[gid]&&LIVE.sum[gid].ts)||0;
+    try{ await liveFetchSummary(gid,true); }catch(e){}                                              // plays, box score, scoring, win prob AND the score/clock
+    let ok=!!(LIVE.sum[gid]&&LIVE.sum[gid].ts>t0);                                                  // a fresh timestamp is the only proof the pull landed
+    if(gen!==GV.gen) return;
+    try{ gvApplyHeader(gid); }catch(e){}
+    if(st==='in'){ n++;
+      if(n%GVF.pts===0){ try{ LIVE.last.mu=0; LIVE.last.ml=0; if(n%GVF.stats===0) LIVE.last.st=0; await liveRefresh(); }catch(e){ ok=false; } }   // the league-scored fantasy points
+      if(gen!==GV.gen) return; }
+    try{ gameViewRepaint(); }catch(e){}
+    try{ gvStampFresh(ok); }catch(e){}
+    back=ok?0:Math.min(GVF.maxBack,(back||GVF.fast)*2);                                             // a failed pull backs off, a good one snaps back to 8s
+    GV.timer=setTimeout(tick, st==='in'?(back||GVF.fast):30000); };                                 // pre-game: every 30s so kickoff is caught
+  GV.timer=setTimeout(tick,1200); }                                                                  // first refresh right away, not 20s later
+function gvStampFresh(ok){ // a small "updated Ns ago" in the game header so the cadence is visible
+  const el=document.querySelector('#modal .gvstate'); if(!el) return;
+  let t=el.querySelector('.gvfresh'); if(!t){ t=document.createElement('span'); t.className='gvfresh'; el.appendChild(t); }
+  GV.fresh=Date.now(); t.textContent=ok?'live':'retrying'; t.classList.toggle('bad',!ok);
+}
 function gvHelpMount(){ const b0=$('gvBody'); const b=(b0&&b0.querySelector('.gvmain'))||b0; if(!b) return; const x=$('gvHelpBox'); if(!GV.help){ if(x) x.remove(); return; } if(x) return; const h=HELP.gamecenter||{};
   const d=document.createElement('div'); d.id='gvHelpBox'; d.className='card'; d.style.cssText='margin:0 0 10px'; d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><b>'+esc(h.t||'Game Center')+'</b><button class="btn sm" data-act="gvHelp">Close</button></div><div class="railnote">'+(h.b||'Live feed, box score, scoring plays and your players in this game.')+'</div>'; b.prepend(d); }
 function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
@@ -13245,7 +13301,9 @@ function livePlaysFor(g,limit){ // merged, newest-first plays for a game: summar
 }
 function liveSurface(){ // v5.5: the surfaces that show plays, box lines and win probability — the Live tab, or a dossier mount that is visible AND has a game to show
   return S.ui.tab==='live'||(!!S.ui.gameView&&!!$('gvBody')&&$('modal').classList.contains('on'))||[...document.querySelectorAll('.livePlayer[data-pid]')].some(el=>el.childElementCount>0&&!!el.closest('#sover.on,.panel.on')&&dsVisible(el)); } // v8.2: a mount under a collapsed section has no box at all, so the 20s feed stands down
-async function liveRefresh(){ // one polling pass — each feed on its own cadence; renders in place afterwards
+let LIVE_INFLIGHT=null;   // V93_LIVEINFLIGHT: the global poller and the game-view poller must never run two passes at once
+async function liveRefresh(){ if(LIVE_INFLIGHT) return LIVE_INFLIGHT; LIVE_INFLIGHT=liveRefreshInner().finally(function(){ LIVE_INFLIGHT=null; }); return LIVE_INFLIGHT; }
+async function liveRefreshInner(){ // one polling pass — each feed on its own cadence; renders in place afterwards
   if(LIVE.refreshing||!S.conn||!S.league) return; LIVE.refreshing=true;
   const now=Date.now(); const wk=liveWeek(); const y=Number(S.nfl.season)||2026;
   try{
