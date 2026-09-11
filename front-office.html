@@ -3276,6 +3276,103 @@ body.phone .pzrn .pzft{display:inline-block;flex:none;margin-left:0}
 /* the phone's full-view prop detail: its only exit gets a real 44 × 44 target */
 body.phone #sover:has(.pzdet) #soClose{min-width:44px;min-height:44px;padding:0 16px;font-size:12px}
 @media(prefers-reduced-motion:reduce){ .pzc.sk,.pzspin{animation:none} .pzprog i,.pztray .pzslh .cv{transition:none} }
+
+/* ═══════════ v9.3 · V93_RECAP — specific recaps, the injury banner, action verdicts ═══════════ */
+.r93lr .lrtop .rt .fine{display:block}
+.lrrow.r93hurt{border-color:rgba(255,95,141,.6);box-shadow:inset 3px 0 0 var(--loss)}
+.lrrow.r93maybe{border-color:rgba(255,198,92,.5);box-shadow:inset 3px 0 0 var(--watch)}
+.r93cs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.r93c{display:inline-flex;align-items:baseline;flex-wrap:wrap;column-gap:6px;row-gap:1px;max-width:100%;min-width:0;padding:5px 9px 5px 8px;border-radius:9px;border:1px solid var(--line2);border-left:3px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);font:600 12px/1.3 var(--sans);color:var(--mut)}
+.r93c b{font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.r93c i{font-style:normal;font:600 10.5px/1.2 var(--mono);color:var(--dim);white-space:nowrap}
+.r93c.t-bad{border-left-color:var(--loss)}
+.r93c.t-bad.s-3{background:rgba(255,95,141,.10);border-color:rgba(255,95,141,.42);border-left-color:var(--loss)}
+.r93c.t-good{border-left-color:var(--gain)}
+.r93c.t-good.s-3{background:rgba(55,229,167,.08);border-color:rgba(55,229,167,.38);border-left-color:var(--gain)}
+.r93c.t-warn{border-left-color:var(--watch)}
+.r93c.t-warn.s-3{background:rgba(255,198,92,.08);border-color:rgba(255,198,92,.38);border-left-color:var(--watch)}
+.r93c.t-inj{border-color:rgba(255,95,141,.55);border-left-color:var(--loss);background:rgba(255,95,141,.14)}
+.r93c.t-inj b{color:#FFC2D3}
+.r93c.t-info.s-1 b{color:var(--mut)}
+.r93v{display:flex;align-items:flex-start;gap:9px;margin-top:9px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line2);min-width:0}
+.r93vp{flex:none;font:800 10.5px/1 var(--sans);letter-spacing:.08em;padding:6px 9px;border-radius:99px;white-space:nowrap;background:rgba(59,227,255,.16);color:#8BEBFF}
+.r93vr{flex:1 1 auto;min-width:0;font:600 12.5px/1.42 var(--sans);color:var(--ink);overflow-wrap:anywhere}
+.r93v.v-start .r93vp{background:var(--gain);color:#04281B}
+.r93v.v-hold .r93vp{background:rgba(59,227,255,.16);color:#8BEBFF}
+.r93v.v-mon{border-color:rgba(255,198,92,.45)} .r93v.v-mon .r93vp{background:var(--watch);color:#2A1C02}
+.r93v.v-sell{border-color:rgba(255,138,91,.45)} .r93v.v-sell .r93vp{background:#FF8A5B;color:#2A0E02}
+.r93v.v-buy .r93vp{background:rgba(55,229,167,.14);color:#7CF0C5;box-shadow:inset 0 0 0 1px rgba(55,229,167,.55)}
+.r93v.v-bench{border-color:rgba(255,95,141,.45)} .r93v.v-bench .r93vp{background:var(--loss);color:#2A0512}
+.r93v.v-add{border-color:rgba(59,227,255,.4)} .r93v.v-add .r93vp{background:var(--acc);color:#03131B}
+.r93v.v-pass .r93vp{background:rgba(255,255,255,.1);color:var(--mut)}
+.r93addc{margin-top:8px;padding:6px 9px}
+.r93addc .r93vr{font-size:12px;color:var(--mut)}
+.r93is{display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;border-radius:10px;font:600 12px/1.35 var(--sans);color:var(--ink);min-width:0}
+.r93is b{flex:none;font:800 10px/1 var(--sans);letter-spacing:.09em;padding:5px 7px;border-radius:6px}
+.r93is span{min-width:0;overflow-wrap:anywhere}
+.r93is.i-red{background:rgba(255,95,141,.14);box-shadow:inset 0 0 0 1px rgba(255,95,141,.55)} .r93is.i-red b{background:var(--loss);color:#fff}
+.r93is.i-amb{background:rgba(255,198,92,.12);box-shadow:inset 0 0 0 1px rgba(255,198,92,.5)} .r93is.i-amb b{background:var(--watch);color:#2A1C02}
+.r93is.i-knock,.r93is.i-dim{background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line2)} .r93is.i-knock b,.r93is.i-dim b{background:rgba(255,198,92,.18);color:var(--watch)}
+.r93inj{margin-top:10px;border-radius:14px;padding:12px;background:linear-gradient(180deg,rgba(255,95,141,.18),rgba(255,95,141,.06));box-shadow:inset 0 0 0 1px rgba(255,95,141,.6);min-width:0}
+.r93inj.i-amb{background:linear-gradient(180deg,rgba(255,198,92,.15),rgba(255,198,92,.05));box-shadow:inset 0 0 0 1px rgba(255,198,92,.55)}
+.r93inj.i-knock,.r93inj.i-dim{background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line2)}
+.r93ih{display:flex;align-items:center;gap:9px;flex-wrap:wrap;min-width:0}
+.r93ib{flex:none;font:900 11px/1 var(--sans);letter-spacing:.12em;padding:6px 9px;border-radius:7px;background:var(--loss);color:#fff}
+.r93inj.i-amb .r93ib{background:var(--watch);color:#2A1C02}
+.r93inj.i-knock .r93ib,.r93inj.i-dim .r93ib{background:rgba(255,198,92,.2);color:var(--watch)}
+.r93ih b{font:700 14px/1.3 var(--sans);color:var(--ink);min-width:0}
+.r93isrc{margin-top:6px;font:800 10px/1.35 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:#FF9BB8}
+.r93inj.i-amb .r93isrc{color:var(--watch)} .r93inj.i-knock .r93isrc,.r93inj.i-dim .r93isrc{color:var(--mut)}
+.r93iq{margin:9px 0 0;padding:8px 10px;border-left:3px solid rgba(255,255,255,.35);background:rgba(0,0,0,.24);border-radius:0 8px 8px 0;font:500 12px/1.45 var(--mono);color:var(--ink);overflow-wrap:anywhere}
+.r93iq i{font-style:normal;font-weight:800;color:#FF9BB8;margin-right:4px}
+.r93inj.i-amb .r93iq i{color:var(--watch)}
+.r93ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin-top:9px}
+.r93ig span{display:flex;flex-direction:column;gap:3px;padding:7px 9px;border-radius:9px;background:rgba(0,0,0,.22);min-width:0}
+.r93ig i{font-style:normal;font:800 9.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.r93ig b{font:700 13px/1.3 var(--sans);color:var(--ink);overflow-wrap:anywhere}
+.r93ig em{font-style:normal;font:600 10.5px/1.2 var(--mono);color:var(--mut)}
+.r93ig span.w{grid-column:1/-1}
+.r93row:not(.open) .r93vr,.r93mini .r93vr{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.r93ihn{margin-top:8px;font:600 12px/1.4 var(--sans);color:var(--ink)}
+.r93ihn i{font-style:normal;font:800 9.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-right:6px}
+.r93im{margin-top:8px;font:600 12.5px/1.45 var(--sans);color:var(--ink)}
+.r93take{margin-top:10px;padding:9px 10px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02)}
+.r93th{font:800 9.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.r93tl{font:600 13px/1.45 var(--sans);color:var(--ink);overflow-wrap:anywhere} .r93tl span{color:var(--mut)}
+.r93take .r93v{margin-top:8px}
+.r93tn{margin-top:6px}
+.r93nx{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:10px;font:600 12.5px/1.3 var(--sans);color:var(--mut)}
+.r93nx i{font-style:normal;font:800 9.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.r93nx b{color:var(--ink)} .r93nx.hard span{color:var(--loss)} .r93nx.soft span{color:var(--gain)}
+.r93card{margin-top:10px;padding:12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line2);min-width:0}
+.r93hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.r93gw{font:700 13px/1.2 var(--sans);color:var(--ink)}
+.r93pts{margin-left:auto;text-align:right;white-space:nowrap}
+.r93pts b{display:block;font:700 18px var(--mono);color:var(--ink)}
+.r93card .lrbody,.r93open .lrbody{margin-top:10px}
+.r93mini{margin-top:8px}
+.r93sum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.r93sp{font:700 11px/1 var(--sans);letter-spacing:.03em;padding:6px 9px;border-radius:99px;background:rgba(255,255,255,.05);color:var(--mut);white-space:nowrap}
+.r93sp b{color:var(--ink);font-weight:800}
+.r93sp.v-mon{box-shadow:inset 0 0 0 1px rgba(255,198,92,.5)} .r93sp.v-bench{box-shadow:inset 0 0 0 1px rgba(255,95,141,.5)} .r93sp.v-sell{box-shadow:inset 0 0 0 1px rgba(255,138,91,.5)}
+.r93sp.v-start,.r93sp.v-buy{box-shadow:inset 0 0 0 1px rgba(55,229,167,.45)} .r93sp.v-add{box-shadow:inset 0 0 0 1px rgba(59,227,255,.45)}
+.btn.sm.r93fh:not(.pri){color:#FF9BB8;border-color:rgba(255,95,141,.45)}
+.lwbd.b-inj{background:var(--loss);color:#fff}
+.lwbd.b-injl{background:rgba(255,198,92,.16);color:var(--watch);box-shadow:inset 0 0 0 1px rgba(255,198,92,.55)}
+.tier.r93tag{background:var(--loss);color:#fff;border-color:var(--loss)}
+.tier.r93tag.l{background:rgba(255,198,92,.16);color:var(--watch);border-color:rgba(255,198,92,.55)}
+.r93btns{margin-top:10px}
+body.phone .lrrow .r93btns .btn.sm,body.phone .r93lr .btn.sm[data-act="lrF"]{min-height:44px;height:auto}
+body.phone .r93lr .btn.help{position:relative}
+body.phone .r93lr .btn.help::after{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+body.phone .r93lr .r93tl .ilink,body.phone .r93lr .r93addc .ilink,body.phone .r93lr .r93nx .tmlink,body.phone .r93card .r93tl .ilink,body.phone .r93card .r93nx .tmlink{position:relative}
+body.phone .r93lr .r93tl .ilink::after,body.phone .r93lr .r93addc .ilink::after,body.phone .r93lr .r93nx .tmlink::after,body.phone .r93card .r93tl .ilink::after,body.phone .r93card .r93nx .tmlink::after{content:"";position:absolute;left:50%;top:50%;width:100%;min-width:44px;height:44px;transform:translate(-50%,-50%)}
+body.phone .r93lr>.hd{flex-wrap:wrap;row-gap:6px}
+body.phone .r93lr>.hd .inlinebtns{flex-wrap:wrap}
+body.phone .r93c{font-size:12.5px}
+body.phone .r93ig{grid-template-columns:1fr 1fr}
+@media(max-width:360px){ body.phone .r93ig{grid-template-columns:1fr} }
+@media(prefers-reduced-motion:reduce){ .lwbd.b-inj,.lwbd.b-injl{animation:none!important} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -3702,7 +3799,7 @@ function filterPlayers(raw){
     const relevant = rostered.has(pid) || (p.team && p.status!=='Inactive'&&(!idp||(p.depth_chart_order&&p.depth_chart_order<=3)||(p.search_rank&&p.search_rank<1500))) || (p.search_rank && p.search_rank<1500) || (!idp&&p.years_exp!=null && p.years_exp<=2 && p.team);
     if(!relevant) continue;
     out[pid]={ id:pid, n:p.full_name||((p.first_name||'')+' '+(p.last_name||'')).trim(), t:p.team||null, p:pos,
-      a:p.age||null, x:p.years_exp, s:p.status||null, inj:p.injury_status||null, dco:p.depth_chart_order||null, sr:p.search_rank||null, e:p.espn_id||null,
+      a:p.age||null, x:p.years_exp, s:p.status||null, inj:p.injury_status||null, ib:p.injury_body_part||null, dco:p.depth_chart_order||null, sr:p.search_rank||null, e:p.espn_id||null,
       ht:p.height||null, wt:p.weight||null, col:p.college||null, no:(p.number!=null&&p.number!==''?p.number:null) };   // v8.8 · V88_HERO9: the hero's vitals row — Sleeper carries all four and filterPlayers used to drop them
     count++;
   }
@@ -3712,7 +3809,8 @@ async function loadPlayers(force){
   if(!force){ const c=await Store.get('players'); if(c && pdbCur(c) && !stale(c.ts,24)){ S.players=c; newsRetag(); return c; } if(c && !S.net.sleeper){ S.players=c; newsRetag(); return c; } if(c && !pdbCur(c)){ S.players=c; newsRetag(); } } // v8: the cached DB retags the wire too // v8.8 · V88_HERO9: a pre-v8.8 cache paints immediately and is refetched underneath, so height/weight/college/number fill in instead of staying blank forever
   if(!S.net.sleeper){ const c=await Store.get('players'); if(c){S.players=c; newsRetag(); return c;} return null; }
   const raw=await slp('/players/nfl');
-  S.players=filterPlayers(raw); valDirty(); newsRetag(); // v7.0.1 → v8: headlines merged before the DB existed get their player tags, from the cache path too, and in place before any refetch
+  let r93P0=S.players; if(!r93P0){ try{ r93P0=await Store.get('players'); }catch(e){ r93P0=null; } }   // V93_RECAP: the copy this pull replaces
+  S.players=filterPlayers(raw); try{ r93PrevSnap(r93P0,S.players); }catch(e){} valDirty(); newsRetag(); // v7.0.1 → v8: headlines merged before the DB existed get their player tags, from the cache path too, and in place before any refetch · V93: + the replaced copy's tags (S.players.prev)
   await Store.set('players',S.players);
   return S.players;
 }
@@ -14732,7 +14830,8 @@ function liveParseSummary(j){ // ESPN game summary → per-athlete box map, play
   if(drv){ (drv.previous||[]).forEach(collect); if(drv.current) collect(drv.current); }
   const scoring=((j&&j.scoringPlays)||[]).map(p=>({id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,team:liveTeamKey(p.team&&p.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore,score:true}));
   const drive=(drv&&drv.current&&(drv.current.description||''))||'';
-  return {box,wp,plays:plays.slice(-160),scoring,ts:Date.now(),teams,drive};
+  const P93={box,wp,plays:plays.slice(-160),scoring,ts:Date.now(),teams,drive}; try{ r93ParseExtra(j,P93); }catch(e){}   // V93_RECAP: every play + the injury lists, for the recap engine
+  return P93;
 }
 /* ===== v5.8 · GAME CENTER — one game, live: play by play, box score, scoring, your players ===== */
 const GV={timer:null};
@@ -14912,7 +15011,7 @@ function gvRowHTML(pid,g,side,starter){                                         
     :rz?'<span class="tier must lpulse">RED ZONE</span>'
     :on?'<span class="tier gain lpulse">ON FIELD</span>'
     :'<span class="tier spec">'+(idp?'offense on':'sideline')+'</span>';
-  const bmTag=(bm&&bm.tag==='boom')?'<span class="tier gain lpulse">BOOM</span>':(bm&&bm.tag==='bust')?'<span class="tier must">BUST</span>':'';
+  const bmTag=((bm&&bm.tag==='boom')?'<span class="tier gain lpulse">BOOM</span>':(bm&&bm.tag==='bust')?'<span class="tier must">BUST</span>':'')+r93RowTag(pid,g);   // V93: + INJ
   let ava=''; try{ ava=avatarHTML(pid,'sm'); }catch(e){}
   let pt=''; try{ pt=ptag(p.p); }catch(e){}
   const bits=[]; if(line) bits.push(esc(line)); else if(!pre) bits.push('no touches yet');
@@ -15079,7 +15178,7 @@ function liveLine(pid){ // position-appropriate live stat line: Sleeper's live r
     if(tg!=null||rc!=null) b.push((rc||0)+'/'+(tg||0)+' tgt · '+fmtN(v('rec_yd','receiving.receivingYards')||0)+' yds');
     const td=v('rec_td','receiving.receivingTouchdowns'); if(td) b.push(td+' TD'); const ra=v('rush_att','rushing.rushingAttempts'); if(ra) b.push(ra+' car · '+fmtN(v('rush_yd','rushing.rushingYards')||0)+' yds');
   } else if(p.p==='K'){ const fg=sr?((sr.fgm||0)+'/'+(sr.fga!=null?sr.fga:(sr.fgm||0))):(bx&&bx['kicking.fieldGoalsMade']); if(fg) b.push(fg+' FG'); const xp=sr?((sr.xpm||0)+'/'+(sr.xpa!=null?sr.xpa:(sr.xpm||0))):(bx&&bx['kicking.extraPointsMade']); if(xp) b.push(xp+' XP');
-  } else if(p.p==='DEF'){ if(sr){ if(sr.sack) b.push(sr.sack+' sacks'); const tk=(sr.int||0)+(sr.fr||0); if(tk) b.push(tk+' takeaways'); if(sr.pts_allow!=null) b.push(sr.pts_allow+' pts allowed'); if(sr.def_td) b.push(sr.def_td+' TD'); }
+  } else if(p.p==='DEF'){ if(sr){ if(sr.sack) b.push(sr.sack+(Number(sr.sack)===1?' sack':' sacks')); const fk=(sr.fum_rec!=null)?'fum_rec':(sr.fr!=null)?'fr':(sr.def_fum_rec!=null)?'def_fum_rec':'fum_rec'; const tk=(Number(sr.int)||0)+(Number(sr[fk])||0); if(tk) b.push(tk+(tk===1?' takeaway':' takeaways')); if(sr.pts_allow!=null) b.push(sr.pts_allow+' pts allowed'); if(sr.def_td) b.push(sr.def_td+' TD'); }   // V93_RECAP: Sleeper's DEF rows count recoveries as fum_rec — the line reads the same key as the recap label
   } else { const tk=v('idp_tkl','defensive.totalTackles')!=null?v('idp_tkl','defensive.totalTackles'):v('tkl'); if(tk!=null) b.push(tk+' tkl'); const sk=v('idp_sack','defensive.sacks')!=null?v('idp_sack','defensive.sacks'):v('sack'); if(sk) b.push(sk+' sack'); const tf=v('idp_tkl_loss','defensive.tacklesForLoss'); if(tf) b.push(tf+' TFL'); const it=v('idp_int','interceptions.interceptions'); if(it) b.push(it+' INT'); const pd=v('idp_pass_def','defensive.passesDefended'); if(pd) b.push(pd+' PD'); const ff=v('idp_ff'); if(ff) b.push(ff+' FF'); }
   return b.join(' · ');
 }
@@ -15157,7 +15256,9 @@ async function liveRefreshInner(){ // one polling pass — each feed on its own 
       const due=gi.filter(g=>g.state!=='pre'&&need(g)).sort((a,b)=>((b.state==='in')-(a.state==='in'))||(((LIVE.sum[a.id]||{}).ts||0)-((LIVE.sum[b.id]||{}).ts||0))).slice(0,2); // ESPN summary: box lines, drives, win probability — in-progress first, then ONE finished game per pass so a recap gets its box score
       for(const g of due){
         try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+g.id,12000); if(j){ LIVE.sum[g.id]=liveParseSummary(j); if(g.state==='post') LIVE.sum[g.id].fin=true; } }catch(e){ const prev=LIVE.sum[g.id]||{box:{},plays:[],scoring:[],wp:null}; LIVE.sum[g.id]=Object.assign(prev,{ts:now,tries:(prev.tries||0)+1}); } } }
+    try{ await r93BgSummaries(gi,now,heavy); }catch(e){}   // V93_RECAP: no live surface open — each finished game's final summary is still pulled, once, so its recap is kept; and on any pass the one post-report pull
     try{ mlHarvestRecaps(gi,wk); }catch(e){} // v8: grade + store every finished player once per pass
+    try{ r93MarkHarvested(gi,wk); }catch(e){}   // V93_RECAP: a game whose every recap is kept from its final summary is marked — a later session never re-downloads it
   }finally{ LIVE.refreshing=false; }
   liveRepaint();
 }
@@ -15218,7 +15319,7 @@ function livePlayerRowHTML(pid,g,side,starter,L){ // v8: same 5 columns, now lea
   const gm=g?g.state:'pre';
   const msTo=g?new Date(g.date).getTime()-Date.now():0; // hours-away countdown for today, the day/time otherwise — "217h 38m" helps nobody
   const status=gm==='pre'?'<span class="tier mon">'+esc(msTo>20*3600e3?liveKickoff(g):('kickoff in '+(liveCountdown(g)||liveKickoff(g))))+'</span>':gm==='post'?'<span class="tier mon">final</span>':(rz?'<span class="tier must lpulse">RED ZONE</span>':on?'<span class="tier gain lpulse">ON FIELD</span>':'<span class="tier spec">'+((['DL','LB','DB','DEF'].includes(p.p))?'offense on':'sideline')+'</span>');
-  const bmTag=(bm&&bm.tag==='boom')?' <span class="tier gain lbm lpulse">BOOM</span>':(bm&&bm.tag==='bust')?' <span class="tier must lbm">BUST</span>':'';
+  const bmTag=((bm&&bm.tag==='boom')?' <span class="tier gain lbm lpulse">BOOM</span>':(bm&&bm.tag==='bust')?' <span class="tier must lbm">BUST</span>':'')+r93RowTag(pid,g);   // V93: + INJ
   return '<tr class="rowbtn lrow'+(on?' on':'')+(side==='opp'?' opp':'')+'" data-act="liveCard" data-pid="'+esc(pid)+'">'
     +'<td>'+avatarHTML(pid,'sm')+' '+ptag(p.p)+teamChip(p.t)+' <b>'+esc(p.n)+'</b>'+(starter?'':' <span class="fine">bench</span>')+(side==='opp'?' <span class="fine">theirs</span>':'')
       +(function(){ let tg=''; try{ tg=mlTagsHTML(pid,{cur:curLid,tight:1}); }catch(e){} if(!tg){ try{ tg=(side==='opp'?'':mlChipsHTML(pid)); }catch(e){} }
@@ -15348,6 +15449,9 @@ function mlPtsAny(pid){ const ML=mlSides(); const rec=ML&&ML.byPid[pid];
   if(rec){ for(let i=0;i<rec.in.length;i++){ const v=mlPts(pid,rec.in[i].L); if(v!=null) return v; } }
   return livePts(pid); }
 function mlExp(pid,L){ // this week's expectation, re-based to L's scoring while keeping every DvP/Vegas/venue/weather/injury adjustment
+  const p93=playerOf(pid);                                                                   // V93_RECAP: after the final, the designation Sleeper set afterwards never moves the expectation this game is graded against
+  if(p93&&p93.inj){ let g93=null; try{ g93=liveGameOf(pid); }catch(e){ g93=null; }
+    if(g93&&g93.state==='post'){ const t93=p93.inj; p93.inj=null; try{ return mlExp(pid,L); }finally{ p93.inj=t93; } } }
   let base=0; try{ base=weekScore(pid)||0; }catch(e){ base=0; }
   if(!L||L.active) return base;
   let a=null,b=null; try{ a=projPts(pid); }catch(e){} try{ b=hubProj(pid,L.lg); }catch(e){}
@@ -15493,7 +15597,8 @@ function mlStatGridHTML(pid,row,base,limit){ // the advanced line, each tile aga
     push('Long','fgm_lng',null,null);
   } else if(pos==='DEF'){
     push('Sacks','sack',null,null);
-    T.push(mlTile('Takeaways',(V('int')==null&&V('fr')==null)?null:((V('int')||0)+(V('fr')||0)),'', '','Sleeper keys: int + fr'));
+    (function(){ const fk=(row&&row.fum_rec!=null)?'fum_rec':(row&&row.fr!=null)?'fr':(row&&row.def_fum_rec!=null)?'def_fum_rec':'fum_rec';   // V93_RECAP: Sleeper's DEF rows count recoveries as fum_rec
+      T.push(mlTile('Takeaways',(V('int')==null&&V(fk)==null)?null:((V('int')||0)+(V(fk)||0)),'', '','Sleeper keys: int + '+fk)); })();
     push('Pts allowed','pts_allow',null,null); push('Yds allowed','yds_allow',null,null); push('TD','def_td',null,null);
   } else {
     const idp=(a,c)=>{ const v=V(a); return v!=null?v:V(c); };
@@ -15659,7 +15764,7 @@ function mlDiagnose(pid){
   const g=liveGameOf(pid); if(!g) return null;
   const row=(S.live&&S.live.stats&&S.live.stats[pid])||null;
   const L=mlPrimaryLeague(pid);
-  const pts=mlPts(pid,L); if(pts==null) return null;
+  let pts=mlPts(pid,L); if(pts==null){ if(row&&row.gp) pts=0; else return null; }   // V93_RECAP: he played and scored nothing — grade it, do not drop it
   const exp=mlExp(pid,L)||0; const cv=mlCv(pid);
   const ceil=exp*(1+1.10*cv), floor=exp*(1-0.85*cv);
   const grade=exp>0
@@ -15770,15 +15875,1070 @@ function mlHarvestRecaps(gi,wk){ // one grade per finished player per pass, boun
   const W=S.lrec.weeks[wk]=S.lrec.weeks[wk]||{}; let dirty=false;
   fin.forEach(g=>{ const H=ML.byTeam[g.home]||{mine:[]}, A=ML.byTeam[g.away]||{mine:[]};
     [...H.mine,...A.mine].forEach(pid=>{
-      if(!(ML.startPids.has(pid)||((mlPtsAny(pid)||0)>=10))) return;
+      if(!(ML.startPids.has(pid)||((mlPtsAny(pid)||0)>=10)||r93InjFlag(pid))) return;   // V93: an injured bench player is recapped too
       if(!(S.live&&S.live.stats&&S.live.stats[pid])) return;
-      const d=mlDiagnose(pid); if(!d) return;
-      const old=W[pid]; if(old&&old.pts===d.pts&&old.grade===d.grade) return;
+      if(!r93HarvestOK(g)) return;                                                                 // V93: a finished game is kept once its FINAL summary is in (or three pulls failed) — never a thin read the summary would overturn
+      const d=mlDiagnoseX(pid); if(!d) return;
+      const old=W[pid]; if(old&&old.pts===d.pts&&old.grade===d.grade&&old.sig===d.sig) return;   // V93: a new injury note or verdict rewrites the record
+      if(old&&old.v93&&old.full&&!d.full&&old.pts===d.pts&&old.grade===d.grade) return;           // V93: a record read from the finished game's whole summary is never rewritten by a pass that lacks it
       W[pid]={pid,gid:d.gid,wk,team:d.team,opp:d.opp,ts:d.ts,grade:d.grade,pts:d.pts,exp:Math.round((d.exp||0)*10)/10,
         byLg:d.byLg,raw:d.raw,reasons:d.reasons.map(r=>({k:r.k,label:r.label,sev:Math.round(r.sev*100)/100,s:r.s,good:!!r.good})),nar:d.nar};
+      try{ r93Persist(W[pid],d); }catch(e){}
       dirty=true; }); });
   if(dirty){ LREC_DIRTY=true; setTimeout(()=>{ lrecSave().catch(()=>{}); },1200); } }
-function mlRecapView(pid,wk){ let d=null; try{ d=mlDiagnose(pid); }catch(e){} return d||liveRecapOf(pid,wk); } // survives a reload that wiped S.live.stats
+function mlRecapView(pid,wk){ let d=null; try{ d=mlDiagnoseX(pid); }catch(e){} return d||liveRecapOf(pid,wk); } // survives a reload that wiped S.live.stats · V93: the enriched diagnosis
+/* ═══════════ v9.3 · V93_RECAP — recaps that say WHAT happened, WHO got hurt, and WHAT TO DO ═══════════
+   mlDiagnose still grades and attributes. mlDiagnoseX wraps it with, per finished (or live) player:
+     inj      an injury read, graded honestly: confirmed (the play-by-play or ESPN's injury report says so), likely (his snaps
+              collapsed AND the feed lost him mid-game with no note), knock (hurt and back in), inactive / scratch (did not play)
+     chips    specific labels — the fact, the number and his own per-game norm ("4 targets · avg 8.1")
+     take     the teammate who absorbed the work, and the leagues where that teammate is a free agent
+     next     next week's opponent and how that defense treats his position (DvP)
+     trend    his snap share over his last three games
+     verdict  START · HOLD · MONITOR · SELL HIGH · BUY LOW · BENCH NEXT WEEK · ADD · DON'T CHASE · NO MOVE, with a one-line reason
+   The engine fetches nothing (r93BgSummaries is the poller's, not the engine's) and never throws into a caller. Things our data cannot know (a practice report, a coach's comment) are
+   named as things to check, never invented. */
+const R93={rx:new Map(),rxTs:-1,im:{st:null,m:new Map()},tt:new WeakMap(),err:null};
+const R93_INJ=/injur|shaken up|left the game|questionable to return|doubtful to return|ruled out|will not return|not return|carted|evaluat|concussion|trainer|locker room|medical tent|helped off|has returned|returned to the game|return is (?:questionable|doubtful|probable)/i;
+const R93_FREE=/\b(?:was injured|is injured|injured (?:his|on the)|(?:was|is) shaken up|left the game|suffered an? |(?:is being|was) evaluated|carted off|helped off|questionable to return|doubtful to return|ruled out|will not return|went to the locker room|(?:blue|medical) tent|concussion protocol|has returned to the game|returned to the game)/i;
+const R93_BODY=/\b(ankle|knee|hamstring|groin|shoulder|concussion|head|neck|back|hip|foot|toe|wrist|hand|finger|elbow|calf|quadriceps|quad|thigh|ribs|rib|chest|oblique|achilles|abdomen|abdominal|illness|forearm|arm|leg|pectoral|thumb|eye|jaw|heel|shin|stinger|glute|lower body|upper body)\b/i;
+const R93_NEWS=/injur|hurt|carted|concussion|questionable|doubtful|ruled out|out for|week-to-week|day-to-day|\bmri\b|x-ray|sprain|strain|\btear\b|torn|injured reserve|placed on ir/i;
+const R93_LONG=/\bout (?:at least |for |roughly |about |an estimated |a minimum of )?(?:\d+|two|three|four|five|six|seven|eight|several|multiple)(?:[- ]to[- ]\w+)? weeks|season[- ]ending|out for the (?:season|year)|\btorn (?:acl|achilles|mcl|pec)|placed on (?:injured reserve|ir)\b|(?:to|on) injured reserve/i;   // a headline that says the absence is long
+const R93_TM={LA:'LAR',WSH:'WAS',JAC:'JAX',ARZ:'ARI',BLT:'BAL',CLV:'CLE',HST:'HOU',STL:'LAR',OAK:'LV',SD:'LAC'};   // ESPN's play-by-play club prefixes ("LA-D.Allen") → Sleeper codes
+const R93_VCLS={'START':'v-start','HOLD':'v-hold','MONITOR':'v-mon','SELL HIGH':'v-sell','BUY LOW':'v-buy','BENCH NEXT WEEK':'v-bench','ADD':'v-add','DON\u2019T CHASE':'v-pass','NO MOVE':'v-pass'};
+const R93_VRANK={'BENCH NEXT WEEK':2,'SELL HIGH':3,'MONITOR':3.5,'BUY LOW':4,'START':5,'ADD':5.5,'HOLD':6,'NO MOVE':7,'DON\u2019T CHASE':7};
+function r93Tm(x){ const a=String(x||'').toUpperCase(); return R93_TM[a]||liveTeamKey(a); }
+function r93f1(x){ if(x==null||!isFinite(x)) return '\u2014'; const r=Math.round(x*10)/10; return Math.abs(r-Math.round(r))<1e-9?String(Math.round(r)):r.toFixed(1); }
+function r93pc(x){ return (x==null||!isFinite(x))?'\u2014':Math.round(x*100)+'%'; }
+function r93an(t){ return /^(8[0-9]?|11|18)([^0-9]|$)/.test(String(t||''))?'an':'a'; }   // "an 85% norm", "a 60% norm"
+function r93pl(k,w,wp){ return k+' '+(k===1?w:(wp||w+'s')); }
+function r93cap(x){ x=String(x||''); return x?x.charAt(0).toUpperCase()+x.slice(1):''; }
+function r93Short(pid){ const q=playerOf(pid); if(!q) return 'Player'; return q.p==='DEF'?String(q.t||q.n||'DEF'):mockShortName(q.n||''); }
+function r93Clock(q,c){ q=Number(q)||0; return q?((q>4?'OT':'Q'+q)+(c?' '+c:'')):''; }
+function r93Frac(q,c){ q=Number(q)||0; if(q>4) return 0.97; const m=String(c||'0:00').split(':'); const left=(Number(m[0])||0)+(Number(m[1])||0)/60; return clamp(((q-1)*15+(15-left))/60,0,1); }
+/* ── parse: called from liveParseSummary with the SAME json — no request of its own ── */
+function r93ParseExtra(j,P){
+  const pall=[]; const drv=j&&j.drives;
+  const one=function(d,p){ const st=p.start||{}; const wc=Date.parse(p.wallclock||'');
+    pall.push({t:String(p.text||''),q:(p.period&&p.period.number)||0,c:(p.clock&&p.clock.displayValue)||'',tm:liveTeamKey(d&&d.team&&d.team.abbreviation),
+      ty:(p.type&&p.type.text)||'',y2e:(st.yardsToEndzone!=null&&isFinite(Number(st.yardsToEndzone)))?Number(st.yardsToEndzone):null,
+      hs:p.homeScore,as:p.awayScore,sc:!!p.scoringPlay,wc:isFinite(wc)?wc:null}); };
+  if(drv){ (drv.previous||[]).forEach(function(d){ (d.plays||[]).forEach(function(p){ one(d,p); }); });
+    if(drv.current) (drv.current.plays||[]).forEach(function(p){ one(drv.current,p); }); }
+  P.pall=pall.length>1200?pall.slice(-1200):pall;
+  const inj=[];
+  ((j&&j.injuries)||[]).forEach(function(t){ const tm=liveTeamKey(t&&t.team&&t.team.abbreviation);
+    ((t&&t.injuries)||[]).forEach(function(x){ const a=(x&&x.athlete)||{}; const dd=(x&&x.details)||{}; const dt=Date.parse((x&&x.date)||'');
+      inj.push({tm:tm,eid:a.id!=null?String(a.id):null,n:String(a.displayName||a.fullName||''),pos:(a.position&&a.position.abbreviation)||'',
+        st:String((x&&x.status)||''),dt:isFinite(dt)?dt:null,ty:String(dd.type||''),loc:String(dd.location||''),det:String(dd.detail||''),side:String(dd.side||''),
+        fs:String((dd.fantasyStatus&&dd.fantasyStatus.displayDescription)||''),ret:String(dd.returnDate||'')}); }); });
+  P.inj=inj;
+  P.pt=Number(P.ts)||Date.now();   // when this summary was PULLED — a failed re-pull restamps ts, never pt: "was ESPN's post-game injury report out yet?" reads pt
+  try{ const c=j&&j.header&&j.header.competitions&&j.header.competitions[0]; const k=Date.parse((c&&c.date)||''); if(isFinite(k)) P.kick=k;
+    const hs=c&&c.status&&c.status.type&&c.status.type.state; if(hs) P.hst=String(hs); }catch(e){}   // 'post' = this pull saw the final
+}
+function r93Plays(sm){ if(!sm) return [];
+  if(sm.pall&&sm.pall.length) return sm.pall;
+  return (sm.plays||[]).map(function(p){ return {t:String(p.text||''),q:p.period||0,c:p.clock||'',tm:p.team||'',ty:p.type||'',y2e:null,hs:p.hs,as:p.as,sc:!!p.score,wc:null}; }); }
+/* ── names: the ways ESPN prints a player ("S.Darnold", "A.St. Brown", "J.Smith-Njigba", "Ja.Williams", the full name),
+      indexed per club — a form two teammates share is ambiguous and never used, so a namesake can never trip the detector ── */
+function r93Forms(nm){
+  const raw=String(nm||'').trim(); if(!raw) return [];
+  const parts=raw.split(/\s+/).filter(function(w){ return w&&!/^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(w); });
+  const out=[]; const add=function(x){ x=String(x).toLowerCase().replace(/\s+/g,' ').trim(); if(x.length>3&&out.indexOf(x)<0) out.push(x); };
+  add(parts.join(' ')); add(raw);
+  if(parts.length>=2){ const first=parts[0].replace(/[^A-Za-z]/g,''); const sur=parts.slice(1).join(' '); const sur2=sur.replace(/\.\s+/g,'.');
+    [1,2,3].forEach(function(k){ const fi=first.slice(0,k); if(!fi||fi.length<k) return; add(fi+'.'+sur); add(fi+'. '+sur); if(sur2!==sur) add(fi+'.'+sur2); }); }   // V93: a multi-word surname stays WHOLE ("a.st. brown", "a.st.brown") — never a surname-only "a.brown", which is how ESPN prints a different Lion
+  return out; }
+function r93TeamIdx(T,sm){
+  const ts=(S.players&&S.players.ts)||0; if(R93.rxTs!==ts){ R93.rx=new Map(); R93.rxTs=ts; }
+  const smk=sm?(String(sm.ts||0)+'|'+Object.keys(sm.box||{}).length+'|'+((sm.inj||[]).length)):'';
+  let m=R93.rx.get(T); if(m&&m.smk===smk) return m;
+  const by=new Map(); const db=(S.players&&S.players.byId)||{};
+  const addF=function(key,nm){ r93Forms(nm).forEach(function(f){ const a=by.get(f); if(a){ if(a.indexOf(key)<0) a.push(key); } else by.set(f,[key]); }); };
+  const SFX=/^(jr\.?|sr\.?|ii|iii|iv|v)$/i;
+  const eids={}, names={}, pis={};
+  const pik=function(pos,nm){ const w=String(nm||'').trim().split(/\s+/).filter(function(x){ return x&&!SFX.test(x); }); return w.length>=2?String(pos||'')+'|'+w[0].charAt(0).toLowerCase()+'|'+norm(w.slice(1).join(' ')):''; };
+  for(const pid in db){ const p=db[pid]; if(!p||String(p.t||'').toUpperCase()!==T||p.p==='DEF') continue;
+    addF(pid,p.n); if(p.e!=null&&p.e!=='') eids[String(p.e)]=1; names[norm(p.n)]=1; const k0=pik(p.p,p.n); if(k0) pis[k0]=1; }
+  /* ESPN's own club list for THIS game (its box score and its injury report) joins the index, so a teammate the player DB never
+     kept (a corner, a practice-squad call-up) still makes a shared form ambiguous. The same man is recognised by his ESPN id, his
+     full name, or position + first initial + surname, so a DB player is never counted twice against himself */
+  if(sm){ const seen={}; const PM={CB:'DB',S:'DB',FS:'DB',SS:'DB',DB:'DB',DE:'DL',DT:'DL',NT:'DL',EDGE:'DL',DL:'DL',LB:'LB',ILB:'LB',OLB:'LB',MLB:'LB',PK:'K'};
+    const ext=function(eid,nm,pos){ nm=String(nm||'').trim(); if(!nm) return; const k=(eid!=null&&eid!=='')?String(eid):'n:'+norm(nm); if(seen[k]) return; seen[k]=1;
+      if((eid!=null&&eid!==''&&eids[String(eid)])||names[norm(nm)]) return;
+      const P=PM[String(pos||'').toUpperCase()]||String(pos||'').toUpperCase(); const k1=pik(P,nm); if(k1&&pis[k1]) return;
+      addF('e:'+k,nm); };
+    const bx=sm.box||{}; for(const eid in bx){ const r=bx[eid]; if(r&&r.team===T) ext(eid,r.name,r.pos); }
+    (sm.inj||[]).forEach(function(x){ if(x&&x.tm===T) ext(x.eid,x.n,x.pos); }); }
+  m={forms:new Map(),smk:smk,all:new Set(by.keys())};   // all: EVERY way this club's men are printed, shared or not — what an opposing namesake check reads
+  by.forEach(function(keys,f){ if(keys.length!==1) return; const k=keys[0]; if(k.indexOf('e:')===0) return; const a=m.forms.get(k); if(a) a.push(f); else m.forms.set(k,[f]); });
+  R93.rx.set(T,m); return m; }
+function r93OppAll(g,T,sm){ // the other club's printed forms in this game (its DB players, its box score, its injury list), or null
+  try{ const O=g?(g.home===T?g.away:(g.away===T?g.home:null)):null; return O?r93TeamIdx(String(O).toUpperCase(),sm).all:null; }catch(e){ return null; } }
+function r93At(tl,forms,from){ // earliest whole-name hit (a letter on either side disqualifies it: "a.brown" never matches "ja.brown") · {i, f: the form it matched}
+  let best=-1, bf='';
+  for(let j=0;j<forms.length;j++){ const f=forms[j]; if(!f) continue; let i=tl.indexOf(f,from||0);
+    while(i>=0){ const a=i>0?tl.charAt(i-1):' ', z=tl.charAt(i+f.length)||' '; if(!/[a-z]/.test(a)&&!/[a-z'\u2019]/.test(z)) break; i=tl.indexOf(f,i+1); }
+    if(i>=0&&(best<0||i<best||(i===best&&f.length>bf.length))){ best=i; bf=f; } }
+  return best<0?null:{i:best,f:bf}; }
+function r93Hit(tl,forms,T,oAll,from){ // a mention that can only be HIM: the feed prefixes it with his club ("ne-a.brown"), or it is printed in a form no
+  // opposing player shares. A SEA "(A.Brown)" tackling on a NE play is never NE's A.J. Brown; a coverage tackle on the other club's kickoff, in a
+  // form only his club has, still is him. A mention prefixed with the OTHER club is never him
+  let f0=from||0;
+  for(let k=0;k<16;k++){ const h=r93At(tl,forms,f0); if(!h) return null;
+    const pm=tl.slice(Math.max(0,h.i-4),h.i).match(/(?:^|[^a-z])([a-z]{2,3})-$/);
+    if(pm){ if(r93Tm(pm[1])===T) return h; }
+    else if(!(oAll&&oAll.has(h.f))) return h;
+    f0=h.i+1; }
+  return null; }
+/* ── every injury note in one game's feed: whose (club + name as printed), what, when, which play ── */
+function r93GameEvents(sm){
+  if(!sm) return []; if(sm._r93e&&sm._r93e.ts===sm.ts) return sm._r93e.ev;
+  const pl=r93Plays(sm); const ev=[];
+  pl.forEach(function(p,ix){ const t=String(p.t||''); if(!R93_INJ.test(t)) return;
+    const re=/\b([A-Z]{2,3})-([A-Z][A-Za-z'\u2019.\- ]{1,34}?)\s+(?=(?:was|has|is|left|will|went|suffered|returned|had|did|remains|could|may)\b)/g; let m; const hits=[];
+    while((m=re.exec(t))){ hits.push({tm:r93Tm(m[1]),nm:m[2].trim(),i:m.index,j:m.index+m[0].length}); }
+    hits.forEach(function(h,k){ const end=k+1<hits.length?hits[k+1].i:t.length; const pred=t.slice(h.j,end); if(!R93_INJ.test(pred)) return;
+      const ret=/has returned|returned to the game|\bis back\b/i.test(pred);
+      const kind=ret?'ret':/ruled out|will not return|won'?t return|not return|\bis out\b|out for the (?:game|rest|remainder)|downgraded to out/i.test(pred)?'out'
+        :/doubtful/i.test(pred)?'dtr':/questionable/i.test(pred)?'qtr':'inj';
+      const bm=pred.match(R93_BODY);
+      ev.push({ix:ix,q:p.q,c:p.c,tm:h.tm,nm:h.nm.toLowerCase(),kind:kind,body:bm?bm[1].toLowerCase():'',text:t}); });
+    if(!hits.length&&R93_FREE.test(t)) ev.push({ix:ix,q:p.q,c:p.c,tm:null,nm:null,free:true,kind:/has returned|returned to the game/i.test(t)?'ret':'inj',body:((t.match(R93_BODY)||[])[1]||'').toLowerCase(),text:t}); });   // prose with no club prefix: only a real injury verb, never the bare word "injury" (an "injury timeout" names nobody)
+  sm._r93e={ts:sm.ts,ev:ev}; return ev; }
+/* a club-less injury sentence names HIM only when he is its subject: the first name in its sentence (after "Injury Update:" or a
+   formation note) or the target of its pass, AND nothing but his own play stands between him and the injury verb — his run direction,
+   yard lines, the tacklers in parentheses, "for N yards / no gain / -N yards", "pushed / ran ob at", "sacked at", "scrambles" — leaving
+   at most "and", "but", a comma or a dash. So "J.Price right end to NE 43 for 4 yards (C.Woodson) and was injured" is his; "…for 2 yards
+   and Davis / the quarterback / a teammate / the holder / #24 was injured", "… - Davis was injured", "…, cornerback was injured",
+   "J.Price … . C.Davis was injured" and "C.Davis tackled J.Price and was injured" are not */
+function r93FreeHit(e,forms,oAll){
+  const tO=String(e.text||'').replace(/\([^)]*\)|\[[^\]]*\]/g,function(x){ return ' '.repeat(x.length); });   // a tackler in parentheses is never the subject
+  const t2=tO.toLowerCase(); const re=new RegExp(R93_FREE.source,'gi'); let mm, prev=0, guard=0;
+  while((mm=re.exec(t2))&&guard++<12){ const kx=mm.index; const from0=prev; prev=kx+mm[0].length;
+    let at=null, from=from0; for(let g2=0;g2<8;g2++){ const h=r93At(t2,forms,from); if(!h||h.i>=kx) break; at=h; from=h.i+1; }   // his LAST mention before this verb
+    if(!at) continue; const end=at.i+at.f.length; if(end>kx||kx-end>100) continue;
+    if(oAll&&oAll.has(at.f)) continue;                                                                           // an opposing player is printed the same way: no club prefix, no way to tell
+    const seg=tO.slice(end,kx).replace(/^\s*(?:jr|sr|ii|iii|iv|v)\.?(?=\s|,|$)/i,'');
+    if(/[.;!?](?:\s|$)/.test(seg)) continue;                                                                     // a sentence ended in between: a different subject
+    const pre=tO.slice(0,at.i).split(/[.;!?]\s+/).pop().replace(/^[\s*]*injury update\s*:?/i,'').trim();
+    if(pre&&!/\bpass(?:es)?\b.*\bto$/i.test(pre)) continue;                                                      // someone else opens the sentence ("C.Davis tackled J.Price and was injured"): not his
+    const rest=seg.replace(/^\s*(?:scrambles?\s+)?(?:(?:left|right)\s+(?:end|tackle|guard)|up the middle)\b/i,' ')   // his own run direction
+      .replace(/\b(?:pushed|ran|run|stepped|forced|went)\s+ob\s+at\b/gi,' ').replace(/\bsacked\s+at\b/gi,' ').replace(/\bscrambles?\b/gi,' ')
+      .replace(/\b(?:to|at)\s+(?:the\s+)?(?:[A-Z]{2,3}\s+)?\d{1,2}\b/g,' ').replace(/\b[A-Z]{2,3}\s+\d{1,2}\b/g,' ')   // yard lines ("to NE 43", "at SEA 26", "to the 50")
+      .replace(/\bfor\s+(?:no gain|a loss of\s+\d+\s+yards?|-?\d+\s+yards?)\b/gi,' ');
+    if(!/^[\s,\-–—]*(?:(?:and|but)\b[\s,\-–—]*)?$/i.test(rest)) continue;                     // the whitelist: anything else between him and the verb may be its subject
+    const v=mm[0]; const kind=/returned/i.test(v)?'ret':/ruled out|will not return/i.test(v)?'out':/doubtful/i.test(v)?'dtr':/questionable/i.test(v)?'qtr':'inj';
+    return Object.assign({},e,{kind:kind}); }
+  return null; }
+function r93IsSnap(x,T){ if(!x||x.tm!==T) return false; const ty=String(x.ty||'');
+  if(/kickoff|punt|field goal|extra point|timeout|end (?:of )?(?:period|quarter|game|half)|coin|two-minute/i.test(ty)) return false;
+  if(/rush|pass|sack|touchdown|interception|fumble|scramble|kneel|safety|two-point/i.test(ty)) return true;
+  return /penalty/i.test(ty)&&/\bpass\b|\bleft end\b|\bright end\b|up the middle|left (?:tackle|guard)|right (?:tackle|guard)|scrambles|sacked|kneels/i.test(String(x.t||'')); }
+function r93NoInj(t){ // the play without its injury sentences: "…to C.McCaffrey for no gain. LA-N.Landman was injured during the play." still has McCaffrey on a snap
+  const s=String(t||''); if(!R93_INJ.test(s)) return s;
+  return s.replace(/([.;!?])\s+(?=[A-Z(*])/g,'$1\u0001').split('\u0001').filter(function(x){ return !R93_INJ.test(x); }).join(' '); }
+/* ── the injury read ── */
+function r93Injury(pid){
+  try{
+    const p=playerOf(pid); if(!p||p.p==='DEF') return null;
+    const g=liveGameOf(pid); if(!g||g.state==='pre') return null;
+    const stats=(S.live&&S.live.stats)||null;
+    if(R93.im.st!==stats) R93.im={st:stats,m:new Map()};
+    const sm=LIVE.sum[g.id]||null;
+    const k=g.id+'|'+g.state+'|'+((sm&&sm.ts)||0)+'|'+((S.players&&S.players.ts)||0)+'|'+((S.news&&S.news.ts)||0)+'|'+(p.inj||'')+'|'+(p.t||'')+'|'+((S.sstatTs&&S.sstatTs[Number(S.nfl.season)||2026])||0);
+    const hit=R93.im.m.get(String(pid)); if(hit&&hit.k===k) return hit.v;
+    const v=r93InjuryInner(String(pid),p,g,sm);
+    R93.im.m.set(String(pid),{k:k,v:v}); return v;
+  }catch(e){ R93.err=e; return null; } }
+function r93SlNew(p,kick){ // Sleeper CHANGED his designation after kickoff: the DB copy in hand was pulled after kickoff, and the latest copy
+  // pulled BEFORE it (loadPlayers keeps those copies' tags — S.players.prev) had a different tag. A copy pulled after kickoff is the normal
+  // state the day after any game, so its mere age proves nothing; with no copy from before kickoff Sleeper says nothing about THIS game
+  try{ if(!p||!p.inj||!kick) return false; const P=S.players; if(!P||!((Number(P.ts)||0)>kick)) return false;
+    const a=Array.isArray(P.prev)?P.prev:((P.prev&&P.prev.ts)?[P.prev]:[]); let sn=null;
+    a.forEach(function(x){ const t=Number(x&&x.ts)||0; if(t&&t<kick&&x.inj&&(!sn||t>Number(sn.ts))) sn=x; });
+    if(!sn) return false;
+    return String(sn.inj[String(p.id)]||'')!==String(p.inj); }catch(e){ return false; } }
+function r93SlFresh(p,g,sm,played,read){ // Sleeper's designation carries no date: an IR / PUP / Out / Doubtful tag counts when he did not play,
+  // or — for a man who played — only when Sleeper changed it after kickoff (r93SlNew). A DB copy pulled before kickoff can never describe
+  // this game, and a verified feed note does not make a pregame tag count: a man who played through last week's IR tag is not on IR.
+  // Any other designation passes through as it is. (read is kept for callers; it no longer decides anything)
+  const t=(p&&p.inj)?String(p.inj):''; if(!t) return '';
+  if(!/^(ir|pup|out|doubtful|injured reserve|physically unable)/i.test(t)) return t;
+  if(!played) return t;
+  const kick=(sm&&sm.kick)||Date.parse((g&&g.date)||'')||0;
+  return r93SlNew(p,kick)?t:''; }
+function r93OwnTx(tl,x,T){ // on his own club's scrimmage snap the men in parentheses before INTERCEPTED / FUMBLES / RECOVERED are the other club's
+  // tacklers — never him (a namesake missing from every index would otherwise be read as him); after those words his club is the one tackling
+  if(!x||!r93IsSnap(x,T)) return tl;
+  const m=tl.search(/\b(?:intercepted|fumbles?|recovered)\b/i); const a=m<0?tl:tl.slice(0,m), b=m<0?'':tl.slice(m);
+  return a.replace(/\([^)]*\)|\[[^\]]*\]/g,function(z){ return ' '.repeat(z.length); })+b; }
+function r93OnPlay(x,forms,T,oAll,pos,pref){ // does the injury note's own play involve him? A mention only he can be (his club's prefix, or a form no
+  // opposing player shares) anywhere in it — a tackle, a return, a flag — or, on his own club's snap, the passer / carrier / target named
+  // outside the parentheses: the other club's men sit in parentheses there, or behind "INTERCEPTED by" / "RECOVERED by". A defender is
+  // almost never named on the snap he is hurt on: a club-prefixed note on a scrimmage snap of the OTHER club is on his play (an unseen
+  // same-club namesake would be an offensive man, hurt on his own club's snaps — that guard still holds)
+  if(pref&&/^(DL|LB|DB)$/.test(String(pos||''))&&x&&x.tm&&x.tm!==T&&r93IsSnap(x,x.tm)) return true;
+  const t0=String(x&&x.t||''); const tx=r93NoInj(t0)||t0.slice(0,Math.max(0,t0.search(R93_FREE))); if(!tx) return false; const tl=tx.toLowerCase();   // a same-sentence note ("… (C.Woodson) and was injured") keeps the play in front of it
+  if(r93Hit(tl,forms,T,oAll)) return true;
+  if(!x||x.tm!==T) return false;
+  const core=tl.replace(/\([^)]*\)|\[[^\]]*\]/g,function(m){ return ' '.repeat(m.length); }).split(/\b(?:intercepted by|recovered by|penalty on|blocked by|muffs|touched by)\b/)[0];
+  return !!r93At(core,forms); }
+function r93NoFeed(I){ // a knock that rests on ESPN's list alone: listed after kickoff, and the play-by-play never noted him
+  return !!(I&&I.st==='knock'&&!I.q&&!I.text&&!I.ret&&!I.seen&&!I.son&&I.es&&I.es.in); }
+function r93InjuryInner(pid,p,g,sm){
+  const T=String(p.t||'').toUpperCase();
+  const row=(S.live&&S.live.stats&&S.live.stats[pid])||null;
+  const played=!!(row&&row.gp);
+  const kick=(sm&&sm.kick)||Date.parse(g.date)||0;
+  const pl=sm?r93Plays(sm):[];
+  const forms=r93TeamIdx(T,sm).forms.get(pid)||[];
+  const oAll=r93OppAll(g,T,sm);                                                              // every way the OTHER club's men are printed in this game
+  /* (c) ESPN's club injury list — a designation dated after kickoff is an in-game injury; Coach's Decision is a healthy scratch */
+  let es=null; if(sm&&Array.isArray(sm.inj)){ const nn=norm(p.n); es=sm.inj.find(function(x){ return (p.e&&x.eid&&String(p.e)===x.eid)||(x.tm===T&&norm(x.n)===nn); })||null; }
+  const NONINJ=/coach|personal|suspen|not injury|^rest$|conditioning|contract|holdout|reserve\/left/i;          // an absence that is not an injury
+  const coach=!!((es&&NONINJ.test(es.ty))||(!es&&!played&&NONINJ.test(String(p.ib||''))));   // ESPN's list stops at five a club — Sleeper's body part says "Coach's Decision" for the rest
+  const absWhy=coach?String((es&&NONINJ.test(es.ty))?es.ty:(p.ib||'')).toLowerCase().replace(/^coach'?s decision$/,'coach’s decision'):'';
+  /* in-game = dated from kickoff to 30 hours after it: the report catches up overnight (a real case posted 23 hours on), while a
+     practice injury midweek lands days later — and a summary re-pulled on a Wednesday carries Wednesday's list */
+  const esIn=!!(es&&!coach&&es.dt&&kick&&es.dt>=kick-5*60000&&es.dt<=kick+30*3600e3&&/out|doubtful|questionable|injured/i.test(es.st));
+  /* (a) the play-by-play */
+  const evs=[];
+  if(sm&&forms.length){ r93GameEvents(sm).forEach(function(e){
+    if(e.free){ const fe=r93FreeHit(e,forms,oAll); if(fe) evs.push(fe); return; }          // prose with no club prefix: he must be the SUBJECT of the injury verb
+    if(e.tm&&e.tm!==T) return;                                                              // the note names the OTHER club
+    const nm=e.nm.replace(/\s+(jr\.?|sr\.?|ii|iii|iv|v)$/,'').replace(/\s+/g,' ');
+    if(forms.indexOf(e.nm)>=0||forms.indexOf(nm)>=0) evs.push(e); }); }
+  let open=null; const closed=[]; const RK={inj:1,qtr:2,dtr:3,out:4};
+  evs.forEach(function(e){
+    if(e.kind==='ret'){ closed.push({a:open?open.a:null,r:e,body:open?open.body:'',kind:open?open.kind:'inj'}); open=null; return; }
+    if(!open) open={a:e,kind:e.kind,body:e.body||''};
+    else { if((RK[e.kind]||0)>(RK[open.kind]||0)) open.kind=e.kind; if(!open.body&&e.body) open.body=e.body; } });
+  /* (b) snaps against his norm, and the last time the feed saw him */
+  const snOK=snapPosOK(p.p);
+  const sn=snOK?mlSnapPct(row):null; const b=r93Base(pid,g);
+  const nrm=(b&&b.snap!=null)?b.snap:null;
+  const osn=snOK?mlV(row,'off_snp'):null, tms=snOK?mlV(row,'tm_off_snp'):null;
+  /* (a2) THE GATE — a feed note that says he got hurt must agree with the rest of his game before it may say "did not return".
+     He played on if the feed names him on a later play — by his club's prefix or a form no opposing player shares (a SEA "(A.Brown)"
+     tackling on a NE play is not NE's A.J. Brown) — or Sleeper counts more of his snaps than the team ran up to the note. After the
+     final, a share within 0.10 of his own norm cannot be told apart from a full game, and a note on a play that does not involve him
+     with nothing to back it may name a teammate printed the same way: both are unverified. Mid-game neither applies — the share is
+     still being built — so a fresh note reads INJ until a later mention or his snap count says he is back */
+  let seen=null, unv=0, brief=null;
+  if(open&&played&&pl.length){ const oi=open.a.ix; const own={}; evs.forEach(function(e){ own[e.ix]=1; }); let seenL=null;
+    for(let i=oi+1;i<pl.length;i++){ if(own[i]) continue; const tx=r93NoInj(pl[i].t); if(!tx) continue;   // an injury sentence that names him is not a snap — the play around it still is
+      if(r93Hit(r93OwnTx(tx.toLowerCase(),pl[i],T),forms,T,oAll)){ if(!seen) seen={q:pl[i].q,c:pl[i].c}; seenL={q:pl[i].q,c:pl[i].c,ix:i}; } }   // a parenthesised tackler on his own club's snap is the other club's man
+    let snapsOn=false;
+    if(snOK&&osn!=null&&tms){ let bef=0,all=0,befL=0; pl.forEach(function(x,i){ if(!r93IsSnap(x,T)) return; all++; if(i<=oi) bef++; if(seenL&&i<=seenL.ix) befL++; });
+      if(all){ const sc=tms/all, befS=Math.round(bef*sc); snapsOn=osn>=befS+4;
+        /* named again only within a few snaps of the note (he finished the drive), then 15+ team snaps without him, and Sleeper's
+           count stops there too: he stayed in briefly and then left — the note stands. Anything more is playing on */
+        if(seenL){ const befLS=Math.round(befL*sc), win=befLS-befS, aftL=Math.round((all-befL)*sc); const pz=pl[seenL.ix]||{};
+          const mg=(pz.hs!=null&&pz.as!=null)?Math.abs(Number(pz.hs)-Number(pz.as)):0;
+          if(win<=6&&aftL>=15&&osn<=befLS+2&&mg<21) brief={q:seenL.q,c:seenL.c}; } } }
+    if(brief){ seen=null; snapsOn=false; }
+    if(g.state==='post'&&!brief&&!seen&&!snapsOn&&sn!=null&&nrm!=null&&sn>=nrm-0.10) unv=1;
+    /* the note's own play does not name him (not the passer, carrier, target, tackler or flagged man) and nothing corroborates it — no ESPN
+       listing since kickoff, no Sleeper designation CHANGED since kickoff (r93SlNew), no snap collapse AT the note: unverified. The collapse is
+       anchored to the note — his usual share up to it, his count stopping there, 15+ team snaps after it, and a real drop in the end — so a
+       role or game-script dip before a late note never backs it. Right after the final ESPN's post-game injury report is not out yet (it posts
+       about an hour after the last play): while the summary in hand predates that hour, the read says it is WAITING on the report (wt), and
+       the poller pulls the game once more when the hour is up (r93RepullDue) */
+    let wt=0;
+    if(g.state==='post'&&!seen&&!snapsOn&&!unv){ const onPlay=r93OnPlay(pl[oi],forms,T,oAll,p.p,!open.a.free);
+      const slNew=r93SlNew(p,kick);
+      let bN=0,aN=0; pl.forEach(function(x,i){ if(!r93IsSnap(x,T)) return; aN++; if(i<=oi) bN++; });
+      const sN=(aN&&tms)?tms/aN:1, befN=Math.round(bN*sN), aftN=Math.round((aN-bN)*sN);
+      const collapse=sn!=null&&nrm!=null&&osn!=null&&aftN>=15&&osn<=befN+2&&osn>=0.8*nrm*befN&&(nrm-sn)>=0.15;
+      if(!onPlay&&!esIn&&!slNew&&!collapse){ unv=2; brief=null;
+        const rw=r93RepWin(sm,g); if(rw&&sm&&(Number(sm.pt)||0)>0&&sm.pt<rw&&!sm.rp&&(sm.tries||0)<3) wt=rw; } }
+    if(seen||snapsOn||unv){ closed.push({a:open.a,r:null,body:open.body,kind:open.kind,seen:seen,son:!seen&&snapsOn,unv:(!seen&&!snapsOn)?unv:0,wt:(!seen&&!snapsOn&&unv===2)?wt:0}); open=null; } }
+  let last=null;
+  if(pl.length&&forms.length){ for(let i=pl.length-1;i>=0;i--){ const tl=r93OwnTx(String(pl[i].t||'').toLowerCase(),pl[i],T); if(r93Hit(tl,forms,T,oAll)){ last={ix:i,q:pl[i].q,c:pl[i].c,hs:pl[i].hs,as:pl[i].as}; break; } } }
+  let vanished=false, after=null, lastFr=null;
+  if(last){ lastFr=r93Frac(last.q,last.c);
+    if(snOK&&osn!=null&&tms){ let bef=0,aft=0; pl.forEach(function(x,i){ if(!r93IsSnap(x,T)) return; if(i<=last.ix) bef++; else aft++; });
+      const sc=(bef+aft)?tms/(bef+aft):1; const befS=Math.round(bef*sc); after=Math.round(aft*sc);
+      const margin=(last.hs!=null&&last.as!=null)?Math.abs(Number(last.hs)-Number(last.as)):0;
+      // gone = he was playing his usual share UP TO his last play, could not have played many after it, and the game went on without him
+      vanished=nrm!=null&&after>=15&&lastFr<=0.6&&osn<=befS+2&&osn>=0.8*nrm*befS&&margin<21; } }
+  /* (d) the designation — counted only when it can be about THIS game — and a headline since kickoff */
+  const hasRead=!!(open||closed.some(function(c){ return !c.unv; })||esIn);                // an injury read from THIS game — an unverified note (a full-game share, or a play that does not involve him) is not one
+  const stS=r93SlFresh(p,g,sm,played,hasRead);
+  const slStale=!!(p.inj&&!stS);                                                             // the tag was judged stale: its body part is too
+  let head=null; try{ head=(newsFor(p.n,8,pid)||[]).find(function(it){ return it&&it.t>=kick-3600e3&&R93_NEWS.test((it.h||'')+' '+(it.d||'')); })||null; }catch(e){ head=null; }
+  let st=null;
+  if(!played){ if(coach) st='scratch'; else if(!row&&!(sm&&sm.box&&p.e&&sm.box[String(p.e)])&&!((S.live&&S.live.stats)&&r93Team(T)&&r93Team(T).mates.length)) st=null;   // the stat file has not reached his game: say nothing yet
+    else if((es&&!coach&&/out|doubtful/i.test(es.st))||/^(out|doubtful)$/i.test(stS)) st='inactive'; }   // this game's report, or a short-term designation — a months-old IR/PUP tag is not news about this game
+  else if(open) st='confirmed';
+  else if(closed.some(function(c){ return c.unv!==2; })&&(esIn||/^(out|doubtful|ir)/i.test(stS))) st='confirmed';
+  else if(esIn&&(!snOK||sn==null||nrm==null||sn<=nrm-0.15)) st='confirmed';
+  else if(closed.length||esIn) st='knock';
+  else if(snOK&&sn!=null&&nrm!=null&&nrm>=0.5&&sn<=nrm*0.6&&(nrm-sn)>=0.25&&vanished) st='likely';
+  else if(!pl.length&&snOK&&sn!=null&&nrm!=null&&nrm>=0.5&&sn<=nrm*0.6&&/^(out|doubtful|ir|pup)/i.test(stS)) st='likely';   // no feed at all: the designation plus the collapse
+  if(!st) return null;
+  const lc=closed.length?closed[closed.length-1]:null;
+  const ev=open?open.a:(lc?(lc.a||null):null);
+  const retE=(!open&&lc)?lc.r:null;
+  const seenE=(!open&&lc&&!retE)?(lc.seen||null):null;
+  let body=(open&&open.body)||(lc&&lc.body)||'', side='', det='';
+  if(es&&!coach){ if(es.ty&&!/not specified|^other$/i.test(es.ty)) body=es.ty.toLowerCase();
+    if(es.side&&!/not specified/i.test(es.side)) side=es.side.toLowerCase(); if(es.det&&!/not specified/i.test(es.det)) det=es.det.toLowerCase(); }
+  if(!body&&!slStale&&p.ib&&!NONINJ.test(String(p.ib))&&!/not specified|^other$|undisclosed/i.test(String(p.ib))) body=String(p.ib).toLowerCase();
+  if(!body&&head){ const hb=((head.h||'')+' '+(head.d||'')).match(R93_BODY); if(hb) body=hb[1].toLowerCase(); }
+  const src=[]; if(ev||retE) src.push('play-by-play'); if(es&&!coach&&(esIn||st==='inactive')) src.push('ESPN injury report'); if(stS) src.push('Sleeper status'); if(st==='likely') src.push('snap count');
+  return {st:st,q:ev?ev.q:(st==='likely'&&last?last.q:null),c:ev?ev.c:(st==='likely'&&last?last.c:null),
+    text:ev?ev.text:((st==='likely'&&last&&pl[last.ix])?pl[last.ix].t:''),kind:open?open.kind:(lc?lc.kind:''),
+    ret:retE?{q:retE.q,c:retE.c}:null,out:!!open,brief:(open&&brief)?brief:null,seen:seenE?{q:seenE.q,c:seenE.c}:null,son:(!open&&!retE&&!seenE&&lc&&lc.son)?1:0,
+    unv:(!open&&lc&&!retE&&!seenE&&!lc.son)?(lc.unv||0):0,wt:(!open&&lc&&!retE&&!seenE&&!lc.son&&lc.unv===2&&lc.wt)?1:0,we:(!open&&lc&&!retE&&!seenE&&!lc.son&&lc.unv===2&&lc.wt)?lc.wt:0,
+    rd:hasRead?1:0,body:body,side:side,det:det,why:absWhy,
+    es:(es&&!coach)?{st:es.st,dt:es.dt,ret:es.ret,in:esIn}:null,sl:stS||null,
+    sn:sn,nrm:nrm,osn:osn,tms:tms,last:last?{q:last.q,c:last.c,fr:lastFr,after:after}:null,
+    head:head?{h:String(head.h||''),t:head.t,src:String(head.src||'ESPN'),long:R93_LONG.test((head.h||'')+' '+(head.d||''))}:null,src:src,played:played}; }
+function r93EsOf(pid,T,sm){ // his entry on ESPN's injury list in THIS game's summary (never a coach's decision), or null
+  try{ const p=playerOf(pid); if(!p||!sm||!Array.isArray(sm.inj)) return null; const nn=norm(p.n);
+    const x=sm.inj.find(function(x){ return (p.e&&x.eid&&String(p.e)===x.eid)||(x.tm===T&&norm(x.n)===nn); })||null;
+    return (x&&!/coach|personal|suspen|not injury|^rest$|conditioning|contract|holdout|reserve\/left/i.test(x.ty))?x:null; }catch(e){ return null; } }
+function r93InjFlag(pid){ const I=r93InjView(pid); return !!(I&&(I.st==='confirmed'||I.st==='likely'||I.st==='inactive')); }
+const R93_IRANK={confirmed:5,inactive:4,likely:3,knock:2,scratch:1};
+function r93InjRank(I){ return I?(R93_IRANK[I.st]||0):0; }
+function r93SumOK(sm,g){ // this game's summary is in AND final — the feed, the injury list and every play — so a read made from it is complete
+  return !!(sm&&Array.isArray(sm.pall)&&sm.pall.length&&(!g||g.state!=='post'||sm.fin||sm.hst==='post')); }
+function r93HarvestOK(g){ // the harvest keeps a finished game once its final summary is in — or once the poller has stopped asking (three failed pulls, or a final pull with no plays)
+  try{ const sm=LIVE.sum[g.id]||null; return !!(sm&&(r93SumOK(sm,g)||sm.fin||(sm.tries||0)>=3)); }catch(e){ return true; } }
+function r93End(sm,g){ // the finished game's LAST play, by its wallclock (ESPN stamps some mid-game plays a day late) — or kickoff + 4h15 without one
+  const kick=(sm&&sm.kick)||Date.parse((g&&g.date)||'')||0; let end=0; const pa=(sm&&sm.pall)||[];
+  for(let i=pa.length-1;i>=0&&i>=pa.length-12;i--){ const w=pa[i]&&pa[i].wc; if(w){ end=w; break; } }
+  if(!(end>kick&&end<kick+8*3600e3)) end=kick?kick+4.25*3600e3:0;
+  return end; }
+function r93RepWin(sm,g){ const e=r93End(sm,g); return e?e+60*60000:0; }   // ESPN's post-game injury report is in by an hour after the last play (a real one posted 47 minutes on)
+function r93RepullDue(g,now){ // ONE more pull of a finished game's summary, once the hour after its last play has passed, when a read of it waits on
+  // ESPN's post-game injury report: the summary in hand was pulled inside that hour and a read from it (a recap the harvest keeps, or any
+  // sheet the owner may open in that game) is a note nothing backs yet — or, with no final summary in hand (a new session), a recap kept
+  // from it says so. Never after it was pulled again, never past three tries
+  try{ if(!g||g.state!=='post') return false;
+    const sm=LIVE.sum[g.id]||null;
+    if(sm&&(sm.rp||(sm.tries||0)>=3)) return false;
+    if(r93SumOK(sm,g)){ const rw=r93RepWin(sm,g); const pt=Number(sm.pt)||0;
+      if(!rw||!pt||pt>=rw||now<rw) return false;
+      const H=String(g.home||'').toUpperCase(), A=String(g.away||'').toUpperCase(); const st=(S.live&&S.live.stats)||{};
+      for(const pid in st){ const r=st[pid]; if(!r||!r.gp) continue; const q=playerOf(pid); if(!q||q.p==='DEF') continue; const t=String(q.t||'').toUpperCase(); if(t!==H&&t!==A) continue;
+        const I=r93Injury(pid); if(I&&I.unv===2&&I.wt) return true; }
+      return false; }
+    const W=(S.lrec&&S.lrec.weeks&&S.lrec.weeks[liveWeek()])||{};
+    for(const pid in W){ const r=W[pid]; if(r&&r.v93&&String(r.gid||'')===String(g.id)&&r.inj&&r.inj.unv===2&&r.inj.wt&&now>=(Number(r.inj.we)||0)) return true; }
+    return false; }catch(e){ return false; } }
+async function r93BgSummaries(gi,now,heavy){ // a pass with no live surface open: each finished game of interest still owed its final summary gets it — two a pass at
+  // most, each attempt made once (a failure counts toward liveSumPending's three tries and the next pass may try again), never a finished
+  // summary pulled twice, never a game already kept whole from its final summary (S.lrec.g93) — so each session moves on to the games still
+  // owed one, and the recap is kept even when Live was never opened between the final and the week's rollover. On ANY pass (a live surface
+  // pulls the rest itself) a game whose read waits on ESPN's post-game injury report gets its one extra pull once the hour is up
+  if(!LIVE.r93bg) LIVE.r93bg={};
+  const M=(S.lrec&&S.lrec.g93&&S.lrec.g93[liveWeek()])||{};
+  const tries=function(g){ return ((LIVE.sum[g.id]||{}).tries)||0; };
+  const due=[];
+  (gi||[]).forEach(function(g){ if(!g||g.state!=='post') return;
+    const sm=LIVE.sum[g.id]||null; if(sm&&(Number(sm.ts)||0)>=now) return;                    // pulled (or tried) on this very pass already
+    if(r93RepullDue(g,now)){ const k=String(g.id)+'|rp|'+tries(g); if(!LIVE.r93bg[k]) due.push({g:g,k:k,rp:1}); return; }
+    if(heavy||M[g.id]||!liveSumPending(g)) return;
+    const k=String(g.id)+'|'+tries(g); if(!LIVE.r93bg[k]) due.push({g:g,k:k,rp:0}); });
+  for(const x of due.slice(0,2)){ const g=x.g; LIVE.r93bg[x.k]=now;
+    try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+g.id,12000); if(!j) throw new Error('empty');
+      const P=liveParseSummary(j); P.fin=true; if(x.rp) P.rp=1; LIVE.sum[g.id]=P; }
+    catch(e){ const prev=LIVE.sum[g.id]||{box:{},plays:[],scoring:[],wp:null}; LIVE.sum[g.id]=Object.assign(prev,{ts:now,tries:(prev.tries||0)+1}); } } }
+function r93MarkHarvested(gi,wk){ // a finished game whose every recap (each player the harvest keeps) is saved from its FINAL summary is marked in the
+  // recap store — S.lrec.g93[wk][gid] = 1, persisted by lrecSave with the records — so no later session re-downloads that summary to rebuild
+  // what is already kept. A player whose stat line is not in yet, or whose record was kept from a thinner read, leaves the game unmarked
+  if(!S.lrec) return; const ML=mlSides(); if(!ML) return;
+  const W=(S.lrec.weeks&&S.lrec.weeks[wk])||{}; let add=false;
+  (gi||[]).forEach(function(g){ if(!g||g.state!=='post') return; if(!r93SumOK(LIVE.sum[g.id]||null,g)) return;
+    if(S.lrec.g93&&S.lrec.g93[wk]&&S.lrec.g93[wk][g.id]) return;
+    const H=ML.byTeam[g.home]||{mine:[]}, A=ML.byTeam[g.away]||{mine:[]}; let ok=true;
+    H.mine.concat(A.mine).forEach(function(pid){ if(!ok) return;
+      if(!(ML.startPids.has(pid)||((mlPtsAny(pid)||0)>=10)||r93InjFlag(pid))) return;          // the harvest's own gate: not a player it keeps
+      const r=W[pid]; if(r&&r.v93&&r.full&&String(r.gid||'')===String(g.id)) return;
+      if(!(S.live&&S.live.stats&&S.live.stats[pid])){ ok=false; return; }                      // his stat line is not in: the harvest could not keep him yet
+      if(r&&String(r.gid||'')===String(g.id)) ok=false; });                                  // kept, but not from the final summary
+    if(ok){ S.lrec.g93=S.lrec.g93||{}; (S.lrec.g93[wk]=S.lrec.g93[wk]||{})[g.id]=1; add=true; } });
+  if(!add) return;
+  try{ Object.keys(S.lrec.g93).forEach(function(w){ if(!(Number(w)>Number(wk)-4&&Number(w)<=Number(wk))) delete S.lrec.g93[w]; }); }catch(e){}   // the same four weeks lrecSave keeps
+  LREC_DIRTY=true; setTimeout(function(){ lrecSave().catch(function(){}); },1200); }
+function r93PrevSnap(P0,P1){ // loadPlayers: the copy a refetch replaces — its pull time and each TAGGED player's tag — rides on the new copy (newest first,
+  // up to four copies), so r93SlNew can ask "did Sleeper change his tag since kickoff?" against a copy pulled before the game, after a reload too
+  if(!P1) return; const t0=Number(P0&&P0.ts)||0; const out=[];
+  if(P0&&P0.byId&&t0&&t0<(Number(P1.ts)||Date.now())){ const inj={}; for(const pid in P0.byId){ const q=P0.byId[pid]; if(q&&q.inj) inj[pid]=String(q.inj); } out.push({ts:t0,inj:inj}); }
+  const old=(P0&&Array.isArray(P0.prev))?P0.prev:((P0&&P0.prev&&P0.prev.ts)?[P0.prev]:[]);
+  old.forEach(function(x){ const t=Number(x&&x.ts)||0; if(t&&x.inj&&out.length<4&&!out.some(function(y){ return y.ts===t; })) out.push({ts:t,inj:x.inj}); });
+  if(out.length) P1.prev=out; }
+function r93InjView(pid){ // the badge/row read: the fresh one, unless this finished game's summary is not in and the saved recap knew more
+  const I=r93Injury(pid);
+  try{ const g=liveGameOf(pid); if(!g||g.state!=='post') return I;
+    const sm=LIVE.sum[g.id]||null; if(r93SumOK(sm,g)&&S.live&&S.live.stats&&S.live.stats[pid]) return I;
+    const sv=liveRecapOf(pid,liveWeek()); if(sv&&sv.v93&&sv.inj&&String(sv.gid||'')===String(g.id)&&(r93InjRank(sv.inj)>r93InjRank(I)||(r93InjRank(sv.inj)===r93InjRank(I)&&sv.inj.text&&!(I&&I.text)))) return sv.inj; }catch(e){}
+  return I; }
+/* ── the live season's file already carries THIS week once it was pulled after kickoff: take this week's row back out (and one
+      game). Pulled mid-game there is no clean way to do that, so the live season is not used; without a game we cannot tell ── */
+function r93Prior(pid,st,g){
+  if(!st||!st.gp||!g) return null;
+  if(g.state==='pre') return st;
+  const y=Number(S.nfl.season)||2026; const ts=(S.sstatTs&&(S.sstatTs[y]||S.sstatTs[String(y)]))||0;
+  const sm=(LIVE.sum&&LIVE.sum[g.id])||null; const kick=(sm&&sm.kick)||Date.parse(g.date)||0;
+  if(!ts||!kick) return null;
+  if(ts<kick) return st;                                                   // pulled before this game kicked off: prior games only
+  if(g.state!=='post') return null;                                        // pulled mid-game: part of this game is in there
+  let end=0; const pa=(sm&&sm.pall)||[]; for(let i=pa.length-1;i>=0&&i>=pa.length-12;i--){ const w=pa[i]&&pa[i].wc; if(w){ end=w; break; } }   // the LAST play's wallclock (ESPN stamps some mid-game plays a day late)
+  if(!(end>kick&&end<kick+8*3600e3)) end=kick+4.25*3600e3;
+  if(ts<end+10*60000) return null;                                         // pulled before the final settled
+  const stats=S.live&&S.live.stats; let any=false; if(stats){ for(const k in stats){ any=true; break; } } if(!any) return null;
+  const lst=(LIVE.last&&LIVE.last.st)||0; if(lst&&lst<end+2*60000) return null;    // this week's row was pulled before the final: subtracting it would leave part of the game in
+  const row=stats[pid]; if(!row||!row.gp) return st;                       // he did not play this week: nothing of it is in the file
+  const CORE=['off_snp','tm_off_snp','rec_tgt','rec','rec_yd','rush_att','rush_yd','pass_att','pass_yd','pass_td','rec_td','rush_td'];
+  const out={}; let bad=false;
+  for(const k in st){ const a=Number(st[k]); if(st[k]==null||!isFinite(a)){ out[k]=st[k]; continue; } const b=Number(row[k]); out[k]=a-(isFinite(b)?b:0); if(out[k]<-0.01&&CORE.indexOf(k)>=0) bad=true; }
+  out.gp=Number(st.gp)-1;
+  return (bad||!(out.gp>=0))?null:out; }
+/* ── his own per-game norm: last season until he has four PRIOR games this season — never a sample that includes this game ── */
+function r93Base(pid,gm){
+  try{
+    const y=Number(S.nfl.season)||2026; const p=playerOf(pid); const pos=p?p.p:null;
+    if(gm===undefined){ try{ gm=liveGameOf(pid); }catch(e){ gm=null; } }
+    const pick=function(se){ const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; return (st&&st.gp)?st:null; };
+    let se=y, st=r93Prior(pid,pick(y),gm);                                   // V93: the live season WITHOUT this game, or nothing
+    if(!st||!(st.gp>=4)){ const st2=pick(y-1); if(st2&&st2.gp>=3){ se=y-1; st=st2; } else return null; }   // four PRIOR games before the live season is his norm
+    const g=Math.max(1,st.gp); const v=function(k){ return Number(st[k])||0; };
+    const tms=v('tm_off_snp');
+    return {se:se,g:g,live:se===y,snap:(snapPosOK(pos)&&tms>0)?v('off_snp')/tms:null,
+      tgt:v('rec_tgt')/g,car:v('rush_att')/g,att:v('pass_att')/g,rec:v('rec')/g,recYd:v('rec_yd')/g,rushYd:v('rush_yd')/g,
+      ypc:v('rush_att')?v('rush_yd')/v('rush_att'):null,ypt:v('rec_tgt')?v('rec_yd')/v('rec_tgt'):null,ypa:v('pass_att')?v('pass_yd')/v('pass_att'):null,
+      rz:(v('rec_rz_tgt')+v('rush_rz_att')+v('pass_rz_att'))/g,td:(v('rec_td')+v('rush_td')+v('pass_td'))/g,ptd:v('pass_td')/g,
+      tkl:(st.idp_tkl!=null?v('idp_tkl'):v('tkl'))/g,pa:st.pts_allow!=null?v('pts_allow')/g:null,
+      yacpc:(st.rush_yac!=null&&v('rush_att')>=20)?v('rush_yac')/v('rush_att'):null,adot:(st.rec_air_yd!=null&&v('rec_tgt')>=15)?v('rec_air_yd')/v('rec_tgt'):null};
+  }catch(e){ return null; } }
+/* ── is Sleeper's enrichment complete for this week? A week whose carries show a fraction of last season's yards after
+      contact (and not one broken tackle) is still being enriched — those tiles would print a confident, false low ── */
+function r93Cal(){
+  const st=(S.live&&S.live.stats)||null; if(!st) return {rush:false,rec:false};
+  if(R93.cal&&R93.cal.st===st) return R93.cal;
+  const y=(Number(S.nfl.season)||2026)-1; const s0=(S.sstat&&S.sstat[y])||{};
+  let a=0,ya=0,bt=0,rc=0,yr=0; for(const pid in st){ const r=st[pid]; if(!r) continue;
+    if(r.rush_att&&r.rush_yac!=null){ a+=Number(r.rush_att)||0; ya+=Number(r.rush_yac)||0; bt+=Number(r.rush_btkl)||0; }
+    if(r.rec&&r.rec_yar!=null){ rc+=Number(r.rec)||0; yr+=Number(r.rec_yar)||0; } }
+  let A=0,YA=0,RC=0,YR=0; for(const pid in s0){ const r=s0[pid]; if(!r) continue;
+    if((r.rush_att||0)>=20&&r.rush_yac!=null){ A+=Number(r.rush_att)||0; YA+=Number(r.rush_yac)||0; }
+    if((r.rec||0)>=10&&r.rec_yar!=null){ RC+=Number(r.rec)||0; YR+=Number(r.rec_yar)||0; } }
+  const rush=a>=30&&(A<200||(ya/a)>=0.6*(YA/A))&&(a<60||bt>0);
+  const rec=rc>=15&&(RC<100||(yr/rc)>=0.6*(YR/RC));
+  R93.cal={st:st,rush:rush,rec:rec,wk:{rushYac:a?ya/a:null,btkl:bt,att:a,recYar:rc?yr/rc:null},se:{rushYac:A?YA/A:null,recYar:RC?YR/RC:null}}; return R93.cal; }
+function r93Team(T){ // this game's team totals and the teammates who played — from Sleeper's weekly rows, memoised per stat pull
+  const st=(S.live&&S.live.stats)||null; if(!st||!T) return null;
+  let M=R93.tt.get(st); if(!M){ M=new Map(); R93.tt.set(st,M); }
+  let o=M.get(T); if(o) return o;
+  o={tgt:0,car:0,rz:0,att:0,mates:[]};
+  for(const pid in st){ const r=st[pid]; if(!r||!r.gp) continue; const q=playerOf(pid); if(!q||String(q.t||'').toUpperCase()!==T) continue;
+    if(['QB','RB','WR','TE'].indexOf(q.p)<0) continue;
+    o.tgt+=Number(r.rec_tgt)||0; o.car+=Number(r.rush_att)||0; o.rz+=(Number(r.rec_rz_tgt)||0)+(Number(r.rush_rz_att)||0); o.att+=Number(r.pass_att)||0; o.mates.push(pid); }
+  M.set(T,o); return o; }
+function r93GoalLine(sm,T){ // carries from inside the 5, by carrier — the carrier opens the play line
+  const out={n:0,by:{}}; if(!sm) return out; const ix=r93TeamIdx(T,sm);
+  r93Plays(sm).forEach(function(x){ if(x.tm!==T||x.y2e==null||x.y2e>5||!/rush/i.test(x.ty)||/two-point|2pt/i.test(x.t)) return;
+    const tl=String(x.t||'').toLowerCase().replace(/^\s*\([^)]*\)\s*/,'');
+    let best=null,bp=null; ix.forms.forEach(function(fs,pid){ const at=r93At(tl,fs); if(at&&(best==null||at.i<best)){ best=at.i; bp=pid; } });
+    if(bp==null||best>2) return; out.n++; out.by[bp]=(out.by[bp]||0)+1; });
+  return out; }
+function r93Own(pid){ let A=[]; try{ A=mlSidesAll(pid)||[]; }catch(e){ A=[]; }
+  let mine=A.some(function(x){ return x.mine; });
+  if(!A.length){ try{ const my=myRoster(); mine=!!(my&&(my.players||[]).indexOf(String(pid))>=0); }catch(e){} }
+  const fa=A.filter(function(x){ return x.k==='fa'; }).map(function(x){ return x.L; });
+  let faTs=0; fa.forEach(function(L){ const t=Number(L&&L.b&&L.b.ts)||0; if(t&&(!faTs||t<faTs)) faTs=t; });   // "free agent" is only as fresh as the OLDEST roster copy it read
+  return {mine:mine,vs:A.some(function(x){ return x.vs; }),fa:fa,faTs:faTs,n:A.length}; }
+function r93When(ts){ ts=Number(ts)||0; if(!ts) return ''; // an absolute stamp, so a saved recap never goes stale: "Wed 9:12 AM", or "Sep 2" past a week
+  try{ const d=new Date(ts); if(isNaN(d.getTime())) return '';
+    if(Date.now()-ts>6*86400e3) return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    return d.toLocaleDateString(undefined,{weekday:'short'})+' '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); }catch(e){ return ''; } }
+function r93AsOf(ts){ const w=r93When(ts); return w?'rosters as of '+w:''; }
+/* ── a club's REAL points per game, from the schedule's final scores (loadSchedule already keeps them — nothing is fetched):
+      the live season's prior games once there are four, else last season. Never this week's game, never a rebuilt estimate ── */
+function r93TeamPts(T){
+  const y=Number(S.nfl.season)||2026; const wk=liveWeek();
+  const one=function(se,maxW){ const box=S.sched&&S.sched[String(se)]; if(!box||!box.by) return null; let pts=0,n=0;
+    for(const k in box.by){ const x=box.by[k]; if(!x||!(x.w>=1&&x.w<=18)||(maxW&&x.w>=maxW)) continue; if(x.h!==T&&x.a!==T) continue;
+      if(x.hs==null||x.as==null||!/post|final/i.test(String(x.st||''))) continue;
+      pts+=Number(x.h===T?x.hs:x.as)||0; n++; }
+    return n?{ppg:pts/n,n:n,se:se}:null; };
+  const cur=one(y,wk); if(cur&&cur.n>=4) return cur;
+  if(!(S.sched&&S.sched[String(y-1)]&&S.sched[String(y-1)]._hy)&&typeof hydrateSched==='function'){ try{ hydrateSched(String(y-1)).catch(function(){}); }catch(e){} }   // the stored copy (IndexedDB), never the network
+  const prev=one(y-1,0); return (prev&&prev.n>=8)?prev:null; }
+/* ── the context every label reads ── */
+function r93Ctx(d){
+  const pid=String(d.pid); const p=playerOf(pid); if(!p||!d.g) return null;
+  const pos=p.p, T=String(d.team||p.t||'').toUpperCase(), g=d.g;
+  const row=(S.live&&S.live.stats&&S.live.stats[pid])||null;
+  const V=function(k){ return mlV(row,k); };
+  const snOK=snapPosOK(pos);
+  const tm=r93Team(T)||{tgt:0,car:0,rz:0,att:0,mates:[]};
+  const mineHome=g.home===T;
+  const ln=g.lines||{}; const mL=(mineHome?ln.home:ln.away)||[], tL=(mineHome?ln.away:ln.home)||[];
+  const sq=function(a,k){ return a.slice(0,k).reduce(function(x,y){ return x+(Number(y)||0); },0); };
+  let TR=null; try{ TR=r93TeamPts(T); }catch(e){ TR=null; }                // V93: real final scores — not last season's TDs re-summed by today's rosters
+  let D=null; try{ D=dvpOf(d.opp,pos); }catch(e){}
+  const venue=mineHome?T:d.opp; const std=(typeof STADIUMS!=='undefined')?STADIUMS[venue]:null;
+  const wx=(S.wx&&S.wx.week===liveWeek()&&S.wx.byHome)?S.wx.byHome[venue]:null;
+  const sm=LIVE.sum[g.id]||null;
+  return {pid:pid,p:p,pos:pos,T:T,g:g,row:row,V:V,snOK:snOK,sn:snOK?mlSnapPct(row):null,b:r93Base(pid,g),tm:tm,teamRows:tm.mates.length>0,
+    sm:sm,sumOK:r93SumOK(sm,g),my:Number(mineHome?g.hs:g.as)||0,th:Number(mineHome?g.as:g.hs)||0,
+    half:(mL.length>=2&&tL.length>=2)?{m:sq(mL,2),t:sq(tL,2)}:null,q3:(mL.length>=3&&tL.length>=3)?{m:sq(mL,3),t:sq(tL,3)}:null,
+    tr:TR,D:D,wx:(std&&!std.dome)?wx:null,
+    sc:(d.L&&d.L.scoring)||(S.league&&S.league.league&&S.league.league.scoring_settings)||{},own:r93Own(pid)}; }
+function r93LastSeen(C){ // the last play the feed names him on (injury updates excluded), and how many team snaps came after it
+  const sm=C.sm; if(!sm) return null; const pl=r93Plays(sm); if(!pl.length) return null;
+  const forms=r93TeamIdx(C.T,sm).forms.get(C.pid)||[]; if(!forms.length) return null;
+  const oAll=r93OppAll(C.g,C.T,sm);                                                          // an opposing namesake's mention is never his
+  let n=0, aft=0, lastI=-1;
+  for(let i=0;i<pl.length;i++){ const tx=r93NoInj(pl[i].t); if(r93Hit(r93OwnTx(tx.toLowerCase(),pl[i],C.T),forms,C.T,oAll)){ n++; lastI=i; } }   // a parenthesised tackler on his own club's snap is never him
+  if(lastI<0) return null;
+  let all=0; pl.forEach(function(x,i){ if(!r93IsSnap(x,C.T)) return; all++; if(i>lastI) aft++; });
+  return {q:pl[lastI].q,c:pl[lastI].c,n:n,after:aft,all:all}; }
+function r93Late(C,pid){ // the plays the feed names a teammate on, and how many of them came in the fourth quarter or later
+  const sm=C.sm; if(!sm) return null; const pl=r93Plays(sm); if(!pl.length) return null;
+  const forms=r93TeamIdx(C.T,sm).forms.get(String(pid))||[]; if(!forms.length) return null;
+  const oAll=r93OppAll(C.g,C.T,sm);
+  let n=0, q4=0; pl.forEach(function(x){ if(!r93IsSnap(x,C.T)) return; if(r93Hit(r93OwnTx(r93NoInj(x.t).toLowerCase(),x,C.T),forms,C.T,oAll)){ n++; if(Number(x.q)>=4) q4++; } });
+  return n?{n:n,q4:q4}:null; }
+function r93Ord(a){ const seen={}; const out=a.filter(function(c){ if(seen[c.k]) return false; seen[c.k]=1; return true; });
+  const w=function(c){ return c.tone==='inj'?9:(c.tone==='info'?c.sev*0.3:c.sev+(c.tone==='bad'?0.05:0))*(c.ctx?0.55:1); };   // his own facts first, the game around him after
+  return out.sort(function(x,y){ return w(y)-w(x); }); }
+/* ── the labels: the fact, the number, his norm ── */
+function r93Chips(d,C){
+  const out=[]; const V=C.V, b=C.b, pos=C.pos, f1=r93f1, pc=r93pc, pl=r93pl;
+  const add=function(k,t,nn,tone,sev,why,ctx){ if(!t) return; out.push({k:k,t:String(t),n:nn?String(nn):'',tone:tone||'info',sev:clamp(Number(sev)||0,0,1),why:why?String(why):'',ctx:ctx?1:0}); };
+  const avg=function(x){ return (x==null||!isFinite(x))?'':'avg '+f1(x); };
+  const bn=b?' ('+b.se+', '+b.g+' games)':'';
+  const I=d.inj;   // the injury itself is drawn by the strip / banner above the labels \u2014 never repeated as a chip
+  if(!C.row){ if(C.teamRows) add('nostat','No stat line \u2014 did not play','','bad',0.9,'Sleeper posted his teammates for this game but no row for him.');
+    else add('nostat','Stat line not in yet','','info',0.1,'Sleeper\u2019s weekly file has not reached this game yet.');
+    if(!I&&C.p.inj) add('status',C.p.inj+' (Sleeper)','','warn',0.4,'His current Sleeper designation \u2014 check the practice report.');
+    return r93Ord(out); }
+  if(!C.row.gp){ add('dnp','Did not play','','bad',0.95,'Sleeper lists no game played for him this week.'); return r93Ord(out); }
+  const tgt=V('rec_tgt')||0, rec=V('rec')||0, car=V('rush_att')||0, recYd=V('rec_yd')||0, rushYd=V('rush_yd')||0;
+  const rtd=V('rec_td')||0, rutd=V('rush_td')||0, tds=rtd+rutd;
+  if(C.snOK){ const sn=C.sn;
+    if(sn!=null){ const bs=(b&&b.snap!=null)?b.snap:null; const dd=bs!=null?sn-bs:0;
+      add('snap',pc(sn)+' of snaps',bs!=null?'avg '+pc(bs):'',bs==null?'info':dd<=-0.12?'bad':dd>=0.12?'good':'info',bs==null?0.1:Math.min(1,Math.abs(dd)/0.35),
+        ((V('off_snp')!=null&&V('tm_off_snp'))?V('off_snp')+' of '+V('tm_off_snp')+' offensive snaps':'Snap share')+(bs!=null?' against a '+pc(bs)+' share'+bn:'')); }
+    else add('snap','Snaps n/a','','info',0,SNAP_NA); }
+  if(pos==='WR'||pos==='TE'){
+    const bt=b?b.tgt:null; const r=(bt>0.5)?tgt/bt:null;
+    add('tgt',pl(tgt,'target'),avg(bt),r==null?'info':r<=0.7?'bad':(r>=1.35&&tgt>=5)?'good':'info',r==null?0.15:Math.min(1,Math.abs(1-r)/0.6),
+      (C.tm.tgt?pc(tgt/C.tm.tgt)+' of '+C.T+'\u2019s '+C.tm.tgt+' targets':'Targets')+(bt!=null?' \u00b7 '+f1(bt)+' a game'+bn:''));
+    if(tgt>=3){ const drops=V('rec_drop'); const cr=rec/tgt;
+      add('catch',rec+' of '+tgt+' caught'+(drops?' \u00b7 '+pl(drops,'drop'):''),'',(cr<0.5||drops>=2)?'bad':(cr>=0.8&&tgt>=6)?'good':'info',(cr<0.5||drops>=2)?0.55:(cr>=0.8&&tgt>=6)?0.35:0.15,
+        recYd+' receiving yards'+(drops!=null?'; drops are Sleeper\u2019s count':'; drops not published for this game yet')); }
+    if(tgt>=3){ const y=recYd/tgt, by=b?b.ypt:null; const r2=(by>0.5)?y/by:null;
+      add('ypt',f1(y)+' yds/target',avg(by),r2==null?'info':r2<=0.7?'bad':r2>=1.35?'good':'info',r2==null?0.1:Math.min(1,Math.abs(1-r2)/0.6),recYd+' yards on '+pl(tgt,'target')); }
+    const air=V('rec_air_yd'); if(air!=null&&tgt>=3){ const ad=air/tgt, ba=b?b.adot:null;
+      add('air','aDOT '+f1(ad)+' \u00b7 '+air+' air yds',ba!=null?'avg '+f1(ba):'','info',(ba!=null&&Math.abs(ad-ba)>=4)?0.3:0.12,'Average depth of target \u2014 '+air+' air yards on '+pl(tgt,'target')+(ba!=null?' against a '+f1(ba)+'-yard norm':'')+' (Sleeper).'); }
+    const yar=V('rec_yar'); if(yar!=null&&yar>=40&&r93Cal().rec) add('yac',yar+' yds after catch','','good',Math.min(1,yar/100),'Yards after the catch (Sleeper).');
+  } else if(pos==='RB'){
+    const tch=car+tgt, bT=b?(b.car+b.tgt):null; const r=(bT>2)?tch/bT:null;
+    add('tch',pl(car,'carry','carries')+' \u00b7 '+pl(tgt,'target'),b?'avg '+f1(b.car)+' + '+f1(b.tgt):'',r==null?'info':r<=0.7?'bad':(r>=1.3&&tch>=12)?'good':'info',r==null?0.15:Math.min(1,Math.abs(1-r)/0.6),
+      (C.tm.car?pl(car,'carry','carries')+' of '+C.T+'\u2019s '+C.tm.car:'Touches')+(bT!=null?' \u00b7 '+f1(bT)+' touches a game'+bn:''));
+    if(car>=6){ const ypa=V('rush_ypa'); const y=ypa!=null?ypa:rushYd/car; const by=b?b.ypc:null; const rr=(by>1)?y/by:null;
+      add('ypc',f1(y)+' yds/carry',avg(by),rr==null?'info':rr<=0.7?'bad':rr>=1.35?'good':'info',rr==null?0.1:Math.min(1,Math.abs(1-rr)/0.6),rushYd+' yards on '+pl(car,'carry','carries')); }
+    const yac=V('rush_yac'), btk=V('rush_btkl');
+    if(yac!=null&&car>=6&&r93Cal().rush){ const pa=yac/car, by=b?b.yacpc:null; const rr=(by>0.3)?pa/by:null; const hot=(rr!=null&&rr>=1.4)||btk>=3;
+      add('yaco',(btk?pl(btk,'broken tackle')+' \u00b7 ':'')+f1(pa)+' yds after contact/carry',avg(by),hot?'good':(rr!=null&&rr<=0.6)?'bad':'info',hot?0.5:(rr!=null&&rr<=0.6)?0.35:0.1,
+        yac+' yards after contact on '+pl(car,'carry','carries')+(btk!=null?', '+pl(btk,'broken tackle'):'')+' (Sleeper).'); }
+    const stf=V('rush_tkl_loss'); if(stf!=null&&stf>=3) add('stuff','Stuffed '+stf+' times','','bad',0.35,stf+' carries went for a loss.');
+    if(tgt>=2) add('rrec',rec+' of '+tgt+' caught \u00b7 '+recYd+' yds','','info',0.1,'His receiving line.');
+  } else if(pos==='QB'){
+    const att=V('pass_att')||0, cmp=V('pass_cmp')||0, pyd=V('pass_yd')||0, pint=V('pass_int')||0, ptd=V('pass_td')||0;
+    const ba=b?b.att:null; const r=(ba>5)?att/ba:null;
+    add('att',pl(att,'attempt'),avg(ba),r==null?'info':r<=0.7?'bad':r>=1.3?'good':'info',r==null?0.1:Math.min(1,Math.abs(1-r)/0.6),cmp+' of '+att+' completed');
+    if(att>=8){ const y=pyd/att, by=b?b.ypa:null; add('ypa',f1(y)+' yds/att',avg(by),y<6?'bad':y>=8.5?'good':'info',(y<6||y>=8.5)?0.45:0.1,pyd+' passing yards'); }
+    add('tdint',ptd+' TD \u00b7 '+pint+' INT',b?'avg '+f1(b.ptd)+' TD':'',(pint>=2&&ptd<=1)?'bad':(ptd>=3&&pint===0)?'good':'info',(pint>=2||ptd>=3)?0.5:0.1,'Passing touchdowns and interceptions.');
+    const sk=V('pass_sack'); if(sk!=null&&sk>=4) add('sack','Sacked '+sk+' times','','bad',Math.min(1,sk/7),'Sacks taken.');
+    const ra=V('rush_att')||0; if(ra>=4||rushYd>=25) add('qrun',pl(ra,'run')+' \u00b7 '+rushYd+' yds'+(rutd?' \u00b7 '+pl(rutd,'rush TD'):''),(b&&b.car)?'avg '+f1(b.car)+' runs':'',(rushYd>=40||rutd)?'good':'info',(rushYd>=40||rutd)?0.5:0.15,'His rushing line.');
+  } else if(pos==='K'){
+    const fgm=V('fgm')||0, fga=V('fga')!=null?V('fga'):fgm, xpm=V('xpm')||0, xpa=V('xpa')!=null?V('xpa'):xpm, lng=V('fgm_lng');
+    add('fg',fgm+' of '+fga+' FG'+(lng?' \u00b7 long '+lng:''),'',fga>fgm?'bad':fgm>=3?'good':'info',fga>fgm?0.6:fgm>=3?0.5:0.15,'Field goals made of attempted.');
+    add('xp',xpm+' of '+xpa+' XP','',xpa>xpm?'bad':'info',xpa>xpm?0.4:0.05,'Extra points.');
+  } else if(pos==='DEF'){
+    const fk=(C.row.fum_rec!=null)?'fum_rec':(C.row.fr!=null)?'fr':(C.row.def_fum_rec!=null)?'def_fum_rec':'fum_rec';   // Sleeper's team-defense rows count recoveries as fum_rec
+    const pa=V('pts_allow'), sk=V('sack')||0, to=(V('int')||0)+(V(fk)||0), td=V('def_td')||0;
+    if(pa!=null) add('pa','Allowed '+pa,(b&&b.pa!=null)?'avg '+f1(b.pa):'',pa>=28?'bad':pa<=13?'good':'info',pa>=28?0.6:pa<=13?0.5:0.1,'Points allowed.');
+    add('dsk',pl(sk,'sack')+' \u00b7 '+pl(to,'takeaway'),'',(sk+to*2)>=6?'good':(sk+to)===0?'bad':'info',(sk+to*2)>=6?0.5:(sk+to)===0?0.4:0.1,'Pass rush and turnovers \u2014 '+pl(V('int')||0,'interception')+' and '+pl(V(fk)||0,'fumble recovery','fumble recoveries')+'.');
+    if(td) add('dtd',pl(td,'defensive TD'),'','good',0.7,'Return or defensive touchdowns.');
+  } else {
+    const tk=V('idp_tkl')!=null?V('idp_tkl'):(V('tkl')||0); const bt=b?b.tkl:null; const r=(bt>1)?tk/bt:null;
+    add('tkl',pl(tk,'tackle'),avg(bt),r==null?'info':r<=0.6?'bad':r>=1.4?'good':'info',r==null?0.15:Math.min(1,Math.abs(1-r)/0.6),'Total tackles.');
+    const sk=V('idp_sack')!=null?V('idp_sack'):V('sack'); if(sk) add('isk',f1(sk)+' sack'+(sk===1?'':'s'),'','good',0.5,'Sacks.');
+    const it=V('idp_int'); if(it) add('iint',pl(it,'interception'),'','good',0.6,'Interceptions.');
+    const pd=V('idp_pass_def'); if(pd>=2) add('ipd',pd+' passes defended','','good',0.3,'Pass breakups.');
+  }
+  /* red zone — the looks, and whether they cashed */
+  if(['RB','WR','TE'].indexOf(pos)>=0){ const enr=V('rec_rz_tgt')!=null||V('rush_rz_att')!=null; const rz=(V('rec_rz_tgt')||0)+(V('rush_rz_att')||0);
+    if(enr&&C.tm.rz>=2){ const brz=b?b.rz:null;
+      if(rz===0&&brz!=null&&brz>=0.8) add('rz','0 of '+C.tm.rz+' red-zone looks',avg(brz),'bad',Math.min(1,0.4+brz/4),C.T+' had '+C.tm.rz+' red-zone opportunities; none went to him.');
+      else if(rz>=2&&tds===0) add('rz',rz+' red-zone looks, no TD','','bad',0.5,rz+' of '+C.T+'\u2019s '+C.tm.rz+' red-zone opportunities and no score.');
+      else if(rz>=1) add('rz',rz+' of '+C.tm.rz+' red-zone looks'+(tds?' \u00b7 '+pl(tds,'TD'):''),avg(brz),tds?'good':'info',tds?0.45:0.15,'Red-zone targets and carries.'); } }
+  /* touchdown and big-play dependence — the booms that will not repeat */
+  if(['RB','WR','TE'].indexOf(pos)>=0&&(Number(d.pts)||0)>=10&&(d.grade==='boom'||d.grade==='solid')){ const sc=C.sc||{};
+    const tdp=rtd*(sc.rec_td!=null?Number(sc.rec_td):6)+rutd*(sc.rush_td!=null?Number(sc.rush_td):6);
+    if(tds>=1&&tdp>=0.5*d.pts) add('tddep',f1(tdp)+' of '+f1(d.pts)+' pts from '+pl(tds,'TD')+' on '+pl(rec+car,'touch','touches'),'','warn',Math.min(1,tdp/d.pts),'Touchdown share of his points in '+((d.L&&d.L.short)||'this league')+'\u2019s scoring.');
+    const rl=V('rec_lng')||0, ul=V('rush_lng')||0, lng=Math.max(rl,ul), tot=recYd+rushYd;
+    if(lng>=30&&tot>=40&&lng/tot>=0.45) add('big','A '+lng+'-yd '+(rl>=ul?'catch':'run')+' was '+pc(lng/tot)+' of his yards','','warn',Math.min(1,lng/tot),'One play carried the day \u2014 '+lng+' of his '+tot+' yards.'); }
+  /* the game around him */
+  const S0=(C.half&&Math.abs(C.half.m-C.half.t)>=14)?{x:C.half,w:'at the half'}:(C.q3&&Math.abs(C.q3.m-C.q3.t)>=14)?{x:C.q3,w:'after three'}:null;
+  if(S0&&pos!=='K'&&pos!=='DEF'){ const lead=S0.x.m>S0.x.t; const dd=Math.abs(S0.x.m-S0.x.t);
+    const tone=pos==='RB'?(lead?'good':'bad'):['WR','TE','QB'].indexOf(pos)>=0?(lead?'bad':'good'):'info';
+    add('script',(lead?'Led ':'Trailed ')+S0.x.m+'\u2013'+S0.x.t+' '+S0.w,'',(d.grade==='boom'||d.grade==='solid')?(tone==='good'?'good':'info'):(tone==='bad'?'bad':'info'),0.35+Math.min(0.3,(dd-14)/40),
+      C.T+' '+(lead?'led':'trailed')+' by '+dd+' '+S0.w+(pos==='RB'?(lead?' \u2014 a lead feeds the run game.':' \u2014 a team that chases shelves the run game.'):(lead?' \u2014 a lead turns a team run-first.':' \u2014 a team that chases throws.')),1); }
+  else if(Math.abs(C.my-C.th)>=17&&pos!=='K'&&pos!=='DEF'){ const won=C.my>C.th;
+    add('script',(won?'Won ':'Lost ')+C.my+'\u2013'+C.th,'','info',0.3,'A '+Math.abs(C.my-C.th)+'-point final \u2014 a game this lopsided can send the starters to the bench late; the recap only says they did when the play-by-play shows it.',1); }
+  if(C.tr&&C.tr.ppg!=null&&pos!=='DEF'){ const ppg=C.tr.ppg; const src=C.T+' scored '+C.my+' against a '+r93f1(ppg)+'-point average \u2014 its real final scores, '+C.tr.n+' games'+(String(C.tr.se)===String(Number(S.nfl.season)||2026)?' this season before this one':' in '+C.tr.se)+'.';
+    if(C.my<=ppg-7) add('off','Team scored '+C.my,'avg '+r93f1(ppg),'bad',Math.min(1,0.3+(ppg-C.my)/25),src,1);
+    else if(C.my>=ppg+10) add('off','Team scored '+C.my,'avg '+r93f1(ppg),'good',Math.min(1,0.3+(C.my-ppg)/25),src,1); }
+  if(C.D&&['QB','RB','WR','TE'].indexOf(pos)>=0){ const D=C.D; const good=(d.grade==='boom'||d.grade==='solid');
+    if(D.rank>=D.n-7) add('def','vs '+d.opp+' \u2014 '+ordinal(D.n-D.rank+1)+'-toughest vs '+pos,'',good?'good':'info',good?0.35:0.5,d.opp+' allows the '+ordinal(D.rank)+'-most fantasy points to '+pos+' of '+D.n+' (DvP).',1);
+    else if(D.rank<=8) add('def','vs '+d.opp+' \u2014 '+ordinal(D.rank)+'-softest vs '+pos,'',good?'info':'bad',good?0.3:0.45,d.opp+' allows the '+ordinal(D.rank)+'-most fantasy points to '+pos+' of '+D.n+' (DvP).',1); }
+  if(C.wx){ const wind=Number(C.wx.wind!=null?C.wx.wind:C.wx.windMph), pcp=Number(C.wx.precip!=null?C.wx.precip:C.wx.precipPct), tmp=Number(C.wx.temp!=null?C.wx.temp:C.wx.tempF);
+    if(isFinite(wind)&&wind>=15) add('wind',Math.round(wind)+' mph wind','','info',wind>=20?0.45:0.25,'Kickoff forecast at an open-air venue.',1);
+    if(isFinite(pcp)&&pcp>=50) add('rain',Math.round(pcp)+'% rain','','info',0.25,'Kickoff forecast at an open-air venue.',1);
+    if(isFinite(tmp)&&tmp<=25) add('cold',Math.round(tmp)+'\u00b0 at kickoff','','info',0.2,'Kickoff forecast at an open-air venue.',1); }
+  if(C.trend) add('trend',C.trend.t,C.trend.n,C.trend.dir==='down'?'bad':C.trend.dir==='up'?'good':'info',C.trend.dir?0.55:0.05,'His snap share over his last three games'+(C.trend.n?' ('+C.trend.n+')':'')+'.');
+  const slC=r93SlFresh(C.p,C.g,C.sm,true,false);                                             // he played: an IR/PUP/Out/Doubtful tag older than kickoff is stale, not a label
+  if(!I&&slC) add('status',slC+' (Sleeper)','','warn',0.4,'His current Sleeper designation \u2014 check the practice report.');
+  return r93Ord(out); }
+/* ── who took the work — only asked when his own work fell, or he got hurt ── */
+function r93Take(d,C){
+  const pos=C.pos; if(['QB','RB','WR','TE'].indexOf(pos)<0||!C.row) return null;
+  const I=d.inj, b=C.b, V=C.V;
+  const work=pos==='QB'?(V('pass_att')||0):pos==='RB'?((V('rush_att')||0)+(V('rec_tgt')||0)):(V('rec_tgt')||0);
+  const nw=b?(pos==='QB'?b.att:pos==='RB'?(b.car+b.tgt):b.tgt):null;
+  const snD=(C.sn!=null&&b&&b.snap!=null)?C.sn-b.snap:null;
+  const hurt=!!(I&&(I.st==='confirmed'||I.st==='likely'||I.st==='inactive'));
+  const fell=hurt||(nw!=null&&nw>=2&&work<=nw*0.7)||(snD!=null&&snD<=-0.15);
+  const grp=pos==='QB'?['QB']:pos==='RB'?['RB']:['WR','TE'];
+  const gl=(pos==='RB')?r93GoalLine(C.sm,C.T):{n:0,by:{}};
+  let best=null;
+  if(fell) C.tm.mates.forEach(function(m){ if(m===C.pid) return; const q=playerOf(m); if(!q||grp.indexOf(q.p)<0) return;
+    const r=S.live.stats[m]; if(!r) return; const mb=r93Base(m,C.g);
+    const w=q.p==='QB'?(Number(r.pass_att)||0):q.p==='RB'?((Number(r.rush_att)||0)+(Number(r.rec_tgt)||0)):(Number(r.rec_tgt)||0);
+    const wn=mb?(q.p==='QB'?mb.att:q.p==='RB'?(mb.car+mb.tgt):mb.tgt):null;
+    const s=snapPosOK(q.p)?mlSnapPct(r):null; const sd=(s!=null&&mb&&mb.snap!=null)?s-mb.snap:null;
+    const dw=w-(wn!=null?wn:0); const same=q.p===pos;
+    let score;
+    if(pos==='QB'){ if(!((s!=null&&s>=0.4)||w>=10)) return; score=(s!=null?s:0)*10+w*0.2; }
+    else if(pos==='RB'){ if(!(dw>=2||(sd!=null&&sd>=0.15))) return; score=dw+(sd!=null?sd*6:0)+((gl.by[m]||0)*1.5); }
+    else { if(!(dw>=2||(same&&sd!=null&&sd>=0.15&&dw>=0.5))) return; score=dw+((same&&sd!=null)?sd*10:0); }   // a blocking tight end soaking up a receiver's snaps is a formation, not the work
+    if(score<2.5) return;
+    if(!best||score>best.score) best={pid:m,q:q,r:r,mb:mb,w:w,wn:wn,s:s,sd:sd,score:score}; });
+  /* a back with a real role who lost the goal line gets that named even on a normal day */
+  let glTake=null;
+  if(pos==='RB'&&gl.n>=2&&b&&(b.car+b.tgt)>=8){ const mineGl=gl.by[C.pid]||0; let top=null; Object.keys(gl.by).forEach(function(m){ if(m!==C.pid&&(!top||gl.by[m]>gl.by[top])) top=m; });
+    if(top&&gl.by[top]>=2&&gl.by[top]>mineGl) glTake={pid:top,k:gl.by[top],mine:mineGl}; }
+  if(!best&&!glTake) return null;
+  const glChip=glTake?{k:'gl',t:'Goal line: '+r93Short(glTake.pid)+' '+glTake.k+' of '+gl.n,n:glTake.mine?'he had '+glTake.mine:'',tone:'bad',sev:Math.min(1,0.45+glTake.k/8),why:'Carries from inside the 5, read from the play-by-play — '+r93Short(glTake.pid)+' had '+glTake.k+' of '+gl.n+(glTake.mine?', he had '+glTake.mine:'')+'.'}:null;
+  /* only the goal-line split moved: that is named as the goal line, never as "took the work" (a back whose own load FELL can
+     still vulture two short carries from one whose load rose) — and a two-carry split is no pickup call */
+  if(!best){ const go=r93Own(glTake.pid);
+    return {pid:glTake.pid,n:r93Short(glTake.pid),gl:1,k:glTake.k,of:gl.n,t:glTake.k+' of '+gl.n+' goal-line carries'+(glTake.mine?' · he had '+glTake.mine:''),
+      fa:go.fa.map(function(L){ return L.short; }),faTs:go.faTs,nL:go.n,mine:go.mine,why:'the goal line moved',real:false,blow:0,glChip:glChip}; }
+  const pick=best.pid; const q=playerOf(pick); const r=S.live.stats[pick]||{}; const mb=best.mb;
+  const nm=r93Short(pick);
+  let t='';
+  if(q.p==='QB'){ const s=snapPosOK('QB')?mlSnapPct(r):null; t=(s!=null&&r.off_snp!=null&&r.tm_off_snp?r.off_snp+' of '+r.tm_off_snp+' snaps':'took over')+' \u00b7 '+(Number(r.pass_att)||0)+' att, '+(Number(r.pass_yd)||0)+' yds'; }
+  else if(q.p==='RB'){ t=r93pl(Number(r.rush_att)||0,'carry','carries')+(mb?' (avg '+r93f1(mb.car)+')':'')+((gl.n>=2&&gl.by[pick])?' \u00b7 '+gl.by[pick]+' of '+gl.n+' goal-line carries':''); }
+  else { const s=mlSnapPct(r); t=r93pl(Number(r.rec_tgt)||0,'target')+(mb?' (avg '+r93f1(mb.tgt)+')':'')+(s!=null?' \u00b7 '+r93pc(s)+' of snaps'+((mb&&mb.snap!=null)?' (avg '+r93pc(mb.snap)+')':''):''); }
+  const own=r93Own(pick);
+  const rs=snapPosOK(q.p)?mlSnapPct(r):null;
+  const realT=q.p==='QB'?(rs!=null?rs>=0.5:(Number(r.pass_att)||0)>=15):q.p==='RB'?((Number(r.rush_att)||0)+(Number(r.rec_tgt)||0))>=8:(Number(r.rec_tgt)||0)>=4;   // snaps without looks are a formation, not a pickup
+  const res={pid:pick,n:nm,t:t,fa:own.fa.map(function(L){ return L.short; }),faTs:own.faTs,nL:own.n,mine:own.mine,why:hurt?'the next man up':'the role moved',
+    real:realT,blow:Math.abs((C.my||0)-(C.th||0))>=17?Math.abs((C.my||0)-(C.th||0)):0};
+  if(glChip) res.glChip=glChip;
+  return res; }
+/* ── next week ── */
+function r93Next(d,C){
+  const pos=C.pos, T=C.T; const w=(Number(d.wk)||liveWeek())+1; if(w>18) return null;
+  const bye=!!(S.byes&&S.byes.byTeam&&Number(S.byes.byTeam[T])===w);
+  let SG=null; try{ SG=scheduleGame(T,S.nfl.season,w); }catch(e){ SG=null; }
+  if(!SG||!SG.opp) return bye?{wk:w,bye:true}:null;
+  let D=null; try{ D=dvpOf(SG.opp,pos); }catch(e){ D=null; }
+  let lab='';
+  if(D){ const half=D.rank<=Math.ceil(D.n/2);
+    lab=pos==='DEF'?(half?ordinal(D.rank)+'-most giving to defenses':ordinal(D.n-D.rank+1)+'-stingiest to defenses')
+      :(half?ordinal(D.rank)+'-softest':ordinal(D.n-D.rank+1)+'-toughest')+' vs '+pos; }
+  return {wk:w,opp:SG.opp,home:SG.isHome!==false,rank:D?D.rank:null,n:D?D.n:null,lab:lab,hard:!!(D&&D.rank>=D.n-4),soft:!!(D&&D.rank<=5)}; }
+/* ── snap share over his last three games ── */
+function r93Trend(d,C){ if(!C.snOK||C.sn==null) return null;
+  const y=String(S.nfl.season); const wk=Number(d.wk)||liveWeek();
+  let rows=[]; try{ rows=gameLog(C.pid).filter(function(r){ return r.played&&r.stats&&!(String(r.season)===y&&r.week===wk); }); }catch(e){ rows=[]; }
+  const prev=rows.slice(-2).map(function(r){ return {s:snapPctOf(r.stats,C.pos),se:r.season,w:r.week}; }).filter(function(x){ return x.s!=null; });
+  if(prev.length<2) return null;
+  const seq=prev.map(function(x){ return x.s; }).concat([C.sn]);
+  const d1=seq[1]-seq[0], d2=seq[2]-seq[1], tot=seq[2]-seq[0];
+  const dir=(d1<=-0.03&&d2<=-0.03&&tot<=-0.10)?'down':(d1>=0.03&&d2>=0.03&&tot>=0.10)?'up':'';   // two steps the same way AND ten points in all — noise is not a trend
+  const cross=prev.some(function(x){ return String(x.se)!==y; });
+  return {dir:dir,seq:seq,t:'Snaps '+(dir==='down'?'down 3 straight':dir==='up'?'up 3 straight':'last 3')+': '+seq.map(function(x){ return Math.round(x*100)+'%'; }).join(' \u2192 '),
+    n:cross?'from '+prev[0].se+' wk '+prev[0].w:''}; }
+function r93Cause(d,pos){ // the fact behind a bad game, framed — never a soft draw
+  const c=d.chips||[]; const f=function(k,test){ return c.find(function(x){ return x.k===k&&(!test||test(x)); })||null; };
+  const bad=function(x){ return x.tone==='bad'; }, tough=function(x){ return /toughest/.test(x.t); };
+  const order=pos==='QB'
+    ?[['tdint',bad,'turnovers'],['ypa',bad,'efficiency'],['sack',null,'protection'],['def',tough,'the draw'],['off',bad,'the offense'],['script',null,'the game script'],['wind',null,'the weather'],['rain',null,'the weather']]
+    :[['catch',bad,'his hands'],['ypt',bad,'efficiency'],['ypc',bad,'efficiency'],['rz',bad,'the red zone'],['gl',null,'the goal line'],['def',tough,'the draw'],['off',bad,'the offense'],['script',null,'the game script'],['wind',null,'the weather'],['rain',null,'the weather']];
+  for(let i=0;i<order.length;i++){ const x=f(order[i][0],order[i][1]); if(x) return order[i][2]+': '+String(x.t).replace(/^Goal line: /,'')+(x.n?' ('+x.n+')':''); }
+  return ''; }
+/* ── the verdict ── */
+function r93Verdict(d,C){ // a player the owner does not have (not rostered in any league of his — a start/sit or an ADD is only ever about his own
+  // roster or a free agent's role) gets no bench or start call: the same reason, as NO MOVE
+  const V0=r93VerdictCore(d,C);
+  if(V0&&!(C.own&&C.own.mine)&&(V0.v==='BENCH NEXT WEEK'||V0.v==='START')) return {v:'NO MOVE',why:V0.why};
+  return V0; }
+function r93UnvWhy(I){ // the namesake reading, said plainly: a note on a play that does not involve him, with nothing to back it — or, inside the
+  // hour after the final, nothing YET: ESPN's post-game injury report is not out, and the recap checks the game again once it is
+  const w=r93Clock(I.q,I.c)||'in the game';
+  if(I.wt) return 'An injury note '+w+' matches his printed name'+(I.body?' ('+I.body+')':'')+', but that play does not involve him and nothing backs it yet — waiting on ESPN’s post-game injury report, which posts about an hour after the final; the recap checks the game again then.';
+  const snap=(I.sn!=null&&I.nrm!=null)?'his snap count did not stop at the note ('+r93pc(I.sn)+' against '+r93an(r93pc(I.nrm))+' '+r93pc(I.nrm)+' norm)'
+    :I.sn!=null?'there is no NFL snap norm to measure a drop against':'there is no snap count to check';
+  return 'An injury note '+w+' matches his printed name'+(I.body?' ('+I.body+')':'')+', but that play does not involve him and nothing backs it — no ESPN listing since kickoff, no Sleeper designation changed since kickoff, and '+snap+'. It may be a teammate the feed prints the same way — unverified.'; }
+function r93VerdictCore(d,C){
+  const I=d.inj, g=d.grade, pos=C.pos, b=C.b, V=C.V, own=C.own, nx=d.next;
+  const tk=(d.take&&!d.take.gl)?d.take:null;                                                 // a goal-line split is not "the work"
+  const mine=own.mine, faL=own.fa.map(function(L){ return L.short; });
+  const asof=r93AsOf(own.faTs); const faTxt=faL.length?' — free agent in '+faL.join(', ')+(asof?' ('+asof+')':''):'';
+  const chip=function(k){ return (d.chips||[]).find(function(c){ return c.k===k; })||null; };
+  const ct=function(k){ const c=chip(k); return c?(c.t+(c.n?' ('+c.n+')':'')):''; };
+  const nxt=(nx&&!nx.bye&&nx.opp)?((nx.home?'vs ':'@ ')+nx.opp+(nx.lab?' ('+nx.lab+')':'')):(nx&&nx.bye?'a bye in week '+nx.wk:'');
+  const Rv=function(v,why){ return {v:v,why:String(why||'').replace(/\s+\./g,'.').replace(/\.\./g,'.')}; };
+  /* injured reserve or PUP by EITHER source — Sleeper's designation or ESPN's injury list in this game's summary — whatever the feed
+     showed (a knock, no note at all): he is out at least four games. Sleeper's tag carries no date: it counts only when he did not play, or
+     when Sleeper changed it after kickoff against a copy of the player DB pulled before the game (r93SlFresh) — a stale IR tag on a man who
+     just played is not news, and a verified feed note does not make it news */
+  const esE=(I&&I.es)?I.es:r93EsOf(C.pid,C.T,C.sm); const kk=(C.sm&&C.sm.kick)||Date.parse(C.g.date)||0;
+  const slS=r93SlFresh(C.p,C.g,C.sm,!!(C.row&&C.row.gp),!!(I&&(I.rd!=null?I.rd:(I.text||I.q||(I.es&&I.es.in)))));   // rd: a verified feed note or an ESPN listing from THIS game (an unverified note is not one)
+  const esS=String((esE&&esE.st&&!(esE.dt&&kk&&esE.dt<kk-5*60000))?esE.st:'');   // ESPN's entry counts only when it is dated from kickoff on — a pregame tag he played through is not news
+  const irSl=/^(ir|pup|injured reserve|physically unable)/i.test(slS), irEs=/injured reserve|physically unable|^ir$|^pup\b/i.test(esS);
+  if((irSl||irEs)&&!(I&&I.st==='scratch')){
+    const kSl=irSl?(/^(pup|physically)/i.test(slS)?'the PUP list':'injured reserve'):'', kEs=irEs?(/physically unable|^pup\b/i.test(esS)?'the PUP list':'injured reserve'):'';   // PUP is named PUP, never "injured reserve"
+    const onT=(kSl&&kEs)?(kSl===kEs?kSl+' (Sleeper and ESPN)':kEs+' (ESPN) and '+kSl+' (Sleeper)'):kSl?kSl+' (Sleeper)':kEs+' (ESPN)';
+    return Rv(mine?'BENCH NEXT WEEK':'NO MOVE','On '+onT+' — out at least four games'
+      +((I&&I.st!=='knock'&&I.q)?'; hurt '+r93Clock(I.q,I.c)+(I.body?' ('+I.body+')':''):'')+(tk?'; '+tk.n+' is next in line':'')+'.'); }
+  if(I&&(I.st==='confirmed'||I.st==='likely'||I.st==='inactive')){
+    if(I.head&&I.head.long) return Rv(mine?'BENCH NEXT WEEK':'NO MOVE','Hurt '+(r93Clock(I.q,I.c)||'in the game')+(I.body?' ('+I.body+')':'')+', and the latest headline ('+I.head.src+') reads “'+I.head.h+'”'+(mine?' — plan without him':'')+(tk?'; '+tk.n+' is the fill-in':'')+'. Watch the practice report for the official word.');
+    const lead=I.st==='likely'?('Snaps collapsed ('+r93pc(I.sn)+', norm '+r93pc(I.nrm)+') and the feed lost him after '+(r93Clock(I.q,I.c)||'early')+' \u2014 hurt or pulled, no injury note yet')
+      :I.st==='inactive'?('Did not play'+(I.body?' ('+I.body+')':''))
+      :('Hurt '+(r93Clock(I.q,I.c)||'in the game')+(I.body?' ('+I.body+')':'')+(I.ret?', came back':(I.seen||I.son)?', played on':(I.out&&I.brief)?', stayed in to '+r93Clock(I.brief.q,I.brief.c)+', then did not return':I.out?', did not return':''));
+    const stt=(I.es&&I.es.st)?' \u2014 ESPN lists him '+I.es.st:(I.sl?' \u2014 Sleeper lists him '+I.sl:'');
+    return Rv('MONITOR',lead+stt+'. Check the Wednesday\u2013Friday practice report before you set a lineup'+(tk?'; '+tk.n+' is the fill-in':'')+'.'); }
+  if(I&&I.st==='scratch'){ const w=I.why||'coach\u2019s decision';
+    if(/coach/.test(w)) return Rv(mine?'BENCH NEXT WEEK':'NO MOVE','A healthy scratch (coach\u2019s decision) \u2014 no role until that changes; check the news for why.');
+    if(/suspen/.test(w)) return Rv(mine?'BENCH NEXT WEEK':'NO MOVE','Did not play \u2014 suspension. Check the news for its length before you plan around him.');
+    return Rv(mine?'MONITOR':'NO MOVE','Did not play ('+w+') \u2014 not an injury; check the news for when he is back.'); }
+  if(I&&I.st==='knock'&&I.unv===2) return Rv('MONITOR',r93UnvWhy(I)+' Check the practice report before you set a lineup.');
+  if(I&&I.st==='knock'&&I.es&&I.es.st){
+    if(r93NoFeed(I)) return Rv('MONITOR','ESPN listed him '+I.es.st+(I.body?' ('+I.body+')':'')+' after kickoff; the play-by-play has no injury note on him — check the practice report.');   // no feed event: nothing says he was shaken up, or back in
+    return Rv('MONITOR','Shaken up '+(r93Clock(I.q,I.c)||'in the game')+' and back in, but ESPN lists him '+I.es.st+(I.body?' ('+I.body+')':'')+' — check the practice report.'); }
+  if(I&&I.st==='knock'&&I.unv) return Rv('MONITOR','An injury note names him '+(r93Clock(I.q,I.c)||'in the game')+(I.body?' ('+I.body+')':'')+', but '+r93pc(I.sn)+' of snaps against '+r93an(r93pc(I.nrm))+' '+r93pc(I.nrm)+' norm says he played close to a full game — unverified. Check the practice report before you set a lineup.');
+  /* no injury read, but a designation that says he may not play: never a usage verdict over it */
+  if(!I&&C.row&&C.row.gp&&C.p.p!=='DEF'&&(/^(out|doubtful)$/i.test(slS)||/^(out|doubtful)$/i.test(esS))){ const who=/^(out|doubtful)$/i.test(slS)?'Sleeper lists him '+slS:'ESPN lists him '+esS;
+    return Rv(mine?'MONITOR':'NO MOVE',who+(C.sumOK?' after this game, and its play-by-play carries no injury note on him':' (this game\u2019s play-by-play is not in yet)')+' \u2014 check the news and the Wednesday\u2013Friday practice report before you set a lineup'+(nxt?'. Next: '+nxt:'')+'.'); }
+  if(pos==='K'||pos==='DEF'){
+    if(nx&&nx.bye) return Rv(mine?'BENCH NEXT WEEK':'NO MOVE','Bye in week '+nx.wk+' \u2014 stream a replacement.');
+    if(nx&&nx.soft) return Rv(mine?'START':(faL.length?'ADD':'NO MOVE'),nxt+' next'+(!mine?faTxt:'')+'.');
+    if(nx&&nx.hard) return Rv(mine?'BENCH NEXT WEEK':'NO MOVE',nxt+' next \u2014 stream a softer matchup.');
+    return Rv(mine?'HOLD':'NO MOVE',[ct(pos==='K'?'fg':'pa'),nxt?'next: '+nxt:''].filter(Boolean).join(' \u2014 ')+'.'); }
+  /* no stat row (offline, or the weekly file has not reached his game) or no game played: nothing here may be read as usage */
+  if(!C.row||!C.row.gp){ const nt=nxt?' Next: '+nxt+'.':''; const sl=slS?' Sleeper lists him '+slS+'.':'';
+    if(C.row||C.teamRows) return Rv(mine?'MONITOR':'NO MOVE','No stat line while his teammates\u2019 are in \u2014 he did not play'+(sl?'.'+sl:', and this data has no injury note on him.')+' Check the news for why before you set a lineup.'+nt);
+    if(/^(out|doubtful|questionable)/i.test(slS)) return Rv(mine?'MONITOR':'NO MOVE','Stat line not in yet \u2014 '+fmtPts(d.pts||0)+' pts on Sleeper so far, and Sleeper lists him '+slS+'. Check the news and the practice report before you set a lineup; the full read waits for his snaps and looks.'+nt);
+    return Rv(mine?'HOLD':'NO MOVE','Stat line not in yet \u2014 '+fmtPts(d.pts||0)+' pts on Sleeper so far; the verdict waits for his snaps and looks.'+nt); }
+  const idp=['QB','RB','WR','TE'].indexOf(pos)<0;
+  const work=pos==='QB'?(V('pass_att')||0):pos==='RB'?((V('rush_att')||0)+(V('rec_tgt')||0)):idp?(V('idp_tkl')!=null?V('idp_tkl'):(V('tkl')||0)):(V('rec_tgt')||0);
+  const nw=b?(pos==='QB'?b.att:pos==='RB'?(b.car+b.tgt):idp?b.tkl:b.tgt):null;
+  const vol=(nw!=null&&nw>=1.5)?work/nw:null;
+  const snD=(C.sn!=null&&b&&b.snap!=null)?C.sn-b.snap:null;
+  const workTxt=pos==='QB'?ct('att'):pos==='RB'?ct('tch'):idp?ct('tkl'):ct('tgt');
+  const snapTxt=(C.sn!=null)?ct('snap'):'';
+  const both=[workTxt,snapTxt].filter(Boolean).join(', ');
+  const exp=Number(d.exp)||0;
+  const boomish=(g==='boom'||g==='solid'), bad=(g==='meh'||g==='bust');
+  const tr=C.trend, tDown=!!(tr&&tr.dir==='down'), tUp=!!(tr&&tr.dir==='up');
+  const margin=C.my-C.th, blow=Math.abs(margin)>=17;
+  const lowAbs=pos==='RB'?work<=8:(pos==='WR'||pos==='TE')?work<=4:false;                  // a ratio on three targets is noise
+  const real=pos==='QB'?(C.sn!=null?C.sn>=0.5:work>=15):pos==='RB'?(work>=8&&(C.sn==null||C.sn>=0.3)):(pos==='WR'||pos==='TE')?(work>=4&&(C.sn==null||C.sn>=0.4)):work>=5;
+  const upNorm=((vol!=null&&vol>=1.3&&!lowAbs)||(snD!=null&&snD>=0.15)||(tUp&&(!b||b.snap==null||C.sn>=b.snap-0.05)));
+  /* no NFL norm (a rookie): a REAL role counts as up \u2014 60%+ of the snaps or 12+ touches, outside a blowout */
+  const tch=(V('rush_att')||0)+(V('rec_tgt')||0);
+  const upNew=!b&&!idp&&!blow&&((C.sn!=null&&C.sn>=0.6)||(pos!=='QB'&&tch>=12));
+  const up=upNorm||upNew;
+  const cause=r93Cause(d,pos);
+  const tkTxt=tk?tk.n+' took the work \u2014 '+tk.t:'';
+  /* A \u00b7 a free agent whose role grew \u2014 an ADD whatever the score */
+  if(up&&real&&!mine&&faL.length) return Rv('ADD',(upNorm?'Role grew \u2014 '+both+(tUp?'; '+tr.t:''):'A real role with no NFL norm to measure yet \u2014 '+both)+faTxt+'.');
+  /* B \u00b7 a boom built on touchdowns or one play */
+  const tdc=chip('tddep'), bgc=chip('big');
+  if(boomish&&(tdc||bgc)&&(vol==null||vol<=1.05||lowAbs)){
+    const why=(tdc?tdc.t:bgc.t)+(workTxt?' \u2014 on '+workTxt:'')+'; the volume will not repeat that';
+    return mine?Rv('SELL HIGH',why+(nxt?'. Next: '+nxt:'')+'.'):Rv('DON\u2019T CHASE',why+'.'); }
+  /* C \u00b7 someone else's depth piece */
+  if(!mine&&exp<5&&!(up&&real)) return Rv('NO MOVE','Projected '+r93f1(exp)+' \u2014 not a fantasy factor yet: '+(both||r93f1(d.pts)+' pts')+'.');
+  /* D \u00b7 his snaps fell */
+  if(snD!=null&&snD<=-0.15&&!tUp){
+    const shrink=tDown||(vol!=null&&vol<0.75);
+    if(shrink&&blow&&!tDown){   // "the backups played late" only with proof from the feed: it lost him before the fourth quarter, or most of the backup's plays came in it
+      const ls=C.last; const gap=(ls&&ls.n)?ls.all/ls.n:0; const early=!!(ls&&ls.q<4&&ls.after>=Math.max(10,2.5*gap));
+      const bl=tk?r93Late(C,tk.pid):null; const lateTk=!!(bl&&bl.n>=3&&bl.q4>=0.6*bl.n);
+      const late=early?' \u2014 the backups played late (the feed last named him '+r93Clock(ls.q,ls.c)+')'
+        :lateTk?' \u2014 the backups played late ('+tk.n+': '+bl.q4+' of his '+bl.n+' plays in the feed came in the 4th)'
+        :tk?'; '+tk.n+' took the work \u2014 '+tk.t:'';                                          // a split all game is not garbage time
+      return Rv(mine?'HOLD':'NO MOVE',both+' in a '+Math.abs(margin)+'-point '+(margin>0?'win':'loss')+late+'; watch his share next week.'); }
+    if(shrink){ const why=both+' \u2014 '+(tDown?'his role is shrinking ('+tr.t+')':'a smaller role today')+(tk?'; '+tkTxt:'')+((nx&&nx.hard)?'; '+nxt+' next':'')+'.';
+      if(mine) return Rv((tDown||(tk&&snD<=-0.2))?'BENCH NEXT WEEK':'HOLD',why);
+      return Rv('DON\u2019T CHASE',why); }
+    if(vol!=null&&vol>=0.75) return Rv(mine?'HOLD':'NO MOVE',snapTxt+', but '+(workTxt||'his looks')+' held'+(tk?'; '+tkTxt:'')+'; no injury note \u2014 watch his share next week'+(nxt?'. Next: '+nxt:'')+'.'); }
+  /* E \u00b7 a bad game with the work intact */
+  if(bad&&vol!=null&&vol>=0.8&&(snD==null||snD>=-0.08)){
+    const base='The work was there \u2014 '+both+(cause?'; the miss was '+cause:'');
+    if(mine){ if(nx&&nx.hard) return Rv('HOLD',base+' \u2014 but '+nxt+' next; start him only without a better option.');
+      if(exp<9) return Rv('HOLD',base+'.');
+      return Rv('START',base+(nxt?'. Next: '+nxt:'')+'.'); }
+    return Rv('BUY LOW',base+' \u2014 efficiency comes back, the role is what sticks'+(nxt?'. Next: '+nxt:'')+'.'); }
+  /* F \u00b7 a quiet game into a brutal draw */
+  if(bad&&mine&&nx&&nx.hard&&exp>=6) return Rv('BENCH NEXT WEEK','A quiet game ('+(both||r93f1(d.pts)+' pts')+') and '+nxt+' next.');
+  /* G \u00b7 the role grew on a good day */
+  if(boomish&&up&&real){ const why=(upNorm?'Role growing \u2014 '+both+(tUp?'; '+tr.t:''):'A real role with no NFL norm yet \u2014 '+both);
+    if(mine) return Rv('START',why+(nxt?'. Next: '+nxt:'')+'.');
+    return Rv('NO MOVE',why+' \u2014 his price just went up.'); }
+  /* H \u00b7 no norm yet, a light day, or on script */
+  const soft=!!(mine&&nx&&nx.soft&&real&&exp>=6);                                            // a real role into a top-5 draw: start him
+  if(!b) return Rv(soft?'START':(mine?'HOLD':'NO MOVE'),'No NFL norm to measure him against yet \u2014 '+(both||r93f1(d.pts)+' pts')+(nxt?(soft?' \u2014 and '+nxt+' next':'. Next: '+nxt):'')+'.');
+  if(bad) return Rv(mine?'HOLD':'NO MOVE',(both||r93f1(d.pts)+' pts')+' \u2014 a light day'+(cause?'; the miss was '+cause:'')+(nxt?'. Next: '+nxt:'')+'.');
+  return Rv(soft?'START':(mine?'HOLD':'NO MOVE'),(g==='boom'?'A smash on normal usage \u2014 ':g==='solid'?'Right on script \u2014 ':'')+(both||r93f1(d.pts)+' pts')+(nxt?(soft?' \u2014 and '+nxt+' next':'. Next: '+nxt):'')+'.'); }
+function r93Nar(d,C){
+  const p=C.p; const I=d.inj; const out=[];
+  out.push(p.n+' scored '+fmtPts(d.pts||0)+(d.L?' in '+d.L.short:'')+(d.exp>0?' against a '+fmtPts(d.exp)+' expectation':'')+' \u2014 '+(GRADE_WORD[d.grade]||d.grade)+'.');
+  if(I&&I.st!=='knock') out.push(r93InjSentence(I));
+  else if(I) out.push(I.unv===2?('An injury note '+(r93Clock(I.q,I.c)||'in the game')+' matches his printed name, but that play does not involve him and nothing else backs it'+(I.wt?' yet — waiting on ESPN’s post-game injury report.':' — unverified.'))
+    :r93NoFeed(I)?('ESPN listed him '+I.es.st+(I.body?' ('+I.body+')':'')+' after kickoff; the play-by-play has no injury note on him.')
+    :('Shaken up '+(r93Clock(I.q,I.c)||'in the game')+(I.ret?', back '+r93Clock(I.ret.q,I.ret.c):I.seen?', and played on (the feed names him again '+r93Clock(I.seen.q,I.seen.c)+')':I.son?', and played on (Sleeper counts more of his snaps than his team ran before the note)':I.unv?' — but his snaps say he played close to a full game, so it is unverified':'')+'.'));
+  const facts=(d.chips||[]).filter(function(c){ return c.k!=='inj'&&c.tone!=='info'; }).slice(0,3).map(function(c){ return c.t+(c.n?' ('+c.n+')':''); });
+  if(facts.length) out.push('The numbers: '+facts.join('; ')+'.');
+  const glSaid=(d.chips||[]).filter(function(c){ return c.k!=='inj'&&c.tone!=='info'; }).slice(0,3).some(function(c){ return c.k==='gl'; });
+  if(d.take&&!(d.take.gl&&glSaid)) out.push(d.take.gl?('Goal line: '+d.take.n+' had '+d.take.t+'.'):(d.take.n+' took the work: '+d.take.t+'.'));   // a goal-line split is never "took the work", and is said once
+  if(d.next&&d.next.bye) out.push('Bye in week '+d.next.wk+'.'); else if(d.next&&d.next.opp) out.push('Next: '+(d.next.home?'vs ':'@ ')+d.next.opp+(d.next.lab?' ('+d.next.lab+')':'')+'.');
+  return out.join(' '); }
+function r93InjSentence(I){
+  if(!I) return '';
+  if(I.st==='inactive') return 'Did not play'+(I.body?' ('+I.body+')':'')+((I.es&&I.es.st)?' \u2014 ESPN had him '+I.es.st+' before kickoff':'')+'.';
+  if(I.st==='scratch') return 'Inactive \u2014 '+(I.why||'a coach\u2019s decision')+'.';
+  if(I.st==='likely') return 'Likely hurt: '+r93pc(I.sn)+' of snaps against a '+r93pc(I.nrm)+' norm and the feed lost him after '+(r93Clock(I.q,I.c)||'early')+' \u2014 hurt or pulled, with no injury note yet.';
+  return 'Hurt '+(r93Clock(I.q,I.c)||'in the game')+(I.body?' ('+I.body+(I.det?', '+I.det:'')+')':'')+(I.ret?' \u2014 returned '+r93Clock(I.ret.q,I.ret.c):I.seen?' \u2014 played on (named again '+r93Clock(I.seen.q,I.seen.c)+')':I.son?' \u2014 played on (his snap count runs past the note)':(I.out&&I.brief)?' \u2014 stayed in to '+r93Clock(I.brief.q,I.brief.c)+', then did not return':I.out?' \u2014 did not return':'')+(I.sn!=null?'; '+r93pc(I.sn)+' of snaps'+(I.nrm!=null?' against '+r93an(r93pc(I.nrm))+' '+r93pc(I.nrm)+' norm':' (no NFL norm yet)'):'')+'.'; }
+function r93InjMean(d){ const I=d.inj; if(!I||I.st==='knock') return '';
+  const tk=(d.take&&!d.take.gl)?d.take:null; const parts=[]; const long=!!(I.head&&I.head.long);   // a goal-line split never makes anyone "next in line"
+  const ao=tk?r93AsOf(tk.faTs):'';
+  if(tk) parts.push((long?'Plan for weeks without him: ':'If he misses time, ')+tk.n+' is next in line — '+tk.t+((tk.fa&&tk.fa.length&&tk.real!==false&&!tk.blow)?' \u2014 a free agent in '+tk.fa.join(', ')+(ao?' ('+ao+')':''):(tk.fa&&!tk.fa.length&&tk.nL)?' \u2014 rostered in every league of yours':'')+'.');
+  parts.push(long?'That headline is the only word on how long; the Wednesday\u2013Friday practice report and Sleeper\u2019s daily designation are the official ones.'
+    :'Nothing in this data says how long he is out: the Wednesday\u2013Friday practice report is the tell'+(d.next&&d.next.opp?' before '+(d.next.home?'vs ':'@ ')+d.next.opp:'')+', and Sleeper\u2019s designation refreshes daily.');
+  return parts.join(' '); }
+function r93Saved(pid,g){ // this week's saved V93 record for THIS game, or null
+  try{ const sv=liveRecapOf(pid,liveWeek()); return (sv&&sv.v93&&(!g||String(sv.gid||'')===String(g.id)))?sv:null; }catch(e){ return null; } }
+function r93FromSaved(d,sv){ // the saved recap, whole: it was read with his stat line (and, when sv.full, the finished game's whole summary)
+  ['inj','chips','verdict','take','next','trend','injMean','nar93','sig'].forEach(function(k){ d[k]=(sv[k]!=null)?sv[k]:null; });
+  if(sv.grade) d.grade=sv.grade; if(sv.pts!=null) d.pts=sv.pts; if(sv.exp!=null) d.exp=sv.exp;
+  if(sv.raw&&(!d.raw||!Object.keys(d.raw).length)) d.raw=sv.raw;
+  if(Array.isArray(sv.reasons)) d.reasons=sv.reasons; if(sv.nar) d.nar=sv.nar;
+  d.full=!!sv.full; d.fromSaved=1; d.v93=1; return d; }
+function r93FixOff(d,C){ // the v8 reasons carried the same rebuilt team average: restate it from the real final scores, or drop it
+  try{ const rs=d.reasons||[]; let i=-1; rs.forEach(function(r,j){ if(i<0&&r&&r.k==='off') i=j; }); if(i<0) return;
+    const old=rs[i]; const tp=C.tr; let nr=null;
+    if(tp&&tp.ppg!=null&&C.my<=tp.ppg-9) nr=Object.assign({},old,{s:C.T+' scored '+C.my+' against a '+r93f1(tp.ppg)+'-point average (its real final scores, '+tp.se+') — nothing worked around him.'});
+    d.reasons=rs.slice(); if(nr) d.reasons[i]=nr; else d.reasons.splice(i,1);
+    if(d.nar&&old.s) d.nar=String(d.nar).split(old.s).join(nr?nr.s:'').replace(/\s{2,}/g,' ').trim(); }catch(e){} }
+function r93Extend(d){
+  const C=r93Ctx(d); if(!C) return d;
+  const sv=r93Saved(C.pid,C.g);
+  /* no stat row (offline, or the pass before the first stat pull): the saved recap IS the recap — never a thin fresh one that
+     drops the injury and guesses a verdict from Sleeper's points alone */
+  if(sv&&!C.row&&(sv.chips||[]).length) return r93FromSaved(d,sv);
+  /* this finished game's summary is not in on this pass (stats pulled first, a reload, three failed pulls): a record that was
+     read WITH it stands whole, and in any case a weaker injury read never takes the place of a stronger saved one */
+  if(sv&&!C.sumOK&&sv.full&&sv.pts===d.pts&&sv.grade===d.grade) return r93FromSaved(d,sv);
+  if(C.row&&d.raw&&typeof d.raw==='object') ['fum_rec','def_fum_rec'].forEach(function(k){ if(C.row[k]!=null) d.raw[k]=C.row[k]; });   // the saved line keeps a defense's fumble recoveries
+  let I=r93Injury(C.pid);
+  if(sv&&!C.sumOK&&sv.inj&&(r93InjRank(sv.inj)>r93InjRank(I)||(r93InjRank(sv.inj)===r93InjRank(I)&&sv.inj.text&&!(I&&I.text)))) I=Object.assign({},sv.inj,{saved:1});   // the saved read that quoted the play stands
+  d.inj=I;
+  C.last=r93LastSeen(C);
+  C.trend=r93Trend(d,C); d.trend=C.trend;
+  d.next=r93Next(d,C);
+  d.chips=r93Chips(d,C);
+  d.take=r93Take(d,C);
+  if(d.take&&d.take.glChip){ d.chips.push(d.take.glChip); d.chips=r93Ord(d.chips); delete d.take.glChip; }   // the goal line is its own label; "who took the work" keeps its own reason
+  r93FixOff(d,C);
+  d.verdict=r93Verdict(d,C);
+  if(d.verdict&&!d.inj&&/^questionable/i.test(String(C.p.inj||''))&&d.verdict.v!=='MONITOR'&&!/lists him/.test(d.verdict.why))
+    d.verdict.why+=' Sleeper lists him Questionable — check the practice report.';
+  d.injMean=r93InjMean(d);
+  d.nar93=r93Nar(d,C);
+  d.full=(C.g.state==='post'&&C.sumOK&&!!C.row)?1:0;
+  d.sig=[d.inj?d.inj.st+(d.inj.es?d.inj.es.st:'')+(d.inj.sl||'')+(d.inj.head?(d.inj.head.long?'L':'h'):'')+(d.inj.seen?'s':'')+(d.inj.son?'o':'')+(d.inj.brief?'b':'')+(d.inj.unv?'u'+d.inj.unv:'')+(d.inj.wt?'w':''):'',d.verdict?d.verdict.v:'',(d.chips||[]).length,d.take?d.take.pid+(d.take.gl?'g':''):'',d.next?d.next.opp||'bye':'',d.full?'F':'~'].join('|');
+  d.v93=1; return d; }
+function mlDiagnoseX(pid){ // a FINISHED game is graded against its pregame expectation: mlExp → weekScore → startScore → injMod reads p.inj live,
+  // so a tag Sleeper set after the game (an Out on a man hurt in it) or a stale one he played through would shrink "exp" and flip the grade
+  // and the verdict (a stale IR made a normal day a SELL HIGH). mlDiagnose is synchronous — the tag is set aside for that one call and always put back
+  const p=playerOf(pid); let g0=null; try{ g0=liveGameOf(pid); }catch(e){ g0=null; }
+  let d=null;
+  if(p&&p.inj&&g0&&g0.state==='post'){ const t=p.inj; p.inj=null; try{ d=mlDiagnose(pid); }finally{ p.inj=t; } }
+  else d=mlDiagnose(pid);
+  if(!d) return null; try{ r93Extend(d); }catch(e){ R93.err=e; } return d; }
+function r93Persist(W,d){ if(!W||!d||!d.v93) return;
+  const I=d.inj;
+  W.inj=I?{st:I.st,q:I.q,c:I.c,text:String(I.text||'').slice(0,400),kind:I.kind,body:I.body,side:I.side,det:I.det,ret:I.ret,out:I.out,seen:I.seen||null,brief:I.brief||null,son:I.son?1:0,unv:I.unv||0,wt:I.wt?1:0,we:I.wt?(Number(I.we)||0):0,rd:I.rd?1:0,es:I.es,sl:I.sl,
+    sn:I.sn,nrm:I.nrm,osn:I.osn,tms:I.tms,last:I.last,head:I.head,src:I.src,played:I.played}:null;
+  W.full=d.full?1:0;
+  W.chips=(d.chips||[]).slice(0,12).map(function(c){ return {k:c.k,t:c.t,n:c.n,tone:c.tone,sev:Math.round(c.sev*100)/100,why:c.why,ctx:c.ctx||0}; });
+  W.verdict=d.verdict||null; W.take=d.take||null; W.next=d.next||null; W.trend=d.trend?{t:d.trend.t,n:d.trend.n,dir:d.trend.dir}:null;
+  W.injMean=d.injMean||''; W.nar93=d.nar93||''; W.sig=d.sig||''; W.v93=1; }
+/* ── drawing ── */
+function r93ChipHTML(c){ const sv=c.sev>=0.66?3:c.sev>=0.33?2:1;
+  return '<span class="r93c t-'+esc(c.tone||'info')+' s-'+sv+'"'+(c.why?' title="'+esc(c.why)+'"':'')+'><b>'+esc(c.t)+'</b>'+(c.n?'<i>'+esc(c.n)+'</i>':'')+'</span>'; }
+function r93ChipsHTML(list,lim){ const a=(list||[]).slice(0,lim||99); return a.length?'<div class="r93cs">'+a.map(r93ChipHTML).join('')+'</div>':''; }
+function r93LegacyChips(d){ // a recap saved before V93: its reasons, drawn in the new chip style
+  return (d.reasons||[]).map(function(r){ return {k:r.k,t:r.label,n:'',tone:r.good?'good':'bad',sev:r.sev||0.3,why:r.s||''}; }); }
+function r93VerdictHTML(v){ if(!v||!v.v) return '';
+  return '<div class="r93v '+esc(R93_VCLS[v.v]||'v-hold')+'"><span class="r93vp">'+esc(v.v)+'</span><span class="r93vr">'+esc(v.why||'')+'</span></div>'; }
+function r93InjWord(I){ return I.st==='confirmed'?'INJURED':I.st==='likely'?'LIKELY INJURED':I.st==='inactive'?'INACTIVE':I.st==='scratch'?'SCRATCHED':r93NoFeed(I)?'LISTED':'KNOCK'; }   // LISTED: ESPN's report alone — no feed note, so never a "knock"
+function r93InjCls(I){ return (I.st==='confirmed'||I.st==='inactive')?'i-red':I.st==='likely'?'i-amb':I.st==='scratch'?'i-dim':'i-knock'; }
+function r93InjLine(I){ if(!I) return ''; const bits=[];
+  if(I.st==='inactive') bits.push('did not play'+(I.body?' \u2014 '+I.body:''));
+  else if(I.st==='scratch') bits.push((I.why||'coach\u2019s decision')+' \u2014 did not play');
+  else { const w=r93Clock(I.q,I.c); if(w) bits.push((I.st==='likely'?'last seen ':I.unv===2?'note ':'hurt ')+w);
+    if(I.body) bits.push(I.body+(I.side?' ('+I.side+')':''));
+    if(I.ret) bits.push('returned '+r93Clock(I.ret.q,I.ret.c)); else if(I.seen) bits.push('played on ('+r93Clock(I.seen.q,I.seen.c)+')'); else if(I.son) bits.push('played on (snap count)'); else if(I.unv) bits.push(I.unv===2?(I.wt?'not on that play — waiting on ESPN’s post-game report':'not on that play — unverified'):'snaps near his norm — unverified'); else if(I.out) bits.push(I.brief?'stayed in to '+r93Clock(I.brief.q,I.brief.c)+', then out':'did not return'); else if(r93NoFeed(I)) bits.push('listed after kickoff — no injury note in the feed'); }
+  const stt=[]; if(I.es&&I.es.st) stt.push(I.es.st); if(I.sl&&!(I.es&&String(I.sl).toLowerCase()===String(I.es.st).toLowerCase())) stt.push(I.sl);
+  if(stt.length) bits.push(stt.join(' / '));
+  return bits.join(' \u00b7 '); }
+function r93InjStripHTML(I){ if(!I) return '';
+  return '<div class="r93is '+r93InjCls(I)+'"><b>'+esc(r93InjWord(I))+'</b><span>'+esc(r93InjLine(I))+'</span></div>'; }
+function r93InjBannerHTML(I,d){ if(!I) return '';
+  const w=r93Clock(I.q,I.c);
+  const head=I.st==='confirmed'?(w?'Hurt '+w+(I.ret?' \u2014 returned '+r93Clock(I.ret.q,I.ret.c):I.seen?' \u2014 played on (named again '+r93Clock(I.seen.q,I.seen.c)+')':I.son?' \u2014 played on (snap count)':(I.out&&I.brief)?' \u2014 stayed in to '+r93Clock(I.brief.q,I.brief.c)+', then did not return':I.out?' \u2014 did not return':''):'On ESPN\u2019s injury report since kickoff')
+    :I.st==='likely'?'Snaps collapsed and the feed lost him after '+(w||'early')+' \u2014 hurt or pulled'
+    :I.st==='knock'?(I.unv===2?'An injury note '+(w||'in the game')+(I.wt?' — waiting on ESPN’s post-game injury report':' — unverified'):r93NoFeed(I)?'On ESPN’s injury report since kickoff — no injury note in the feed':('Shaken up '+(w||'in the game')+(I.ret?' — back '+r93Clock(I.ret.q,I.ret.c):I.seen?' — played on (named again '+r93Clock(I.seen.q,I.seen.c)+')':I.son?' — played on (snap count)':I.unv?' — unverified':'')))
+    :I.st==='inactive'?'Did not play'+((I.es&&I.es.st)?' \u2014 listed '+I.es.st+' before kickoff':'')
+    :'Inactive \u2014 '+(I.why||'coach\u2019s decision');
+  const srcs=(I.src||[]).filter(function(x){ return x!=='snap count'; });
+  const conf=I.st==='likely'?'Likely \u2014 no injury note in the feed or on the report yet'
+    :I.st==='confirmed'?'Confirmed \u2014 '+(srcs.join(' + ')||'injury report')
+    :I.st==='knock'?(I.unv===2?(I.wt?'Waiting on ESPN’s post-game injury report — the note’s play does not involve him, and the report posts about an hour after the final':'Unverified — the note’s play does not involve him, and no ESPN listing, Sleeper change since kickoff or snap drop at the note backs it'):r93NoFeed(I)?'ESPN listed him '+I.es.st+' after kickoff — the play-by-play has no injury note on him':(I.es&&I.es.st)?'Played through it — but ESPN lists him '+I.es.st:I.unv?'Unverified — the feed logged an injury, but his snaps are within 10 points of his norm':I.seen?'Played on — the feed names him on a later play':I.son?'Played on — Sleeper counts more of his snaps than his team ran before the note':'Back in the game — no designation')
+    :I.st==='inactive'?(srcs.length?'Source: '+srcs.join(' + '):''):'';
+  const grid=[];
+  if(I.body) grid.push(['Injury',r93cap(I.body)+(I.det?' \u2014 '+I.det:'')+(I.side?', '+I.side:''),'']);
+  if(I.sn!=null) grid.push(['Snaps',(I.osn!=null&&I.tms)?I.osn+' of '+I.tms+' ('+r93pc(I.sn)+')':r93pc(I.sn),I.nrm!=null?'norm '+r93pc(I.nrm):'']);
+  const stt=[]; if(I.sl) stt.push(I.sl+' (Sleeper)'); if(I.es&&I.es.st) stt.push(I.es.st+' (ESPN'+(I.es.in?', since kickoff':'')+')');
+  if(stt.length) grid.push(['Status',stt.join(' \u00b7 '),'','w']);
+  if(I.last&&I.st==='likely') grid.push(['Last play',r93Clock(I.last.q,I.last.c),I.last.after!=null?'then '+I.last.after+' team snaps without him':'']);
+  const quote=I.text?'<blockquote class="r93iq"><i>'+esc(w||'')+'</i> \u201c'+esc(String(I.text).trim())+'\u201d</blockquote>':'';
+  const hd=I.head?'<div class="r93ihn"><i>Latest</i>'+esc(I.head.h)+'</div>':'';
+  const mean=(d&&d.injMean)?'<div class="r93im">'+esc(d.injMean)+'</div>':'';
+  return '<div class="r93inj '+r93InjCls(I)+'" role="note"><div class="r93ih"><span class="r93ib">'+esc(r93InjWord(I))+'</span><b>'+esc(head)+'</b></div>'
+    +(conf?'<div class="r93isrc">'+esc(conf)+'</div>':'')+quote
+    +(grid.length?'<div class="r93ig">'+grid.map(function(x){ return '<span'+(x[3]?' class="'+esc(x[3])+'"':'')+'><i>'+esc(x[0])+'</i><b>'+esc(x[1])+'</b>'+(x[2]?'<em>'+esc(x[2])+'</em>':'')+'</span>'; }).join('')+'</div>':'')
+    +hd+mean+'</div>'; }
+function r93TakeHTML(t,compact){ if(!t) return ''; const fa=t.fa||[];
+  if(t.gl){ if(compact) return '';                                                          // only the goal-line split moved: "Goal line", never "took the work", and no pickup call
+    return '<div class="r93take"><div class="r93th">Goal line</div><div class="r93tl">'+whoHTML(t.pid,t.n)+' <span>'+esc(t.t)+'</span></div><div class="fine r93tn">Carries from inside the 5, read from the play-by-play \u2014 a short-yardage split, not a change in who carried the load.</div></div>'; }
+  const addOK=fa.length&&t.real!==false&&!t.blow;                                           // an ADD needs real looks, and never garbage time
+  const ao=r93AsOf(t.faTs);                                                                 // the roster copies are cached: say how old
+  if(compact) return addOK?'<div class="r93v v-add r93addc"><span class="r93vp">ADD</span><span class="r93vr">'+whoHTML(t.pid,t.n)+' \u2014 '+esc(t.t)+' \u00b7 free agent in '+esc(fa.join(', '))+(ao?' \u00b7 '+esc(ao):'')+'</span></div>':'';
+  const note=addOK?'<div class="r93v v-add"><span class="r93vp">ADD</span><span class="r93vr">'+esc(t.n)+' is a free agent in '+esc(fa.join(', '))+(ao?' ('+esc(ao)+')':'')+' \u2014 '+esc(t.why||'the role moved')+'.</span></div>'
+    :(fa.length&&t.blow)?'<div class="fine r93tn">A '+t.blow+'-point game \u2014 work in a blowout can be game script rather than a role, so no pickup call until he does it again.</div>'
+    :(fa.length&&t.real===false)?'<div class="fine r93tn">He took the snaps, not the looks \u2014 no pickup call.</div>'
+    :(t.nL?'<div class="fine r93tn">'+esc(t.n)+' is already rostered in all '+t.nL+' of your leagues.</div>':'');
+  return '<div class="r93take"><div class="r93th">Who took the work</div><div class="r93tl">'+whoHTML(t.pid,t.n)+' <span>'+esc(t.t)+'</span></div>'+note+'</div>'; }
+function r93NextHTML(nx){ if(!nx) return '';
+  if(nx.bye) return '<div class="r93nx"><i>Week '+esc(String(nx.wk))+'</i><b>BYE</b></div>';
+  return '<div class="r93nx'+(nx.hard?' hard':nx.soft?' soft':'')+'"><i>Next \u00b7 wk '+esc(String(nx.wk))+'</i><b>'+(nx.home?'vs ':'@ ')+teamChip(nx.opp,nx.opp)+'</b>'+(nx.lab?'<span>'+esc(nx.lab)+'</span>':'')+'</div>'; }
+function r93HeadHTML(d){ const dv=(Number(d.pts)||0)-(Number(d.exp)||0);
+  return '<div class="r93hd"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span><span class="r93gw">'+esc(GRADE_WORD[d.grade]||'')+'</span>'
+    +'<span class="r93pts"><b class="vnum">'+fmtPts(d.pts||0)+'</b><span class="fine">vs '+fmtPts(d.exp||0)+' exp \u00b7 <span class="'+(dv>=0?'up':'dn')+'">'+(dv>=0?'+':'\u2212')+fmtPts(Math.abs(dv))+'</span></span></span></div>'; }
+function r93Rank(d){ const I=d.inj; if(I&&(I.st==='confirmed'||I.st==='inactive')) return 0; if(I&&I.st==='likely') return 1;
+  const v=d.verdict&&d.verdict.v; return v&&R93_VRANK[v]!=null?R93_VRANK[v]:6; }
+function r93RowHTML(d,open){
+  const pid=String(d.pid); const p=playerOf(pid)||{n:'Player',p:'FLEX'};
+  const I=d.inj||null; const chips=(d.chips&&d.chips.length)?d.chips:r93LegacyChips(d);
+  const dv=(Number(d.pts)||0)-(Number(d.exp)||0);
+  let tg=''; try{ tg=mlTagsHTML(pid,{}); }catch(e){ tg=''; }
+  const hurt=I&&(I.st==='confirmed'||I.st==='inactive'), maybe=I&&I.st==='likely';
+  let body='';
+  if(open){ let st=null; try{ st=d.raw||(S.live&&S.live.stats&&S.live.stats[pid])||null; }catch(e){ st=null; }
+    let grid=''; try{ grid=mlStatGridHTML(pid,st,r93Base(pid),6); }catch(e){ grid=''; }   // the same norm as the labels: never one that counts this game
+    body='<div class="r93open">'+r93TakeHTML(d.take)+r93NextHTML(d.next)
+      +'<div class="lrbody">'+esc(d.nar93||d.nar||'')+'</div>'+grid
+      +'<div class="inlinebtns r93btns"><button class="btn sm" data-act="liveCard" data-pid="'+esc(pid)+'">Full stat line</button><button class="btn sm" data-act="lsIntel" data-pid="'+esc(pid)+'">Dossier</button></div></div>'; }
+  return '<div class="lrrow r93row'+(open?' open':'')+(hurt?' r93hurt':maybe?' r93maybe':'')+'" data-act="lrTog" data-pid="'+esc(pid)+'" role="button" tabindex="0" aria-expanded="'+(open?'true':'false')+'">'
+    +'<div class="lrtop"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span>'+avatarHTML(pid,'sm')+' '+ptag(p.p)
+      +'<span class="nm">'+esc(p.n)+'</span><span class="rt"><b class="vnum">'+fmtPts(d.pts||0)+'</b><span class="fine">vs '+fmtPts(d.exp||0)+' \u00b7 <span class="'+(dv>=0?'up':'dn')+'">'+(dv>=0?'+':'\u2212')+fmtPts(Math.abs(dv))+'</span></span></span></div>'
+    +(open?r93InjBannerHTML(I,d):r93InjStripHTML(I))
+    +r93VerdictHTML(d.verdict)
+    +r93ChipsHTML(chips,open?99:3)
+    +(open?'':r93TakeHTML(d.take,true))
+    +(tg?'<div class="mltags lrtags">'+tg+'</div>':'')
+    +body+'</div>'; }
+function r93CardHTML(d){ // the live sheet: grade, the injury, the verdict, every label, who took the work, next week
+  const chips=(d.chips&&d.chips.length)?d.chips:r93LegacyChips(d);
+  return '<div class="r93card">'+r93HeadHTML(d)+r93InjBannerHTML(d.inj,d)+r93VerdictHTML(d.verdict)+r93ChipsHTML(chips)
+    +r93TakeHTML(d.take)+r93NextHTML(d.next)+'<div class="lrbody">'+esc(d.nar93||d.nar||'')+'</div></div>'; }
+function r93SheetTopHTML(pid,g){
+  if(!g||g.state==='pre') return '';
+  if(g.state==='post'){ const d=mlRecapView(pid,liveWeek()); if(d) return r93CardHTML(d); }
+  const I=r93Injury(pid); if(!I) return '';
+  return (I.st==='knock'||I.st==='scratch')?r93InjStripHTML(I):r93InjBannerHTML(I,null); }
+function r93MiniHTML(d){ const chips=(d.chips&&d.chips.length)?d.chips:r93LegacyChips(d);
+  return '<div class="r93mini"><div class="r93hd"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span><span class="r93gw">'+esc(GRADE_WORD[d.grade]||'')+'</span></div>'
+    +r93InjStripHTML(d.inj)+r93VerdictHTML(d.verdict)+r93ChipsHTML(chips,3)+r93TakeHTML(d.take,true)+'</div>'; }
+function r93LiveInjHTML(pid){ try{ const I=r93Injury(pid); return I?r93InjStripHTML(I):''; }catch(e){ return ''; } }
+function r93TileBadge(m){ try{ if(!m||!(m.st==='in'||m.st==='post')) return ''; const I=r93InjView(m.pid); if(!I) return '';
+    if(I.st==='confirmed'||I.st==='inactive') return '<span class="lwbd b-inj" title="'+esc(r93InjLine(I))+'">'+(I.st==='inactive'?'OUT':'INJ'+(I.q?' Q'+I.q:''))+'</span>';
+    if(I.st==='likely') return '<span class="lwbd b-injl" title="'+esc('Likely hurt \u2014 '+r93InjLine(I))+'">INJ?</span>';
+    return ''; }catch(e){ return ''; } }
+function r93RowTag(pid,g){ try{ if(!g||g.state==='pre') return ''; const I=r93InjView(pid); if(!I||!(I.st==='confirmed'||I.st==='likely'||I.st==='inactive')) return '';
+    return ' <span class="tier must r93tag'+(I.st==='likely'?' l':'')+'" title="'+esc(r93InjLine(I))+'">'+(I.st==='likely'?'INJ?':I.st==='inactive'?'OUT':'INJ'+(I.q?' Q'+I.q:''))+'</span>'; }catch(e){ return ''; } }
+/* ── the recap card: the same finished players, sorted by what needs doing ── */
+function mlRecapSectionHTML(gid){
+  try{
+    const ML=mlSides(); const wk=liveWeek();
+    let gs=[]; try{ gs=liveGamesOfInterest().filter(function(g){ return g.state==='post'&&(!gid||String(g.id)===String(gid)); }); }catch(e){}
+    const pids=[];
+    gs.forEach(function(g){ const H=(ML&&ML.byTeam[g.home])||{mine:[]}, A=(ML&&ML.byTeam[g.away])||{mine:[]};
+      H.mine.concat(A.mine).forEach(function(pid){ if(pids.indexOf(pid)<0) pids.push(pid); }); });
+    if(!gid){ const W=(S.lrec&&S.lrec.weeks&&S.lrec.weeks[wk])||{}; Object.keys(W).forEach(function(pid){ if(pids.indexOf(pid)<0) pids.push(pid); }); }
+    if(!pids.length) return '';
+    const F=S.ui.lrF||'all';
+    const all=pids.map(function(pid){ const d=mlRecapView(pid,wk); return d?Object.assign({pid:pid},d):null; }).filter(Boolean);
+    const hurt=function(d){ return !!(d.inj&&(d.inj.st==='confirmed'||d.inj.st==='likely'||d.inj.st==='inactive')); };
+    const nHurt=all.filter(hurt).length;
+    let list=all;
+    if(F==='boom') list=all.filter(function(d){ return d.grade==='boom'; });
+    else if(F==='bust') list=all.filter(function(d){ return d.grade==='bust'||d.grade==='meh'; });
+    else if(F==='inj') list=all.filter(hurt);
+    if(!list.length&&F==='all') return '';
+    list.sort(function(a,b){ return (r93Rank(a)-r93Rank(b))||(ML_GRANK[a.grade]-ML_GRANK[b.grade])||(Math.abs((b.pts||0)-(b.exp||0))-Math.abs((a.pts||0)-(a.exp||0))); });
+    const filt=[['all','All'],['inj','Hurt'+(nHurt?' '+nHurt:'')],['boom','Booms'],['bust','Busts']].filter(function(x){ return x[0]!=='inj'||nHurt||F==='inj'; })
+      .map(function(x){ return '<button class="btn sm'+(F===x[0]?' pri':'')+(x[0]==='inj'?' r93fh':'')+'" data-act="lrF" data-v="'+x[0]+'">'+esc(x[1])+'</button>'; }).join('');
+    const vc={}; all.forEach(function(d){ const v=d.verdict&&d.verdict.v; if(v) vc[v]=(vc[v]||0)+1; });
+    const ord=['MONITOR','BENCH NEXT WEEK','SELL HIGH','BUY LOW','START','ADD','HOLD'];
+    const sum=ord.filter(function(v){ return vc[v]; }).map(function(v){ return '<span class="r93sp '+esc(R93_VCLS[v]||'')+'"><b>'+vc[v]+'</b> '+esc(v.toLowerCase())+'</span>'; }).join('');
+    const rows=list.map(function(d){ return r93RowHTML(d,!!(S.ui.lrOpen&&S.ui.lrOpen[d.pid])); }).join('');
+    return '<div class="card lrcard r93lr"><div class="hd"><span class="lb">Post-game recaps \u2014 week '+wk+' '+helpBtn('recap93')+'</span><span class="right inlinebtns">'+filt+'</span></div>'
+      +'<div class="bd">'+(gid?(function(){ try{ return mlLegendHTML('lr'); }catch(e){ return ''; } })():'')
+      +(sum?'<div class="r93sum">'+sum+'</div>':'')
+      +'<div class="lrlist">'+(rows||'<div class="empty">Nothing in that filter yet.</div>')+'</div>'
+      +'<div class="railnote" style="margin-top:8px">Injuries first, then what to do. Every label is the number against his own per-game norm (last season until he has four games this season before this one \u2014 this game is never in it). <b>Injured</b> means the play-by-play logged it or ESPN\u2019s injury report added him after kickoff; <b>likely</b> means his snaps collapsed and the feed lost him mid-game with no note yet. Practice reports and coaches\u2019 comments are not in this data \u2014 the card says when to check them. Recaps are kept for four weeks.</div></div></div>';
+  }catch(e){ R93.err=e; try{ return mlRecapSectionHTMLv8(gid); }catch(x){ return ''; } } }
+try{ HELP.recap93={t:'Post-game recaps',b:'Every finished player of yours gets a card that says <b>what happened</b>, <b>whether he got hurt</b> and <b>what to do</b>, strongest fact first. <b>The injury read</b> is graded honestly. <b>Injured</b> (red): ESPN\u2019s play-by-play logged \u201cwas injured\u201d and he never came back \u2014 checked against the rest of his game: if later plays name him, or Sleeper counts more of his snaps than his team ran before the note, he played on and it is a <b>knock</b> (named only within a few snaps of the note and then gone for 15+ snaps, with Sleeper’s count stopping there too, he finished the drive and left — the note stands); after the final, a share within 10 points of his norm makes the note <b>unverified</b> (MONITOR, never \u201cdid not return\u201d), and so does a note on a play that does not involve him (he is not the passer, carrier, target, tackler or flagged man on it \u2014 a defender\u2019s club-prefixed note on the other club\u2019s snap is on his play) unless ESPN listed him after kickoff, Sleeper changed his designation since kickoff (checked against the copy of the player DB pulled before the game \u2014 without one, Sleeper backs nothing), or his snap count stopped at the note after his usual share up to it \u2014 it may be a teammate the feed prints the same way. Right after the final ESPN\u2019s post-game injury report is not out yet (it posts about an hour after the last play), so such a note reads <b>waiting on ESPN\u2019s post-game injury report</b> and the game is pulled once more when that hour is up; mid-game a fresh note reads injured until a later mention or his snap count says he is back \u2014 or ESPN\u2019s injury report added him <i>after</i> kickoff \u2014 the banner quotes the exact play, the quarter and clock, the body part (ESPN\u2019s report, the feed or Sleeper), his snaps against his norm and both designations. <b>Likely</b> (amber): no note anywhere, but his snaps collapsed to 60% of his norm or less <i>and</i> the feed lost him before the fourth quarter while his snap count matches the plays before his last one \u2014 a normal rotational game, a player who simply was not targeted, or a 21-point blowout never qualifies. <b>Knock</b>: hurt and back in. Names are matched club by club \u2014 against the player DB and ESPN\u2019s own box score and injury list for that game \u2014 and a form two teammates share (two \u201cJ.Williams\u201d) is never used; a two-word surname stays whole (\u201cA.St. Brown\u201d, never \u201cA.Brown\u201d), and a sentence with no club prefix counts only when he is its subject (no other name, capitalised word, position word or club between him and the injury verb); a later mention in a form an opposing player shares is never read as him. So a namesake cannot trigger it. <b>Labels</b> carry the number and his own per-game average \u2014 \u201c4 targets \u00b7 avg 8.1\u201d, \u201c31% of snaps \u00b7 avg 78%\u201d, \u201c3 of 9 caught \u00b7 2 drops\u201d, \u201c0 of 4 red-zone looks\u201d, \u201cTrailed 24\u20133 at the half\u201d, \u201cvs SF \u2014 2nd-toughest vs WR\u201d, \u201cTeam scored 10 \u00b7 avg 24.3\u201d (the club\u2019s real points per game, from final scores), touchdown and big-play dependence, yards after contact, broken tackles and target depth where Sleeper publishes them, and his snap share over his last three games. <b>Who took the work</b> names the teammate at his position whose snaps, targets or carries rose (goal-line carries are read from the play-by-play; when only the goal-line split moved it is labelled <b>Goal line</b>, not the work) and the leagues where that player is a free agent \u2014 as of your last roster sync, which the card shows. His norm is last season until he has four games this season <i>before</i> this one; this game is never in it. <b>The verdict</b>: MONITOR (hurt, or listed Out or Doubtful after the game with no note in the feed \u2014 check the Wednesday\u2013Friday practice report), BENCH NEXT WEEK (role shrinking, injured reserve or PUP on Sleeper or ESPN \u2014 Sleeper\u2019s tag carries no date, so it counts only when he did not play, or when Sleeper changed it after kickoff against the copy of the player DB pulled before the game \u2014 a headline since kickoff that says he is out for weeks — quoted, never paraphrased — a healthy scratch, or a quiet game into a brutal draw), SELL HIGH (the boom rested on touchdowns or one play on normal-or-less volume), START (a bad game with the work intact \u2014 or HOLD when next week is a top-5 defense against his position), BUY LOW (the same for someone else\u2019s player), ADD (a free agent whose role grew, or a rookie with no NFL norm who played 60%+ of the snaps or had 12+ touches outside a blowout), HOLD (on script), and for players you do not own DON\u2019T CHASE or NO MOVE \u2014 never a bench or start call. Next week\u2019s opponent is ranked by fantasy points allowed to his position. Practice reports and coaches\u2019 comments are not in this data, so the card tells you to check them rather than guessing.'}; }catch(e){}
 /* ── ORDER 0 · the multi-league strip (one league → today's strip, byte for byte) ── */
 function mlSplit(pids){ let live=0,done=0,to=0; pids.forEach(pid=>{ const g=liveGameOf(pid);
   if(g&&g.state==='in') live++; else if(g&&g.state==='post') done++; else to++; }); return {live,done,to,n:pids.length}; }
@@ -15842,7 +17002,7 @@ function mlLeagueCardHTML(L){
 /* ── ORDER 3 · post-game recaps ── */
 const ML_GRANK={boom:0,bust:1,meh:2,solid:3};
 function mlReasonChip(r){ return '<span class="rchip '+(r.good?'good':'bad')+'" title="'+esc(r.s)+'"><span class="rsev"><i style="width:'+Math.round(Math.min(1,r.sev)*100)+'%"></i></span>'+esc(r.label)+'</span>'; }
-function mlRecapSectionHTML(gid){
+function mlRecapSectionHTMLv8(gid){ // v8 card, kept as a fallback — V93_RECAP renders mlRecapSectionHTML below
   const ML=mlSides(); const wk=liveWeek();
   let gs=[]; try{ gs=liveGamesOfInterest().filter(g=>g.state==='post'&&(!gid||String(g.id)===String(gid))); }catch(e){}
   const pids=[];
@@ -15896,17 +17056,16 @@ function mlStatCardHTML(pid){
   const dv=(pts||0)-exp*fr;
   const paceB='<div class="lpaceb"><i class="'+(dv>=0?'up':'dn')+'" style="width:'+fill.toFixed(1)+'%"></i><u style="left:'+mark.toFixed(1)+'%"></u></div>'
     +'<div class="fine">'+fmtPts(pts||0)+' of an expected '+fmtPts(exp)+' · '+Math.round(fr*100)+'% of the game played · '+(dv>=0?'+':'')+fmtPts(dv)+' vs where he should be · on pace for <b class="vnum">'+fmtPts(pace)+'</b></div>';
-  const grid=mlStatGridHTML(pid,row,mlBaseline(pid));
+  let r93b=null; if(g.state==='post'){ try{ r93b=r93Base(pid,g); }catch(e){ r93b=null; } }
+  const grid=mlStatGridHTML(pid,row,g.state==='post'?r93b:mlBaseline(pid));   // V93_RECAP: the recap's own norm after the final
   let plays=[]; try{ plays=livePlaysFor(g,160).filter(x=>livePlayMentions(x.text,[pid]).length).slice(0,12); }catch(e){}
   const playsH=plays.length?'<div class="lplays big" style="margin-top:10px">'+plays.map(x=>'<div class="lplay mine'+(x.score?' score':'')+'"><span class="lpclk">'+(x.period?'Q'+x.period+' ':'')+esc(x.clock||'')+'</span><span>'+esc(x.text)+'</span></div>').join('')+'</div>'
     :'<div class="fine" style="margin-top:10px">'+(g.state==='pre'?'Kickoff '+esc(liveKickoff(g))+' — his plays appear here as they happen.':'No plays mentioning him in the feed yet.')+'</div>';
-  let diag='';
-  if(g.state==='post'){ const d=mlRecapView(pid,liveWeek());
-    if(d) diag='<div class="lrrow open" style="margin-top:10px"><div class="lrtop"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span><span class="nm">'+esc(GRADE_WORD[d.grade]||'')+'</span></div>'
-      +'<div class="lrbody">'+esc(d.nar||'')+'</div>'+((d.reasons||[]).length?'<div style="margin-top:6px">'+d.reasons.map(mlReasonChip).join('')+'</div>':'')+'</div>'; }
+  const diag='';   // V93_RECAP: the post-game card (and a mid-game injury banner) now sit at the TOP of the sheet — r93SheetTopHTML
   const btns='<div class="inlinebtns" style="margin-top:12px"><button class="btn sm pri" data-act="openGame" data-gid="'+esc(g.id)+'">Game center</button>'
     +'<button class="btn sm" data-act="lsIntel" data-pid="'+esc(pid)+'">Full dossier</button>'+lwDossierPinHTML(pid)+sleeperBtn('player','Sleeper page',pid)+'</div>';
-  return '<div data-pid="'+esc(pid)+'">'+head+lgRow+paceB+grid+playsH+diag+btns
+  let r93top=''; try{ r93top=r93SheetTopHTML(pid,g); }catch(e){ r93top=''; }
+  return '<div data-pid="'+esc(pid)+'">'+head+r93top+lgRow+paceB+grid+playsH+diag+btns
     +'<div class="railnote" style="margin-top:10px">Snaps, targets, carries, air yards, YAC, broken tackles and red-zone looks come from Sleeper\'s live weekly file; a tile reading <b>n/a</b> means Sleeper has not enriched this game yet — it is not a zero. Plays and the score are ESPN\'s.</div></div>'; }
 function lsMount(){ if($('lsheet')) return;
   const d=document.createElement('div'); d.id='lsheet'; d.className='lsheet';
@@ -16347,6 +17506,7 @@ function lwStatHTML(m,C){
   let h='<span class="lwbd b-'+B[1]+'">'+B[0]+'</span>';
   if(m.bm&&m.bm.tag==='boom') h+='<span class="lwbd b-boom" title="Pacing past his own ceiling (his weekly spread)">BOOM</span>';
   else if(m.bm&&m.bm.tag==='bust') h+='<span class="lwbd b-bust" title="Pacing under his own floor (his weekly spread)">BUST</span>';
+  h+=r93TileBadge(m);   // V93_RECAP: INJ the moment the feed logs it
   if(m.st==='in'||m.st==='post') h+='<span class="lwclk">'+lwRingHTML(m.fr,m.st)+esc(lwClock(m.g))+'</span>';
   else if(m.st==='pre') h+='<span class="lwclk">'+esc(liveKickoff(m.g))+(m.g.tv?' · '+esc(m.g.tv):'')+' <i class="lwcd" data-lwk="'+m.kick+'">'+esc(lwCountdown(m.kick-C.now))+'</i></span>';
   const rel=m.forL.length+m.vsL.length;
@@ -16622,13 +17782,14 @@ function livePlayerInnerHTML(pid){ // dossier / slideover: only while he is actu
     return '<div class="card lgame lmini"><div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+'</div></div>'
       +'<div class="bd"><div class="lminirow"><span class="tier mon">FINAL</span><span class="lbig vnum">'+(pts2!=null?fmtPts(pts2):'—')+'</span><span class="fine">pts'+(function(){ const sn=liveSnapNote(pid); return sn?' · '+sn:''; })()+'</span></div>'
       +'<div class="lline" style="margin-top:6px">'+(ln2?esc(ln2):'<span class="fine">no stat line</span>')+'</div>'
-      +(d?'<div style="margin-top:8px"><span class="lrgrade '+esc(d.grade)+'">'+esc(d.grade)+'</span> '+(d.reasons||[]).slice(0,2).map(mlReasonChip).join('')+'</div>':'')
+      +(d?r93MiniHTML(d):'')
       +'<div class="inlinebtns" style="margin-top:8px"><button class="btn sm" data-act="liveCard" data-pid="'+esc(pid)+'">View full game stats</button></div></div></div>'; }
   const p=playerOf(pid); const on=liveOnField(pid,g); const pts=livePts(pid); const line=liveLine(pid); const pace=livePace(pid);
   const plays=livePlaysFor(g,40).filter(x=>livePlayMentions(x.text,[pid]).length).slice(0,3);
   return '<div class="card lgame in lmini"><div class="lhead" data-act="openGame" data-gid="'+esc(g.id)+'" role="button"><div class="lteams"><span class="lteam">'+esc(g.an)+' <b class="vnum">'+g.as+'</b></span><span class="lat">@</span><span class="lteam">'+esc(g.hn)+' <b class="vnum">'+g.hs+'</b></span></div><div class="lmeta">'+liveStatusChip(g)+(g.dd?' <span class="chip mono">'+esc(g.dd)+'</span>':'')+'</div></div>'
     +'<div class="bd"><div class="lminirow">'+(on&&g.rz?'<span class="tier must lpulse">RED ZONE</span>':on?'<span class="tier gain lpulse">ON FIELD</span>':'<span class="tier spec">'+(['DL','LB','DB','DEF'].includes(p.p)?'offense on the field':'on the sideline')+'</span>')
     +'<span class="lbig vnum">'+(pts!=null?fmtPts(pts):'—')+'</span><span class="fine">pts so far · pace <b class="vnum">'+fmtPts(pace)+'</b>'+(function(){ const sn=liveSnapNote(pid); return sn?' · '+sn:''; })()+'</span></div>'
+    +r93LiveInjHTML(pid)
     +'<div class="lline" style="margin-top:6px">'+(line?esc(line):'<span class="fine">no touches yet</span>')+'</div>'
     +(plays.length?'<div class="lplays" style="margin-top:8px">'+plays.map(x=>'<div class="lplay mine'+(x.score?' score':'')+'"><span class="lpclk">'+(x.period?'Q'+x.period+' ':'')+esc(x.clock||'')+'</span><span>'+esc(x.text)+'</span></div>').join('')+'</div>':'')
     +'</div></div>';
@@ -18720,7 +19881,7 @@ function renderTab(){
 }
 function renderDiag(){
   $('diag').innerHTML=[
-    'FRONT OFFICE v9.2','store: '+Store.backend,
+    'FRONT OFFICE v9.3','store: '+Store.backend,
     'players: '+(S.players?S.players.count+' · '+ago(S.players.ts):'—'),
     'values: '+((S.values&&S.values.src)?S.values.src+' · '+ago(S.values.ts):'baseline Jan 2026'),
     'nfl: '+(S.nfl.season_type||'?')+' wk'+(S.nfl.week!=null?S.nfl.week:'?')+' '+(S.nfl.league_season||''),
@@ -19442,13 +20603,13 @@ function buildPhoneShell(){ if($('tabbar')) return;
   bar.innerHTML=PHONE_MAIN.map(([t,l,i])=>'<button data-ptab="'+t+'" aria-label="'+l+'">'+svgI(i)+(t==='live'?'<i class="livedot" id="liveBarDot"></i>':'')+(t==='trade'?'<span class="badge" id="tdBadgeBar" style="display:none">0</span>':'')+(t==='waiver'?'<span class="badge" id="wvBadgeBar" style="display:none">0</span>':'')+'<span>'+l+'</span></button>').join('')
     +'<button data-ptab="more" aria-label="More">'+svgI('more')+'<span id="moreLbl">More</span></button>';
   document.body.appendChild(bar);
-  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v9.2 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
+  const more=el('div','psheet'); more.id='moreSheet'; more.innerHTML=PHONE_MORE.map(([t,l,i])=>'<button class="pitem" data-ptab="'+t+'">'+svgI(i)+'<span>'+l+'</span></button>').join('')+'<div class="pfoot">FRONT OFFICE v9.3 · <button class="plink" data-act="tourStart">Replay the tour</button></div>'; document.body.appendChild(more);
   const menu=el('div','psheet top'); menu.id='hmenu'; menu.innerHTML='<div class="pgrid" id="hmTop"></div><div class="pfoot"><span id="hmFoot"></span> · <button class="plink" data-act="tourStart">Tour</button></div>'; document.body.appendChild(menu);
   const hb=el('button','btn',svgI('dots')); hb.id='hmenuBtn'; hb.setAttribute('aria-label','Menu'); document.querySelector('header.top .hgroup').appendChild(hb);
   const ptr=el('div','','<span class="spin"></span><span id="ptrTxt">Pull to refresh</span>'); ptr.id='ptr'; document.body.appendChild(ptr);
   bar.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; const t=b.dataset.ptab; if(t==='more'){ toggleSheet('moreSheet'); return; } closeSheets(); if(S.ui.tab===t){ window.scrollTo({top:0,behavior:'smooth'}); return; } switchTab(t); });
   more.addEventListener('click',e=>{ const b=e.target.closest('button[data-ptab]'); if(!b) return; closeSheets(); switchTab(b.dataset.ptab); });
-  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v9.2 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
+  hb.onclick=()=>{ try{ $('hmFoot').textContent='FRONT OFFICE v9.3 · store: '+Store.backend; }catch(e){} toggleSheet('hmenu'); }; // the store label is read when the sheet opens (IndexedDB may still be connecting at boot)
   if(typeof MutationObserver!=='undefined'){ const mo=new MutationObserver(()=>syncTabbar()); ['tdBadge','wvBadge'].forEach(id=>{ const x=$(id); if(x) mo.observe(x,{attributes:true,childList:true,characterData:true,subtree:true}); }); } // mirror the tab-strip badges
 }
 function toggleSheet(id){ const sh=$(id); if(!sh) return; const on=!sh.classList.contains('on'); closeSheets(); if(on){ sh.classList.add('on'); $('scrim').classList.add('on'); } }
@@ -19467,7 +20628,7 @@ function setPhone(on){ const body=document.body; try{ buildPhoneShell(); }catch(
   const dot=document.querySelector('.dotrow'), pill=$('modePill'), chip=$('seasonChip'), pal=$('btnPal'), hg=document.querySelector('header.top .hgroup'), hdr=document.querySelector('header.top'), bn=$('btnNotif');
   if(on){ const menu=$('hmenu'); const foot=menu.querySelector('.pfoot'); $('hmTop').appendChild(pill); $('hmTop').appendChild(chip); if(foot&&foot.parentElement===menu) menu.insertBefore(dot,foot); else menu.appendChild(dot); hg.insertBefore(pal,$('hmenuBtn')); pal.innerHTML=svgI('search'); // v6.0.2: the sheet footer is a wrapper now — insert before it, never before a nested node
     if(bn&&!bn.querySelector('.plbl')) bn.appendChild(el('span','plbl','Alerts'));
-    $('hmFoot').textContent='FRONT OFFICE v9.2 · store: '+Store.backend; }
+    $('hmFoot').textContent='FRONT OFFICE v9.3 · store: '+Store.backend; }
   else { hg.appendChild(pill); hg.appendChild(chip); hdr.appendChild(dot); dot.insertBefore(pal,$('railToggle')); pal.textContent='Search'; const pl=bn&&bn.querySelector('.plbl'); if(pl) pl.remove(); closeSheets(); }
   if(was!==!!on){ try{ fixSticky(); }catch(e){} try{ renderTab(); }catch(e){} }
   syncTabbar();
