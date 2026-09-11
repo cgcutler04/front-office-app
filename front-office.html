@@ -2536,6 +2536,51 @@ body.phone .nw9 .nw9x{min-width:44px;min-height:44px;padding:0;font-size:13px}
 @media(max-width:1100px){ .h9 .h9wm{right:3%;height:112%;max-width:50%} }
 body.phone .h9 .h9wm{right:3%;height:104%;max-width:54%;opacity:.13}
 .h9.h9-intel .h9wm{right:5%;height:124%;max-width:34%}
+
+/* ═══════════ v9.2 · the game header is a scoreboard ═══════════ */
+/* V92_GVTOP — more room under the Dynamic Island, club logos and colours, big numerals */
+body.phone #modal.gvfs .gvtop.gvtop2{padding:calc(env(safe-area-inset-top,0px) + 14px) 10px 10px;background:#111931;border-bottom:1px solid rgba(255,255,255,.10)}
+.gvtop2 .gvbar{display:flex;align-items:center;justify-content:space-between;min-height:40px;margin-bottom:4px}
+.gvtop2 .gvback{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:transparent;color:var(--ink);font:300 32px/1 var(--sans);padding:0 0 4px;cursor:pointer}
+.gvtop2 .gvback:active{background:rgba(255,255,255,.09)}
+.gvtop2 .gvstate{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
+  font:700 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-variant-numeric:tabular-nums}
+.gvtop2 .gvstate.in{color:var(--gain);border-color:rgba(55,229,167,.35);background:rgba(55,229,167,.08)}
+.gvtop2 .gvstate.fin{color:var(--ink)}
+.gvtop2 .gvboard{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:8px}
+.gvtop2 .gvT{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;
+  background:linear-gradient(135deg,var(--tint) 0%,rgba(255,255,255,.02) 100%);border:1px solid rgba(255,255,255,.08);min-width:0}
+.gvtop2 .gvT.gvH{flex-direction:row-reverse}
+.gvtop2 .gvTid{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.gvtop2 .gvlogo{width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+.gvtop2 .gvTab .tm{font:800 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:3px 6px;border-radius:6px}
+.gvtop2 .gvTsc{font:800 34px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--mut);letter-spacing:-.02em}
+.gvtop2 .gvT.lead .gvTsc{color:var(--ink)}
+.gvtop2 .gvT.lead{border-color:rgba(255,255,255,.18)}
+.gvtop2 .gvT.poss{box-shadow:inset 0 0 0 1px rgba(55,229,167,.35)}
+.gvtop2 .gvball{position:absolute;top:8px;width:8px;height:8px;border-radius:50%;background:var(--gain);box-shadow:0 0 0 3px rgba(55,229,167,.18);animation:lpulse 1.6s ease infinite}
+.gvtop2 .gvT.gvA .gvball{right:10px} .gvtop2 .gvT.gvH .gvball{left:10px}
+.gvtop2 .gvvs{align-self:center;font:700 12px/1 var(--sans);color:var(--dim);min-width:10px;text-align:center}
+.gvtop2 .gvsit2{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:9px}
+.gvtop2 .gvsit2 .gvdd{font:600 11.5px/1.25 var(--mono);color:var(--mut);letter-spacing:.02em}
+@media(prefers-reduced-motion:reduce){ .gvtop2 .gvball{animation:none} }
+/* the same scoreboard reads well in the desktop modal too */
+body:not(.phone) .gvtop2{padding:4px 2px 12px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+body:not(.phone) .gvtop2 .gvback{display:none}
+body:not(.phone) .gvtop2 .gvlogo{width:46px;height:46px}
+body:not(.phone) .gvtop2 .gvTsc{font-size:38px}
+
+/* v9.2.1 · one compact scoreboard row — back, away, clock, home */
+.gvtop2 .gvboard{grid-template-columns:40px 1fr auto 1fr;gap:6px;align-items:center}
+.gvtop2 .gvback{width:40px;height:44px;font-size:30px;margin-left:-4px}
+.gvtop2 .gvT{padding:8px 9px;gap:6px}
+.gvtop2 .gvlogo{width:34px;height:34px}
+.gvtop2 .gvTsc{font-size:30px}
+.gvtop2 .gvstate{flex-direction:column;gap:3px;padding:6px 8px;font-size:10.5px;line-height:1.1;text-align:center;white-space:nowrap}
+.gvtop2 .gvstate .livedot{margin:0}
+body.phone #modal.gvfs .gvtop.gvtop2{padding:calc(env(safe-area-inset-top,0px) + 12px) 8px 9px}
+.gvtop2 .gvsit2{margin-top:7px}
+body:not(.phone) .gvtop2 .gvboard{grid-template-columns:1fr auto 1fr}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -12897,7 +12942,45 @@ function gvSegHTML(TABS,cur){                                                   
 function gvKickLab(g){ try{ const ms=new Date(g.date).getTime()-Date.now();
     if(!isFinite(ms)) return liveKickoff(g);
     return ms>20*3600e3?liveKickoff(g):('in '+(liveCountdown(g)||liveKickoff(g))); }catch(e){ return ''; } }
-function gvTopHTML(g){                                                                  // the bar that never scrolls: back, both team chips, both scores, possession, clock, red zone
+function gvClubLogo(t){ const a=String(t||'').toLowerCase(); return a?('https://sleepercdn.com/images/team_logos/nfl/'+esc(a)+'.png'):''; }
+function gvClubTint(t,alpha){ // a soft wash of the club's own colour, clamped so it never overpowers the numerals
+  try{ const K=(typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(t||'').toUpperCase()])||null; if(!K) return 'rgba(255,255,255,.03)';
+    const hx=String(K.p||'').replace('#',''); if(hx.length!==6) return 'rgba(255,255,255,.03)';
+    const r=parseInt(hx.slice(0,2),16), g2=parseInt(hx.slice(2,4),16), b=parseInt(hx.slice(4,6),16);
+    return 'rgba('+r+','+g2+','+b+','+(alpha==null?0.34:alpha)+')'; }catch(e){ return 'rgba(255,255,255,.03)'; } }
+function gvTopHTML(g){ // V92_GVTOP: a scoreboard, not a strip of abbreviations
+  try{
+    const live=g.state==='in', pre=g.state==='pre', fin=g.state==='post';
+    const clk=live?((g.period>4?'OT':'Q'+g.period)+' · '+String(g.clock||'')):fin?'Final':gvKickLab(g);
+    const dash='\u2014', mid=' \u00b7 ';
+    const lead=function(side){ if(pre) return false; return side==='a'?(Number(g.as)>Number(g.hs)):(Number(g.hs)>Number(g.as)); };
+    const side=function(t,score,which){
+      const has=(live&&g.poss===t);
+      const lg=gvClubLogo(t);
+      return '<div class="gvT '+which+(lead(which==='gvA'?'a':'h')?' lead':'')+(has?' poss':'')+'" style="--tint:'+gvClubTint(t)+'">'
+        +'<div class="gvTid">'
+          +(lg?'<img class="gvlogo" alt="" loading="eager" decoding="async" src="'+lg+'" onerror="this.remove()">':'')
+          +'<span class="gvTab">'+teamChip(t,t)+'</span>'
+          +(has?'<i class="gvball" title="has the ball" aria-label="has the ball"></i>':'')
+        +'</div>'
+        +'<b class="gvTsc">'+(pre?dash:esc(String(score)))+'</b>'
+      +'</div>'; };
+    const situ=(live&&(g.rz||g.dd))
+      ? '<div class="gvsit2">'+(g.rz?'<span class="tier must lpulse">RED ZONE</span>':'')
+          +(g.dd?'<span class="gvdd">'+esc(g.dd)+(g.spot?mid+esc(g.spot):'')+'</span>':'')+'</div>'
+      : ((pre&&(g.tv||g.venue))?'<div class="gvsit2"><span class="gvdd">'+esc([g.tv,g.venue].filter(Boolean).join(mid))+'</span></div>':'');
+    return '<div class="gvtop gvtop2">'   // V921_GVROW: one row — the clock sits between the two clubs instead of on its own line
+      +'<div class="gvboard">'
+        +'<button class="gvback" data-act="gvBack" aria-label="Close the game view" title="Back">\u2039</button>'
+        +side(g.away,g.as,'gvA')
+        +'<span class="gvstate'+(live?' in':(fin?' fin':''))+'">'+(live?'<i class="livedot in"></i>':'')+esc(clk)+'</span>'
+        +side(g.home,g.hs,'gvH')
+      +'</div>'
+      +situ
+    +'</div>';
+  }catch(e){ return gvTopHTMLv82(g); }
+}
+function gvTopHTMLv82(g){                                                                  // the bar that never scrolls: back, both team chips, both scores, possession, clock, red zone
   const live=g.state==='in', pre=g.state==='pre', fin=g.state==='post';
   const clk=live?((g.period>4?'OT':'Q'+g.period)+' '+String(g.clock||'')):fin?'Final':gvKickLab(g);
   const poss=function(t){ return (live&&g.poss===t)?'<i class="gvpo" title="has the ball"></i>':''; };
