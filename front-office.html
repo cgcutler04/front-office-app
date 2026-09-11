@@ -15741,6 +15741,13 @@ document.addEventListener('click',async e=>{
       if(!S.bundles[HUB.open]||!hh||hh.wk!==hwk||Date.now()-hh.ts>120e3){ try{ hubFetch(true,HUB.open).catch(function(){}); }catch(err){} } }
     hubRepaint();
     if(HUB.open) setTimeout(function(){ const dd=document.querySelector('#p-command .hubdet'); if(dd) dd.scrollIntoView({behavior:'smooth',block:'nearest'}); },30);
+    if(HUB.open&&S.conn&&S.conn.leagueId!==hid){                  // V91_HUBACTIVE: tapping a league makes it the league you work in, across the whole app
+      try{ await activateLeague(hid); }catch(err){ toast('Could not open league: '+err.message,'bad'); return; }
+      engineDirty(); renderHeader(); renderFmtChips(); try{ await scanWaivers(true); }catch(err){}
+      renderTab();                                                   // HUB.open survives the rebuild, so the matchup detail stays open
+      setTimeout(function(){ const dd=document.querySelector('#p-command .hubdet'); if(dd) dd.scrollIntoView({behavior:'auto',block:'nearest'}); },40);
+      try{ const L=(S.league&&S.league.league)||{}; toast('Now working in '+(L.name||'that league').trim(),'good'); }catch(err){}
+    }
     return; }
   if(act==='hubClose'){ HUB.open=null; hubRepaint(); return; }
   if(act==='hubLineup'){ const hid2=b.dataset.id;
