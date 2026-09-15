@@ -4633,6 +4633,21 @@ body.phone .tfsl{grid-template-columns:repeat(3,minmax(0,1fr))}
 .tfgm .pm-WR,.tfgl .pm-WR i{fill:#3BE3FF;background:#3BE3FF} .tfgm .pm-TE,.tfgl .pm-TE i{fill:#FFB547;background:#FFB547}
 .tfgm .pm-K,.tfgl .pm-K i{fill:#B28CFF;background:#B28CFF} .tfgm .pm-DEF,.tfgl .pm-DEF i{fill:#8E9AB8;background:#8E9AB8}
 .tfgm .pm-IDP,.tfgl .pm-IDP i{fill:#FF8A5B;background:#FF8A5B}
+
+/* ═══ v9.5.2 · NEWS95_MARK — full-article badges, Show more, honest reader failures ═══ */
+.nw95m{margin-top:5px;display:flex;align-items:center;gap:6px;min-width:0}
+.nw95b{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font:700 9.5px/1 var(--sans);letter-spacing:.07em;text-transform:uppercase;font-style:normal;
+  color:var(--acc);background:rgba(59,227,255,.08);border:1px solid rgba(59,227,255,.22);border-radius:999px;padding:3px 8px 3px 7px}
+.nw95b::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85;flex:none}
+.nw9 .nw9m .nw95b{margin-left:8px;vertical-align:1px;font-size:9px;padding:2px 7px 2px 6px}
+.nw95more{display:flex;justify-content:center;padding:14px 0 6px}
+.nw95more .btn{min-width:190px}
+.nw95more .nw95left{color:var(--dim);font-weight:600;margin-left:6px}
+.rdnote.nw95fail{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;border-color:rgba(255,198,92,.38);color:var(--ink)}
+.rdnote.nw95fail .btn{margin-left:auto}
+body.phone .nw95more .btn{min-height:44px;width:100%}
+body.phone .nw95b{font-size:9px}
+body.phone .rdnote.nw95fail .btn{min-height:44px;padding:0 18px}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -7569,7 +7584,7 @@ function histLine(pid){
 }
 /* --- Live news wire (ESPN public JSON feed — no key, CORS-open) --- */
 const NEWS_ST={inflight:null,dbTagged:false,deepTs:0,dbBuilt:false}; // v8: deepTs = last full build; dbBuilt = that build saw the player DB
-const NEWS_V=1, NEWS_MAXAGE=14*86400e3, NEWS_CAP=400, NEWS_PAGES=3;
+const NEWS_V=1, NEWS_MAXAGE=14*86400e3, NEWS_CAP=900, NEWS_PAGES=6; /* NEWS95_MARK: 400 -> 900 stories, 3 -> 6 firehose pages */
 const NEWS_BY_KEY=Object.create(null); // key -> the ONE canonical item object every mount's data-nkey resolves to
 let NEWS_PS=null;
 function nHash(s){ let h=5381; s=String(s==null?'':s); for(let i=0;i<s.length;i++) h=((h*33)^s.charCodeAt(i))>>>0; return h.toString(36); }
@@ -7583,13 +7598,15 @@ function newsReg(list){ (list||[]).forEach(it=>{ if(!it) return; const k=newsKey
     if(ex&&ex!==it){ ['u','img','d','story','by','typ','api','id','cap','cred','full','eid'].forEach(f=>{ if(!ex[f]&&it[f]) ex[f]=it[f]; }); return; }
     NEWS_BY_KEY[k]=it; });
   const ks=Object.keys(NEWS_BY_KEY);
-  if(ks.length>2600){ ks.map(k=>[k,(NEWS_BY_KEY[k]||{}).t||0]).sort((a,b)=>a[1]-b[1]).slice(0,ks.length-1600).forEach(p=>{ delete NEWS_BY_KEY[p[0]]; }); } }
+  if(ks.length>6000){ ks.map(k=>[k,(NEWS_BY_KEY[k]||{}).t||0]).sort((a,b)=>a[1]-b[1]).slice(0,ks.length-4000).forEach(p=>{ delete NEWS_BY_KEY[p[0]]; }); } }
 async function newsPersist(){ try{ if(!S.news||!S.news.items) return; // the wire survives a reload, so a cold start paints before the network answers
-    let budget=120000; // the newest article bodies ride along for offline reading; the rest are refetched on demand, which keeps the record near 300 KB
-    const items=S.news.items.slice(0,300).map(it=>{ const c={...it}; delete c._m; delete c.imgs; delete c.vids; delete c.rel; delete c._stub;
-      if(c.story){ if(c.story.length>24000||c.story.length>budget) delete c.story; else budget-=c.story.length; }
+    const big=Store.backend==='indexeddb'; /* NEWS95_MARK: IndexedDB carries ~700 stories with the newest ~2.5M chars of bodies (one body up to 80k); localStorage keeps the lean 300 / 120k record */
+    const mk=(cnt,budget,one)=>S.news.items.slice(0,cnt).map(it=>{ const c={...it}; delete c._m; delete c.imgs; delete c.vids; delete c.rel; delete c._stub; delete c._ex; delete c._wc;
+      if(c.story){ if(c.story.length>one||c.story.length>budget) delete c.story; else budget-=c.story.length; }
       return c; });
-    await Store.set('news',{v:NEWS_V,ts:S.news.ts,items,db:!!NEWS_ST.dbBuilt,deepTs:NEWS_ST.deepTs||0}); }catch(e){} }
+    const rec=items=>({v:NEWS_V,ts:S.news.ts,items,db:!!NEWS_ST.dbBuilt,deepTs:NEWS_ST.deepTs||0});
+    const ok=await Store.set('news',rec(big?mk(700,1800000,80000):mk(300,120000,24000)));
+    if(!ok&&big) await Store.set('news',rec(mk(300,120000,24000))); }catch(e){} }
 function newsPersistSoon(){ if(NEWS_PS) return; NEWS_PS=setTimeout(()=>{ NEWS_PS=null; newsPersist(); },4000); } // a burst of reader opens writes once
 function newsHydrate(c){ try{ if(!(c&&c.v===NEWS_V&&c.items&&c.items.length&&!stale(c.ts,12))) return false;
     S.news={items:c.items,ts:c.ts}; newsReg(c.items); NEWS_ST.deepTs=c.deepTs||0; NEWS_ST.dbBuilt=!!c.db; return true; }catch(e){ return false; } }
@@ -7605,7 +7622,7 @@ function newsRetag(){ // v8: headlines merged before the player DB existed get t
   const cold=!NEWS_ST.dbBuilt; if(cold) NEWS_ST.deepTs=0; // the injury wire produces nothing without the DB — the next build must go deep
   if(S.ui.tab==='news'||S.ui.tab==='command'){ try{ renderTab(); }catch(e){} }
   loadNews(cold||stale(S.news.ts,0.75)).then(()=>{ if(S.ui.tab==='news'||S.ui.tab==='command'){ try{ renderTab(); }catch(e){} } }).catch(()=>{}); }
-async function loadNews(force,light){ if(NEWS_ST.inflight) return NEWS_ST.inflight; NEWS_ST.inflight=loadNewsInner(force,light).finally(()=>{ NEWS_ST.inflight=null; }); return NEWS_ST.inflight; } // v7.0.1: one merge at a time · v8: light = the two primary wires only
+async function loadNews(force,light){ if(NEWS_ST.inflight) return NEWS_ST.inflight; NEWS_ST.inflight=loadNewsInner(force,light).finally(()=>{ NEWS_ST.inflight=null; try{ nw95Soon(1500); }catch(e){} }); return NEWS_ST.inflight; } // v7.0.1: one merge at a time · v8: light = the two primary wires only
 async function loadNewsInner(force,light){
   if(!force && S.news && S.net.news!=null && !stale(S.news.ts,0.75)) return S.news; // v8: the first pull of a session still runs, so the health dot resolves even off a fresh cache
   if(!S.news){ try{ newsHydrate(await Store.get('news')); }catch(e){} } // v8: the persisted wire paints instantly; the live pull follows
@@ -7694,7 +7711,7 @@ function isFootballNews(it){ const t=(it.h||'')+' '+(it.d||'');
   return knownPlayerHit(it.h);                 // unknown topics survive only by naming a real player
 }
 async function ffNews(eid,limit){ // ESPN Fantasy's own player feed (fantasy.espn) — the fantasy-angle takes, distinct from the athlete wire
-  const j=await jget('https://site.api.espn.com/apis/fantasy/v2/games/ffl/news/players?playerId='+encodeURIComponent(eid)+'&limit='+(limit||4),12000).catch(()=>null); if(!j) return []; // v7.0.1: bounded
+  const j=await jget('https://site.api.espn.com/apis/fantasy/v2/games/ffl/news/players?playerId='+encodeURIComponent(eid)+'&limit='+(limit||10),12000).catch(()=>null); if(!j) return []; // v7.0.1: bounded
   return (j.feed||[]).map(a=>{ const im=(a.images&&a.images[0])||null; // v8: the blurb's own story field IS the full text — keep it, and tag the row to the athlete we asked for
     return {h:a.headline||'',d:a.description||'',t:a.published?Date.parse(a.published):Date.now(),u:(a.links&&a.links.web&&a.links.web.href)||null,img:(im&&im.url)||null,src:'ESPN Fantasy',
       id:a.id!=null?String(a.id):null, api:(a.links&&a.links.api&&a.links.api.self&&a.links.api.self.href)||null, story:a.story||null, typ:a.type||null, prem:!!a.premium,
@@ -7704,8 +7721,8 @@ async function ffNews(eid,limit){ // ESPN Fantasy's own player feed (fantasy.esp
 async function playerNews(pid,limit){
   const p=playerOf(pid); if(!p) return [];
   S.pnewsCache=S.pnewsCache||{};
-  const c=S.pnewsCache[pid]; if(c&&!stale(c.ts,0.5)&&(c.lim||0)>=(limit||5)) return c.items.slice(0,limit||5); // a shallow pull must not starve a deeper caller
-  let items=newsFor(p.n,limit||5,pid);
+  const c=S.pnewsCache[pid]; if(c&&!stale(c.ts,0.5)&&(c.lim||0)>=(limit||8)) return c.items.slice(0,limit||8); // a shallow pull must not starve a deeper caller
+  let items=newsFor(p.n,limit||8,pid);
   if(p.e&&S.news&&S.news.items){ // exact ESPN-id hits from the fantasy feed outrank name matches
     const hits=S.news.items.filter(it=>it.eid&&String(it.eid)===String(p.e));
     const seen=new Set(items.map(i=>i.h));
@@ -7713,27 +7730,27 @@ async function playerNews(pid,limit){
     items.sort((a,b)=>b.t-a.t);
   }
   if(p.e){ // ESPN Fantasy's player blurbs (the per-athlete news feed itself is gone — HTTP 404 since 2026-09; the 32 team wires in S.news cover that ground now)
-    const ff=await ffNews(p.e,limit||4).catch(()=>[]);
+    const ff=await ffNews(p.e,Math.max(10,limit||0)).catch(()=>[]);
     const seen=new Set(items.map(i=>i.h)); ff.forEach(m=>{ if(!seen.has(m.h)){ items.push(m); seen.add(m.h); } }); items.sort((a,b)=>b.t-a.t);
   }
-  newsReg(items); // v8: ffl blurbs and eid hits must be resolvable by the reader from any mount
-  S.pnewsCache[pid]={items,ts:Date.now(),lim:limit||5};
-  return items.slice(0,limit||5); // v8: the cache records lim 5 — returning 8 was a live inconsistency
+  newsReg(items); try{ nw95Soon(2500); }catch(e){} // v8: ffl blurbs and eid hits must be resolvable by the reader from any mount
+  S.pnewsCache[pid]={items,ts:Date.now(),lim:limit||8};
+  return items.slice(0,limit||8); // v8: the cache records the same default lim — returning 8 was a live inconsistency
 }
 function newsFor(name,limit,pid){ // v5.7: stories tagged to the player (ids, full name, surname on his club) — a bare surname no longer drags in every namesake
   if(!S.news||!S.news.items||!name) return [];
   const full=norm(name);
   const score=it=>{ if(pid){ const m=it._m||(it._m=newsMatchPids(it)); if(m.includes(pid)) return 2; return 0; } const txt=norm(it.h+' '+it.d); return full&&txt.includes(full)?2:0; };
   return S.news.items.map(it=>({it,s:score(it)})).filter(x=>x.s>0)
-    .sort((a,b)=>b.s-a.s||b.it.t-a.it.t).slice(0,limit||3).map(x=>x.it);
+    .sort((a,b)=>b.s-a.s||b.it.t-a.it.t).slice(0,limit||5).map(x=>x.it);
 }
 function agoShort(ts){ const m=Math.max(1,Math.round((Date.now()-ts)/60000)); if(m<60)return m+'m'; const h=Math.round(m/60); if(h<24)return h+'h'; return Math.round(h/24)+'d'; }
 function newsItemHTML(it){ // v8: the whole row opens the in-app reader — no bare anchor, so the installed PWA never hands a tap to Safari
-  const k=newsKey(it); const ext=!!(it.u&&RD_ESPN.test(it.u));
+  const k=newsKey(it); const ext=!!(it.u&&RD_ESPN.test(it.u)); const nw95D=nw95Desc(it);
   return '<div class="newsit rdrow" role="button" tabindex="0" data-act="newsOpen" data-nkey="'+esc(k)+'">'
     +(it.img?'<img class="newsimg" loading="lazy" decoding="async" src="'+esc(it.img)+'" onerror="this.remove()">':'')
     +'<div style="flex:1;min-width:0"><span class="nh">'+esc(it.h)+'</span>'
-    +(it.d?'<div class="nd">'+esc(it.d)+'</div>':'')+'</div>'
+    +(nw95D?'<div class="nd">'+esc(nw95D)+'</div>':'')+nw95BadgeHTML(it)+'</div>'
     +'<span class="nt">'+esc(it.src||'ESPN')+' · '+agoShort(it.t)
     +(ext?'<button class="nglyph" data-act="espnOpen" data-url="'+esc(it.u)+'" title="Open on ESPN" aria-label="Open on ESPN">&#8599;</button>':'')+'</span></div>';
 }
@@ -7778,13 +7795,13 @@ function newsSanitize(html,ctx){ // whitelist walk: every node is BUILT FRESH in
       if(nd.nodeType!==1) continue;
       const tag=(nd.tagName||'').toUpperCase();
       if(RD_KILL[tag]) continue; // dropped WITH its subtree
-      let m=/^PHOTO(\d+)$/.exec(tag);
+      let m=/^PHOTO(\d+)(-[A-Z0-9-]*)?$/.exec(tag);
       if(m){ const im=imgs[Number(m[1])-1];
         if(im&&im.url&&RD_IMG_OK.test(im.url)&&im.url!==hero) out.appendChild(rdFigure(im));
         walk(nd,out); continue; } // ESPN's pseudo-tags never close — the rest of the paragraph is nested INSIDE them and must be unwrapped
-      m=/^VIDEO(\d+)$/.exec(tag);
+      m=/^VIDEO(\d+)(-[A-Z0-9-]*)?$/.exec(tag);
       if(m){ const v=vids[Number(m[1])-1]; if(v) out.appendChild(rdVideoCard(v)); walk(nd,out); continue; }
-      if(tag==='ALSOSEE'||/^INLINE\d*$/.test(tag)){ walk(nd,out); continue; } // no backing field in the payload — the marker goes, the text stays
+      if(tag==='ALSOSEE'||/^INLINE\d*(-[A-Z0-9-]*)?$/.test(tag)){ walk(nd,out); continue; } // no backing field in the payload — the marker goes, the text stays
       if(tag==='A'){ const href=nd.getAttribute('href')||''; const sm=RD_STORY.exec(href);
         if(sm){ const bt=document.createElement('button'); bt.className='rdlink'; bt.setAttribute('data-act','newsOpen'); bt.setAttribute('data-nid',sm[1]); bt.setAttribute('data-nu',href); bt.setAttribute('data-nh',(nd.textContent||'').trim().slice(0,140)); walk(nd,bt); out.appendChild(bt); }
         else walk(nd,out); // every other link becomes plain text — no <a> ever reaches the DOM
@@ -7798,7 +7815,7 @@ function newsSanitize(html,ctx){ // whitelist walk: every node is BUILT FRESH in
   return frag; }
 function rdHoist(art){ try{
     art.querySelectorAll('p > figure, p > .rdvid').forEach(nd=>{ const p=nd.parentNode; if(p&&p.parentNode) p.parentNode.insertBefore(nd,p.nextSibling); }); // a figure inside a <p> is invalid nesting
-    art.querySelectorAll('p').forEach(p=>{ if(!p.textContent.trim()&&!p.querySelector('img,figure,br')) p.remove(); });
+    art.querySelectorAll('p,h2,h3,blockquote,li,ul,ol,strong,b,em,i').forEach(p=>{ if(!p.textContent.trim()&&!p.querySelector('img,figure,.rdvid')) p.remove(); }); /* NEWS95_MARK: placeholder-only blocks go */
   }catch(e){} }
 function rdChips(it){ let ps=[]; try{ ps=(it._m&&it._m.length?it._m:newsMatchPids(it))||[]; }catch(e){ ps=[]; }
   return ps.filter(p=>playerOf(p)).slice(0,6).map(p=>'<button class="btn sm" data-act="pv" data-pid="'+esc(p)+'">'+ptag(posOf(p))+' '+esc((playerOf(p)||{}).n||'')+'</button>').join(' '); }
@@ -7848,25 +7865,8 @@ async function openReader(key,stub,nav){
   const body=$('rdBody'); if(!body) return;
   body.innerHTML=rdHeadHTML(it); body.scrollTop=0; // the head paints from the item we already have — a tap always shows something instantly
   R.classList.add('on');
-  let changed=false;
-  try{
-    if(!it.story&&!it.prem&&it.typ!=='Rotowire'&&it.typ!=='Media'&&(it.api||it.id)){
-      const url=(it.api&&RD_DETAIL.test(it.api))?it.api:(it.id?(RD_NEWS_BY_ID+encodeURIComponent(String(it.id))):null);
-      if(url){ const j=await jget(url,12000); const d=j&&j.headlines&&j.headlines[0];
-        if(d){
-          if(d.story) it.story=d.story;
-          if(!it.by&&d.byline){ it.by=d.byline; changed=true; }
-          if(!it.u&&d.links&&d.links.web&&d.links.web.href&&RD_ESPN.test(d.links.web.href)){ it.u=d.links.web.href; changed=true; }
-          if(!it.d&&d.description){ it.d=d.description; changed=true; }
-          if(it._stub&&d.headline){ it.h=d.headline; changed=true; }
-          if(it._stub&&d.published){ const tp=Date.parse(d.published); if(tp){ it.t=tp; changed=true; } }
-          it.imgs=(d.images&&d.images.length)?d.images:null; it.vids=(d.video&&d.video.length)?d.video:null; it.rel=(d.related&&d.related.length)?d.related:null;
-          if(d.images&&d.images[0]){ const i0=d.images[0];
-            if(!it.img&&i0.url){ it.img=i0.url; changed=true; }
-            if(!it.cap&&i0.caption){ it.cap=i0.caption; changed=true; }
-            if(!it.cred&&i0.credit){ it.cred=i0.credit; changed=true; } }
-          delete it._stub; newsPersistSoon(); } } } // the fetched body is written back onto the registry item, so reopening it costs nothing
-  }catch(e){}
+  let changed=false, fst='skip';
+  try{ const r95=await newsBodyFetch(it); fst=(r95&&r95.st)||'skip'; changed=!!(r95&&r95.changed); }catch(e){ fst='fail'; } /* NEWS95_MARK: content.core, then now.core; the body lands on every copy of the item and persists */
   if(READER.gen!==gen||!R.classList.contains('on')) return; // a newer open (or a close) won the race
   if(changed){ body.innerHTML=rdHeadHTML(it); const s2=$('rdSrc'); if(s2) s2.textContent=it.src||'ESPN'; }
   rdEspnBtn(it);
@@ -7875,7 +7875,8 @@ async function openReader(key,stub,nav){
   const ctx={images:it.imgs||(it.img?[{url:it.img,caption:it.cap,credit:it.cred}]:[]),video:it.vids||[],hero:it.img||''};
   const text=it.story||it.full||(rdLede(it)?'':it.d)||'';
   if(it.prem&&!it.story) art.appendChild(rdNote('This is an ESPN+ story — the full text sits behind their paywall. Open it on ESPN to read it.'));
-  else if(text){ try{ art.appendChild(newsSanitize(text,ctx)); rdHoist(art); }catch(e){ art.appendChild(rdNote('That article would not render here — open it on ESPN.')); } }
+  else if(text){ if(fst==='fail'&&!it.story) art.appendChild(nw95FailNote(k)); try{ art.appendChild(newsSanitize(text,ctx)); rdHoist(art); }catch(e){ art.appendChild(rdNote('That article would not render here — open it on ESPN.')); } }
+  else if(fst==='fail') art.appendChild(nw95FailNote(k));
   else art.appendChild(rdNote('No article body on this wire item — the headline above is the whole update.'));
   if(it.rel&&it.rel.length) art.appendChild(rdRelated(it.rel));
   art.appendChild(rdFooter(it));
@@ -7894,6 +7895,131 @@ function closeReader(){ READER.gen++; READER.key=null; READER.item=null; READER.
   document.addEventListener('click',e=>{ const t=(e.target&&e.target.closest)?e.target.closest('[data-act]'):null;
     if(t&&t.dataset.act==='pv'&&r.classList.contains('on')) closeReader(); },true); // the slideover (z 60) must never open behind the reader (z 78)
 })();
+/* ═══ v9.5.2 · NEWS95_MARK — every article body pulled eagerly, honest reader failures, full-article badges ═══ */
+const NW95={inf:Object.create(null),fail:Object.create(null),nb:Object.create(null),run:false,again:false,kt:null,pt:null,landed:new Set(),ix:null,ixOf:null,nr:null};
+const NW95_NOW='https://now.core.api.espn.com/v1/sports/news/';
+function nw95Saver(){ try{ return !!(navigator.connection&&navigator.connection.saveData); }catch(e){ return false; } }
+function nw95Eligible(it){ /* article types only: never ESPN+, injury/transaction/Rotowire/Media rows, or an item with no id to ask for */
+  return !!(it&&!it.prem&&!/^(rotowire|media|injury|transaction)$/i.test(String(it.typ||''))&&it.src!=='Injuries'&&it.src!=='Transactions'&&((it.id!=null&&it.id!=='')||(it.api&&RD_DETAIL.test(it.api)))); }
+function nw95MyPids(){ /* every player on a roster you own, across ALL your leagues (current season first), deduped */
+  try{ if(!S.conn||!S.conn.user_id) return []; const uid=S.conn.user_id, out=new Set();
+    const add=b=>{ ((b&&b.rosters)||[]).forEach(r=>{ if(r&&r.owner_id===uid) (r.players||[]).forEach(p=>{ if(p!=null) out.add(String(p)); }); }); };
+    add(S.league);
+    const all=(S.conn.leagues||[]).filter(l=>l&&l.league_id); const act=all.filter(l=>{ try{ return leagueIsActive(l); }catch(e){ return true; } });
+    (act.length?act:all).forEach(l=>add(S.bundles&&S.bundles[l.league_id]));
+    return [...out]; }catch(e){ return []; } }
+function nw95Imgs(a){ return (a&&a.length)?a.map(im=>({url:im&&im.url,caption:im&&im.caption,credit:im&&im.credit,alt:im&&im.alt})):null; }
+function nw95Vids(a){ return (a&&a.length)?a.map(v=>({headline:v&&v.headline,duration:v&&v.duration,thumbnail:v&&v.thumbnail,posterImages:{default:{href:(v&&v.posterImages&&v.posterImages.default&&v.posterImages.default.href)||''}},links:{web:{href:(v&&v.links&&v.links.web&&v.links.web.href)||''}}})):null; }
+function nw95Rel(a){ return (a&&a.length)?a.slice(0,8).map(r=>({id:r&&r.id,type:r&&r.type,headline:r&&r.headline,title:r&&r.title,links:{web:{href:(r&&r.links&&r.links.web&&r.links.web.href)||''}}})):null; }
+function nw95Apply(it,d){ let changed=false; /* exactly what the reader always wrote back — images, video and related kept compact (only the fields the reader draws) */
+  if(d.story) it.story=d.story;
+  if(!it.by&&d.byline){ it.by=d.byline; changed=true; }
+  if(!it.u&&d.links&&d.links.web&&d.links.web.href&&RD_ESPN.test(d.links.web.href)){ it.u=d.links.web.href; changed=true; }
+  if(!it.d&&d.description){ it.d=d.description; changed=true; }
+  if(it._stub&&d.headline){ it.h=d.headline; changed=true; }
+  if(it._stub&&d.published){ const tp=Date.parse(d.published); if(tp){ it.t=tp; changed=true; } }
+  const im=nw95Imgs(d.images), vd=nw95Vids(d.video), rl=nw95Rel(d.related);
+  if(im||!it.imgs) it.imgs=im; if(vd||!it.vids) it.vids=vd; if(rl||!it.rel) it.rel=rl;
+  if(d.images&&d.images[0]){ const i0=d.images[0];
+    if(!it.img&&i0.url){ it.img=i0.url; changed=true; }
+    if(!it.cap&&i0.caption){ it.cap=i0.caption; changed=true; }
+    if(!it.cred&&i0.credit){ it.cred=i0.credit; changed=true; } }
+  delete it._stub; return changed; }
+function nw95Sync(it){ /* the registry item and the persisted wire item can be two objects under one key — a body on either lands on both */
+  try{ const k=newsKey(it); const g=[it]; const r=NEWS_BY_KEY[k]; if(r&&g.indexOf(r)<0) g.push(r);
+    const L=S.news&&S.news.items; if(L){ if(NW95.ixOf!==L){ const m=Object.create(null); L.forEach(x=>{ if(x) m[newsKey(x)]=x; }); NW95.ix=m; NW95.ixOf=L; } const s2=NW95.ix[k]; if(s2&&g.indexOf(s2)<0) g.push(s2); }
+    if(g.length<2) return;
+    ['story','by','u','d','img','cap','cred','imgs','vids','rel'].forEach(f=>{ let v=null; for(let i=0;i<g.length;i++){ if(g[i][f]){ v=g[i][f]; break; } } if(v) g.forEach(x=>{ if(!x[f]) x[f]=v; }); }); }catch(e){} }
+function newsBodyFetch(it,opt){ /* the ONE full-article pull, shared by the reader and the prefetch: content.core first, now.core second, bounded per request */
+  opt=opt||{};
+  if(!it) return Promise.resolve({st:'skip',changed:false});
+  if(!it.story) nw95Sync(it);
+  if(it.story) return Promise.resolve({st:'have',changed:false});
+  if(!nw95Eligible(it)) return Promise.resolve({st:'skip',changed:false});
+  const k=newsKey(it); if(NW95.inf[k]) return NW95.inf[k];
+  const id=(it.id!=null&&it.id!=='')?String(it.id):null; const urls=[];
+  if(id){ urls.push(RD_NEWS_BY_ID+encodeURIComponent(id)); urls.push(NW95_NOW+encodeURIComponent(id)); }
+  if(it.api&&RD_DETAIL.test(it.api)&&urls.indexOf(it.api)<0) urls.push(it.api);
+  const pr=(async()=>{ let seen=false, changed=false;
+    for(let i=0;i<urls.length&&!it.story;i++){ let j=null; try{ j=await jget(urls[i],opt.ms||12000); }catch(e){ j=null; }
+      const d=j&&j.headlines&&j.headlines[0]; if(!d) continue; seen=true; try{ if(nw95Apply(it,d)) changed=true; }catch(e){} }
+    if(it.story||seen){ delete NW95.fail[k]; if(it.story) delete NW95.nb[k]; else NW95.nb[k]=1; nw95Sync(it); if(!opt.quiet) newsPersistSoon(); return {st:it.story?'ok':'empty',changed}; }
+    const f=NW95.fail[k]||(NW95.fail[k]={n:0,next:0}); f.n++; f.next=Date.now()+20*60e3; return {st:'fail',changed:false}; })();
+  NW95.inf[k]=pr; pr.then(()=>{ if(NW95.inf[k]===pr) delete NW95.inf[k]; },()=>{ if(NW95.inf[k]===pr) delete NW95.inf[k]; });
+  return pr; }
+function nw95Queue(cap){ /* stories still missing a body: your rostered players (every league) first, then newest first */
+  const now=Date.now(), seen=new Set(), pool=[]; const saver=nw95Saver();
+  const my=new Set(nw95MyPids()), myE=new Set(); my.forEach(p=>{ const q=playerOf(p); if(q&&q.e!=null) myE.add(String(q.e)); });
+  const dbOk=!!(S.players&&S.players.byId);
+  const consider=it=>{ if(!it||it.story) return; let k; try{ k=newsKey(it); }catch(e){ return; } if(seen.has(k)) return; seen.add(k);
+    if(NW95.inf[k]||NW95.nb[k]||!nw95Eligible(it)) return; const f=NW95.fail[k]; if(f&&(f.n>=3||f.next>now)) return;
+    let mine=false; if(my.size){ try{ mine=(it.pid!=null&&my.has(String(it.pid)))||(it.eid!=null&&myE.has(String(it.eid)))||(it.eids||[]).some(e=>myE.has(String(e)))
+      ||(it._m||(dbOk?(it._m=newsMatchPids(it)):[])).some(p=>my.has(String(p))); }catch(e){ mine=false; } }
+    if(saver&&!mine) return; pool.push({m:mine?1:0,t:Number(it.t)||0,it}); };
+  ((S.news&&S.news.items)||[]).forEach(consider); for(const k in NEWS_BY_KEY) consider(NEWS_BY_KEY[k]);
+  pool.sort((a,b)=>b.m-a.m||b.t-a.t); return pool.slice(0,cap).map(x=>x.it); }
+function nw95Soon(ms){ if(NW95.kt) return; NW95.kt=setTimeout(()=>{ NW95.kt=null; nw95Kick().catch(()=>{}); },ms||1500); }
+async function nw95Kick(){ /* up to 6 passes of 150, three requests at a time; a failed story backs off 20 min, three strikes and it waits for the next session */
+  if(NW95.run){ NW95.again=true; return; }
+  if(!S.news||!S.news.items) return;
+  try{ if(navigator.onLine===false) return; }catch(e){}
+  NW95.run=true; NW95.again=false; let landed=0;
+  try{
+    for(let pass=0;pass<6;pass++){
+      const q=nw95Queue(150); if(!q.length) break;
+      let qi=0, got=0, bad=0;
+      await Promise.all(Array.from({length:Math.min(3,q.length)},async()=>{ while(qi<q.length){ const it=q[qi++]; if(it.story) continue;
+        let r=null; try{ r=await newsBodyFetch(it,{quiet:true,ms:10000}); }catch(e){ r=null; }
+        if(r&&r.st==='ok'){ got++; landed++; NW95.landed.add(newsKey(it)); nw95PaintSoon(); if(landed%25===0) newsPersistSoon(); }
+        else if(!r||r.st==='fail'){ bad++; if(!got&&bad>=8) qi=q.length; } } }));   /* eight straight misses: ESPN is down, stop asking */
+      if(q.length<150||(!got&&bad)||document.hidden) break;
+    }
+  }catch(e){}
+  NW95.run=false; if(landed) newsPersistSoon();
+  if(NW95.again){ NW95.again=false; nw95Soon(5000); } }
+function nw95PaintSoon(){ if(NW95.pt) return; NW95.pt=setTimeout(()=>{ NW95.pt=null; nw95Paint(); },1200); }
+function nw95Paint(){ /* light repaint: only the on-screen rows whose body just landed are swapped, no tab re-render */
+  const ks=NW95.landed; if(!ks.size) return; NW95.landed=new Set(); let els=[];
+  try{ els=[].slice.call(document.querySelectorAll('.newsit.rdrow[data-nkey],article.nw9it[data-nkey]')); }catch(e){ return; }
+  els.forEach(el=>{ const k=el.getAttribute('data-nkey'); if(!k||!ks.has(k)) return; const it=NEWS_BY_KEY[k]; if(!it||!it.story) return;
+    try{ if(el.contains(document.activeElement)) return; const t=document.createElement('div'); t.innerHTML=el.classList.contains('nw9it')?news9HTML(it):newsItemHTML(it);
+      const nu=t.firstElementChild; if(nu&&el.parentNode) el.parentNode.replaceChild(nu,el); }catch(e){} }); }
+function nw95Text(html){ /* tags out, entities decoded — plain text for word counts and excerpts (always esc()'d on output) */
+  let t=String(html==null?'':html);
+  t=t.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi,' ').replace(/<br\s*\/?>/gi,'\n').replace(/<\/(p|h2|h3|li|blockquote|div)>/gi,'\n\n').replace(/<[^>]*>/g,' ');
+  return t.replace(/&nbsp;/gi,' ').replace(/&(rsquo|lsquo|apos|#39);/gi,"'").replace(/&(ldquo|rdquo|quot);/gi,'"').replace(/&mdash;/gi,'\u2014').replace(/&ndash;/gi,'\u2013').replace(/&hellip;/gi,'\u2026')
+    .replace(/&#(\d+);/g,(m0,d)=>{ try{ return String.fromCodePoint(Number(d)); }catch(e){ return ' '; } }).replace(/&#x([0-9a-f]+);/gi,(m0,h)=>{ try{ return String.fromCodePoint(parseInt(h,16)); }catch(e){ return ' '; } })
+    .replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&amp;/gi,'&'); }
+function nw95Story(it){ if(!it) return null; if(it.story) return it; let r=null; try{ r=NEWS_BY_KEY[newsKey(it)]||null; }catch(e){ r=null; } return (r&&r.story)?r:null; }
+function nw95Words(src){ const st=src&&src.story; if(!st) return 0; if(src._wc&&src._wc[0]===st.length) return src._wc[1];
+  const c=(nw95Text(st).match(/\S+/g)||[]).length; try{ src._wc=[st.length,c]; }catch(e){} return c; }
+function nw95Excerpt(src){ if(!src||!src.story) return ''; const st=src.story; if(src._ex&&src._ex[0]===st.length) return src._ex[1];
+  const paras=nw95Text(st).split(/\n+/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);
+  let p=paras.find(x=>x.length>=60)||paras[0]||'';
+  if(p.length>200){ const cut=p.slice(0,200); const sp=cut.lastIndexOf(' '); p=(sp>140?cut.slice(0,sp):cut).replace(/[\s,;:.\u2014-]+$/,'')+'\u2026'; }
+  try{ src._ex=[st.length,p]; }catch(e){} return p; }
+function nw95Desc(it){ /* the wire's description, unless it is empty or very short and a full body is in hand — then the body's first paragraph */
+  const d=String((it&&it.d)||'').trim(); const nk=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+  if(d.length>=60&&nk(d)!==nk(it&&it.h)) return d;
+  let ex=''; try{ const src=nw95Story(it); ex=src?nw95Excerpt(src):''; }catch(e){ ex=''; }
+  return (ex&&nk(ex)!==nk(it&&it.h))?ex:d; }
+function nw95BadgeHTML(it,inline){ let src=null; try{ src=nw95Story(it); }catch(e){ src=null; } if(!src) return '';
+  const w=nw95Words(src); if(w<30) return '';
+  const b='<span class="nw95b" title="The full article is pulled and ready to read in-app">Full article \u00b7 '+Math.max(1,Math.round(w/230))+' min read</span>';
+  return inline?b:'<div class="nw95m">'+b+'</div>'; }
+function nw95FailNote(k){ const d=rdNote('Couldn\u2019t reach ESPN for the full story.'); d.classList.add('nw95fail');
+  const b=document.createElement('button'); b.className='btn sm'; b.type='button'; b.setAttribute('data-act','nw95Retry'); b.setAttribute('data-nkey',k||''); b.textContent='Retry'; d.appendChild(b); return d; }
+function nw95ShownHTML(cnt){ const N=NW95.nr; const tot=N?N.list.length:cnt; return '<span class="nw95sh">'+(tot>cnt?' Showing the latest '+cnt+' of '+tot+'.':'')+'</span>'; }
+function nw95MoreHTML(){ const N=NW95.nr; if(!N) return ''; const left=N.list.length-N.n; if(left<=0) return '';
+  return '<div class="nw95more"><button class="btn sm" type="button" data-act="nw95More">Show '+Math.min(60,left)+' more<span class="nw95left">\u00b7 '+left+' left</span></button></div>'; }
+function nw95More(b){ /* appends the next 60 rows in place — no re-render, the scroll position holds */
+  const el=$('nrBody'), N=NW95.nr; if(!el||!N||el.dataset.gen!==String(N.gen)){ renderTab(); return; }
+  const w=b.closest('.nw95more'); if(!w){ renderTab(); return; }
+  const to=Math.min(N.list.length,N.n+60); w.insertAdjacentHTML('beforebegin',N.list.slice(N.n,to).map(N.row).join('')); N.n=to; S.ui.nrLim=to;
+  const c=el.querySelector('.nrhead .pzcnt'); if(c) c.textContent=String(to);
+  const sh=el.querySelector('.nw95sh'); if(sh) sh.textContent=to<N.list.length?(' Showing the latest '+to+' of '+N.list.length+'.'):'';
+  const nx=nw95MoreHTML(); if(nx) w.outerHTML=nx; else w.remove();
+  nw95Soon(800); }
 /* --- Player imagery: Sleeper CDN headshot, ESPN fallback, monogram floor --- */
 function avatarHTML(pid,cls){
   const p=playerOf(pid);
@@ -13298,7 +13424,7 @@ async function openDraftResearch(pid){
   // The container is pid-stamped so a slow fetch can never paint the previous player's news into a newer modal.
   try{
     let items;
-    if(p) items=await playerNews(pid,6);
+    if(p) items=await playerNews(pid,8);
     else { if(!S.news) await loadNews(false); items=newsFor(name,5); }
     const el=$('drNews'); if(!el||el.dataset.pid!==String(pid)) return;
     el.innerHTML=(items&&items.length)?items.map(newsItemHTML).join(''):'<div class="empty">Nothing recent on the wire for him.</div>';
@@ -15995,15 +16121,14 @@ function newsMatchPids(it){ // which DB players a story is about — exact ESPN 
   return [...out];
 }
 async function nrRosterItems(force){ // deep-pull every rostered player's feeds (athlete wire + ESPN Fantasy blurbs), merged, 30-min cache
-  const my=myRoster(); if(!my) return null;
-  const lid=(S.conn&&S.conn.leagueId)||null;
+  const pids=nw95MyPids().filter(p=>playerOf(p)); if(!pids.length) return null; /* NEWS95_MARK: every roster you own across ALL your leagues, deduped */
+  const lid='r'+pids.length+':'+nHash(pids.slice().sort().join(','));
   if(!force&&S.nrCache&&S.nrCache.lid===lid&&!stale(S.nrCache.ts,0.5)) return S.nrCache.items;
-  const pids=(my.players||[]).filter(p=>playerOf(p));
-  const out=[]; const seen=new Set();
-  await Promise.all(pids.map(async pid=>{ try{
-    const its=await playerNews(pid,4);
+  const out=[]; const seen=new Set(); let qi=0;
+  await Promise.all(Array.from({length:Math.min(6,pids.length)},async()=>{ while(qi<pids.length){ const pid=pids[qi++]; try{
+    const its=await playerNews(pid,8);
     its.forEach(it=>{ if(seen.has(it.h)) return; seen.add(it.h); out.push({...it,pid}); });
-  }catch(e){} }));
+  }catch(e){} } }));
   out.sort((a,b)=>b.t-a.t);
   S.nrCache={lid,ts:Date.now(),items:out};
   return out;
@@ -16024,7 +16149,7 @@ function renderNews(){
       if(!S.news) await loadNews(false).catch(()=>{});
       let items=[];
       if(F==='mine'){
-        if(!my){ const el0=mount(); if(el0) el0.innerHTML='<div class="empty">Connect a league to filter the wires to your roster — Everything mode works without one.</div>'; return; }
+        if(!my&&!nw95MyPids().length){ const el0=mount(); if(el0) el0.innerHTML='<div class="empty">Connect a league to filter the wires to your roster — Everything mode works without one.</div>'; return; }
         items=((await nrRosterItems(false))||[]).map(it=>({...it,_m:it.pid?[it.pid]:newsMatchPids(it)}));
       } else {
         const base=((S.news&&S.news.items)||[]).filter(isFootballNews);
@@ -16037,14 +16162,14 @@ function renderNews(){
       }
       const srcs=[...new Set(items.map(i=>i.src||'ESPN'))];
       const EF=(SRC!=='all'&&!srcs.includes(SRC))?'all':SRC; // a source filter from another view must never blank this one
-      const shown=(EF==='all'?items:items.filter(i=>(i.src||'ESPN')===EF)).slice(0,60);
-      const rows=shown.map(it=>{
+      const all95=(EF==='all'?items:items.filter(i=>(i.src||'ESPN')===EF)); const shown=all95.slice(0,Math.max(60,Number(S.ui.nrLim)||60)); /* NEWS95_MARK: Show more adds 60 at a time */
+      const row95=it=>{
         const ms=(it._m||[]).filter(p=>playerOf(p)).slice(0,2);
         const chipsP=ms.map(p=>'<button class="btn sm nrchip" data-act="pv" data-pid="'+esc(p)+'">'+avatarHTML(p,'sm')+'<span class="nrcn">'+esc((playerOf(p)||{}).n||'')+'</span>'+ptag(posOf(p))+'</button>').join('');
-        return '<div class="nrrow"><div class="nrmain">'+newsItemHTML(it)+'</div>'+(chipsP?'<div class="nrchips">'+chipsP+'</div>':'')+'</div>'; }).join('');   // VIS94B_MARK
+        return '<div class="nrrow"><div class="nrmain">'+newsItemHTML(it)+'</div>'+(chipsP?'<div class="nrchips">'+chipsP+'</div>':'')+'</div>'; }; const rows=shown.map(row95).join(''); const nr95={gen,list:all95,row:row95,n:shown.length};   // VIS94B_MARK
       const el=mount(); if(!el) return;
-      el.innerHTML=nrHeadHTML(F,shown.length,EF)+(srcs.length>1?'<div class="inlinebtns nrsrcs">'+chips([['all','All sources']].concat(srcs.map(s=>[s,s])),EF,'nrS')+'</div>':'')
-        +(rows||'<div class="empty">Nothing on the wires for this filter right now'+(F==='mine'?' — try All rosters or Everything':'')+'.</div>')
+      NW95.nr=nr95; el.innerHTML=nrHeadHTML(F,shown.length,EF)+(srcs.length>1?'<div class="inlinebtns nrsrcs">'+chips([['all','All sources']].concat(srcs.map(s=>[s,s])),EF,'nrS')+'</div>':'')
+        +(rows?rows+nw95MoreHTML():'<div class="empty">Nothing on the wires for this filter right now'+(F==='mine'?' — try All rosters or Everything':'')+'.</div>')
         +'<div class="railnote foot">Every keyless wire, merged and de-duplicated on ESPN\'s article id — a headline opens the in-app reader, the &#8599; opens ESPN, a player chip opens his card. The ? in the title lists every source.</div>';
     }catch(e){ const el=mount(); if(el) el.innerHTML='<div class="empty">Wires unreachable right now.</div>'; }
   })();
@@ -16532,8 +16657,8 @@ function vbSkinTeam(T){ // the hero9 club-colour recipe for a CLUB (the player v
   return { p:pr, a:ac, g:'linear-gradient(118deg,'+h9Mix(pr,'#FFFFFF',0.14)+' 0%,'+pr+' 46%,'+h9Mix(pr,'#04060B',0.52)+' 100%)', bd:h9Mix(pr,'#04060B',0.70),
     logo:base?('https://sleepercdn.com/images/team_logos/nfl/'+T.toLowerCase()+'.png'):'', club:(function(){ try{ return String(teamNick(T)).toUpperCase(); }catch(e){ return T; } })(), abbr:T }; }
 function nrHeadHTML(F,cnt,EF){ // News Room: scope · count · lede
-  const L={mine:['My roster','Stories that mention a player on your roster \u2014 each man\u2019s own feed is deep-pulled.'],league:['All rosters','Stories about any player rostered in this league.'],fa:['Free agents','Stories about players nobody in this league rosters.'],all:['Everything','The whole football wire, every source.']}[F]||['Stories',''];
-  return '<div class="pzsech nrhead"><h3>'+esc(L[0])+'</h3><span class="pzcnt">'+cnt+'</span>'+(EF&&EF!=='all'?'<span class="src">'+esc(EF)+'</span>':'')+'<p>'+esc(L[1])+(cnt>=60?' Showing the latest 60.':'')+'</p></div>'; }
+  const L={mine:['My roster','Stories that mention a player on any roster you own, across every one of your leagues \u2014 each man\u2019s own feed is deep-pulled.'],league:['All rosters','Stories about any player rostered in this league.'],fa:['Free agents','Stories about players nobody in this league rosters.'],all:['Everything','The whole football wire, every source.']}[F]||['Stories',''];
+  return '<div class="pzsech nrhead"><h3>'+esc(L[0])+'</h3><span class="pzcnt">'+cnt+'</span>'+(EF&&EF!=='all'?'<span class="src">'+esc(EF)+'</span>':'')+'<p>'+esc(L[1])+nw95ShownHTML(cnt)+'</p></div>'; }
 function luCompHTML(pid){ // the composition line as chips (ONE source: labCompBits — the first paint and labRepaintRows both call this)
   const t=labCompBits(pid); if(!t) return '';
   return t.split(' \u00b7 ').filter(Boolean).map(function(b){ const k=/^proj /.test(b)?' for':/^(inj |last wk)/.test(b)?' flag':/^(matchup|vs D|env)/.test(b)?' news':''; return '<span class="pzw'+k+'">'+b+'</span>'; }).join(''); }
@@ -17159,7 +17284,7 @@ function renderIntelBodyLegacy(pid){
   ${S.ui.cmpPid&&S.ui.cmpPid!==pid?compareHTML(pid,S.ui.cmpPid):''}`;
   try{ fillPlayerHistory(pid); }catch(e){}
   if(S.ui.cmpPid&&S.ui.cmpPid!==pid){ try{ fillCompareTimelines(pid,S.ui.cmpPid); }catch(e){} }
-  const fill=async()=>{ const hits=await playerNews(pid,5); { const pn=$('pnews'); if(!pn||pn.dataset.pid!==String(pid)) return; }
+  const fill=async()=>{ const hits=await playerNews(pid,8); { const pn=$('pnews'); if(!pn||pn.dataset.pid!==String(pid)) return; }
     $('pnews').innerHTML=hits.length?hits.map(newsItemHTML).join(''):'<div class="railnote">Nothing on the wire for him, even reaching back through his athlete feed — genuinely quiet. Injury flag and depth chart on the left stay live from Sleeper.</div>'; };
   (async()=>{ try{ if(!S.news||stale(S.news.ts,0.5)) await loadNews().catch(()=>{}); await fill(); }
     catch(e){ $('pnews').innerHTML='<div class="railnote">News wire unreachable in this environment. Values, injury status and depth chart on the left remain live via Sleeper/FantasyCalc.</div>'; } })();
@@ -21713,9 +21838,9 @@ function news9HTML(it){ // the whole card opens the in-app reader — no bare an
     +'<div class="nw9top">'
     +(it.img?'<img class="nw9img" loading="lazy" decoding="async" alt="" src="'+esc(it.img)+'" onerror="this.remove()">':'')
     +'<div class="nw9tx"><div class="nw9h">'+esc(it.h||'')+'</div>'
-    +'<div class="nw9m">'+esc((when?when+' via ':'via ')+src)+'</div></div>'
+    +'<div class="nw9m">'+esc((when?when+' via ':'via ')+src)+nw95BadgeHTML(it,true)+'</div></div>'
     +(ext?'<button class="nw9x" type="button" data-act="espnOpen" data-url="'+esc(it.u)+'" title="Open on ESPN" aria-label="Open on ESPN">&#8599;</button>':'')
-    +'</div>'+nw9BodyHTML(it.d,it.h)+'</article>';
+    +'</div>'+nw9BodyHTML(nw95Desc(it),it.h)+'</article>';
 }
 function dbLog(pid){
   const rows=glogRowsFor(pid,10).filter(function(r){ return r.played; });
@@ -21871,7 +21996,7 @@ async function fillDossierNews(pid,rootId,gen,force){
   try{
     if(force){ await loadNews(true).catch(function(){}); if(S.pnewsCache) delete S.pnewsCache[pid]; }
     else if(!S.news||stale(S.news.ts,0.5)) await loadNews().catch(function(){});
-    const items=await playerNews(pid,6);
+    const items=await playerNews(pid,12);
     const m=find(); if(!m) return;
     m.innerHTML=(items&&items.length)?items.map(function(it){ try{ return news9HTML(it); }catch(e){ return newsItemHTML(it); } }).join('')
       :'<div class="railnote">Nothing on the wire for him, even reaching back through his athlete feed — genuinely quiet. Injury flag and depth chart stay live from Sleeper.</div>';
@@ -22070,7 +22195,7 @@ function openPlayerLegacy(pid){
     <div id="soNews" data-pid="${esc(pid)}"><span class="spin"></span> <span class="fine">Pulling the latest…</span></div>`;
   $('sover').classList.add('on'); $('scrim').classList.add('on');
   (async()=>{ // live pull, pid-stamped so a slow fetch never paints another player's stories
-    try{ const items=await playerNews(pid,6);
+    try{ const items=await playerNews(pid,8);
       const el=$('soNews'); if(!el||el.dataset.pid!==String(pid)) return;
       el.innerHTML=(items&&items.length)?items.map(newsItemHTML).join(''):'<div class="empty">Nothing recent on the wires for him.</div>';
     }catch(e){ const el=$('soNews'); if(el&&el.dataset.pid===String(pid)) el.innerHTML='<div class="empty">Wires unreachable right now.</div>'; }
@@ -22251,6 +22376,8 @@ document.addEventListener('click',async e=>{
   if(act==='buyLow'){ const bp=b.dataset.pid;
     loadTrade(Number(b.dataset.rid),null,[{type:'player',pid:bp}],{scroll:false,toast:'Loaded '+(((playerOf(bp)||{}).n)||'target')+' into the trade'}); return; }
   if(act==='newsRefresh'){ b.disabled=true; try{ await loadNews(true);}catch(e){} b.disabled=false; renderTab(); return; }
+  if(act==='nw95Retry'){ const k95=b.dataset.nkey||READER.key; if(k95){ try{ delete NW95.fail[k95]; }catch(err){} b.disabled=true; openReader(k95,null,'back'); } return; }   /* NEWS95_MARK: re-pull in place, the Back stack survives */
+  if(act==='nw95More'){ try{ nw95More(b); }catch(err){ renderTab(); } return; }
   if(act==='newsOpen'){ const rd=$('reader'); // v8: every wire row, in-story link and Related row opens the in-app reader
     openReader(b.dataset.nkey||null,{id:b.dataset.nid||null,u:b.dataset.nu||null,h:b.dataset.nh||(b.textContent||'').trim().slice(0,140)},(rd&&rd.classList.contains('on'))?'push':null); return; }
   if(act==='hubTags'){ var _ht=b.dataset.id; S.ui.hubTags=S.ui.hubTags||{}; S.ui.hubTags[_ht]=!S.ui.hubTags[_ht]; hubRepaint(); return; }
@@ -22315,8 +22442,8 @@ document.addEventListener('click',async e=>{
   if(act==='drDossier'){ $('modal').classList.remove('on'); S.ui.intelPid=pid; switchTab('intel'); return; }
   if(act==='mockScout'){ await openScout(Number(b.dataset.rid)); return; }
   if(act==='mockNotes'){ openManagerNotes(Number(b.dataset.rid)); return; }
-  if(act==='nrF'){ S.ui.nrF=b.dataset.v; S.ui.nrS='all'; renderTab(); return; } // a new scope resets the source filter — its chips may not exist there
-  if(act==='nrS'){ S.ui.nrS=b.dataset.v; renderTab(); return; }
+  if(act==='nrF'){ S.ui.nrLim=60; S.ui.nrF=b.dataset.v; S.ui.nrS='all'; renderTab(); return; } // a new scope resets the source filter — its chips may not exist there
+  if(act==='nrS'){ S.ui.nrLim=60; S.ui.nrS=b.dataset.v; renderTab(); return; }
   if(act==='nrR'){ S.pnewsCache={}; S.nrCache=null; let ok=true; try{ ok=!!(await loadNews(true)); }catch(e){ ok=false; }
     renderTab(); toast(ok?'Every wire re-pulled':'Wires unreachable — showing what\'s cached',ok?'good':'warn'); return; }
   if(act==='goLive'){ switchTab('live'); return; }
