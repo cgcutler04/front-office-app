@@ -4262,6 +4262,47 @@ body.phone .ctkph span{font-size:10px}
 body.phone .ctkin{padding-left:90px}
 body.phone .ctks{max-width:190px}
 @media(prefers-reduced-motion:reduce){ .ctkdot{animation:none} }
+
+/* ═══════════ v9.5 · V95_STREAM_MARK — the streaming planner, built from this league's lineup ═══════════ */
+.sp95 .bd{display:flex;flex-direction:column;gap:10px}
+.sp95fmt{font:700 10.5px/1.35 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+.sp95s{border-radius:14px;background:#10172E;border:1px solid rgba(255,255,255,.07);padding:10px 8px 6px 10px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.sp95s.set{padding-bottom:10px}
+.sp95h{display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap;min-width:0}
+.sp95t{font:800 13px/1.2 var(--sans);color:var(--ink)}
+.sp95k{font:600 10.5px/1.2 var(--sans);color:var(--dim)}
+.sp95gain{margin-left:auto;font:800 11px/1 var(--sans);padding:4px 7px;border-radius:99px;background:rgba(55,229,167,.14);color:#7CF0C5;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sp95ok{margin-left:auto;font:800 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--mut)}
+.sp95b{font:600 11.5px/1.35 var(--sans);color:var(--mut)}
+.sp95b b{color:var(--ink)} .sp95b.dim{color:var(--dim)}
+.sp95hole{color:#FF9BB8;font-weight:800}
+.sp95r{-webkit-appearance:none;appearance:none;display:grid;grid-template-columns:32px minmax(0,1fr) auto auto;align-items:center;gap:8px;width:100%;min-height:48px;margin:0;padding:6px 4px;border-radius:10px;border:0;background:transparent;color:var(--ink);text-align:left;cursor:pointer;font:inherit;letter-spacing:0;text-transform:none}
+.sp95r:hover{background:rgba(255,255,255,.04)}
+.sp95r:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.sp95r .ava{width:32px;height:32px}
+.sp95n{display:flex;flex-direction:column;gap:3px;min-width:0}
+.sp95n b{font:800 13px/1.15 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp95n>span{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font:600 10.5px/1.2 var(--sans);color:var(--dim)}
+.sp95o{display:inline-flex;align-items:center;gap:3px;padding:2px 5px;border-radius:5px;background:rgba(255,255,255,.06);color:var(--mut);font:700 10px/1 var(--sans);white-space:nowrap}
+.sp95o i{font-style:normal;color:var(--dim);font-weight:600}
+.sp95o.soft{background:rgba(55,229,167,.12);color:#7CF0C5} .sp95o.hard{background:rgba(255,95,141,.12);color:#FF9BB8}
+.sp95v{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.sp95v b{font:800 15px/1 var(--sans);font-variant-numeric:tabular-nums}
+.sp95v span{font:600 10px/1 var(--sans);color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sp95u{font-style:normal;font:800 11px/1 var(--sans);padding:5px 6px;border-radius:8px;font-variant-numeric:tabular-nums;min-width:42px;text-align:center}
+.sp95u.up{background:rgba(55,229,167,.14);color:#7CF0C5} .sp95u.dn{background:rgba(255,95,141,.12);color:#FF9BB8} .sp95u.ev{background:rgba(255,255,255,.06);color:var(--mut)}
+body.phone .sp95r{min-height:52px}
+
+/* ═══════════ v9.5 · V95_FMT_MARK — no side rail; the league format lives on Command ═══════════ */
+aside.rail{display:none!important}
+#railToggle{display:none!important}
+.lgfmt{display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap;margin:2px 0 12px;padding:8px 10px;border-radius:12px;background:#0F1529;border:1px solid rgba(255,255,255,.07);min-width:0}
+.lgfmtk{font:800 10.5px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.lgfmtcs{display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.lgfmtc{font:700 11px/1 var(--sans);padding:5px 8px;border-radius:99px;background:rgba(59,227,255,.08);border:1px solid rgba(59,227,255,.22);color:#8BEBFF;white-space:nowrap}
+.lgfmt .btn.help{margin-left:auto}
+body.phone .lgfmt{margin:0 0 10px;padding:8px 9px}
+body:not(.phone) .hubmu .hubtn{text-overflow:ellipsis}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -12948,7 +12989,101 @@ function luckHTML(){
   </tbody></table><div class="railnote foot">${(LP()&&LP().median)?'<b>Median scoring:</b> the median game is credited at its real result (it carries no schedule luck), so Luck isolates your head-to-head draw only. ':''}Negative luck = better than the record shows — those managers sell low out of frustration. Positive luck = worse than the record — they overrate their roster. Both are trade opportunities; the wire card tells you who to call.</div></div></div>`;
 }
 /* --- streaming planner --- */
-function streamPlanHTML(){
+function sp95Pos(){ // V95_STREAM_MARK: which positions this league starts, through strict slots and through which flex slots
+  const slots=starterSlots(); const strict={}, flexIn={};
+  slots.forEach(function(sl){ const E=FLEX_ELIG[sl]||[sl]; if(E.length===1) strict[E[0]]=(strict[E[0]]||0)+1; else E.forEach(function(p){ (flexIn[p]=flexIn[p]||[]).push(sl); }); });
+  const has={}; Object.keys(strict).forEach(function(p){ has[p]=1; }); Object.keys(flexIn).forEach(function(p){ has[p]=1; });
+  return {slots:slots,strict:strict,flexIn:flexIn,has:has,P:LP()||{}}; }
+function sp95Wk1(pid){ const p=playerOf(pid); if(p&&p.inj&&/^(out|ir|pup|sus|cov)/i.test(p.inj)) return 0; let v=0; try{ v=weekScore(pid)||0; }catch(e){ v=0; }
+  if(!(v>0)){ try{ if(!onByeThisWeek(pid)){ const pj=projPts(pid); if(pj>0) v=pj; } }catch(e){} }   /* right after a league switch the engine can read 0 for a moment — never pass that off as a real zero */
+  return Math.max(0,v); }
+function sp95Wk2(pid,w){ // his NEXT week in this league's scoring: per-game projection × that opponent's matchup; a bye is zero
+  const p=playerOf(pid); if(!p||!p.t||!S.byes||!S.byes.opp) return 0; const T=String(p.t).toUpperCase();
+  const o=S.byes.opp[w+1]&&S.byes.opp[w+1][T]; if(!o) return 0;
+  if(p.inj&&/^(ir|pup|sus|cov)/i.test(p.inj)) return 0;
+  let pg=null; try{ const sp=projSeasonPts(pid); if(sp&&sp>0) pg=sp/17; }catch(e){ pg=null; }
+  if(pg==null){ let pj=null; try{ pj=projPts(pid); }catch(e){ pj=null; } pg=(pj!=null&&pj>0)?pj:0; }
+  let d=null; try{ d=dvpOf(o,p.p); }catch(e){ d=null; }
+  const m=d?1+(d.soft-0.5)*0.3:1;                                                  /* the softest draw +15%, the stingiest −15% */
+  const outNow=(p.inj&&/^out/i.test(p.inj))?0.5:1;                                 /* ruled out this week: half credit for next week */
+  return Math.max(0,pg*m*outNow); }
+function sp95Opp(pid,w){ const p=playerOf(pid); if(!p||!p.t||!S.byes||!S.byes.opp) return null; const T=String(p.t).toUpperCase();
+  const o=S.byes.opp[w]&&S.byes.opp[w][T]; if(!o) return {t:'BYE',soft:null}; let d=null; try{ d=dvpOf(o,p.p); }catch(e){ d=null; } return {t:o,soft:d?d.soft:null}; }
+function streamPlanHTML(){ // V95_STREAM_MARK: this league's lineup and scoring, measured against your own starters, two weeks at a time
+  try{
+    if(S.nfl.season_type!=='regular'||!S.league||!S.byes||!S.byes.opp) return '';
+    const w=S.nfl.week||1; const LPs=sp95Pos(); const P=LPs.P; const rostered=rosteredSet();
+    const my=myRoster(); const ids=my?activeIds(my):[];
+    const L1=optimalLineup(ids,sp95Wk1), L2=optimalLineup(ids,function(pid){ return sp95Wk2(pid,w); });
+    const at=function(L,pos){ return L.filter(function(f){ return f.pid&&posOf(f.pid)===pos; }); };
+    const STREAM=['QB','TE','K','DEF','DL','LB','DB'];
+    const faCache={};
+    const faAt=function(pos){ if(faCache[pos]) return faCache[pos]; const out=[];
+      for(const pid in S.players.byId){ const p=S.players.byId[pid]; if(p.p!==pos||!p.t||rostered.has(pid)) continue; if(p.inj&&/^(ir|pup|sus|cov)/i.test(p.inj)) continue;
+        let pj=null, sp=null; try{ pj=projPts(pid); }catch(e){} try{ sp=projSeasonPts(pid); }catch(e){}
+        if(!(pj>0)&&!(sp>0)) continue;
+        const a=sp95Wk1(pid), b=sp95Wk2(pid,w); if(a+b<=0) continue; out.push({pid:pid,a:a,b:b,t:a+b}); }
+      out.sort(function(x,y){ return y.t-x.t; }); faCache[pos]=out; return out; };
+    const secs=[];
+    STREAM.filter(function(p){ return LPs.has[p]; }).forEach(function(pos){
+      const strictN=LPs.strict[pos]||0; const s1=at(L1,pos), s2=at(L2,pos);
+      const minOf=function(arr){ let m=null; arr.forEach(function(f){ if(!m||f.v<m.v) m=f; }); return m; };   /* each week's weakest starter at the position, on his own - the Lab may start different men in the two weeks */
+      const m1=minOf(s1), m2=minOf(s2);
+      const h1=Math.max(0,strictN-s1.length), h2=Math.max(0,strictN-s2.length);
+      let base=(m1||m2)?{pid:m1?m1.pid:m2.pid,pid2:m2?m2.pid:null,a:m1?m1.v:0,b:m2?m2.v:0}:null;
+      if(pos==='QB'&&P.sf&&(s1.length<2||s2.length<2)){                               /* superflex: the second QB would take the SUPER_FLEX slot from whoever holds it */
+        const f1=L1.find(function(f){ return f.slot==='SUPER_FLEX'; }), f2=L2.find(function(f){ return f.slot==='SUPER_FLEX'; });
+        if(f1||f2) base={pid:(f1&&f1.pid)||(f2&&f2.pid)||null,a:f1?f1.v:0,b:f2?f2.v:0,sf:true}; }
+      if(h1||h2) base={pid:null,a:h1?0:(base?base.a:0),b:h2?0:(base?base.b:0),hole:true};
+      const fa=faAt(pos); if(!fa.length) return;
+      const baseT=base?(base.a+base.b):0;
+      const top=fa.slice(0,4).map(function(x){ return {pid:x.pid,a:x.a,b:x.b,t:x.t,up:x.t-baseT}; });
+      const notes=[];
+      if(pos==='QB') notes.push(P.sf?'superflex — two can start':(strictN+' starter'));
+      if(pos==='TE'){ const tp=(P.tep||0)+Math.max(0,((P.recTe!=null?P.recTe:P.ppr)||0)-(P.ppr||0)); if(tp>0) notes.push('TE premium +'+fmtPts1(tp)+'/rec'); if(LPs.flexIn.TE) notes.push('flex-eligible'); }
+      if(pos==='K'||pos==='DEF') notes.push(strictN+' slot'+(strictN>1?'s':''));
+      if(pos==='DL'||pos==='LB'||pos==='DB') notes.push([strictN?strictN+' slot'+(strictN>1?'s':''):'',LPs.flexIn[pos]?'IDP flex':''].filter(Boolean).join(' + '));
+      secs.push({pos:pos,notes:notes.filter(Boolean),base:base,holeWk:h1?w:(h2?w+1:null),top:top,bestUp:top.length?top[0].up:0}); });
+    const cover=[];                                                                  // the other slots: one my roster cannot fill in either week
+    [w,w+1].forEach(function(wk,ix){ (ix?L2:L1).forEach(function(f){ if(f.pid) return; const E=FLEX_ELIG[f.slot]||[f.slot];
+        if(E.every(function(p){ return STREAM.indexOf(p)>=0; })) return; cover.push({wk:wk,slot:f.slot,elig:E}); }); });
+    const covers=cover.slice(0,3).map(function(c){ let best=[];
+        c.elig.forEach(function(pos){ best=best.concat(faAt(pos).map(function(x){ return {pid:x.pid,v:c.wk===w?x.a:x.b}; })); });
+        return {c:c,best:best.filter(function(x){ return x.v>0; }).sort(function(x,y){ return y.v-x.v; }).slice(0,3)}; }).filter(function(x){ return x.best.length; });
+    if(!secs.length&&!covers.length) return '';
+    const LAB={QB:'Quarterbacks',TE:'Tight ends',K:'Kickers',DEF:'Team defenses',DL:'Defensive line · IDP',LB:'Linebackers · IDP',DB:'Defensive backs · IDP'};
+    const chip=function(pid,wk){ const o=sp95Opp(pid,wk); if(!o) return ''; const c=o.soft==null?'':o.soft>=0.66?' soft':o.soft<=0.34?' hard':'';
+      return '<span class="sp95o'+c+'" title="week '+wk+(o.soft!=null?' · matchup '+Math.round(o.soft*100)+'th percentile (higher = softer)':'')+'"><i>wk'+wk+'</i>'+esc(o.t)+'</span>'; };
+    const row=function(x,base){ const p=playerOf(x.pid)||{}; const up=base?x.t-(base.a+base.b):null;
+      return '<button type="button" class="sp95r" data-act="pv" data-pid="'+esc(x.pid)+'">'+avatarHTML(x.pid,'sm')
+        +'<span class="sp95n"><b>'+esc(lwShort(p))+'</b><span>'+esc(p.t||'FA')+' '+chip(x.pid,w)+chip(x.pid,w+1)+'</span></span>'
+        +'<span class="sp95v"><b>'+fmtPts1(x.t)+'</b><span>'+fmtPts1(x.a)+' + '+fmtPts1(x.b)+'</span></span>'
+        +(up!=null?'<em class="sp95u '+(up>0.5?'up':up<-0.5?'dn':'ev')+'" title="versus the starter he would replace">'+(up>=0?'+':'−')+fmtPts1(Math.abs(up))+'</em>':'')+'</button>'; };
+    const isSet=function(sc){ return !(sc.base&&sc.base.hole)&&sc.bestUp<=0.5; };
+    const sec=function(sc){ const b=sc.base, bp=b&&b.pid?playerOf(b.pid):null; const set=isSet(sc);
+      const beat=b&&b.hole?('<span class="sp95hole">Week '+sc.holeWk+': an empty '+esc(sc.pos)+' slot</span>')
+        :(bp?((b.sf?'your superflex slot now: ':'your '+esc(sc.pos)+' to beat: ')+((b.pid2&&b.pid2!==b.pid&&playerOf(b.pid2))?('<b>'+esc(lwShort(bp))+'</b> '+fmtPts1(b.a)+' wk'+w+' · <b>'+esc(lwShort(playerOf(b.pid2)))+'</b> '+fmtPts1(b.b)+' wk'+(w+1)):('<b>'+esc(lwShort(bp))+'</b> '+fmtPts1(b.a)+' + '+fmtPts1(b.b)+' = '+fmtPts1(b.a+b.b)))):'no '+esc(sc.pos)+' on your active roster');
+      return '<div class="sp95s'+(set?' set':'')+'"><div class="sp95h"><span class="sp95t">'+esc(LAB[sc.pos]||sc.pos)+'</span>'+(sc.notes.length?'<span class="sp95k">'+esc(sc.notes.join(' · '))+'</span>':'')
+        +(set?'<span class="sp95ok">set</span>':(sc.bestUp>0.5?'<span class="sp95gain">up to +'+fmtPts1(sc.bestUp)+'</span>':''))+'</div>'
+        +'<div class="sp95b">'+beat+'</div>'
+        +(set?'<div class="sp95b dim">No free agent beats him over these two weeks — best available '+esc(lwShort(playerOf(sc.top[0].pid)||{}))+' at '+fmtPts1(sc.top[0].t)+'.</div>':sc.top.map(function(x){ return row(x,b); }).join(''))+'</div>'; };
+    const coverH=covers.map(function(r){ return '<div class="sp95s"><div class="sp95h"><span class="sp95t">Cover · week '+r.c.wk+'</span><span class="sp95k">'+esc(String(r.c.slot).replace(/_/g,' '))+' slot</span></div>'
+        +'<div class="sp95b"><span class="sp95hole">Nobody on your roster can start there in week '+r.c.wk+'</span></div>'
+        +r.best.map(function(x){ const p=playerOf(x.pid)||{}; return '<button type="button" class="sp95r" data-act="pv" data-pid="'+esc(x.pid)+'">'+avatarHTML(x.pid,'sm')
+          +'<span class="sp95n"><b>'+esc(lwShort(p))+'</b><span>'+esc((p.p||'')+' · '+(p.t||''))+' '+chip(x.pid,r.c.wk)+'</span></span><span class="sp95v"><b>'+fmtPts1(x.v)+'</b><span>wk'+r.c.wk+'</span></span></button>'; }).join('')+'</div>'; }).join('');
+    const open=secs.filter(function(sc){ return !isSet(sc); }).sort(function(x,y){ return ((y.base&&y.base.hole)?1:0)-((x.base&&x.base.hole)?1:0)||y.bestUp-x.bestUp; });
+    const done=secs.filter(isSet);
+    const fmt=[]; if(P.teams) fmt.push(P.teams+'-team'); fmt.push(P.dyn?'dynasty':P.keeper?'keeper':'redraft'); if(P.sf) fmt.push('superflex'); if(P.tep) fmt.push('TE premium'); if(P.idp) fmt.push('IDP'); if(!P.startK) fmt.push('no K'); if(!P.startDef) fmt.push('no DEF'); if(P.bestBall) fmt.push('best ball');
+    const lgName=(S.league&&S.league.league&&S.league.league.name)||'this league';
+    return '<div class="card sp95"><div class="hd"><span class="lb">Streaming planner — weeks '+w+'–'+(w+1)+' '+helpBtn('stream')+'</span><span class="right src">free agents</span></div><div class="bd">'
+      +'<div class="sp95fmt">'+esc(lgName)+' · '+esc(fmt.join(' · '))+'</div>'
+      +(P.bestBall?'<div class="sp95b dim">Best ball — Sleeper starts your best lineup; read these as adds, not start/sit calls.</div>':'')
+      +open.map(sec).join('')+coverH+done.map(sec).join('')
+      +'<div class="railnote">Totals are <b>week '+w+' + week '+(w+1)+'</b> in this league’s scoring — this week from the start/sit engine, next week from his per-game projection moved up to ±15% for that opponent; a bye counts zero. <b>+/−</b> is against the starter he would replace.</div></div></div>';
+  }catch(e){ try{ return streamPlanHTMLv8(); }catch(e2){ return ''; } }
+}
+Object.assign(HELP,{ stream:{t:'Streaming planner',b:'Built from <b>this league’s lineup</b>: only the positions it actually starts (QB with superflex read from the roster slots, TE with any TE premium, K and DEF only when there is a slot, IDP positions only in IDP leagues), all priced with this league’s scoring. Each free agent gets a <b>two-week total</b> — this week from the start/sit engine (projection, matchup, weather, injuries) and next week from his per-game projection moved up to ±15% by that opponent’s defense-vs-position — and is compared with <b>the starter he would replace</b> on your roster (in superflex, whoever holds the SUPER_FLEX slot). A position where nobody available beats your starter folds to one line. <b>Cover</b> lists slots your roster cannot fill in either week (byes, injuries) with the best free agents for that week.'} });
+function streamPlanHTMLv8(){
   if(S.nfl.season_type!=='regular'||!S.league||(!S.dvp&&!S.dvpPrior)||!S.byes||!S.byes.opp) return '';
   const rostered=rosteredSet(); const w=S.nfl.week||1;
   const streamers=pos=>{
@@ -13060,6 +13195,18 @@ function renderHeader(){
   const mp=$('modePill'); if(mp) mp.title=pinned?'Mode pinned by hand — click the highlighted mode again to return to auto-detection from this league\'s Sleeper settings':'Auto-detected from this league\'s own Sleeper settings (dynasty type, keeper count) — click a mode to pin it';
   fixSticky();
 }
+function fmtChipList(){ // V95_FMT_MARK: the same rules the side rail showed, as a list
+  const lg=S.league&&S.league.league; if(!lg) return []; const P=fcParams();
+  const out=[P.numTeams+'-team', P.sf?'Superflex':'1QB', (P.ppr===1?'Full':P.ppr===0.5?'Half':'Non')+'-PPR'];
+  if(lg.scoring_settings&&(lg.scoring_settings.bonus_rec_te||0)>0) out.push('TE Premium');
+  const P2=LP(); if(P2&&P2.idp) out.push('IDP');
+  if(P2&&(P2.startK||P2.startDef)) out.push('Starts '+[P2.startK?'K':'',P2.startDef?'DEF':''].filter(Boolean).join('+'));
+  if(P2&&P2.bestBall) out.push('Best ball'); if(P2&&P2.median) out.push('Median');
+  out.push(modeNow()==='dyn'?'Dynasty':'Redraft'); return out; }
+function lgFmtHTML(){ // the active league's format, on Command — no longer a column on every tab
+  try{ const lg=S.league&&S.league.league; if(!lg) return ''; const chips=fmtChipList(); if(!chips.length) return '';
+    return '<div class="lgfmt"><span class="lgfmtk">Active · '+esc(lg.name||'League')+'</span><span class="lgfmtcs">'+chips.map(function(c){ return '<span class="lgfmtc">'+esc(c)+'</span>'; }).join('')+'</span>'+helpBtn('lgfmt')+'</div>'; }catch(e){ return ''; } }
+Object.assign(HELP,{ lgfmt:{t:'League format',b:'The active league’s rules as Sleeper reports them: team count, one quarterback or superflex, reception scoring, TE premium, IDP, which kickers and defenses start, best ball or median, and the dynasty or redraft lens. Values are pure current state — live market consensus (FantasyCalc trade data) adjusted only for this league’s actual rules; rankings, value and projections speak for themselves, and each player’s card tells the rest. Tap a league card to make it the active league.'} });
 function renderFmtChips(){
   const P=fcParams(); const lg=S.league&&S.league.league;
   const tep=lg&&lg.scoring_settings&&(lg.scoring_settings.bonus_rec_te||0)>0;
@@ -13641,7 +13788,7 @@ function leagueHubHTML(){ const Ls=hubLeagues(); if(!Ls.length) return '';
     const tags=i.alerts.slice(0,4).map(a=>'<span class="hubtag '+a.k+'"'+(a.pid?' data-act="pv" data-pid="'+esc(a.pid)+'"':'')+'>'+esc(a.t)+'</span>').join('')+(i.faab!=null?'<span class="hubtag">$'+i.faab+' FAAB</span>':'');
     const op=HUB.open===i.lid; // v8: open state lives in HUB, never in the DOM — hubRepaint swaps the hub by outerHTML
     return '<div class="hubcard'+(i.active?' active':'')+(op?' open':'')+'" data-act="hubOpen" data-id="'+esc(i.lid)+'" role="button" aria-expanded="'+(op?'true':'false')+'"><div class="hubtop"><div class="hubname"><b>'+esc(i.name)+'</b><span class="hubfmt">'+esc(i.fmt.join(' · '))+(i.loaded?'':' · not loaded — Full Sync')+'</span></div><div class="hubrec">'+esc(i.rec)+(i.rank?' · #'+i.rank:'')+(i.active?'<div class="src live" style="margin-top:4px">active</div>':'')+'<div class="hubchev">'+(op?'▴ matchup':'▾ matchup')+'</div></div></div>'+mu+(tags?'<div class="hubtags">'+tags+'</div>':'')+'</div>'+(op?hubMatchupHTML(i):''); }).join('');
-  return '<div class="card wide" id="leagueHub"><div class="hd"><span class="lb">My leagues'+(reg?' — week '+wk:'')+' '+helpBtn('hub')+'</span><span class="right inlinebtns"><span class="src">'+Ls.length+' league'+(Ls.length>1?'s':'')+(needs?' · '+needs+' need'+(needs>1?'':'s')+' attention':'')+'</span>'+(past.length?'<button class="btn sm" data-act="togglePast">'+(S.ui.showPast?'Hide':'Show')+' past ('+past.length+')</button>':'')+'<button class="btn sm" data-act="addLeague">Add league</button><button class="btn sm" data-act="switchAccount">Switch account</button><button class="btn sm" data-act="hubRefresh"'+(HUB.busy?' disabled':'')+'>'+(HUB.busy?'Pulling…':'Refresh')+'</button></span></div><div class="hubgrid">'+cards+'</div>'
+  return '<div class="card wide" id="leagueHub"><div class="hd"><span class="lb">My leagues'+(reg?' — week '+wk:'')+' '+helpBtn('hub')+'</span><span class="right inlinebtns"><span class="src">'+Ls.length+' league'+(Ls.length>1?'s':'')+(needs?' · '+needs+' need'+(needs>1?'':'s')+' attention':'')+'</span>'+(past.length?'<button class="btn sm" data-act="togglePast">'+(S.ui.showPast?'Hide':'Show')+' past ('+past.length+')</button>':'')+'<button class="btn sm" data-act="addLeague">Add league</button><button class="btn sm" data-act="switchAccount">Switch account</button><button class="btn sm" data-act="hubRefresh"'+(HUB.busy?' disabled':'')+'>'+(HUB.busy?'Pulling…':'Refresh')+'</button></span></div>'+lgFmtHTML()+'<div class="hubgrid">'+cards+'</div>'
     +'<div class="railnote foot">Tap a league to open its matchup — slot by slot, both sides. Make it the active scope from inside. Tap a team name for that roster, a highlighted tag for that player.</div>'+'</div>'; }
 
 /* === v8.2 home82 - phone density: Command + league hub ===
@@ -13712,7 +13859,7 @@ function hubPhoneHTML(){
     +'<span class="right inlinebtns">'+helpBtn('hub')
     +'<button class="btn sm" data-act="hubRefresh"'+(HUB.busy?' disabled':'')+'>'+(HUB.busy?'\u2026':'Refresh')+'</button>'
     +'<button class="btn sm hubmorebtn" data-act="hubMore" aria-label="League options" title="Add league, past seasons, switch account">\u22EF</button>'
-    +'</span></div><div class="hubgrid">'+cards+'</div>'
+    +'</span></div>'+lgFmtHTML()+'<div class="hubgrid">'+cards+'</div>'
     +'<div class="railnote foot">'+Ls.length+' league'+(Ls.length>1?'s':'')+(needs?' \u00B7 '+needs+' need'+(needs>1?'':'s')+' attention':'')
     +'. Tap a league to open its matchup \u2014 slot by slot, both sides. Make it the active scope from inside. Tap a team name for that roster, a highlighted tag for that player.'
     +(past.length?(' '+past.length+' past-season league'+(past.length>1?'s':'')+' sit under the \u22EF button.'):'')+'</div></div>';
