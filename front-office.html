@@ -4219,6 +4219,49 @@ body.phone .mlstrip .mlts{gap:8px}
 body.phone .mlt{padding:11px 11px 9px}
 body.phone .mltsc{font-size:21px}
 body.phone .mlstrip .railnote{display:none}
+
+/* ═══════════ v9.4.2 · CTK95_MARK — the Command banner: bigger cards, the week's most important stories ═══════════ */
+.ctk{height:74px;border-radius:16px;background:#0A1022;border:1px solid rgba(255,255,255,.08);-webkit-mask-image:none;mask-image:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.ctk::after{content:"";position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(90deg,rgba(10,16,34,0),#0A1022);pointer-events:none;z-index:2}
+.ctkph{position:absolute;left:0;top:0;bottom:0;z-index:3;display:flex;flex-direction:column;justify-content:center;gap:5px;width:116px;padding:0 12px 0 14px;background:#0A1022;
+  box-shadow:16px 0 14px -8px #0A1022;border-right:1px solid rgba(255,255,255,.06)}
+.ctkph b{display:flex;align-items:center;gap:6px;font:800 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+.ctkph b .livedot{margin:0}
+.ctkph span{font:600 10.5px/1.25 var(--sans);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctkph.ph-live b{color:var(--gain)} .ctkph.ph-post b{color:#8BEBFF} .ctkph.ph-between b{color:var(--watch)}
+.ctkin{padding-left:116px}
+.ctktrack{padding:0 0 0 10px}
+.ctki{height:58px;min-width:220px;max-width:340px;margin:0 10px 0 0;padding:0 10px 0 9px;gap:10px;border-radius:14px;border:1px solid rgba(255,255,255,.09);text-align:left;align-items:center;
+  background-color:#121A33;background-image:linear-gradient(105deg,color-mix(in srgb,var(--club,#1E2739) 36%,#121A33) 0%,#121A33 58%);
+  box-shadow:inset 3px 0 0 var(--tone,#3BE3FF),0 10px 22px -18px rgba(0,0,0,.9)}
+.ctki.t-g{--tone:#37E5A7} .ctki.t-r{--tone:#FF5F8D} .ctki.t-a{--tone:#FFC65C} .ctki.t-c{--tone:#3BE3FF}
+.ctki.t-g,.ctki.t-r,.ctki.t-a,.ctki.t-c{border-color:rgba(255,255,255,.09)}
+.ctki:hover{border-color:rgba(255,255,255,.26)}
+.ctkmed{flex:none;display:flex;align-items:center}
+.ctki .ctkmed .ava,.ctki .ctkmed .ava.md{width:38px;height:38px}
+.ctki .ctkmed .ava .tlg{width:15px;height:15px;right:-4px;bottom:-4px}
+.ctkbadge{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;font:800 11.5px/1 var(--sans);letter-spacing:.04em;color:#07101F;background:var(--tone,#3BE3FF);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.ctklogos{position:relative;display:block;width:40px;height:38px;flex:none}
+.ctklogos .ctklg{position:absolute;width:25px;height:25px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.ctklogos .ctklg:first-child{left:0;top:0} .ctklogos .ctklg:last-child{right:0;bottom:0}
+.ctktx{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 auto}
+.ctkk{display:flex;align-items:center;gap:5px;font:800 9.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--tone,#8BEBFF);white-space:nowrap;min-width:0}
+.ctkkt{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ctklgc{flex:none;font-style:normal;font:800 9px/1 var(--sans);letter-spacing:.05em;padding:2px 4px;border-radius:4px;background:rgba(255,255,255,.10);color:var(--ink)}
+.ctkdot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--gain);box-shadow:0 0 0 3px rgba(55,229,167,.18);animation:lpulse 1.6s ease infinite}
+.ctkn{font:800 13.5px/1.15 var(--sans);letter-spacing:-.005em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctks{font:600 11px/1.2 var(--sans);color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.ctki.t-g .ctkd,.ctki.t-r .ctkd,.ctki.t-a .ctkd,.ctki.t-c .ctkd{flex:none;align-self:center;font:800 14px/1 var(--sans);padding:8px 9px;border-radius:10px;margin-left:2px;
+  background:color-mix(in srgb,var(--tone) 17%,transparent);color:var(--tone);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctki.live .ctkd::before{content:none}
+body.phone .ctk{height:74px}
+body.phone .ctki{height:58px;min-width:210px;max-width:300px}
+body.phone .ctkph{width:90px;padding:0 8px 0 12px}
+body.phone .ctkph b{font-size:10px;letter-spacing:.07em}
+body.phone .ctkph span{font-size:10px}
+body.phone .ctkin{padding-left:90px}
+body.phone .ctks{max-width:190px}
+@media(prefers-reduced-motion:reduce){ .ctkdot{animation:none} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -14049,7 +14092,131 @@ function hubNeedHTML(i){ // the matchup detail block: the sentence, both sides' 
 Object.assign(HELP,{ hubneed:{t:'The win path',b:'What you still need, from whom. <b>Banked</b> is what each side has actually scored (Sleeper\'s own total). <b>Expected final</b> is banked plus, for every player still playing or yet to kick off, the projection for the part of his game that is left — the same V89 pace model the totals row uses, priced with that league\'s scoring. <b>Need</b> = their expected final minus your banked points, and it becomes exact once their last player is finished. Each player still to play shows his projected remainder and his share of the need (the need split in proportion to the remainders); when the remainders fall short, one of them has to beat his projection by the gap. When both sides are done you see the result, the margin and the slot that swung furthest from its projection.'} });
 
 /* ── the banner ── */
-function ctkItems(){ // each category is skipped when empty; keys are stable so a repaint can patch text in place
+function ctkNotStarted(pid){ let g=null; try{ g=liveGameOf(pid); }catch(e){ g=null; } return !g||g.state==='pre'; }
+function ctkPhase(){ // CTK95_MARK: where the week is right now — the banner chooses its stories from this
+  let gs=[]; try{ gs=(S.live&&S.live.games&&S.live.games.length&&(S.live.week==null||Number(S.live.week)===liveWeek()))?liveGamesOfInterest():[]; }catch(e){ gs=[]; }
+  let inN=0, post=0; const pre=[]; gs.forEach(function(g){ if(g.state==='in') inN++; else if(g.state==='post') post++; else pre.push(g); });
+  pre.sort(function(a,b){ return lwKick(a)-lwKick(b); });
+  const ph=inN?'live':(gs.length&&post===gs.length)?'post':post?'between':'pre';
+  return {ph:ph,n:gs.length,inN:inN,next:pre[0]||null}; }
+function ctkPhaseHTML(){ const P=CTK.phInfo||{ph:'pre'}; const wk=liveWeek();
+  const lab=P.ph==='live'?'<i class="livedot in"></i>Game day':P.ph==='post'?'Week '+wk+' final':'Week '+wk;
+  const sub=P.ph==='live'?(P.inN+' game'+(P.inN===1?'':'s')+' on'):P.ph==='post'?'every game is in':P.next?('next · '+liveKickoff(P.next)):'preview';
+  return '<div class="ctkph ph-'+esc(P.ph||'pre')+'" aria-hidden="true"><b>'+lab+'</b><span>'+esc(sub)+'</span></div>'; }
+function ctkInjWhy(pid,wk){ try{ const W=S.lrec&&S.lrec.weeks; const rc=(W&&W[wk]&&W[wk][pid])||(W&&W[wk-1]&&W[wk-1][pid]); const why=rc&&rc.inj&&rc.verdict&&rc.verdict.why; return why?String(why).split(/ — |; /)[0].slice(0,58)+' · starting':''; }catch(e){ return ''; } }
+function ctkSig(x){ return x.k+'='+(x.d||'')+'|'+(x.name||'')+'|'+(x.sub||'')+'|'+(x.kick||'')+'|'+(x.tone||'')+'|'+(x.lg||''); }
+function ctkPatchText(b,it){ const set=function(sel,t){ const e=b.querySelector(sel); if(e&&e.textContent!==(t||'')) e.textContent=t||''; };
+  set('.ctkn',it.name); set('.ctks',it.sub); set('.ctkkt',it.kick);
+  const tt=[it.kick,it.name,it.d,it.sub].filter(Boolean).join(' · '); if(tt&&b.title!==tt) b.title=tt; }
+function ctkItems(){ // CTK95_MARK: ranked for THIS moment of the week, across every league — what deserves a banner right now
+  const now=Date.now(); const wk=liveWeek();
+  const stamp=(HUB.ts||0)+'|'+((S.live&&S.live.ts)||0)+'|'+(LIVE.last.mu||0)+'|'+(LIVE.last.ml||0)+'|'+wk+'|'+((S.lrec&&S.lrec.ts)||0)+'|'+((S.trend&&S.trend.ts)||0)+'|'+((S.conn&&S.conn.leagueId)||'');
+  if(CTK.memo&&CTK.memo.st===stamp&&now-CTK.memo.at<4000) return CTK.memo.items;
+  const P=ctkPhase(); CTK.ph=P.ph; CTK.phInfo=P; const ph=P.ph; const dow=new Date().getDay(); const early=(dow===2||dow===3);
+  const cand=[]; const add=function(o){ if(o&&o.k) cand.push(o); };
+  const nm=function(pid){ const p=playerOf(pid); return p?lwShort(p):''; };
+  const pos=function(pid){ const p=playerOf(pid); return p?((p.p||'')+(p.t?' · '+p.t:'')):''; };
+  const strip=function(h){ return String(h||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); };
+  let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; }
+  const myAll=(ML&&ML.myPids)||new Set();
+  const codeOf=function(lid,name){ try{ const L=ML&&ML.leagues.find(function(x){ return x.lid===lid; }); if(L) return mlCode(L); }catch(e){} return String(name||'LG').slice(0,3).toUpperCase(); };
+  let infos=[]; try{ infos=hubLeagues().map(hubInfo); }catch(e){ infos=[]; }
+  // 1 · each league's matchup, read for this moment — preview, live with the need, or the final with what decided it
+  try{ infos.forEach(function(i){ if(!i.mine||!i.opp) return; const code=codeOf(i.lid,i.name); const opp=i.oppName||'Opponent';
+      let W=null; try{ W=hubWinPct(i); }catch(e){ W=null; } const p=W?W.p:null; const close=p==null?0.5:1-Math.abs(p-0.5)*2;
+      let o=null, rd=null; try{ if(typeof hubWkOK!=='function'||hubWkOK(i)){ o=hubNeed(i); rd=o?hubNeedRead(o):null; } }catch(e){ o=null; rd=null; }
+      const tone=p==null?'c':p>=0.6?'g':p<=0.4?'r':'a';
+      if(o&&o.kind==='final'){ const won=o.res==='W', lost=o.res==='L';
+        add({k:'mu:'+i.lid,kind:'mu',tone:won?'g':lost?'r':'a',act:'hubOpen',id:i.lid,lg:code,kick:'Final',name:(won?'Won':lost?'Lost':'Tied')+(o.margin?' by '+fmtPts1(Math.abs(o.margin)):'')+' · '+opp,
+          d:fmtPts1(i.myNow)+'–'+fmtPts1(i.oppNow),sub:o.decided?('decided by '+(o.decided.them?'their ':'')+hubNm(o.decided.pid)+' '+fmtPts1(o.decided.now)+' vs '+fmtPts1(o.decided.proj)+' proj'):'',pr:(ph==='post'?96:ph==='between'?70:40)+close*3});
+        return; }
+      if(o&&(o.kind==='mine'||o.kind==='theirs')){
+        add({k:'mu:'+i.lid,kind:'mu',tone:tone,act:'hubOpen',id:i.lid,lg:code,kick:'Live · '+(i.name||''),live:true,name:fmtPts1(i.myNow)+' – '+fmtPts1(i.oppNow)+' · '+opp,
+          d:p!=null?Math.round(p*100)+'%':'—',sub:rd?strip(rd.html):'',pr:(ph==='live'?92:84)+close*6});
+        return; }
+      const edge=(i.myT!=null&&i.oppT!=null)?i.myT-i.oppT:null;
+      add({k:'mu:'+i.lid,kind:'mu',tone:tone,act:'hubOpen',id:i.lid,lg:code,kick:'Week '+wk+' · '+(i.name||''),name:'vs '+opp,
+        d:p!=null?Math.round(p*100)+'%':'—',sub:(i.myT!=null&&i.oppT!=null?'proj '+fmtPts1(i.myT)+' – '+fmtPts1(i.oppT):'projections landing')+(edge!=null?' · edge '+(edge>=0?'+':'−')+fmtPts1(Math.abs(edge)):''),
+        pr:(ph==='pre'?(early?64:78):ph==='between'?60:30)+close*8}); }); }catch(e){}
+  // 2 · each league's own lineup and waiver alerts (Out/IR/bye starters, better starts, questionable tags, free agents) — merged across leagues
+  try{ const merged={};
+    infos.forEach(function(i){ const code=codeOf(i.lid,i.name);
+      (i.alerts||[]).forEach(function(a){ if(!a||a.k==='grn'||!a.t) return;
+        const isW=/^Waiver:/.test(a.t), isDl=/^Trade deadline/.test(a.t), isStart=/^Start /.test(a.t);
+        const kind=isW?'wv':isDl?'dl':'lu'; const key=kind+':'+(a.pid||a.t);
+        if(merged[key]){ if(merged[key].lgs.indexOf(code)<0) merged[key].lgs.push(code); return; }
+        const q=a.pid?playerOf(a.pid):null; let x=null;
+        if(isW){ const m=a.t.match(/^Waiver:\s*(.+?)\s*(\(\+([\d,]+) adds\))?$/);
+          x={kind:'wv',tone:'c',act:a.pid?'pv':'hubOpen',kick:'Waiver target',name:q?lwShort(q):(m?m[1]:a.t),d:(m&&m[3])?'+'+m[3]:'add',sub:(a.pid?pos(a.pid)+' · ':'')+'free agent · trending adds',pr:ph==='pre'?(early?72:54):ph==='post'?58:20}; }
+        else if(isDl) x={kind:'dl',tone:'a',act:'hubOpen',kick:'Trade deadline',name:a.t,d:'soon',sub:'last call on trades',pr:ph==='pre'?50:18};
+        else if(a.k==='red'){ const empty=/empty/.test(a.t), bye=/on bye/.test(a.t);
+          x={kind:'lu',tone:'r',act:a.pid?'pv':'hubOpen',kick:'Lineup fix',name:q?lwShort(q):a.t.replace(/^Lineup:\s*/,''),d:empty?'EMPTY':bye?'BYE':String((q&&q.inj)||'OUT').toUpperCase(),
+            sub:empty?'a starting slot is open':(ctkInjWhy(a.pid,wk)||(pos(a.pid)+' · in your starting lineup')),pr:(a.pid&&!ctkNotStarted(a.pid))?12:(ph==='live'||ph==='between'?97:95)}; }
+        else if(isStart){ const mm=a.t.match(/\(\+([\d.]+)\)/), ov=a.t.match(/ over (.+?) \(/), at=a.t.match(/ at ([A-Z_]+)$/);
+          x={kind:'lu',tone:'a',act:'pv',kick:'Lineup edge',name:q?lwShort(q):a.t,d:mm?'+'+mm[1]:'start',sub:ov?('start over '+ov[1]):(at?('start at '+at[1]):'better start available'),pr:(a.pid&&!ctkNotStarted(a.pid))?8:(ph==='pre'?80:74)}; }
+        else x={kind:'lu',tone:'a',act:a.pid?'pv':'hubOpen',kick:'Injury watch',name:q?lwShort(q):a.t,d:'Q',sub:(a.pid?pos(a.pid)+' · ':'')+'questionable — check before kickoff',pr:(a.pid&&!ctkNotStarted(a.pid))?6:(ph==='pre'?76:70)};
+        x.k=key; x.pid=a.pid||null; x.id=a.pid?null:i.lid; x.lgs=[code]; merged[key]=x; }); });
+    Object.keys(merged).forEach(function(k){ const x=merged[k]; x.lg=x.lgs.filter(Boolean).slice(0,3).join(' · '); x.pr+=Math.min(6,(x.lgs.length-1)*3); add(x); }); }catch(e){}
+  // 3 · on the field now — my starters and my opponents', with the league points, pace and boom/bust
+  try{ if(ML&&S.live&&S.live.games&&(ph==='live'||ph==='between')){ const done={};
+      const addLive=function(pid,mine){ if(done[pid]) return; const g=liveGameOf(pid); if(!g||g.state!=='in') return; done[pid]=1;
+        const rec=ML.byPid[pid]; let L=null; try{ const r0=rec&&(rec.in.find(function(x){ return mine?x.start:true; })||rec.in[0]); L=r0?r0.L:null; }catch(e){ L=null; }
+        let pts=null; try{ if(mine) pts=mlPtsAny(pid); else { const A=mlSidesAll(pid).filter(function(a){ return a.k==='os'; }); if(A.length){ L=A[0].L; pts=mlPts(pid,L); } else pts=mlPtsAny(pid); } }catch(e){ pts=null; }
+        let pace=null, b=null; try{ pace=L?mlPace(pid,L):null; b=L?mlBoom(pid,L):null; }catch(e){}
+        const on=liveOnField(pid,g), rz=!!(on&&g.rz); const lgs=rec?rec.in.filter(function(x){ return mine?x.start:x.k==='os'; }).map(function(x){ return mlCode(x.L); }):[];
+        const tag=b&&b.tag?(b.tag==='boom'?' · booming':' · busting'):'';
+        add({k:'lv:'+pid,kind:'lv',tone:mine?(rz||(b&&b.tag==='boom')?'g':(b&&b.tag==='bust')?'r':'c'):(rz||(b&&b.tag==='boom')?'r':'a'),act:'openGame',gid:g.id,pid:pid,lg:lgs.slice(0,3).join(' · '),
+          kick:(mine?'Yours':'Against you')+(rz?' · red zone':on?' · on field':'')+tag,live:true,name:nm(pid),d:fmtPts1(pts||0),
+          sub:pos(pid)+' · '+lwClock(g)+(pace!=null?' · pace '+fmtPts1(pace):''),pr:(mine?80:64)+(rz?14:on?4:0)+(b&&b.tag?6:0)+Math.min(6,(pts||0)/4)}); };
+      ML.startPids.forEach(function(pid){ addLive(pid,true); });
+      ML.oppPids.forEach(function(pid){ if(!myAll.has(pid)) addLive(pid,false); }); } }catch(e){}
+  // 4 · finished games: my starters who boomed or busted against expectation
+  try{ if(ML&&(ph==='live'||ph==='between'||ph==='post')){ const bb=[];
+      ML.startPids.forEach(function(pid){ const g=liveGameOf(pid); if(!g||g.state!=='post') return; const rec=ML.byPid[pid]; const inL=rec&&(rec.in.filter(function(x){ return x.start; })[0]||rec.in[0]); if(!inL) return;
+        let b=null; try{ b=mlBoom(pid,inL.L); }catch(e){ b=null; } if(!b||!b.tag) return; bb.push({pid:pid,b:b,L:inL.L}); });
+      bb.sort(function(x,y){ return Math.abs(y.b.d)-Math.abs(x.b.d); });
+      bb.slice(0,6).forEach(function(x){ const boom=x.b.tag==='boom'; let pts=null; try{ pts=mlPts(x.pid,x.L); }catch(e){}
+        add({k:'bb:'+x.pid,kind:'bb',tone:boom?'g':'r',act:'pv',pid:x.pid,lg:mlCode(x.L),kick:(boom?'Boomed':'Busted')+' · final',name:nm(x.pid),
+          d:(x.b.d>=0?'+':'−')+fmtPts1(Math.abs(x.b.d)),sub:(pts!=null?fmtPts1(pts)+' pts':'')+' vs '+fmtPts1(x.b.exp)+' expected',pr:(ph==='post'?82:72)+Math.min(10,Math.abs(x.b.d)/2)}); }); } }catch(e){}
+  // 5 · injury reads from the recaps — this week's while it plays, last week's (mine) early in the next week
+  try{ const RK={confirmed:4,inactive:3,scratch:3,likely:2,knock:1};
+    const readInj=function(W,wkN,base,mineOnly){ if(!W) return; Object.keys(W).forEach(function(pid){ const r=W[pid]; const I=r&&r.inj; if(!I||!I.st||I.unv||!playerOf(pid)) return;
+        const rk=RK[String(I.st)]; if(!rk) return; const mine=myAll.has(pid); if(mineOnly&&!mine) return; const q=playerOf(pid);
+        const why=r.verdict&&r.verdict.why?String(r.verdict.why).split(/ — |; /)[0]:'';
+        add({k:'inj:'+pid,kind:'inj',tone:rk>=3?'r':'a',act:'pv',pid:pid,lg:'',kick:(wkN===wk?'Injury':'Wk '+wkN+' injury')+(mine?' · yours':''),name:nm(pid),
+          d:I.ret?'BACK IN':rk>=3?'OUT':'KNOCK',sub:(why||pos(pid)).slice(0,70)+(q.inj&&wkN!==wk?' · now '+q.inj:''),pr:base+rk*2+(mine?6:0)}); }); };
+    const WK=S.lrec&&S.lrec.weeks;
+    if(WK){ if(ph==='live'||ph==='between'||ph==='post') readInj(WK[wk],wk,ph==='post'?80:74,false); else readInj(WK[wk-1],wk-1,early?70:56,true); } }catch(e){}
+  // 6 · early in the week: last week's recap verdicts on my players
+  try{ if(ph==='pre'){ const W=S.lrec&&S.lrec.weeks&&S.lrec.weeks[wk-1];
+      if(W){ const VR={'BENCH NEXT WEEK':['r',78,'BENCH'],'MONITOR':['a',64,'MONITOR'],'BUY LOW':['g',60,'BUY LOW'],'SELL HIGH':['a',56,'SELL HIGH'],'ADD':['c',54,'ADD'],"DON'T CHASE":['a',44,"DON'T CHASE"]};
+        Object.keys(W).forEach(function(pid){ if(!myAll.has(pid)||!playerOf(pid)) return; const r=W[pid]; const v=r&&r.verdict&&r.verdict.v; const sp=VR[v]; if(!sp) return; if(r.inj&&v==='MONITOR') return;
+          add({k:'vd:'+pid,kind:'vd',tone:sp[0],act:'pv',pid:pid,lg:'',kick:'Wk '+(wk-1)+' recap',name:nm(pid),d:sp[2],sub:String(r.verdict.why||'').split(/ — |; /)[0].slice(0,76),pr:sp[1]+(early?4:-10)}); }); } } }catch(e){}
+  // 7 · the next kickoff and how much of the board plays in it
+  try{ if(P.next&&(ph==='pre'||ph==='between')){ const g=P.next; let RW=null; try{ RW=mlGameRows(g); }catch(e){ RW=null; } const me=RW?RW.mine.length:0, vs=RW?RW.opp.length:0; const ms=lwKick(g)-now;
+      if(me||vs) add({k:'nx:'+g.id,kind:'nx',tone:'c',act:'openGame',gid:g.id,away:g.away,home:g.home,lg:'',kick:'Next kickoff',name:g.away+' @ '+g.home,d:String(lwCountdown(ms)).replace(/^in /,''),
+        sub:liveKickoff(g)+(g.tv?' · '+g.tv:'')+' · ▲'+me+' yours ▼'+vs+' theirs',pr:ph==='between'?70:(ms<36*3600e3?72:40)}); } }catch(e){}
+  // 8 · big market moves only, and only when the games are not the story
+  try{ if(ph==='pre'||ph==='post'){ const lid=(S.conn&&S.conn.leagueId)||null; const h=(S.valhist||[]).filter(function(x){ return x.lid===lid&&(x.allPid||x.byPid); });
+      if(h.length>=2){ const cur=h[h.length-1]; const cutoff=cur.ts-7*86400e3; let base=null; for(let q=0;q<h.length;q++){ if(h[q].ts<=cutoff) base=h[q]; } if(!base) base=h[0];
+        if(base!==cur){ const A=base.allPid||base.byPid||{}, B=cur.allPid||cur.byPid||{}; const mv=[];
+          for(const pid in B){ const a=A[pid], b=B[pid]; if(a>=800&&b!=null&&myAll.has(pid)){ const d=(b-a)/a; if(Math.abs(d)>=0.10&&playerOf(pid)) mv.push({pid:pid,d:d,a:a,b:b}); } }
+          mv.sort(function(x,y){ return Math.abs(y.d)-Math.abs(x.d); });
+          mv.slice(0,3).forEach(function(x){ add({k:'mv:'+x.pid,kind:'mv',tone:x.d>0?'g':'r',act:'pv',pid:x.pid,lg:'',kick:'Your stock · 7 days',name:nm(x.pid),d:(x.d>0?'+':'−')+Math.round(Math.abs(x.d)*100)+'%',sub:'value '+fmtN(x.a)+' → '+fmtN(x.b),pr:(early?44:34)+Math.min(8,Math.abs(x.d)*20)}); }); } } } }catch(e){}
+  // 9 · league-wide waiver heat when no league flagged one
+  try{ const add24=(S.trend&&S.trend.add)||[]; let k=0;
+    for(let q=0;q<add24.length&&k<3;q++){ const pid=add24[q].player_id; if(!pid||!playerOf(pid)||myAll.has(pid)) continue; k++;
+      add({k:'wv:'+pid,kind:'wv',tone:'c',act:'pv',pid:pid,lg:'',kick:'Waiver heat · 24h',name:nm(pid),d:'+'+fmtN(add24[q].count||0),sub:pos(pid)+' · adds across Sleeper',pr:(ph==='pre'?(early?46:36):14)-q}); } }catch(e){}
+  // rank: the most important first; one card per story, one story per player, caps per kind
+  const byK={}; cand.forEach(function(x){ const c=byK[x.k]; if(!c||x.pr>c.pr) byK[x.k]=x; });
+  const CAP={mu:6,lu:6,lv:8,bb:5,inj:4,vd:4,wv:3,nx:1,mv:2,dl:1};
+  const list=Object.keys(byK).map(function(k){ return byK[k]; }).sort(function(a,b){ return b.pr-a.pr; });
+  const cnt={}, usedPid={}, out=[];
+  list.forEach(function(x){ if(out.length>=18) return; const c=cnt[x.kind]||0; if(c>=(CAP[x.kind]||3)) return; if(x.pid&&usedPid[x.pid]) return;
+    cnt[x.kind]=c+1; if(x.pid) usedPid[x.pid]=1; out.push(x); });
+  CTK.memo={st:stamp,at:now,items:out}; return out;
+}
+function ctkItemsV94(){ // each category is skipped when empty; keys are stable so a repaint can patch text in place
   const out=[]; const seen={};
   const nm=function(pid){ const p=playerOf(pid); return p?lwShort(p):''; };
   const meta=function(pid){ const p=playerOf(pid); return p?((p.p||'')+(p.t?' · '+p.t:'')):''; };
@@ -14087,15 +14254,30 @@ function ctkItems(){ // each category is skipped when empty; keys are stable so 
       push({k:'wv:'+pid,pid:pid,tone:'c',act:'pv',name:nm(pid),meta:meta(pid)+' · waiver heat',d:'+'+fmtN(add[q].count||0)+' adds'}); } }catch(e){}
   return out;
 }
-function ctkChip(it){
+function ctkMedia(it){
+  if(it.kind==='mu') return '<span class="ctkbadge">'+esc(it.lg||'LG')+'</span>';
+  if(it.away&&it.home) return '<span class="ctklogos">'+lwLogo(it.away,'ctklg')+lwLogo(it.home,'ctklg')+'</span>';
+  if(it.pid) return avatarHTML(it.pid,'md bdg');
+  return '<span class="ctkbadge">'+esc(String(it.kick||'•').slice(0,3).toUpperCase())+'</span>'; }
+function ctkChip(it){ // CTK95_MARK: a two-line card — what and where, the player or league, the detail, the number
+  if(it&&it.kind==null&&it.meta!=null) return ctkChipV94(it);
+  let club=''; if(it.pid){ try{ club=h9Skin(it.pid).p; }catch(e){ club=''; } }
+  const tt=[it.kick,it.name,it.d,it.sub].filter(Boolean).join(' · ');
+  return '<button type="button" class="ctki k-'+esc(it.kind||'x')+' t-'+esc(it.tone||'c')+(it.live?' live':'')+'" data-act="'+esc(it.act)+'"'+(it.pid?' data-pid="'+esc(String(it.pid))+'"':'')+(it.gid?' data-gid="'+esc(String(it.gid))+'"':'')+(it.id?' data-id="'+esc(String(it.id))+'"':'')
+    +' data-ck="'+esc(it.k)+'"'+(club?' style="--club:'+esc(club)+'"':'')+' title="'+esc(tt)+'">'
+    +'<span class="ctkmed">'+ctkMedia(it)+'</span>'
+    +'<span class="ctktx"><span class="ctkk">'+(it.live?'<i class="ctkdot"></i>':'')+((it.lg&&it.kind!=='mu')?'<em class="ctklgc">'+esc(it.lg)+'</em>':'')+'<span class="ctkkt">'+esc(it.kick||'')+'</span></span>'
+    +'<b class="ctkn">'+esc(it.name||'')+'</b><span class="ctks">'+esc(it.sub||'')+'</span></span>'
+    +'<i class="ctkd">'+esc(it.d||'')+'</i></button>'; }
+function ctkChipV94(it){
   return '<button type="button" class="ctki t-'+it.tone+(it.live?' live':'')+'" data-act="'+esc(it.act)+'"'+(it.pid?' data-pid="'+esc(String(it.pid))+'"':'')+(it.gid?' data-gid="'+esc(String(it.gid))+'"':'')
     +' data-ck="'+esc(it.k)+'"'+(it.v?' title="'+esc(it.v)+'"':'')+'>'+(it.pid?avatarHTML(it.pid,'sm'):'')+'<b>'+esc(it.name)+'</b><span class="ctkm">'+esc(it.meta)+'</span><i class="ctkd">'+esc(it.d)+'</i></button>'; }
 function cmdBannerHTML(){ let items=[]; try{ items=ctkItems(); }catch(e){ items=[]; }
-  const sig=items.map(function(x){ return x.k+'='+x.d+'|'+x.meta; }).join(';'), keys=items.map(function(x){ return x.k; }).join(';');
-  return '<div id="cmdTicker" class="ctk'+(items.length?'':' none')+'" role="region" aria-label="This week across your leagues" data-sig="'+esc(sig)+'" data-keys="'+esc(keys)+'"><div class="ctkin"><div class="ctktrack">'+items.map(ctkChip).join('')+'</div></div></div>'; }
+  const sig=items.map(ctkSig).join(';'), keys=items.map(function(x){ return x.k; }).join(';');
+  return '<div id="cmdTicker" class="ctk'+(items.length?'':' none')+'" role="region" aria-label="This week across your leagues" data-sig="'+esc(sig)+'" data-keys="'+esc(keys)+'" data-ph="'+esc(CTK.ph||'')+'">'+ctkPhaseHTML()+'<div class="ctkin"><div class="ctktrack">'+items.map(ctkChip).join('')+'</div></div></div>'; }
 function ctkSpeed(el){ const tr=el.querySelector('.ctktrack'); if(!tr||!tr.children.length) return;
   const first=tr.children[0], clone=tr.querySelector('.ctkclone'); const x=clone?(clone.offsetLeft-first.offsetLeft):tr.scrollWidth; if(!(x>0)) return;
-  el.style.setProperty('--ctkx',x+'px'); el.style.setProperty('--ctkdur',Math.max(20,Math.round(x/55))+'s'); }
+  el.style.setProperty('--ctkx',x+'px'); el.style.setProperty('--ctkdur',Math.max(28,Math.round(x/40))+'s'); }
 function ctkMount(){ // clone the item set for the seamless loop (enough copies to cover the strip), size the speed by content, wire touch-pause once
   const el=$('cmdTicker'); if(!el) return; const tr=el.querySelector('.ctktrack'); if(!tr) return;
   [].slice.call(tr.querySelectorAll('.ctkclone')).forEach(function(x){ x.remove(); });
@@ -14112,13 +14294,13 @@ function ctkMount(){ // clone the item set for the seamless loop (enough copies 
 function cmdTickerRepaint(){ // on every hub / live repaint: same chips → patch numbers in place (no restart); different chips → rebuild
   const el=$('cmdTicker'); if(!el||S.ui.tab!=='command') return;
   let items=[]; try{ items=ctkItems(); }catch(e){ items=[]; }
-  const sig=items.map(function(x){ return x.k+'='+x.d+'|'+x.meta; }).join(';'); if(sig===el.dataset.sig) return;
+  const sig=items.map(ctkSig).join(';'); if((el.dataset.ph||'')!==(CTK.ph||'')){ el.outerHTML=cmdBannerHTML(); try{ ctkMount(); }catch(e){} return; } { const phb=el.querySelector('.ctkph'); if(phb){ const ph2=ctkPhaseHTML(); if(phb.outerHTML!==ph2) phb.outerHTML=ph2; } } if(sig===el.dataset.sig) return;
   const keys=items.map(function(x){ return x.k; }).join(';'); const tr=el.querySelector('.ctktrack');
   if(tr&&keys===el.dataset.keys){
     items.forEach(function(it){ [].slice.call(tr.querySelectorAll('[data-ck="'+it.k+'"]')).forEach(function(b){
       const d=b.querySelector('.ctkd'); if(d&&d.textContent!==it.d) d.textContent=it.d;
-      const m=b.querySelector('.ctkm'); if(m&&m.textContent!==it.meta) m.textContent=it.meta;
-      const cls='ctki t-'+it.tone+(it.live?' live':'')+(b.classList.contains('ctkclone')?' ctkclone':''); if(b.className!==cls) b.className=cls;
+      const m=b.querySelector('.ctkm'); if(m&&m.textContent!==it.meta) m.textContent=it.meta; ctkPatchText(b,it);
+      const cls='ctki k-'+(it.kind||'x')+' t-'+it.tone+(it.live?' live':'')+(b.classList.contains('ctkclone')?' ctkclone':''); if(b.className!==cls) b.className=cls;
       if(it.v) b.title=it.v; }); });
     el.dataset.sig=sig; return; }
   el.outerHTML=cmdBannerHTML(); try{ ctkMount(); }catch(e){} }
