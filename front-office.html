@@ -4517,6 +4517,36 @@ body.phone .tfph .ava.md{width:40px;height:40px}
 body.phone .tfpr{grid-template-columns:auto;grid-template-areas:"p" "g"} body.phone .tfpr .tfdv{display:none} body.phone .tfgp{justify-self:end}
 .tffoot{margin-top:6px;padding:12px 2px 4px;border-top:1px solid rgba(255,255,255,.06);font:500 11.5px/1.55 var(--sans);color:var(--dim)} .tffoot p{margin:0 0 6px} .tffoot b{color:var(--mut)}
 @media(prefers-reduced-motion:reduce){ .tfpop{transition:none} }
+
+/* ═══════════ v9.5.1 · CTK95B_MARK — wider-not-taller banner cards, the phase as a card on the phone, swipe override ═══════════ */
+.ctk{height:62px;touch-action:pan-y;-webkit-user-select:none;user-select:none;cursor:grab}
+.ctk.dragging{cursor:grabbing}
+.ctk.dragging .ctki{pointer-events:none}
+.ctki{height:48px;min-width:250px;max-width:360px;padding:0 10px 0 7px;gap:9px}
+.ctki .ctkmed .ava,.ctki .ctkmed .ava.md{width:32px;height:32px}
+.ctkbadge{width:32px;height:32px;border-radius:9px;font-size:10.5px}
+.ctklogos{width:34px;height:32px} .ctklogos .ctklg{width:21px;height:21px}
+.ctktx{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:7px;row-gap:4px;align-items:baseline;min-width:0}
+.ctkk{grid-column:1;max-width:136px;min-width:0}
+.ctkn{grid-column:2;font-size:13px}
+.ctks{grid-column:1 / -1;max-width:280px;font-size:10.5px}
+.ctki.t-g .ctkd,.ctki.t-r .ctkd,.ctki.t-a .ctkd,.ctki.t-c .ctkd{font-size:13px;padding:7px 8px}
+.ctkph{width:104px}
+.ctkin{padding-left:104px}
+.ctkpc{display:none}
+body.phone .ctk{height:62px}
+body.phone .ctkph{display:none}
+body.phone .ctkin{padding-left:0}
+body.phone .ctki{height:48px;min-width:240px;max-width:330px}
+body.phone .ctks{max-width:230px}
+body.phone .ctkk{max-width:118px}
+body.phone .ctkpc{flex:none;display:inline-flex;flex-direction:column;justify-content:center;gap:4px;height:48px;padding:0 12px;margin:0 10px 0 0;border-radius:14px;
+  background:#0F1631;border:1px dashed rgba(255,255,255,.14);white-space:nowrap}
+body.phone .ctkpc b{display:flex;align-items:center;gap:5px;font:800 10px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
+body.phone .ctkpc b .livedot{margin:0}
+body.phone .ctkpc i{font:600 10px/1 var(--sans);font-style:normal;color:var(--dim)}
+body.phone .ctkpc.ph-live b{color:var(--gain)} body.phone .ctkpc.ph-post b{color:#8BEBFF}
+@media(prefers-reduced-motion:reduce){ .ctk{cursor:auto} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -14635,10 +14665,33 @@ function ctkChipV94(it){
     +' data-ck="'+esc(it.k)+'"'+(it.v?' title="'+esc(it.v)+'"':'')+'>'+(it.pid?avatarHTML(it.pid,'sm'):'')+'<b>'+esc(it.name)+'</b><span class="ctkm">'+esc(it.meta)+'</span><i class="ctkd">'+esc(it.d)+'</i></button>'; }
 function cmdBannerHTML(){ let items=[]; try{ items=ctkItems(); }catch(e){ items=[]; }
   const sig=items.map(ctkSig).join(';'), keys=items.map(function(x){ return x.k; }).join(';');
-  return '<div id="cmdTicker" class="ctk'+(items.length?'':' none')+'" role="region" aria-label="This week across your leagues" data-sig="'+esc(sig)+'" data-keys="'+esc(keys)+'" data-ph="'+esc(CTK.ph||'')+'">'+ctkPhaseHTML()+'<div class="ctkin"><div class="ctktrack">'+items.map(ctkChip).join('')+'</div></div></div>'; }
+  return '<div id="cmdTicker" class="ctk'+(items.length?'':' none')+'" role="region" aria-label="This week across your leagues" data-sig="'+esc(sig)+'" data-keys="'+esc(keys)+'" data-ph="'+esc(CTK.ph||'')+'">'+ctkPhaseHTML()+'<div class="ctkin"><div class="ctktrack">'+ctkPhaseChipHTML()+items.map(ctkChip).join('')+'</div></div></div>'; }
 function ctkSpeed(el){ const tr=el.querySelector('.ctktrack'); if(!tr||!tr.children.length) return;
   const first=tr.children[0], clone=tr.querySelector('.ctkclone'); const x=clone?(clone.offsetLeft-first.offsetLeft):tr.scrollWidth; if(!(x>0)) return;
   el.style.setProperty('--ctkx',x+'px'); el.style.setProperty('--ctkdur',Math.max(28,Math.round(x/40))+'s'); }
+function ctkPhaseChipInner(){ const P=CTK.phInfo||{ph:'pre'}; const wk=liveWeek(); // CTK95B_MARK
+  const lab=P.ph==='live'?'<i class="livedot in"></i>Game day':P.ph==='post'?'Week '+wk+' final':'Week '+wk;
+  const sub=P.ph==='live'?(P.inN+' game'+(P.inN===1?'':'s')+' on'):P.ph==='post'?'every game is in':P.next?('next '+liveKickoff(P.next)):'preview';
+  return '<b>'+lab+'</b><i>'+esc(sub)+'</i>'; }
+function ctkPhaseChipHTML(){ const P=CTK.phInfo||{ph:'pre'}; return '<span class="ctkpc ph-'+esc(P.ph||'pre')+'" aria-hidden="true">'+ctkPhaseChipInner()+'</span>'; }
+function ctkDragWire(el){ // swipe, drag or trackpad-scroll the strip to move faster than the auto-scroll; it resumes on its own
+  if(ctkRM()) return; const tr=el.querySelector('.ctktrack'); if(!tr) return;
+  const anim=function(){ try{ return tr.getAnimations()[0]||null; }catch(e){ return null; } };
+  const loopW=function(){ const v=parseFloat(el.style.getPropertyValue('--ctkx')); return v>0?v:tr.scrollWidth/2; };
+  const shift=function(px){ const a=anim(); if(!a) return; let dur=0; try{ dur=Number(a.effect.getComputedTiming().duration)||0; }catch(e){ dur=0; } const W=loopW(); if(!(dur>0)||!(W>0)) return;
+    let t=(Number(a.currentTime)||0)+(px/W)*dur; t=((t%dur)+dur)%dur; a.currentTime=t; };
+  const resume=function(ms){ clearTimeout(CTK.t); CTK.t=setTimeout(function(){ el.classList.remove('paused'); },ms); };
+  let st=null, fling=0;
+  el.addEventListener('pointerdown',function(e){ if(e.button!=null&&e.button>0) return; cancelAnimationFrame(fling); st={x:e.clientX,y:e.clientY,last:e.clientX,ts:performance.now(),v:0,moved:false,id:e.pointerId}; },{passive:true});
+  el.addEventListener('pointermove',function(e){ if(!st||e.pointerId!==st.id) return; const tot=e.clientX-st.x, dy=e.clientY-st.y;
+    if(!st.moved){ if(Math.abs(tot)<7||Math.abs(tot)<Math.abs(dy)) return; st.moved=true; el.classList.add('paused','dragging'); clearTimeout(CTK.t); try{ el.setPointerCapture(e.pointerId); }catch(_){ } }
+    const now=performance.now(), dx=e.clientX-st.last; st.v=0.6*st.v+0.4*(dx/Math.max(1,now-st.ts)); st.ts=now; st.last=e.clientX; shift(-dx); });
+  const end=function(){ if(!st) return; const moved=st.moved; let vel=-st.v*16; st=null; el.classList.remove('dragging'); if(!moved) return;
+    el.__ctkDrag=Date.now();
+    const step=function(){ if(Math.abs(vel)<0.4){ resume(2000); return; } shift(vel); vel*=0.93; fling=requestAnimationFrame(step); }; fling=requestAnimationFrame(step); };
+  el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+  el.addEventListener('click',function(e){ if(el.__ctkDrag&&Date.now()-el.__ctkDrag<450){ e.preventDefault(); e.stopPropagation(); } },true);   /* a swipe is never a tap on a card */
+  el.addEventListener('wheel',function(e){ const dx=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:(e.shiftKey?e.deltaY:0); if(!dx) return; e.preventDefault(); el.classList.add('paused'); shift(dx); resume(2000); },{passive:false}); }
 function ctkMount(){ // clone the item set for the seamless loop (enough copies to cover the strip), size the speed by content, wire touch-pause once
   const el=$('cmdTicker'); if(!el) return; const tr=el.querySelector('.ctktrack'); if(!tr) return;
   [].slice.call(tr.querySelectorAll('.ctkclone')).forEach(function(x){ x.remove(); });
@@ -14647,7 +14700,7 @@ function ctkMount(){ // clone the item set for the seamless loop (enough copies 
   if(!ctkRM()){ let setW=0; kids.forEach(function(k){ setW+=k.offsetWidth+8; }); const copies=Math.max(1,Math.min(6,Math.ceil(((el.clientWidth||0)+8)/Math.max(1,setW))));
     for(let c=0;c<copies;c++) kids.forEach(function(k){ const cl=k.cloneNode(true); cl.classList.add('ctkclone'); cl.setAttribute('aria-hidden','true'); cl.tabIndex=-1; tr.appendChild(cl); }); }
   ctkSpeed(el);
-  if(!el.__ctk){ el.__ctk=1;
+  if(!el.__ctk){ el.__ctk=1; try{ ctkDragWire(el); }catch(e){}
     const pause=function(){ el.classList.add('paused'); clearTimeout(CTK.t); };
     const off=function(){ clearTimeout(CTK.t); CTK.t=setTimeout(function(){ el.classList.remove('paused'); },4000); };
     el.addEventListener('touchstart',pause,{passive:true}); el.addEventListener('touchend',off,{passive:true}); el.addEventListener('touchcancel',off,{passive:true}); }
@@ -14655,7 +14708,7 @@ function ctkMount(){ // clone the item set for the seamless loop (enough copies 
 function cmdTickerRepaint(){ // on every hub / live repaint: same chips → patch numbers in place (no restart); different chips → rebuild
   const el=$('cmdTicker'); if(!el||S.ui.tab!=='command') return;
   let items=[]; try{ items=ctkItems(); }catch(e){ items=[]; }
-  const sig=items.map(ctkSig).join(';'); if((el.dataset.ph||'')!==(CTK.ph||'')){ el.outerHTML=cmdBannerHTML(); try{ ctkMount(); }catch(e){} return; } { const phb=el.querySelector('.ctkph'); if(phb){ const ph2=ctkPhaseHTML(); if(phb.outerHTML!==ph2) phb.outerHTML=ph2; } } if(sig===el.dataset.sig) return;
+  const sig=items.map(ctkSig).join(';'); if((el.dataset.ph||'')!==(CTK.ph||'')){ el.outerHTML=cmdBannerHTML(); try{ ctkMount(); }catch(e){} return; } { const phb=el.querySelector('.ctkph'); if(phb){ const ph2=ctkPhaseHTML(); if(phb.outerHTML!==ph2) phb.outerHTML=ph2; } const pci=ctkPhaseChipInner(); [].slice.call(el.querySelectorAll('.ctkpc')).forEach(function(c){ if(c.innerHTML!==pci) c.innerHTML=pci; }); } if(sig===el.dataset.sig) return;
   const keys=items.map(function(x){ return x.k; }).join(';'); const tr=el.querySelector('.ctktrack');
   if(tr&&keys===el.dataset.keys){
     items.forEach(function(it){ [].slice.call(tr.querySelectorAll('[data-ck="'+it.k+'"]')).forEach(function(b){
