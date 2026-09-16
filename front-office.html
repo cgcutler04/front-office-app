@@ -7491,8 +7491,82 @@ function calFlag(){
   return null;
 }
 /* --- FantasyCalc live market values --- */
-function fcParams(){
-  const lg=S.league&&S.league.league; const rp=(lg&&lg.roster_positions)||[];
+/* ═══ v9.5.3 · VALUES95_MARK — the market, every day, every format: FantasyCalc trade-market consensus, dynasty + redraft in one pull per league format ═══ */
+const V95={busy:false,log:null,logP:null,chk:{},sets:{}};
+function v95Rec(row){ const pl=row.player||{}; const name=pl.name||'';
+  return { dyn:row.value||0, rd:row.redraftValue!=null?row.redraftValue:Math.round((row.value||0)*0.9), rank:row.overallRank, posRank:row.positionRank, trend:row.trend30Day||0, pos:pl.position, team:pl.maybeTeam||null, age:pl.maybeAge||null, name:name }; }
+function v95Build(arr){ /* FantasyCalc rows → {bySleeper,byName,picks}; redraft ranks from the redraftValue ordering (picks excluded, ties by dynasty) */
+  const bySleeper={},byName={},picks={},list=[];
+  (arr||[]).forEach(function(row){ if(!row) return; const pl=row.player||{}; const rec=v95Rec(row);
+    if(/^(19|20)\d{2}/.test(rec.name)||pl.position==='PICK'){ picks[norm(rec.name)]=rec; return; }
+    if(pl.sleeperId) bySleeper[String(pl.sleeperId)]=rec; byName[norm(rec.name)]=rec; list.push(rec); });
+  list.sort(function(a,b){ return ((Number(b.rd)||0)-(Number(a.rd)||0))||((Number(b.dyn)||0)-(Number(a.dyn)||0)); }); const pc={};
+  list.forEach(function(r,i){ r.rdRank=i+1; const p=r.pos||'?'; pc[p]=(pc[p]||0)+1; r.rdPosRank=pc[p]; });
+  return { bySleeper:bySleeper, byName:byName, picks:picks, n:list.length }; }
+function valuesDue(v,key){ /* due: no live set, another format, older than 6 h, or pulled on a previous local calendar day */
+  if(!v||String(v.src||'').indexOf('FantasyCalc')!==0||!v.bySleeper) return true; key=key||JSON.stringify(fcParams()); if(v.params!==key) return true;
+  { const k0=Object.keys(v.bySleeper)[0]; if(k0&&v.bySleeper[k0].rdRank==null) return true; }   /* a set stored before v9.5.3 carries no redraft ranks: one extra pull */
+  const ts=Number(v.ts)||0; if(!ts||Date.now()-ts>6*3600e3) return true; return new Date(ts).toDateString()!==new Date().toDateString(); }
+function v95Backoff(){ return !!(S.valsTry&&Date.now()-S.valsTry<1800e3); }
+function v95Sig(v){ let n=0,d=0,r=0; const m=(v&&v.bySleeper)||{}; for(const k in m){ n++; d+=Number(m[k].dyn)||0; r+=Number(m[k].rd)||0; } return n+':'+Math.round(d)+':'+Math.round(r); }
+function v95Moved(a,b){ let n=0; const A=(a&&a.bySleeper)||{}, B=(b&&b.bySleeper)||{}; for(const k in B){ const x=A[k], y=B[k]; if(!x||!y) continue;
+    const md=x.dyn>0?Math.abs((y.dyn||0)-x.dyn)/x.dyn:0, mr=x.rd>0?Math.abs((y.rd||0)-x.rd)/x.rd:0; if(md>=0.05||mr>=0.05) n++; } return n; }
+function v95When(ts){ const d=new Date(ts||0); if(!ts||isNaN(d)) return 'never'; let t=''; try{ t=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); }catch(e){ t=''; }
+  if(d.toDateString()===new Date().toDateString()) return 'today '+t; let day=''; try{ day=d.toLocaleDateString(undefined,{weekday:'short'}); }catch(e){ day=''; } return (day?day+' ':'')+t; }
+function fcUrl(P){ return 'https://api.fantasycalc.com/values/current?isDynasty=true&numQbs='+P.numQbs+'&numTeams='+P.numTeams+'&ppr='+P.ppr; }
+async function v95Fetch(P,key){ /* one pull per format — the dynasty rows carry the redraft price too, so both markets land in one call */
+  const arr=await jget(fcUrl(P),15000); if(!Array.isArray(arr)||!arr.length) throw new Error('empty');
+  const b=v95Build(arr); if(!b.n) throw new Error('empty'); const set={ bySleeper:b.bySleeper,byName:b.byName,picks:b.picks,ts:Date.now(),params:key,src:'FantasyCalc' };
+  V95.sets[key]=set; try{ await Store.set('values:'+key,set); }catch(e){} return set; }
+function v95LogLoad(){ /* the rolling log is read from the Store once; every reader shares the one promise so a boot-time append can never clobber the history */
+  if(V95.log) return Promise.resolve(V95.log);
+  if(!V95.logP) V95.logP=Promise.resolve().then(function(){ return Store.get('valslog'); }).then(function(L){ if(!V95.log) V95.log=Array.isArray(L)?L:[]; return V95.log; }).catch(function(){ if(!V95.log) V95.log=[]; return V95.log; });
+  return V95.logP; }
+function v95Log(e){ /* load-before-append: an entry logged before the stored log has been read waits for it, then joins the last 14 */
+  const push=function(){ try{ const N=(V95.log||[]).concat([e]).slice(-14); V95.log=N; Promise.resolve(Store.set('valslog',N)).catch(function(){}); }catch(x){} };
+  if(V95.log) push(); else{ try{ v95LogLoad().then(push,push); }catch(x){ push(); } } }
+function v95Keys(){ /* every distinct FantasyCalc format across the active leagues — the active league's first, never more than six */
+  const out=[JSON.stringify(fcParams())];
+  ((S.conn&&S.conn.leagues)||[]).forEach(function(l){ try{ if(!l||!leagueIsActive(l)) return; const lg=hubLeagueObj(l); if(!lg||!lg.roster_positions) return;
+    const k=JSON.stringify(fcParamsOf(lg)); if(out.indexOf(k)<0) out.push(k); }catch(e){} });
+  return out.slice(0,6); }
+function v95Open(){ return ['sover','modal','reader','pal'].some(function(id){ const x=$(id); return !!(x&&x.classList.contains('on')); })||!!document.querySelector('.psheet.on')||!!(document.getElementById('lsheet')&&document.getElementById('lsheet').classList.contains('on')); }
+function v95Repaint(){ if(v95Open()){ S.ui.valsRepaint=1; return; } S.ui.valsRepaint=0; try{ renderDots(); }catch(e){} try{ renderTab(); }catch(e){} }
+function valuesTick(force){ /* the daily guarantee: due → refetch, format by format, one in flight, 30 min back-off after a failure; a cached live set is never demoted */
+  if(V95.busy){ if(force&&V95.run) return V95.run.then(function(){ return valuesTick(true); },function(){ return valuesTick(true); }); return Promise.resolve(false); }   /* a forced pull that lands mid-tick waits its turn */
+  V95.run=v95TickInner(force); return V95.run; }
+async function v95TickInner(force){ if(!force&&v95Backoff()) return false; V95.busy=true;
+  let changed=false;
+  try{ await v95LogLoad(); const keys=v95Keys(), act=keys[0];
+    for(let i=0;i<keys.length;i++){ const key=keys[i]; let P=null; try{ P=JSON.parse(key); }catch(e){ continue; }
+      let old=(S.values&&S.values.params===key)?S.values:(V95.sets[key]||null); if(!old){ try{ old=await Store.get('values:'+key); }catch(e){ old=null; } if(old) V95.sets[key]=old; }
+      const due=valuesDue(old,key); /* due is judged first — a set pulled on a previous local day is refetched on the very next tick, whatever was checked ten minutes ago */
+      if(!due&&!(force&&key===act)){ V95.chk[key]=Date.now(); continue; }
+      if(i) await new Promise(function(r){ setTimeout(r,900); });
+      const live=function(){ return key===act&&key===JSON.stringify(fcParams()); }; /* the league may switch mid-tick: only the current league's format ever replaces S.values */
+      try{ const set=await v95Fetch(P,key); const moved=v95Moved(old,set), nn=Object.keys(set.bySleeper).length; V95.chk[key]=Date.now(); S.valsTry=0;
+        v95Log({ts:set.ts,key:key,n:nn,moved:moved,ok:true});
+        if(!live()) continue;
+        const chg=v95Sig(old)!==v95Sig(set); S.values=set; S.net.fc=true; try{ await Store.set('values',set); }catch(e){}
+        if(chg){ changed=true; try{ engineDirty(); }catch(e){ try{ valDirty(); }catch(x){} } logSync('Market values',true,'updated '+v95When(set.ts)+' · '+moved+' player'+(moved===1?'':'s')+' moved ≥5% · dynasty + redraft'); }
+        else logSync('Market values',true,'checked '+v95When(set.ts)+' · no change · dynasty + redraft');
+      }catch(e){ S.valsTry=Date.now(); v95Log({ts:Date.now(),key:key,n:0,moved:0,ok:false,err:String((e&&e.message)||e)});
+        if(live()){ if(!(S.values&&S.values.params===key)&&old&&old.src) S.values=old; S.net.fc=!!(S.values&&S.values.src==='FantasyCalc'&&S.values.params===key);
+          logSync('Market values',!!(S.values&&S.values.src),(S.values&&S.values.src?'last refresh '+v95When(S.values.ts):'embedded '+BASE_TS_LABEL)+' · retry failed '+v95When(Date.now())); }
+        break; } }
+    if(changed){ try{ await snapshotValues(); }catch(e){} v95Repaint(); }
+  }catch(e){}finally{ V95.busy=false; }
+  return changed; }
+function v95SyncNote(){ const v=S.values; if(!(v&&v.src)) return 'embedded '+BASE_TS_LABEL+' until a live pull lands';
+  const bad=(V95.log||[]).filter(function(e){ return e&&!e.ok&&e.ts>(v.ts||0); }).pop();
+  return (v.src==='FantasyCalc'?'updated ':v.src+' · ')+v95When(v.ts)+' · dynasty + redraft'+(bad?' · retry failed '+v95When(bad.ts):''); }
+function v95EnvNote(){ const v=S.values||{}; return (v.src||'Live')+' trade market · dynasty + redraft · updated '+v95When(v.ts)+' · refreshes daily, every 6 h while open, and on pull-to-refresh'; }
+function v95FailNote(){ const v=S.values; const bad=(V95.log||[]).filter(function(e){ return e&&!e.ok&&v&&e.ts>(v.ts||0); }).pop(); return bad?' Last retry failed '+v95When(bad.ts)+'; the '+v95When(v.ts)+' set still serves.':''; }
+function v95PosRank(fc){ if(!fc) return null; let m='dyn'; try{ m=modeNow(); }catch(e){} return (m==='dyn'||!fc.rdPosRank)?(fc.posRank||null):fc.rdPosRank; }
+function v95RdSub(fc,pos,ov){ if(!fc) return ''; const rk=fc.rdRank?'#'+fc.rdRank+(ov?' overall':'')+' · '+esc(pos||'')+esc(String(fc.rdPosRank||'')):'';
+  const tr=fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):''; return rk&&tr?rk+' · '+tr:(rk||tr); }
+function fcParams(){ return fcParamsOf(S.league&&S.league.league); }
+function fcParamsOf(lg){ const rp=(lg&&lg.roster_positions)||[];
   const qbSlots=rp.filter(x=>x==='QB').length;
   const sf=rp.includes('SUPER_FLEX')||qbSlots>=2; // a true 2QB league demands two starting QBs exactly like superflex
   const teams=(lg&&lg.total_rosters)||12;
@@ -7505,26 +7579,14 @@ async function loadValues(force){
   if(!force){
     let c=await Store.get('values');
     if(!(c&&c.params===key)) c=await Store.get('values:'+key); // per-format cache: 1QB and SF leagues coexist
-    if(c && c.params===key && !stale(c.ts,24)){ S.values=c; S.net.fc=true; return c; }
+    if(c && c.params===key && (!valuesDue(c,key)||v95Backoff())){ S.values=c; S.net.fc=true; return c; }   /* VALUES95_MARK: due = a new local day, 6 h, or another format; 30 min back-off after a failure */
     if(c&&c.params===key){ S.values=c; } }
   try{
-    const url='https://api.fantasycalc.com/values/current?isDynasty=true&numQbs='+P.numQbs+'&numTeams='+P.numTeams+'&ppr='+P.ppr;
-    const arr=await jget(url,15000);
-    if(!Array.isArray(arr)||!arr.length) throw new Error('empty');
-    const bySleeper={},byName={},picks={};
-    arr.forEach(row=>{
-      const pl=row.player||{}; const name=pl.name||'';
-      const rec={ dyn:row.value||0, rd:row.redraftValue!=null?row.redraftValue:Math.round((row.value||0)*0.9),
-        rank:row.overallRank, posRank:row.positionRank, trend:row.trend30Day||0, pos:pl.position, team:pl.maybeTeam||null, age:pl.maybeAge||null, name };
-      if(/^(19|20)\d{2}/.test(name) || pl.position==='PICK'){ picks[norm(name)]=rec; return; }
-      if(pl.sleeperId) bySleeper[String(pl.sleeperId)]=rec;
-      byName[norm(name)]=rec;
-    });
-    S.values={ bySleeper,byName,picks,ts:Date.now(),params:key,src:'FantasyCalc' }; valDirty();
-    S.net.fc=true;
+    const old95=(S.values&&S.values.params===key)?S.values:null; const set=await v95Fetch(P,key);   /* VALUES95_MARK: one pull, dynasty + redraft, stored per format */
+    S.values=set; valDirty(); S.net.fc=true; S.valsTry=0; V95.chk[key]=Date.now();
     await Store.set('values',S.values);
-    await Store.set('values:'+key,S.values);
-  }catch(e){ S.net.fc=(S.values&&S.values.src==='FantasyCalc'&&S.values.params===key)?true:false;
+    v95Log({ts:set.ts,key:key,n:Object.keys(set.bySleeper).length,moved:v95Moved(old95,set),ok:true});
+  }catch(e){ S.valsTry=Date.now(); v95Log({ts:Date.now(),key:key,n:0,moved:0,ok:false,err:String((e&&e.message)||e)}); S.net.fc=(S.values&&S.values.src==='FantasyCalc'&&S.values.params===key)?true:false;
     if(!S.values||S.values.params!==key){ const c=(await Store.get('values:'+key))||(S.values?null:await Store.get('values')); if(c) S.values=c; } }
   return S.values;
 }
@@ -7562,12 +7624,12 @@ function posValueRank(pid){ // v5.1: rank by rd value among same-position player
 function perfGap(pid){ /* SEASON95_MARK · finish-vs-price on the blended finish (hist95): last season alone at w = 0, the live season's pace blended in by games */
   const h=hist95(pid), fc=fcOf(pid);
   if(h&&h.posRank){ const dp=['DL','LB','DB','K','DEF'].indexOf(h.pos)>=0;
-    const mkt=(fc&&fc.posRank)?fc.posRank:((dp&&LP())?posValueRank(pid):null);
+    const fpr=v95PosRank(fc); const mkt=fpr?fpr:((dp&&LP())?posValueRank(pid):null);   /* VALUES95_MARK: dynasty rank in dynasty, redraft rank in redraft */
     if(mkt) return {gap:mkt-h.posRank,hist:h.posRank,mkt:mkt,pos:h.pos,ppg:h.ppg,gp:h.gp,pts:h.pts,w:h.w,nCur:h.nCur,nPrev:h.nPrev,lab:h.lab,short:h.short}; }
   return perfGapV94(pid); }
 function perfGapV94(pid){
   const h=histOf(pid), fc=fcOf(pid);
-  if(h&&h.posRank&&fc&&fc.posRank) return {gap:fc.posRank-h.posRank,hist:h.posRank,mkt:fc.posRank,pos:h.pos,ppg:h.ppg,gp:h.gp,pts:h.pts};
+  const fpr94=v95PosRank(fc); if(h&&h.posRank&&fpr94) return {gap:fpr94-h.posRank,hist:h.posRank,mkt:fpr94,pos:h.pos,ppg:h.ppg,gp:h.gp,pts:h.pts};
   // v5.1: defenders/K/DEF have no PPR history row and no market rank — grade finish vs price on league-scored production instead
   const p=playerOf(pid); if(!p||!['DL','LB','DB','K','DEF'].includes(p.p)||!LP()) return null;
   const y=sb95Cur(); const m=S.sstat&&S.sstat[y-1]; const st=m&&m[pid]; if(!st) return null;
@@ -8057,7 +8119,7 @@ async function fullSync(force){
     if(S.conn&&S.conn.leagueId){ try{ await loadLeague(S.conn.leagueId,force); leagueOk=true; logSync('League',true);}catch(e){ logSync('League',false,e.message);} }
     try{ const p=await loadPlayers(force); logSync('Player DB',!!p, p?p.count+' players':'unavailable'); }catch(e){ logSync('Player DB',false,e.message); }
     try{ await ensureIdpPlayers(); }catch(e){}
-    try{ await loadValues(force); logSync('Market values',!!(S.values&&S.values.src),(S.values&&S.values.src)||'baseline'); }catch(e){ logSync('Market values',false,e.message); }
+    try{ await loadValues(force); logSync('Market values',!!(S.values&&S.values.src),v95SyncNote()); }catch(e){ logSync('Market values',false,e.message); }
     try{ const h=await loadHistory(force); logSync('Last season',!!h,h?(h.season+' totals'):'unavailable'); }catch(e){ logSync('Last season',false); }
     try{ await loadSeasonStats((sb95Cur())-1); }catch(e){} // volume/style factors need last season's category stats engine-wide
     try{ if(liveSeasonWanted()){ const yy=sb95Cur(); await loadSeasonStats(yy,!!force); } }catch(e){} // v5.1: the LIVE season's stats feed every usage pie in-season; force = a real refetch past memory + TTL, the old map serves until it lands
@@ -12447,7 +12509,7 @@ async function openCompare(a,b,heading){ // head-to-head modal: market tiles + c
       +'<div class="fine">'+esc(p.t||'FA')+(p.a?' · '+p.a+' yrs':'')+(p.inj?' · <span class="tier must">'+esc(p.inj)+'</span>':'')+'</div>'
       +'<div class="fine">'+(depthChartHTML(pid)||'')+'</div></div></div>'
       +'<div class="dstats">'+tile(fmtN(dv),'Dynasty',fc&&fc.rank?'#'+fc.rank+' · '+esc(p.p)+String(fc.posRank||''):'')
-      +tile(fmtN(rv),'Redraft',fc&&fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):'')
+      +tile(fmtN(rv),'Redraft',v95RdSub(fc,p.p,0))
       +(LP()?tile(fmtN(adj.v),'In this league',adj.mods.length?adj.mods.map(md=>esc(md[0])+' '+fmtPct(md[1])).join(' · '):'market — no rule quirks'):'')
       +'</div>'+usagePanelHTML(pid,{donut:true})+'</div>'; };
   const va=marketValue(a,modeNow()), vb=marketValue(b,modeNow());
@@ -15090,7 +15152,7 @@ function cmdStripHTML(my,pr,myPR,rankIdx,mode,rosterVal){ // the three stat card
     +'</div>'; }
 function cmdEnvRows(){ return [
   ['Sleeper API', S.net.sleeper===true?true:(S.net.sleeper===false?false:null), S.net.sleeper?'Leagues, rosters, trending and players — read-only.':'Blocked here — open the file locally for direct access, or Import.'],
-  ['Market values', (S.values&&S.values.src)?true:(S.net.fc===false?false:null), (S.values&&S.values.src)?(S.values.src+' trade-market values · '+ago(S.values.ts)):('Embedded '+BASE_TS_LABEL+' until a live sync lands.')],
+  ['Market values', (S.values&&S.values.src)?true:(S.net.fc===false?false:null), (S.values&&S.values.src)?v95EnvNote():('Embedded '+BASE_TS_LABEL+' until a live sync lands.')],
   ['News wire', S.net.news===true?true:(S.net.news===false?false:null), S.net.news?'ESPN headlines and article text, cached locally.':(S.net.news===false?'Blocked here — the cached wire still reads.':'Loads on startup.')] ]; }
 function cmdDataCardHTML(){ // Sync ledger + Data status → one card: name · status pill · note · age
   const KEYS=['League','Player DB','Market values','Last season','Game logs','Trending','Projections','Matchups','Transactions','Portfolio','News wire'];
@@ -15102,7 +15164,7 @@ function cmdDataCardHTML(){ // Sync ledger + Data status → one card: name · s
   const wv=row('Waiver scan',WV.ts?true:null,WV.rows?WV.rows.length+' trending FAs':'',WV.ts||0);
   const env=cmdEnvRows().map(function(r){ return row(r[0],r[1],r[2],0); }).join('');
   const tot=KEYS.length+1+3;
-  return '<div class="card"><div class="hd"><span class="lb">Data &amp; sync <span class="cnt'+(bad?' bad':'')+'">'+ok+'/'+tot+'</span></span><span class="right"><span class="src '+(S.net.sleeper?'live':'stale')+'">'+(S.net.sleeper?'Sleeper live':'Sleeper offline')+'</span></span></div><div class="bd tight"><div class="syncled">'+rows+hist+wv+env+'</div>'
+  return '<div class="card"><div class="hd"><span class="lb">Data &amp; sync <span class="cnt'+(bad?' bad':'')+'">'+ok+'/'+tot+'</span> '+helpBtn('values')+'</span><span class="right"><span class="src '+(S.net.sleeper?'live':'stale')+'">'+(S.net.sleeper?'Sleeper live':'Sleeper offline')+'</span></span></div><div class="bd tight"><div class="syncled">'+rows+hist+wv+env+'</div>'
     +'<div class="sr sbk"><span class="k">Backup</span><span class="n">Ledgers, scout histories, notes and caches live in this browser ('+esc(Store.backend)+') — export a copy, restore it on any machine.</span><span class="inlinebtns"><button class="btn sm pri" data-act="expBackup">Export</button><button class="btn sm" data-act="impBackup">Restore</button></span></div></div></div>'; }
 
 /* ── wrappers: the originals (and the home82 / dd86 wrappers before us) keep doing all of the work ── */
@@ -15446,7 +15508,7 @@ function renderCommand(){
 function envCard(){
   const rows=[
     ['Sleeper API', S.net.sleeper, S.net.sleeper?'Live league, roster, trending and player data.':'Blocked in this sandbox. Download this file and open it locally (double-click the .html) for direct Sleeper access, or use Import to paste data.'],
-    ['Market values', (S.values&&S.values.src)?true:S.net.fc, (S.values&&S.values.src)?('Live '+S.values.src+' trade-market values ('+ago(S.values.ts)+').'):'Using embedded '+BASE_TS_LABEL+' until a live sync succeeds.'],
+    ['Market values', (S.values&&S.values.src)?true:S.net.fc, (S.values&&S.values.src)?('Live '+S.values.src+' trade-market values ('+ago(S.values.ts)+') · dynasty + redraft.'+v95FailNote()):'Using embedded '+BASE_TS_LABEL+' until a live sync succeeds.'],
     ['News wire', S.net.news, S.net.news?"Live NFL headlines and full article text from ESPN's public feeds — powering the in-app reader, the Command wire, player briefs, waiver context and lineup tiebreaks. Cached locally, so it paints before the network answers.":(S.net.news===false?'Blocked in this environment — headlines resume when the file runs locally. The last cached wire still reads. Everything else stays live from Sleeper + market values.':'Untested — loads on startup.')]
   ];
   return `<div class="card"><div class="hd"><span class="lb">Data status</span></div><div class="bd tight">
@@ -16937,7 +16999,7 @@ function compareColHTML(pid){ // v3.9.2: one side of the head-to-head — the do
     +'<div class="fine">'+esc(p.t||'FA')+(p.a?' · '+p.a+' yrs':'')+(p.x===0?' · rookie':(p.x!=null?' · '+p.x+' seasons in':''))+(p.inj?' · <span class="tier must">'+esc(p.inj)+'</span>':'')+'</div>'
     +'<div class="fine">'+(depthChartHTML(pid)||'')+'</div></div></div>'
     +'<div class="dstats">'+tile(fmtN(dv),'Dynasty',fc&&fc.rank?'#'+fc.rank+' · '+esc(p.p)+String(fc.posRank||''):'')
-    +tile(fmtN(rv),'Redraft',fc&&fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):'')
+    +tile(fmtN(rv),'Redraft',v95RdSub(fc,p.p,0))
     +(LP()?tile(fmtN(adj.v),'In this league',adj.mods.length?adj.mods.map(md=>esc(md[0])+' '+fmtPct(md[1])).join(' · '):'market — no rule quirks'):'')
     +tile(adp!=null?adp.toFixed(1):'—','ADP',adp!=null?(A&&A.src==='sleeper'?'Sleeper rooms':'ESPN rooms'):'no feed')+'</div>'
     +usageDonutHTML(pid)
@@ -17243,7 +17305,7 @@ function renderIntelBodyLegacy(pid){
     </div>
     <div class="dstats" style="flex:1;min-width:250px">
       ${tile(fmtN(dv),'Dynasty value',fc&&fc.rank?'#'+fc.rank+' overall · '+esc(p.p)+String(fc.posRank||''):'')}
-      ${tile(fmtN(rv),'Redraft value',fc&&fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):'')}
+      ${tile(fmtN(rv),'Redraft value',v95RdSub(fc,p.p,1))}
       ${LP()?tile(fmtN(adj.v),'In this league',adj.mods.length?adj.mods.map(md=>esc(md[0])+' '+fmtPct(md[1])).join(' · '):'market — no rule quirks'):tile(h&&h.posRank?esc(String(h.pos||p.p))+h.posRank:'—',(S.hist?S.hist.season+' finish':'Last season'),h?fmtN(h.pts)+' pts':'')}
       ${tile(adp!=null?adp.toFixed(1):'—','ADP — '+(A?(A.src==='sleeper'?adpSrcLabel():'ESPN live drafts'):'live drafts'),(adp!=null?adpSub:((S.adp||effBasis().kind==='sleeper')?'undrafted in live rooms':'no feed loaded'))+(own?' · rostered in '+own.owned+'% of Sleeper leagues':''))}
     </div>
@@ -21241,7 +21303,7 @@ function dbSnap(pid,surf){
   let adpFoot=''; try{ adpFoot=(adp!=null?adpSub:((S.adp||effBasis().kind==='sleeper')?'undrafted in live rooms':'no feed loaded'))+(own?' · rostered in '+own.owned+'% of Sleeper leagues':''); }catch(e){}
   const tiles='<div class="dstats">'
     +tile(fmtN(dv),'Dynasty value',fc&&fc.rank?'#'+fc.rank+' overall · '+esc(p.p)+esc(String(fc.posRank||'')):'')
-    +tile(fmtN(rv),'Redraft value',fc&&fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):'')
+    +tile(fmtN(rv),'Redraft value',v95RdSub(fc,p.p,1))
     +(aj?tile(fmtN(aj.v),'In this league',aj.mods.length?esc(aj.mods.map(function(md){ return md[0]+' '+fmtPct(md[1]); }).join(' · ')):'market — no rule quirks')
         :tile(h0&&h0.posRank?esc(String(h0.pos||p.p))+h0.posRank:'—',(S.hist?S.hist.season+' finish':'Last season'),h0?fmtN(h0.pts)+' pts':''))
     +tile(adp!=null?adp.toFixed(1):'—','ADP — '+adpSrc,esc(adpFoot))
@@ -22117,7 +22179,7 @@ function intelHeroHTML(pid){
     +(p.inj?'<span class="tier must">'+esc(p.inj)+'</span>':'')+(p.x===0?'<span class="tier spec">Rookie</span>':'')+'</div></div>'
     +'<div class="dstats" style="flex:1;min-width:250px">'
     +tile(fmtN(dv),'Dynasty value',fc&&fc.rank?'#'+fc.rank+' overall · '+esc(p.p)+esc(String(fc.posRank||'')):'')
-    +tile(fmtN(rv),'Redraft value',fc&&fc.trend?('30d '+(fc.trend>0?'<b class="up">+'+fmtN(fc.trend)+'</b>':'<b class="dn">'+fmtN(fc.trend)+'</b>')):'')
+    +tile(fmtN(rv),'Redraft value',v95RdSub(fc,p.p,1))
     +(LP()?tile(fmtN(adj.v),'In this league',adj.mods.length?esc(adj.mods.map(function(md){ return md[0]+' '+fmtPct(md[1]); }).join(' · ')):'market — no rule quirks')
       :tile(h0&&h0.posRank?esc(String(h0.pos||p.p))+h0.posRank:'—',(S.hist?S.hist.season+' finish':'Last season'),h0?fmtN(h0.pts)+' pts':''))
     +tile(adp!=null?adp.toFixed(1):'—','ADP — '+adpSrc,esc(adpFoot))
@@ -22155,7 +22217,7 @@ function openPlayerLegacy(pid){
       <span class="k">Depth chart</span><span style="font-size:11px">${depthChartHTML(pid)||(p.dco?p.p+p.dco:'—')}</span>
       <span class="k">Ownership</span><span>${(()=>{const oR=(S.league&&S.league.rosters)?S.league.rosters.find(x=>(x.players||[]).includes(pid)):null; return oR?rosterChip(oR.roster_id):(owner?esc(owner):'<b class="up">Free agent</b>');})()}</span>
       <span class="k">Dynasty</span><span class="vnum">${fmtN(marketValue(pid,'dyn'))}${fc&&fc.rank?' <span style="color:var(--dim)">#'+fc.rank+'</span>':''}</span>
-      <span class="k">Redraft</span><span class="vnum">${fmtN(marketValue(pid,'rd'))}</span>
+      <span class="k">Redraft</span><span class="vnum">${fmtN(marketValue(pid,'rd'))}${fc&&fc.rdRank?' <span style="color:var(--dim)">#'+fc.rdRank+'</span>':''}</span>
       ${LP()?(()=>{const aj=adjValue(pid,{mode:modeNow()});return '<span class="k">In this league</span><span class="vnum">'+fmtN(aj.v)+(aj.mods.length?' <span style="font-size:10.5px;color:var(--mut)">'+aj.mods.map(md=>esc(md[0])+' '+fmtPct(md[1])).join(' · ')+'</span>':' <span style="font-size:10.5px;color:var(--dim)">market — no rule quirks</span>')+'</span>';})():''}
       ${(()=>{const A=adpFor(pid,p.n,p.p); const o=ownOf(pid); return (A?'<span class="k">ADP · '+(A.src==='sleeper'?'Sleeper':'ESPN')+'</span><span class="vnum">'+A.v.toFixed(1)+'</span>':'')+(o?'<span class="k">Rostered</span><span class="vnum">'+o.owned+'% <span class="fine">of Sleeper leagues · started '+o.started+'%</span></span>':'');})()}
       ${(()=>{const se=usageSeasonFor(pid); const st=S.sstat&&S.sstat[se]&&S.sstat[se][pid]; if(!st) return '';
@@ -22224,10 +22286,7 @@ function openImport(){
     let data; try{ data=JSON.parse($('impTxt').value); }catch(e){ msg.textContent='Not valid JSON.'; return; }
     try{
       if(Array.isArray(data)&&data.length&&data[0]&&data[0].player&&data[0].player.name!=null){
-        const bySleeper={},byName={},picks={};
-        data.forEach(row=>{const pl=row.player||{};const rec={dyn:row.value||0,rd:row.redraftValue!=null?row.redraftValue:Math.round((row.value||0)*0.9),rank:row.overallRank,posRank:row.positionRank,trend:row.trend30Day||0,pos:pl.position,name:pl.name};
-          if(/^(19|20)\d{2}/.test(pl.name||'')||pl.position==='PICK'){picks[norm(pl.name)]=rec;return;}
-          if(pl.sleeperId)bySleeper[String(pl.sleeperId)]=rec; byName[norm(pl.name)]=rec;});
+        const b95=v95Build(data), bySleeper=b95.bySleeper, byName=b95.byName, picks=b95.picks;   /* VALUES95_MARK: the same row→rec builder as loadValues (redraft ranks included) */
         S.values={bySleeper,byName,picks,ts:Date.now(),params:JSON.stringify(fcParams()),src:'FantasyCalc (pasted)'}; valDirty();
         await Store.set('values',S.values); msg.textContent='Applied: '+Object.keys(byName).length+' market values.';
       } else if(!Array.isArray(data)&&data&&typeof data==='object'&&!data.league_id&&Object.keys(data).length>500){
@@ -22679,7 +22738,7 @@ function switchTab(t){ const prevTab=S.ui.tab; if(isPhone()){ TABSCROLL[prevTab]
   if(isPhone()){ syncTabbar(); const y=TABSCROLL[t]||0; requestAnimationFrame(()=>window.scrollTo(0,y)); Store.set('uitab',t).catch(()=>{}); } } // v5.6: each tab remembers where you were; the app reopens on the last room
 $('tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-tab]'); if(b) switchTab(b.dataset.tab); });
 function renderTab(){
-  const t=S.ui.tab;
+  const t=S.ui.tab; S.ui.valsRepaint=0;   /* VALUES95_MARK */
   // preserve focused input, caret and scroll positions across the innerHTML rebuild
   const ae=document.activeElement; let keep=null;
   if(ae&&ae.id&&['INPUT','TEXTAREA','SELECT'].includes(ae.tagName)&&ae.closest('.stage'))
@@ -22791,7 +22850,7 @@ async function init(){
     jobs.push(loadOwnership(false).catch(()=>{}));
   }
   jobs.push(loadByes(false).catch(()=>{})); // degrades to same-season cache when offline
-  jobs.push(loadValues(false).then(()=>logSync('Market values',!!(S.values&&S.values.src),(S.values&&S.values.src)||'baseline')).catch(()=>logSync('Market values',false)));
+  jobs.push(loadValues(false).then(()=>logSync('Market values',!!(S.values&&S.values.src),v95SyncNote())).catch(()=>logSync('Market values',false)));
   jobs.push(loadNews().then(n=>logSync('News wire',true,n.items.length+' headlines')).catch(()=>logSync('News wire',false)));
   if(S.league) jobs.push(loadTransactions(false).then(()=>logSync('Transactions',!!S.tx,S.tx?S.tx.trades.length+' trades':'')).catch(()=>logSync('Transactions',false)));
   await Promise.allSettled(jobs);
@@ -22811,6 +22870,7 @@ async function init(){
   await scanWaivers(true);
   await snapshotValues();
   try{ await scanDeals(); }catch(e){}
+  setTimeout(function(){ try{ valuesTick(false).catch(function(){}); }catch(e){} },3500);   /* VALUES95_MARK: the daily guarantee and every other league format, behind the first paint */
   renderTab();
   try{ tfReady(); }catch(e){} if(S.league&&S.nfl.season_type==='regular'){ try{ liveArm(); }catch(e){} } // v5.3: quiet scoreboard watch — the Command card and dossiers light up when games start
 }
@@ -23525,7 +23585,7 @@ function phoneAfterRender(t){ if(!isPhone()) return;
       if(c) c.scrollIntoView({behavior:'smooth',block:'start'}); }; }
   if(t==='trade'){ const p=$('p-trade'); const orderOf=c=>{ if(c.id==='tradeMini') return 99; if(c.id==='postTrade') return 4; if(c.classList.contains('tradecols')) return 1; const lb=c.querySelector?c.querySelector('.hd .lb'):null; const tx=lb?lb.textContent.trim():''; if(c.querySelector&&c.querySelector('.tier')&&/Deadline passed/.test(c.textContent)&&!lb) return 0; if(/^Counterparty/.test(tx)) return 0; if(/^Roster needs/.test(tx)) return 2; if(/^Verdict/.test(tx)) return 3; if(/^Counter coach/.test(tx)) return 5; if(/^Balance/.test(tx)) return 6; if(/^Roster leverage/.test(tx)) return 7; if(/^After the trade/.test(tx)) return 8; if(!tx) return 2; return 9; }; [...p.children].forEach(c=>{ c.style.order=String(orderOf(c)); }); } // v5.7 phones: build the deal first, read the verdict and your new lineup next, the leverage map after
 }
-async function phoneRefresh(){ lastPeriodic=0; try{ periodicRefresh(); }catch(e){} const jobs=[];
+async function phoneRefresh(){ lastPeriodic=0; const jobs=[]; try{ jobs.push(valuesTick(true).catch(function(){})); }catch(e){}   /* VALUES95_MARK: pull-to-refresh forces the market */ try{ periodicRefresh(); }catch(e){}
   if(S.conn&&S.conn.leagueId&&S.net.sleeper) jobs.push(loadLeague(S.conn.leagueId,true).catch(()=>{}));
   if(LIVE.enabled) jobs.push(liveRefresh().catch(()=>{}));
   if(S.ui.tab==='props'&&typeof pzKick==='function') jobs.push(pzKick(true).catch(()=>{}));
@@ -24231,9 +24291,12 @@ function splashDone(){ if(SPLASH.done) return; SPLASH.done=true; clearInterval(S
   const hold=Math.max(0,1100-(Date.now()-SPLASH.t0)); // one full beat minimum, so a fast load never flashes
   setTimeout(()=>{ sp.classList.add('out'); setTimeout(()=>{ try{ sp.remove(); }catch(e){} },450); },hold); }
 init();
+Object.assign(HELP,{ values:{t:'Market values',b:   /* VALUES95_MARK */
+  '<p>Every price in Front Office is <b>FantasyCalc\u2019s trade-market consensus</b> \u2014 what players are actually moving for in real leagues \u2014 in two markets at once: <b>dynasty</b> and <b>redraft</b>. One pull per league format (one-QB or superflex, team count, reception scoring), so a superflex league and a one-QB league are never priced off the same table; the ranks under the Redraft tiles come from the redraft price ordering, the ranks under Dynasty from FantasyCalc\u2019s dynasty ranks, and the finish-vs-price read uses whichever market the league is in.</p>'
+  +'<p><b>When it refreshes.</b> Every day: the first open on a new day pulls a fresh set before anything is priced. Every 6 hours while the app is open, on every return from the background, and whenever you pull to refresh. Every league format you are in is refreshed, the active league first. A failed pull keeps the last good set and retries after 30 minutes; the embedded <b>'+BASE_TS_LABEL+'</b> table is used only when no live set has ever landed on this device. Nothing refreshes while the app is closed \u2014 iOS gives a home-screen app no background time \u2014 so the moment you open it is the moment the market is checked. The Data &amp; sync card on Command shows the time of the last pull and how many players moved 5% or more.</p>'} });
 /* keep it live: silent refresh of the fast-moving feeds every 10 minutes (v5.5: named, so a resume from the background can run it early) */
 let lastPeriodic=Date.now();
-function periodicRefresh(){ if(document.hidden) return; lastPeriodic=Date.now(); try{ hubFetch(true).catch(()=>{}); }catch(e){}
+function periodicRefresh(){ if(document.hidden) return; lastPeriodic=Date.now(); try{ hubFetch(true).catch(()=>{}); }catch(e){} try{ valuesTick(false).catch(function(){}); }catch(e){}   /* VALUES95_MARK */
   if(S.net.sleeper&&S.nfl.season_type==='regular'){ Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false)]).then(()=>{ TEAMS.memo=null; miBust(); if(['teams','lineup','waiver'].includes(S.ui.tab)) renderTab(); }).catch(()=>{}); } // v6.1: readouts stay current // v8.1: miBust — a fresh DvP/weather/odds set must repaint, not serve the memo
   loadNews(true,true).then(()=>{ if(S.ui.tab==='command'||S.ui.tab==='news') renderTab(); }).catch(()=>{}); // v8: 2 requests every 10 min — the 37-request deep build self-schedules every 30
   if(S.net.sleeper) loadTrending().then(()=>scanWaivers(S.ui.tab!=='waiver')).catch(()=>{});
@@ -24261,6 +24324,7 @@ setInterval(periodicRefresh,600000);
 try{ luRecapObserve(); }catch(e){}   // LINEUP94
 /* v5.5 · resume from the background: iOS freezes every timer while the app is hidden — pull what went stale the moment it comes back */
 function onResume(){ if(document.hidden) return;
+  try{ valuesTick(false).catch(function(){}); }catch(e){}   /* VALUES95_MARK: the market is checked on every resume, not only after 10 min */
   if(Date.now()-lastPeriodic>600000) periodicRefresh();
   if(LIVE.enabled&&livePullOn()&&!LIVE.ticking){ if(LIVE.timer) clearTimeout(LIVE.timer); LIVE.timer=setTimeout(liveTick,800); } // a tick in flight schedules its own successor
   const L=S.draft&&S.draft.linked; if(L&&L.polling&&pollTimer){ clearTimeout(pollTimer); pollTimer=setTimeout(()=>{ try{ pollDraft(); }catch(e){} },500); } // war room: pull now, not in 12s
