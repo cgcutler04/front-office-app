@@ -24862,7 +24862,7 @@ function gvLiveHTML(g,sm,M){ /* the Live tab: current drive · down & ball on ·
 function gvLiveBody96(g,sm,M){ let h='';
   try{ h+=gvDriveHeadHTML96(M,sm); }catch(e){}
   try{ h+=gvDownHTML96(M); }catch(e){}
-  try{ h+='<div class="gv96field">'+gvFieldSVG96(M)+(M.state!=='pre'?'<button type="button" class="gv96flipbtn" data-act="gvFlip" data-gid="'+esc(M.gid||'')+'" title="If the ends look reversed against the broadcast, tap once \u2014 ESPN never says which end a club defends, so the picture starts from a convention">\u21c4 ends</button>':'')+'</div>'; }catch(e){}   /* GC96UX2 */
+  try{ h+='<div class="gv96field">'+gvFieldSVG96(M)+'</div>'; }catch(e){}   /* GC96DIR_MARK */
   try{ h+=gvLastPlayHTML(M); }catch(e){}
   try{ h+=gvPlayerOnPlayHTML96(g,sm,M); }catch(e){}
   try{ h+=gvDrivePlaysHTML96(g,sm,M); }catch(e){}
@@ -24885,8 +24885,12 @@ function gvDownHTML96(M){ const post=M.fin&&M.mode!=='replay';
   if(!post&&(M.hto!=null||M.ato!=null)){ const dots=function(k){ k=Number(k); if(!isFinite(k)) return 'n/a'; let s2=''; for(let a=0;a<3;a++) s2+=a<k?'\u25cf':'\u25cb'; return s2; };
     h+='<div class="gv96to"><span>'+esc(M.away)+' <i>'+dots(M.ato)+'</i></span><span>timeouts</span><span><i>'+dots(M.hto)+'</i> '+esc(M.home)+'</span></div>'; }
   return h; }
+function gvFlipFor96(M){ /* GC96DIR_MARK: the home end zone sits on the right only while the AWAY club has the ball — whoever has it drives left to right; a final rests with home on the right; an unknown possession keeps the last picture */
+  const post=M&&M.fin&&M.mode!=='replay'; if(post) return false;
+  if(M&&M.poss) return String(M.poss).toUpperCase()===String(M.home||'').toUpperCase();
+  try{ if(GV.fieldPrev&&GV.fieldPrev.gid===String((M&&M.gid)||'')) return !!GV.fieldPrev.flip; }catch(e){} return false; }
 function gvFieldSVG96(M){ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th; hatched end zones with logo + name; midfield logo; the ball slides between plays */
-  const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; let flip=!post&&(q%2===0); try{ if(gvFlipPref96(M.gid)) flip=!flip; }catch(e){}   /* GC96UX2_MARK: mirrored once to match the broadcast, then the quarters follow */
+  const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; let flip=gvFlipFor96(M);   /* GC96DIR_MARK: the club with the ball drives left to right */
   const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; }; const CY=200;
   const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
   const hk=K(M.home), ak=K(M.away); const logo=function(T){ const t=String(T||'').toLowerCase(); return t?'https://sleepercdn.com/images/team_logos/nfl/'+esc(t)+'.png':''; };
@@ -24899,7 +24903,7 @@ function gvFieldSVG96(M){ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home 
       +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="900" font-family="'+FONT+'" font-stretch="condensed" letter-spacing="1.5">'+esc(txt)+'</text>'; };
   let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
   const flipIn=!!(prev&&prev.flip!==flip);
-  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(flip?' — ends switched this quarter':''))+'">';
+  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(M.poss?' \u2014 '+M.poss+' drives left to right':''))+'">';
   s2+='<defs><clipPath id="gv96bc"><circle cx="0" cy="0" r="21"/></clipPath><linearGradient id="gv96ezg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>'
     +'<pattern id="gv96hatch" patternUnits="userSpaceOnUse" width="16" height="16" patternTransform="rotate(45)"><rect width="16" height="8" fill="rgba(255,255,255,.075)"/></pattern></defs>';
   s2+='<rect x="0" y="0" width="1000" height="400" fill="#0E2719"/>';
@@ -24938,7 +24942,7 @@ function gvFieldSVG96v1(M){ /* GC96FLD field (1000×300), kept for reference · 
       +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="800" font-family="'+FONT+'" letter-spacing="2.5">'+esc(txt)+'</text>'; };
   let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
   const flipIn=!!(prev&&prev.flip!==flip);
-  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(flip?' — ends switched this quarter':''))+'">';
+  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(M.poss?' \u2014 '+M.poss+' drives left to right':''))+'">';
   s2+='<defs><clipPath id="gv96bc"><circle cx="0" cy="0" r="21"/></clipPath><linearGradient id="gv96ezg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>';
   s2+='<rect x="0" y="0" width="1000" height="300" fill="#0E2719"/>';
   for(let k=0;k<16;k++) s2+='<rect x="'+(100+k*50)+'" y="0" width="50" height="300" fill="'+(k%2?'#133622':'#163B26')+'"/>';
@@ -25599,9 +25603,9 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
-try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' If the ends look reversed against the broadcast, tap <b>\u21c4 ends</b> on the field once \u2014 the picture mirrors for that game and the quarter switches follow; the choice is remembered on this device.'; }catch(e){}   /* GC96UX2_MARK */
+/* GC96DIR_MARK: the \u21c4 control was retired — the orientation follows the ball */
 try{ if(HELP.gcstats&&HELP.gcstats.b) HELP.gcstats.b+=' <b>Your matchups</b> (under Probabilities) is each league\u2019s matchup live: your score and theirs, the win %, what this game has already done to it \u2014 your players here against theirs, with Sleeper\u2019s points \u2014 and what is still to play here on each side (pace minus points). The small line is your win % since you opened the app, nothing more.'; }catch(e){}   /* GC96UX_MARK */
-try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> Clubs change ends every quarter, so the home end zone sits on the right in the 1st and 3rd quarters and on the left in the 2nd and 4th; ESPN never says which physical end a club defends, so the picture follows that convention. The club with the ball always comes from the same feed as the spot, so a punt or a turnover never shows the new spot with the old direction.'; }catch(e){}   /* GC96FLD_MARK */
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> The club with the ball always drives left to right: the picture mirrors when possession changes, so the end zone on the right is the one being attacked and the chevron always points the way the offense is going. ESPN publishes no physical direction for a play, so this is the one orientation the data can back. The club with the ball always comes from the same feed as the spot, so a punt or a turnover never shows the new spot with the old direction.'; }catch(e){}   /* GC96DIR_MARK */
 (function mob96(){ /* MOB96_MARK */
   let cond=-1; const onScroll=function(){ try{ if(S.ui.tab==='live') LW.scrollTs=Date.now(); const st=$('lwStrip'); if(!st) return; let ph=false; try{ ph=isPhone(); }catch(e){ ph=false; }
     const on=ph&&window.scrollY>150; if(st.classList.contains('lwcond')!==on) st.classList.toggle('lwcond',on); cond=on?1:0; }catch(e){} };
