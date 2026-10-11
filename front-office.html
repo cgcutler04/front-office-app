@@ -4899,6 +4899,20 @@ body.phone .gv96ld .gv96tag{white-space:normal;text-align:left;line-height:1.25}
 body.phone .lpwho .who.ilink{display:inline-block;padding:7px 4px;margin:-7px 0;min-height:30px;font-size:11px}
 body.phone #modal.gvfs .gvseg{padding-top:4px;padding-bottom:4px}
 @media(prefers-reduced-motion:reduce){ body.phone #lwStrip .lwg{transition:none} }
+
+/* ═══════════ v9.6.2 · GC96FLD_MARK — the field's motion; the play + game-total chips ═══════════ */
+.gv96fsvg .gv96slide{animation:gv96slide .62s cubic-bezier(.2,.8,.2,1) both}
+@keyframes gv96slide{from{transform:translateX(var(--dx,0px))}to{transform:translateX(0)}}
+.gv96fsvg .gv96arc{animation:gv96fade .5s ease-out both}
+.gv96fsvg.gv96flipin{animation:gv96fade .45s ease-out both}
+@keyframes gv96fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){ .gv96fsvg .gv96slide,.gv96fsvg .gv96arc,.gv96fsvg.gv96flipin{animation:none} }
+.gv96ptot{display:flex;flex-wrap:wrap;gap:5px 6px;margin-top:6px}
+.gv96pt{display:inline-flex;align-items:center;gap:5px;min-height:26px;padding:0 8px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font:700 11px/1 var(--sans);color:var(--mut);white-space:nowrap}
+.gv96pt b{color:var(--ink);letter-spacing:.04em} .gv96pt i{font-style:normal;font-size:9px} .gv96pt.for i{color:var(--gain)} .gv96pt.vs i{color:var(--loss)}
+.gv96pt em{font-style:normal;font-weight:800;font-variant-numeric:tabular-nums} .gv96pt.for em{color:var(--gain)} .gv96pt.vs em{color:#FF9BB8} .gv96pt em.z{color:var(--dim)}
+.gv96pt small{font:600 10px/1 var(--sans);color:var(--dim);font-variant-numeric:tabular-nums}
+body.phone .gv96pt{min-height:30px;font-size:11px}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -24707,10 +24721,11 @@ function gvModel(g,sm,o){ /* the view model of the LIVE state (o.replay: as of a
   const byId=sm.tmsById||{}; const abOfId=function(id){ if(id==null) return null; id=String(id); if(byId[id]) return byId[id]; if(homeId!=null&&id===String(homeId)) return home; if(awayId!=null&&id===String(awayId)) return away; return null; };
   const replay=!!o.replay; const state=replay?'in':String(g.state||'pre'); const live=state==='in', post=state==='post';
   const sit=(!replay&&live&&sm.sit)?sm.sit:null; const gs=(!replay&&live&&g.sit)?g.sit:null;
-  let poss=null; if(sit&&sit.poss) poss=sit.poss; else if(last&&last.tid1) poss=abOfId(last.tid1); else if(gs&&gs.poss) poss=gs.poss; else if(live&&g.poss) poss=g.poss; else if(last&&last.team) poss=last.team;
+  const sitOK=!!(sit&&sit.poss&&sit.yl!=null);   /* GC96FLD_MARK: the spot and the club with the ball come from the SAME source — a mixed read showed the wrong side after a punt */
+  let poss=null; if(sitOK) poss=sit.poss; else if(last&&last.tid1) poss=abOfId(last.tid1); else if(gs&&gs.poss) poss=gs.poss; else if(live&&g.poss) poss=g.poss; else if(last&&last.team) poss=last.team;
   const td=!!(last&&last.score&&(last.dn1===-1||last.yl1===100||last.yl1===0));
   let dn=null,dist=null,yl=null,y2e=null,dd='',spot='';
-  if(sit){ dn=sit.dn; dist=sit.dist; yl=sit.yl; y2e=sit.y2e; dd=sit.dd||''; spot=sit.spot||''; }
+  if(sitOK){ dn=sit.dn; dist=sit.dist; yl=sit.yl; y2e=sit.y2e; dd=sit.dd||''; spot=sit.spot||''; }
   const NP=/timeout|end period|end of half|end of game|end quarter|two-minute/i; let ref=last;
   if(last&&!post&&NP.test(String(last.type||''))&&!(last.dn1>0&&last.y2e1>0)){ for(let a=n-2;a>=0;a--){ const q=plays[a]; if(q.dv!==last.dv) break; if(NP.test(String(q.type||''))) continue; if(q.dn1>0&&q.yl1!=null) ref=q; break; }   /* the first real play back: used only when it left a live down — never past a score or a turnover */ }
   if(ref&&ref!==last&&(dn==null||yl==null)){ if(dn==null&&ref.dn1!=null) dn=ref.dn1; if(dist==null&&ref.dist1!=null) dist=ref.dist1; if(yl==null&&ref.yl1!=null) yl=ref.yl1; if(y2e==null&&ref.y2e1>0) y2e=ref.y2e1; if(!spot&&ref.pt1) spot=ref.pt1; if(!dd&&ref.dd1) dd=ref.dd1; if(!poss&&ref.tid1) poss=abOfId(ref.tid1); }
@@ -24830,7 +24845,45 @@ function gvDownHTML96(M){ const post=M.fin&&M.mode!=='replay';
   if(!post&&(M.hto!=null||M.ato!=null)){ const dots=function(k){ k=Number(k); if(!isFinite(k)) return 'n/a'; let s2=''; for(let a=0;a<3;a++) s2+=a<k?'\u25cf':'\u25cb'; return s2; };
     h+='<div class="gv96to"><span>'+esc(M.away)+' <i>'+dots(M.ato)+'</i></span><span>timeouts</span><span><i>'+dots(M.hto)+'</i> '+esc(M.home)+'</span></div>'; }
   return h; }
-function gvFieldSVG96(M){ /* viewBox 1000×300 · the HOME end zone on the right (yl 0 → x 900), the AWAY end zone on the left (yl 100 → x 100): each club's end zone sits under its scoreboard panel */
+function gvFieldSVG96(M){ /* GC96FLD_MARK · viewBox 1000×300: the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th (clubs change ends every quarter); midfield carries the home logo; end zones carry logo + name; the ball slides between plays */
+  const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; const flip=!post&&(q%2===0);
+  const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; };
+  const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
+  const hk=K(M.home), ak=K(M.away); const logo=function(T){ const t=String(T||'').toLowerCase(); return t?'https://sleepercdn.com/images/team_logos/nfl/'+esc(t)+'.png':''; };
+  const FONT='-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif';
+  const left=flip?{T:M.home,nm:M.hn,k:hk}:{T:M.away,nm:M.an,k:ak}, right=flip?{T:M.away,nm:M.an,k:ak}:{T:M.home,nm:M.hn,k:hk};
+  const ez=function(x0,side,o){ const cx=x0+50; let txt=String(o.nm||o.T||'').toUpperCase(); if(txt.length>12) txt=String(o.T||'').toUpperCase(); const fsz=txt.length>9?30:txt.length>7?36:42;
+    const ly=side<0?20:232, ty=side<0?186:114; const lg=logo(o.T);
+    return '<rect x="'+x0+'" y="0" width="100" height="300" fill="'+esc(o.k.p)+'"/><rect x="'+x0+'" y="0" width="100" height="300" fill="url(#gv96ezg)"/>'
+      +(lg?'<image href="'+lg+'" x="'+(cx-24)+'" y="'+ly+'" width="48" height="48" preserveAspectRatio="xMidYMid meet" opacity=".96"/>':'')
+      +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="800" font-family="'+FONT+'" letter-spacing="2.5">'+esc(txt)+'</text>'; };
+  let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
+  const flipIn=!!(prev&&prev.flip!==flip);
+  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(flip?' — ends switched this quarter':''))+'">';
+  s2+='<defs><clipPath id="gv96bc"><circle cx="0" cy="0" r="21"/></clipPath><linearGradient id="gv96ezg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>';
+  s2+='<rect x="0" y="0" width="1000" height="300" fill="#0E2719"/>';
+  for(let k=0;k<16;k++) s2+='<rect x="'+(100+k*50)+'" y="0" width="50" height="300" fill="'+(k%2?'#133622':'#163B26')+'"/>';
+  s2+=ez(0,-1,left)+ez(900,1,right);
+  if(M.rz&&!post&&M.dir){ const xa=X(M.dir>0?20:80), xb=X(M.dir>0?0:100); s2+='<rect x="'+Math.min(xa,xb)+'" y="0" width="'+Math.abs(xb-xa)+'" height="300" fill="rgba(226,91,78,.16)"/>'; }
+  for(let yl=1;yl<100;yl++){ if(yl%5===0) continue; const x=X(yl); s2+='<line x1="'+x+'" y1="92" x2="'+x+'" y2="106" stroke="rgba(255,255,255,.28)" stroke-width="2"/><line x1="'+x+'" y1="194" x2="'+x+'" y2="208" stroke="rgba(255,255,255,.28)" stroke-width="2"/>'; }
+  for(let yl=5;yl<=95;yl+=5){ const x=X(yl); s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="300" stroke="rgba(255,255,255,'+(yl%10===0?'.5':'.22')+')" stroke-width="'+(yl===50?3:2)+'"/>'; }
+  s2+='<line x1="100" y1="0" x2="100" y2="300" stroke="#fff" stroke-width="4"/><line x1="900" y1="0" x2="900" y2="300" stroke="#fff" stroke-width="4"/>';
+  for(let yl=10;yl<=90;yl+=10){ const x=X(yl); const lab=yl<=50?yl:100-yl; s2+='<text x="'+x+'" y="268" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">'+lab+'</text><text x="'+x+'" y="32" transform="rotate(180 '+x+' 32)" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">'+lab+'</text>'; }
+  const hl=logo(M.home); if(hl) s2+='<circle cx="500" cy="150" r="52" fill="rgba(0,0,0,.22)"/><image href="'+hl+'" x="456" y="106" width="88" height="88" preserveAspectRatio="xMidYMid meet" opacity=".9"/>';
+  const d=M.drive; if(d&&d.yl0!=null){ const x=X(d.yl0); s2+='<path d="M'+(x-10)+' 300 L'+(x+10)+' 300 L'+x+' 284 Z" fill="rgba(255,255,255,.55)"/><line x1="'+x+'" y1="0" x2="'+x+'" y2="300" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="6 10"/>'; }
+  const L=M.last; if(L&&L.yl0!=null&&L.yl1!=null&&Math.abs(L.yl1-L.yl0)>=1){ const x0=X(L.yl0), x1=X(L.yl1); const col=L.to?'#FF9B4A':'rgba(255,255,255,.9)';
+    s2+='<g class="gv96arc"><path d="M'+x0+' 150 Q'+((x0+x1)/2)+' 48 '+x1+' 150" fill="none" stroke="'+col+'" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/><circle cx="'+x0+'" cy="150" r="7" fill="'+col+'"/></g>'; }
+  if(M.fd!=null&&!post&&M.dn>0&&!M.td){ const x=X(M.fd); s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="300" stroke="#3B82F6" stroke-width="5"/>'; }
+  if(M.yl!=null){ const x=X(M.yl); if(!post&&!M.td) s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="300" stroke="#F5C518" stroke-width="5"/>';
+    if(M.dir&&!post&&!M.td){ const sd=flip?M.dir:-M.dir; const ax=x+sd*72; s2+='<path d="M'+(ax-sd*16)+' 128 L'+(ax+sd*6)+' 150 L'+(ax-sd*16)+' 172" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'; }
+    const T=String(M.poss||'').toLowerCase(); let dx=0; if(prev&&prev.x!=null&&!flipIn&&!(M.mode==='replay')) dx=Math.round(prev.x-x); if(Math.abs(dx)<2) dx=0;
+    try{ GV.fieldPrev={gid:String(M.gid||''),x:x,flip:flip,ts:Date.now()}; }catch(e){}
+    s2+='<g transform="translate('+x+' 150)"><g class="gv96slide" style="--dx:'+dx+'px">'+(live?'<circle class="gv96pulse" cx="0" cy="0" r="30" fill="none" stroke="#F5C518" stroke-width="4"/>':'')
+      +'<path d="M-12 20 L12 20 L0 36 Z" fill="#fff"/><circle cx="0" cy="0" r="26" fill="#fff"/>'
+      +(T?'<image href="https://sleepercdn.com/images/team_logos/nfl/'+esc(T)+'.png" x="-21" y="-21" width="42" height="42" clip-path="url(#gv96bc)" preserveAspectRatio="xMidYMid meet"/>':'<circle cx="0" cy="0" r="12" fill="#8B4513"/>')+'</g></g>'; }
+  else { try{ GV.fieldPrev={gid:String(M.gid||''),x:null,flip:flip,ts:Date.now()}; }catch(e){} }
+  s2+='</svg>'; return s2; }
+function gvFieldSVG96v0(M){ /* pre-GC96FLD field, kept for reference · viewBox 1000×300 · the HOME end zone on the right (yl 0 → x 900), the AWAY end zone on the left (yl 100 → x 100): each club's end zone sits under its scoreboard panel */
   const X=function(yl){ return 900-8*clamp(Number(yl),0,100); };
   const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
   const hk=K(M.home), ak=K(M.away); const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post;
@@ -24899,7 +24952,10 @@ function gvPopRow96(pid,g,sm,M,ev,ML,who){ const p=pid?playerOf(pid):null; const
   let imp=''; if(ev&&pid){ let gr=[]; try{ const sd=lwSideOf(pid,ML); let L0=null; try{ L0=mlPrimaryLeague(pid); }catch(e){} gr=lwImpacts(ev,{forL:sd.forL,vsL:sd.vsL,L:L0}); }catch(e){ gr=[]; }
     imp='<div class="gv96imp">'+(gr.length?gr.map(function(x){ try{ return lwImpHTML(x); }catch(e){ return ''; } }).join(''):'<span class="gv96est">no points on this play in your scoring</span>')+'<span class="gv96est">est. from play text</span></div>'; }
   const did=ev?('<div class="gv96pdid">'+esc(ev.desc)+'</div>'):'';
-  return '<div class="gv96pr"'+(pid?' data-act="liveCard" data-pid="'+esc(pid)+'" role="button" tabindex="0" title="Open his live stat sheet"':'')+'>'+ava+'<div class="gv96pb"><div class="gv96pn"><b>'+esc(nm)+'</b><span>'+esc(pos)+(club?' \u00b7 '+esc(club):'')+'</span></div>'+did+(line?'<div class="gv96pline">'+esc(line)+(M.mode==='replay'?' <i>(final line)</i>':'')+'</div>':'')+tagH+imp+'</div></div>'; }
+  let tot=''; if(pid&&ML){ try{ const sd=lwSideOf(pid,ML); const rows=[]; const one=function(L,side){ let t=null; try{ t=mlPts(pid,L); }catch(e){ t=null; } let dv=null; try{ dv=(ev&&ev.row)?lgScoreRowFor(ev.row,L.scoring):null; }catch(e){ dv=null; } let c=''; try{ c=mlCode(L); }catch(e){ c=String(L.short||'LG'); }
+      rows.push('<span class="gv96pt '+side+'" title="'+(side==='for'?'yours':'against you')+' in '+esc(String(L.short||c))+' \u2014 this play, then his game total there"><b>'+esc(c)+'</b><i>'+(side==='for'?'\u25b2':'\u25bc')+'</i>'+((dv!=null&&Math.abs(dv)>=0.05)?'<em>'+(dv>0?'+':'')+esc(fmtPts1(dv))+'</em>':'<em class="z">\u00b10</em>')+'<small>'+(t!=null?esc(fmtPts1(t))+' game':'n/a')+'</small></span>'); };
+    (sd.forL||[]).forEach(function(L){ one(L,'for'); }); (sd.vsL||[]).forEach(function(L){ one(L,'vs'); }); if(rows.length) tot='<div class="gv96ptot" aria-label="This play and his game total in each of your leagues">'+rows.join('')+'</div>'; }catch(e){ tot=''; } }   /* GC96FLD_MARK */
+  return '<div class="gv96pr"'+(pid?' data-act="liveCard" data-pid="'+esc(pid)+'" role="button" tabindex="0" title="Open his live stat sheet"':'')+'>'+ava+'<div class="gv96pb"><div class="gv96pn"><b>'+esc(nm)+'</b><span>'+esc(pos)+(club?' \u00b7 '+esc(club):'')+'</span></div>'+did+(line?'<div class="gv96pline">'+esc(line)+(M.mode==='replay'?' <i>(final line)</i>':'')+'</div>':'')+tagH+imp+tot+'</div></div>'; }
 function gvPlayerOnPlayHTML96(g,sm,M){ const pl=M.last; if(!pl||!pl.text) return '';
   const cands=gvCands96(g); let pr=null; try{ pr=cands.length?lwParseCached(pl,g,cands):null; }catch(e){ pr=null; }
   let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; }
@@ -25443,6 +25499,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> Clubs change ends every quarter, so the home end zone sits on the right in the 1st and 3rd quarters and on the left in the 2nd and 4th; ESPN never says which physical end a club defends, so the picture follows that convention. The club with the ball always comes from the same feed as the spot, so a punt or a turnover never shows the new spot with the old direction.'; }catch(e){}   /* GC96FLD_MARK */
 (function mob96(){ /* MOB96_MARK */
   let cond=-1; const onScroll=function(){ try{ if(S.ui.tab==='live') LW.scrollTs=Date.now(); const st=$('lwStrip'); if(!st) return; let ph=false; try{ ph=isPhone(); }catch(e){ ph=false; }
     const on=ph&&window.scrollY>150; if(st.classList.contains('lwcond')!==on) st.classList.toggle('lwcond',on); cond=on?1:0; }catch(e){} };
