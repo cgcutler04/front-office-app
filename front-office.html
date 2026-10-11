@@ -4857,6 +4857,48 @@ body.phone .gv96tsv b{white-space:normal;overflow:visible;text-overflow:clip;fon
 #gvBody .lwp .lwplab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;width:100%;margin-top:5px;font:700 10.5px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-variant-numeric:tabular-nums}
 #gvBody .lwp .lwplab span{white-space:nowrap}
 body.phone #modal.gvfs .gvmain .lwp{padding:6px 0 0}
+
+/* ═══════════ v9.6.2 · MOB96_MARK — the phone: a slimmer Live tab, a strip that condenses on scroll, readable chips, 40–44 px targets ═══════════ */
+body.phone .lvhd96 .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 6px 12px;min-height:44px;flex-wrap:nowrap;gap:8px}
+body.phone .lvhd96 .hd .lb{flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:6px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:static;width:auto}
+body.phone .lvhd96 .hd .right{flex:none;margin-left:auto;display:inline-flex;align-items:center;flex-wrap:nowrap;gap:6px;position:static;width:auto}
+body.phone .lvhd96 .liveNext{display:none}
+body.phone .lvhd96 .hd .btn.sm{min-height:34px;padding:0 10px;font-size:11px;white-space:nowrap}
+body.phone .lns .lwbd.b-on:has(+ .l96sit.row){display:none}
+body.phone .lnclk{padding-left:6px;padding-right:8px}
+body.phone #lwBar{padding:3px 8px 3px 12px;min-height:38px;font-size:11px;border-radius:12px;gap:6px}
+body.phone #lwBar .btn{min-height:32px;padding:0 10px;font-size:11px}
+body.phone #lwBar .btn.help{width:32px;height:32px;min-height:32px;padding:0}
+body.phone #lwStrip .lwg{transition:min-height .18s ease,padding .18s ease}
+body.phone #lwStrip.lwcond .lwg{min-height:0;padding:5px 8px 4px}
+body.phone #lwStrip.lwcond .lwgsit{display:none}
+body.phone #lwStrip .lwgsit.drv{display:none}
+body.phone #lwStrip .lwgsit,body.phone #lwStrip .lwgsit.rep,body.phone #lwStrip .lwgsit b,body.phone #lwStrip .lwgsit i{font-size:10px}
+body.phone .lwpre96 small,body.phone .l96pre small,body.phone .l96pk small{font-size:10px}
+body.phone .l96sit.row i{display:none}
+body.phone .l96sit{font-size:10.5px;padding:0 7px}
+body.phone .lns{gap:5px 6px}
+body.phone .lnr{row-gap:6px}
+body.phone .lwbd{font-size:10px;padding:5px 7px}
+body.phone .lnpk,body.phone .mlcp,body.phone .lwlxk{font-size:10.5px}
+body.phone .mlcn{font-size:10px}
+body.phone .lwtik{font-size:10px}
+body.phone .lwtip,body.phone .lwtig{display:inline-flex;align-items:center;min-height:32px;padding:0 4px;margin:-6px 0;vertical-align:middle}
+body.phone .lnclk{min-height:38px}
+body.phone .mllegb{min-height:36px}
+body.phone [data-act=lnSort],body.phone [data-act=liveView],body.phone [data-act=lwF]{min-height:40px}
+body.phone .l96pc{min-height:40px}
+body.phone .lvgo,body.phone .l96mo{font-size:10px}
+body.phone .lwnm .ptag{font-size:10px;padding:3px 5px}
+body.phone .l96netk{font-size:10.5px}
+body.phone .l96est,body.phone .gv96est{font-size:10.5px}
+body.phone .gv96lptag,body.phone .gv96lpk,body.phone .gv96tb,body.phone .gv96tag,body.phone .gv96tsl,body.phone .gv96ldc,body.phone .gvlp{font-size:10.5px}
+body.phone .gv96fr .up,body.phone .gv96fr .dn{font-size:10px}
+body.phone .gv96ld .gv96ptags{flex-wrap:wrap}
+body.phone .gv96ld .gv96tag{white-space:normal;text-align:left;line-height:1.25}
+body.phone .lpwho .who.ilink{display:inline-block;padding:7px 4px;margin:-7px 0;min-height:30px;font-size:11px}
+body.phone #modal.gvfs .gvseg{padding-top:4px;padding-bottom:4px}
+@media(prefers-reduced-motion:reduce){ body.phone #lwStrip .lwg{transition:none} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -17889,7 +17931,8 @@ function gvHelpMount(){ const b0=$('gvBody'); const b=(b0&&b0.querySelector('.gv
   const d=document.createElement('div'); d.id='gvHelpBox'; d.className='card'; d.style.cssText='margin:0 0 10px'; d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><b>'+esc(h.t||'Game Center')+'</b><button class="btn sm" data-act="gvHelp">Close</button></div><div class="railnote">'+(h.b||'Live feed, box score, scoring plays and your players in this game.')+'</div>'; b.prepend(d); }
 function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; GV.helpK=null; try{ GVR.gid=null; GVR.i=null; GVR.dragTs=0; }catch(e){} if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
 function gameViewRepaint(){ gameViewRepaintInner(); if(GV.help) gvHelpMount(); }
-function gameViewRepaintInner(){ if(GVR.dragTs&&Date.now()-GVR.dragTs<1500&&S.ui.gvTab==='live'&&$('gvLivePanel')) return;   /* GC96A_MARK: a replay scrub in progress keeps its slider */
+function gameViewRepaintInner(){ if(GVR.dragTs&&Date.now()-GVR.dragTs<1500&&S.ui.gvTab==='live'&&$('gvLivePanel')) return;
+  if(GV.scrollTs&&Date.now()-GV.scrollTs<1000&&GV.tab===(S.ui.gvTab||'feed')) return;   /* MOB96_MARK: a repaint never lands under a moving thumb — the next tick paints */   /* GC96A_MARK: a replay scrub in progress keeps its slider */
   const m=$('gvBody'); if(!m||!S.ui.gameView){ S.ui.gameView=null; return; } const g=gameOf(S.ui.gameView); if(!g) return;
   const sc=m.querySelector('.gvmain')||m.querySelector('.gvscroll'); const tabNow=S.ui.gvTab||'feed';
   const top=(sc&&GV.tab===tabNow)?sc.scrollTop:0; GV.tab=tabNow;                                   // v8.2: a live tick keeps his place, a tab change starts at the top
@@ -18099,7 +18142,7 @@ setInterval(liveNextPaint,1000);
 function livePullBtnHTML(){ return '<button class="btn sm'+(livePullOn()?' pri lpon':'')+'" data-act="livePull" title="Keeps the feed pulling by itself — 20s during games, once a minute near kickoff, quiet on off days. Click to pause.">'+(livePullOn()?'● Live pull ON':'○ Live pull OFF')+'</button> <span class="fine liveNext"></span>'; }
 /* v5.5: the resume-from-background hook lives in onResume() (init block) — it re-arms the live poller, the draft poller and the 10-minute feeds together */
 function liveRepaint(){ // in-place paints only — never a full renderTab (that wipes un-persisted panels)
-  const root=$('liveRoot'); if(root) lwRootPaint(root);                                // V91: the Watch board patches in place; the ledger views rebuild as before
+  try{ if($('tfPop')) tfPopCheck(); }catch(e){} const root=$('liveRoot'); if(root) lwRootPaint(root);   /* MOB96 */                                // V91: the Watch board patches in place; the ledger views rebuild as before
   const cmd=$('liveCmd'); if(cmd){ const h=liveCommandCardHTML(); if(h!==cmd.outerHTML) cmd.outerHTML=h||'<div id="liveCmd" hidden></div>'; }
   document.querySelectorAll('.livePlayer[data-pid]').forEach(el=>{ el.innerHTML=livePlayerInnerHTML(el.dataset.pid); });
   try{ liveCardRepaint(); }catch(e){}                                                   // the open player sheet follows every tick, scroll kept
@@ -20082,10 +20125,14 @@ function liveBodyHTML(){
   return lwStripHTML()+mlStripHTML()+seg+toggle+body+mlRecapSectionHTML()
     +'<div class="railnote foot">Scoreboard, plays, box lines and win probability: ESPN (keyless). Live points: each league\'s own Sleeper matchup feed — its exact scoring, not an approximation. Snaps, targets, carries, air yards, YAC, broken tackles and red-zone looks: Sleeper\'s live weekly stats. Post-game recaps grade each finished player against his own season baselines, the defense he faced and the game itself. <b>Pace</b> and <b>win %</b> are the only projections here.</div>';
 }
+function liveHeadHTML96(nl){ /* MOB96_MARK: the phone gets one slim row — the dot, the name, the pull toggle, the week */
+  const dot='<i id="liveDot" class="livedot '+liveState()+'"></i>'; let ph=false; try{ ph=isPhone(); }catch(e){ ph=false; }
+  if(ph) return '<div class="card lvhd96"><div class="hd"><span class="lb">'+dot+' Live Feed '+helpBtn('live')+'</span><span class="right inlinebtns">'+livePullBtnHTML()+'<span class="src">wk '+liveWeek()+'</span></span></div></div>';
+  return '<div class="card"><div class="hd"><span class="lb">'+dot+' Live Feed — your players, every league '+helpBtn('live')+'</span><span class="right inlinebtns">'+sleeperBtn('matchup','Matchup in Sleeper')+livePullBtnHTML()+(nl>1?'<span class="src">'+nl+' leagues</span>':'')+'<span class="src">week '+liveWeek()+'</span></span></div></div>'; }
 function renderLive(){
   const m=$('p-live');
   const ML=mlSides(); const nl=(ML&&ML.n)||0;
-  m.innerHTML='<div class="card"><div class="hd"><span class="lb"><i id="liveDot" class="livedot '+liveState()+'"></i> Live Feed — your players, every league '+helpBtn('live')+'</span><span class="right inlinebtns">'+sleeperBtn('matchup','Matchup in Sleeper')+livePullBtnHTML()+(nl>1?'<span class="src">'+nl+' leagues</span>':'')+'<span class="src">week '+liveWeek()+'</span></span></div></div><div id="liveRoot">'+liveBodyHTML()+'</div>';
+  m.innerHTML=liveHeadHTML96(nl)+'<div id="liveRoot">'+liveBodyHTML()+'</div>';   /* MOB96_MARK */
   lwAfterRender(); liveArm(); liveNextPaint();
   if(livePullOn()&&(!S.live||!S.live.games||!S.live.games.length||Date.now()-LIVE.last.sb>20000)) liveRefresh().catch(()=>{});
   else if(livePullOn()&&Date.now()-LIVE.last.ml>60000) mlFetchMatchups(Date.now(),false).then(()=>{ MLIVE.memo=null; liveRepaint(); }).catch(()=>{}); // prime the other leagues on first paint
@@ -20727,6 +20774,7 @@ function lwCadence(root){ /* the cadence the poller already promises — 20s whi
       if(LIVE.timer) clearTimeout(LIVE.timer); LIVE.timer=setTimeout(liveTick,20000); LIVE.next=Date.now()+20000; LW.dbg.rearm=(LW.dbg.rearm||0)+1; } }catch(e){} }
 function lwRootPaint(root){ // the ONE entry liveRepaint uses: the Watch board patches in place; every other view keeps its rebuild
   const vw94=lwView(); if((vw94==='watch'||vw94==='now')&&lwReady()&&$('lwBoard')&&root.contains($('lwBoard'))){ try{ lwPatch(root); return; }catch(e){} }   // LIVE94
+  if(LW.scrollTs&&Date.now()-LW.scrollTs<1200&&root.children.length&&!LW.force96) return;   /* MOB96_MARK: the ledger views rebuild once the thumb is still */
   const sx=$('lwSx'); const sl=sx?sx.scrollLeft:0;
   root.innerHTML=liveBodyHTML(); LW.dbg.full++;
   const sx2=$('lwSx'); if(sx2&&sl){ sx2.scrollLeft=sl; sx2._init=true; }
@@ -22765,7 +22813,7 @@ document.addEventListener('click',async e=>{
   if(act==='lwLg'){ const lid91=String(b.dataset.lid||''); S.cfg.lwLg=(S.cfg.lwLg===lid91)?'':lid91; try{ await Store.set('cfg',S.cfg); }catch(e){} lwPatch($('liveRoot'),{quiet:true}); return; }
   if(act==='lwTk'){ S.ui.lwTkAll=!S.ui.lwTkAll; lwPatch($('liveRoot'),{quiet:true}); return; }
   if(act==='lwClr'){ S.cfg.lwF='all'; S.cfg.lwLg=''; S.cfg.lwGm=''; try{ await Store.set('cfg',S.cfg); }catch(e){} lwPatch($('liveRoot'),{quiet:true}); return; }
-  if(act==='liveView'){ const v91=b.dataset.v; S.cfg.lvView=(v91==='game'||v91==='league'||v91==='recap'||v91==='now')?v91:'watch'; S.ui.lvPick={v:S.cfg.lvView,live:lnLiveN()>0}; if(S.cfg.lvView!=='watch') S.cfg.liveView=S.cfg.lvView; try{ await Store.set('cfg',S.cfg); }catch(e){} liveRepaint(); return; }
+  if(act==='liveView'){ LW.scrollTs=0; const v91=b.dataset.v; S.cfg.lvView=(v91==='game'||v91==='league'||v91==='recap'||v91==='now')?v91:'watch'; S.ui.lvPick={v:S.cfg.lvView,live:lnLiveN()>0}; if(S.cfg.lvView!=='watch') S.cfg.liveView=S.cfg.lvView; try{ await Store.set('cfg',S.cfg); }catch(e){} liveRepaint(); return; }
   if(act==='mlLegend'){ S.cfg.mlLeg=(S.cfg.mlLeg===0)?1:0; try{ await Store.set('cfg',S.cfg); }catch(e){}   // v8.6 · the chip key, remembered
     if(S.ui.gameView&&$('gvBody')) gameViewRepaint(); else liveRepaint(); return; }
   if(act==='mlStake'){ const lid86=String(b.dataset.lid||''); S.ui.mlStk=S.ui.mlStk||{};      // v8.6 · who cuts both ways in this league
@@ -24898,7 +24946,7 @@ function gvReplay(gid,v){ /* sets GVR and patches only the panel: i | 'prev' | '
   const n=sm.plays.length; const cur=(GVR.gid===gid&&GVR.i!=null)?GVR.i:n-1; let i=null;
   if(v==='prev') i=cur-1; else if(v==='next') i=cur+1; else if(v==='live'||v==='final'||v==null||v==='') i=null; else i=Number(v);
   if(i!=null){ if(!isFinite(i)) i=null; else { i=clamp(Math.round(i),0,n-1); if(i===n-1) i=null; } }
-  GVR.gid=gid; GVR.i=i; if($('gvLivePanel')){ GVR.dragTs=Date.now(); gvLivePatch(); } else { GVR.dragTs=0; try{ gameViewRepaint(); }catch(e){} } }   /* GC96FIX */
+  GVR.gid=gid; GVR.i=i; if($('gvLivePanel')){ GVR.dragTs=Date.now(); gvLivePatch(); } else { GVR.dragTs=0; GV.scrollTs=0; try{ gameViewRepaint(); }catch(e){} } }   /* GC96FIX */
 function gvLivePatch(){ /* re-renders the panel body in place; the slider element is kept so a drag in progress survives */
   const gid=S.ui.gameView; const g=gid?gameOf(gid):null; const sm=g?LIVE.sum[g.id]:null; const p=$('gvLivePanel'); if(!g||!p) return;
   if(!sm||!sm.plays){ p.outerHTML=gvLiveHTML(g,sm); return; }
@@ -25395,6 +25443,12 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+(function mob96(){ /* MOB96_MARK */
+  let cond=-1; const onScroll=function(){ try{ if(S.ui.tab==='live') LW.scrollTs=Date.now(); const st=$('lwStrip'); if(!st) return; let ph=false; try{ ph=isPhone(); }catch(e){ ph=false; }
+    const on=ph&&window.scrollY>150; if(st.classList.contains('lwcond')!==on) st.classList.toggle('lwcond',on); cond=on?1:0; }catch(e){} };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  document.addEventListener('scroll',function(e){ try{ const t=e.target; if(t&&t.closest&&t.closest('#gvBody')) GV.scrollTs=Date.now(); }catch(x){} },true);
+})();
 try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Data.</b> Between plays the panel polls ESPN\u2019s situation feed (under 1 KB) every 8 seconds and pulls the full play feed only when a new play has landed, or every 40 seconds for the box score and win probability; with Data Saver on it checks every 16 seconds.'; }catch(e){}   /* GC96POL_MARK */
 /* ---------------- PWA · service worker (only when hosted over http/https — the double-clicked file never registers and works exactly as before) ---------------- */
 (function swBoot(){
