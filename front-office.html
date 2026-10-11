@@ -4913,6 +4913,40 @@ body.phone #modal.gvfs .gvseg{padding-top:4px;padding-bottom:4px}
 .gv96pt em{font-style:normal;font-weight:800;font-variant-numeric:tabular-nums} .gv96pt.for em{color:var(--gain)} .gv96pt.vs em{color:#FF9BB8} .gv96pt em.z{color:var(--dim)}
 .gv96pt small{font:600 10px/1 var(--sans);color:var(--dim);font-variant-numeric:tabular-nums}
 body.phone .gv96pt{min-height:30px;font-size:11px}
+
+/* ═══════════ v9.6.3 · GC96UX_MARK — the matchup panel; the taller field ═══════════ */
+.gv96mms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 2px}
+body.phone .gv96mms{grid-template-columns:minmax(0,1fr)}
+@media(max-width:900px){ .gv96mms{grid-template-columns:minmax(0,1fr)} }
+.gv96mm{min-width:0;padding:10px 12px 9px;border-radius:14px;background:#10172E;border:1px solid rgba(255,255,255,.08);box-shadow:inset 3px 0 0 rgba(255,255,255,.12)}
+.gv96mm.up{box-shadow:inset 3px 0 0 var(--gain)} .gv96mm.dn{box-shadow:inset 3px 0 0 var(--loss)}
+.gv96mmt{display:flex;align-items:center;gap:8px;min-width:0}
+.gv96mmn{flex:1 1 auto;min-width:0;font:800 13px/1.2 var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gv96mmw{flex:none;font:900 18px/1 var(--sans);font-variant-numeric:tabular-nums;color:var(--ink)} .gv96mmw small{margin-left:3px;font:800 9px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.gv96mm.up .gv96mmw{color:var(--gain)} .gv96mm.dn .gv96mmw{color:#FF9BB8}
+.gv96mms2{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:8px;margin-top:7px}
+.gv96mme,.gv96mmo{min-width:0;display:flex;flex-direction:column;gap:2px} .gv96mmo{text-align:right;align-items:flex-end}
+.gv96mme small,.gv96mmo small{font:600 10.5px/1.2 var(--sans);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gv96mme b,.gv96mmo b{font:800 24px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)} .gv96mmo b{color:var(--mut)}
+.gv96mmv{font:700 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding-bottom:6px}
+.gv96mmb{height:6px;margin-top:8px;border-radius:3px;background:rgba(255,95,141,.35);overflow:hidden} .gv96mmb i{display:block;height:100%;background:var(--gain)}
+.gv96mmh{display:flex;flex-direction:column;gap:5px;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.gv96mmk{font:800 9.5px/1.2 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.gv96mmc{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.gv96mmp{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 8px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font:600 11px/1 var(--sans);color:var(--mut);white-space:nowrap;cursor:pointer}
+.gv96mmp b{font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums} .gv96mmp i{font-style:normal;font-size:10px;color:var(--dim)}
+.gv96mmp.me{border-color:rgba(55,229,167,.35)} .gv96mmp.me b{color:var(--gain)} .gv96mmp.vs{border-color:rgba(255,95,141,.35)} .gv96mmp.vs b{color:#FF9BB8}
+.gv96mmvs{font:800 9.5px/1 var(--sans);letter-spacing:.1em;color:var(--dim);padding:0 2px}
+.gv96mml{display:flex;flex-direction:column;gap:3px;margin-top:7px;font:600 11px/1.45 var(--sans);color:var(--dim)} .gv96mml b{font-weight:800;font-variant-numeric:tabular-nums} .gv96mml b.up{color:var(--gain)} .gv96mml b.dn{color:#FF9BB8} .gv96mml small{font-weight:600;color:var(--dim)}
+.gv96mmf{display:flex;justify-content:flex-end;margin-top:6px}
+.gv96mmsp{display:inline-flex;align-items:center;gap:8px} .gv96mmsp svg{display:block;flex:none} .gv96mmsp small{font:600 10px/1.2 var(--sans);color:var(--dim)}
+body.phone .gv96mmp{min-height:32px} body.phone .gv96mme b,body.phone .gv96mmo b{font-size:22px}
+
+/* ═══════════ v9.6.3 · GC96UX2_MARK — the ⇄ ends button ═══════════ */
+.gv96field{position:relative}
+.gv96flipbtn{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:2;min-height:28px;padding:0 9px;border-radius:99px;border:1px solid rgba(255,255,255,.18);background:rgba(8,12,24,.74);color:var(--ink);font:800 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;appearance:none}
+.gv96flipbtn:hover{background:rgba(8,12,24,.92)}
+body.phone .gv96flipbtn{min-height:36px;padding:0 11px;font-size:10.5px}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -17936,6 +17970,11 @@ function gvSitPoll96(gid,g){ /* ESPN's situation feed for ONE game — ~0.6 KB, 
     if(sm){ sm.sit=Object.assign({},sm.sit||{},sit); }
     if(g&&g.state==='in'){ g.sit=Object.assign({},g.sit||{},sit); if(sit.dd) g.dd=sit.dd; if(sit.spot) g.spot=sit.spot; g.rz=sit.rz; if(poss) g.poss=poss; }
     return sit; })(); }
+function gvFlipPref96(gid){ /* GC96UX2_MARK: this device's per-game "mirror the ends" choice */
+  try{ const m=GV.flipPref||(GV.flipPref=JSON.parse(localStorage.getItem('fo:fldflip')||'{}')); return !!m[String(gid||'')]; }catch(e){ return false; } }
+function gvFlipToggle96(gid){ gid=String(gid||S.ui.gameView||''); if(!gid) return;
+  try{ const m=GV.flipPref||(GV.flipPref=JSON.parse(localStorage.getItem('fo:fldflip')||'{}')); if(m[gid]) delete m[gid]; else m[gid]=1; const ks=Object.keys(m); if(ks.length>40) ks.slice(0,ks.length-40).forEach(function(k){ delete m[k]; }); try{ localStorage.setItem('fo:fldflip',JSON.stringify(m)); }catch(e){} }catch(e){}
+  try{ GV.fieldPrev=null; }catch(e){} try{ gvLivePatch(); }catch(e){} try{ toast(gvFlipPref96(gid)?'Ends mirrored to match the broadcast \u2014 the quarters follow from here':'Ends back to the default orientation','good'); }catch(e){} }
 function gvStampFresh(ok){ // a small "updated Ns ago" in the game header so the cadence is visible
   const el=document.querySelector('#modal .gvstate'); if(!el) return;
   let t=el.querySelector('.gvfresh'); if(!t){ t=document.createElement('span'); t.className='gvfresh'; el.appendChild(t); }
@@ -22692,6 +22731,7 @@ document.addEventListener('click',async e=>{
   if(act==='openGame'){ openGame(b.dataset.gid); return; }
   if(act==='lvReplay96'){ lvReplay96(b.dataset.gid); return; }   /* LIVE96_MARK */
   if(act==='gvTab'){ S.ui.gvTab=b.dataset.v; gameViewRepaint(); return; }
+  if(act==='gvFlip'){ gvFlipToggle96(b.dataset.gid); return; }   /* GC96UX2_MARK */
   if(act==='gvReplay'){ gvReplay(b.dataset.gid,b.dataset.v); return; }   /* GC96A_MARK */
   if(act==='gvStatsMode'){ GV.statsMode=b.dataset.v==='mine'?'mine':'wp'; gameViewRepaint(); return; }   /* GC96B_MARK */
   if(act==='gvSwingGo'){ const i96=Number(b.dataset.v); if(isFinite(i96)){ S.ui.gvTab='live'; try{ gvReplay(b.dataset.gid,i96); }catch(e){} gameViewRepaint(); try{ const p96=$('gvLivePanel'); if(p96) p96.scrollTop=0; }catch(e){} } return; }   /* GC96B_MARK */
@@ -24822,7 +24862,7 @@ function gvLiveHTML(g,sm,M){ /* the Live tab: current drive · down & ball on ·
 function gvLiveBody96(g,sm,M){ let h='';
   try{ h+=gvDriveHeadHTML96(M,sm); }catch(e){}
   try{ h+=gvDownHTML96(M); }catch(e){}
-  try{ h+='<div class="gv96field">'+gvFieldSVG96(M)+'</div>'; }catch(e){}
+  try{ h+='<div class="gv96field">'+gvFieldSVG96(M)+(M.state!=='pre'?'<button type="button" class="gv96flipbtn" data-act="gvFlip" data-gid="'+esc(M.gid||'')+'" title="If the ends look reversed against the broadcast, tap once \u2014 ESPN never says which end a club defends, so the picture starts from a convention">\u21c4 ends</button>':'')+'</div>'; }catch(e){}   /* GC96UX2 */
   try{ h+=gvLastPlayHTML(M); }catch(e){}
   try{ h+=gvPlayerOnPlayHTML96(g,sm,M); }catch(e){}
   try{ h+=gvDrivePlaysHTML96(g,sm,M); }catch(e){}
@@ -24845,7 +24885,46 @@ function gvDownHTML96(M){ const post=M.fin&&M.mode!=='replay';
   if(!post&&(M.hto!=null||M.ato!=null)){ const dots=function(k){ k=Number(k); if(!isFinite(k)) return 'n/a'; let s2=''; for(let a=0;a<3;a++) s2+=a<k?'\u25cf':'\u25cb'; return s2; };
     h+='<div class="gv96to"><span>'+esc(M.away)+' <i>'+dots(M.ato)+'</i></span><span>timeouts</span><span><i>'+dots(M.hto)+'</i> '+esc(M.home)+'</span></div>'; }
   return h; }
-function gvFieldSVG96(M){ /* GC96FLD_MARK · viewBox 1000×300: the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th (clubs change ends every quarter); midfield carries the home logo; end zones carry logo + name; the ball slides between plays */
+function gvFieldSVG96(M){ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th; hatched end zones with logo + name; midfield logo; the ball slides between plays */
+  const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; let flip=!post&&(q%2===0); try{ if(gvFlipPref96(M.gid)) flip=!flip; }catch(e){}   /* GC96UX2_MARK: mirrored once to match the broadcast, then the quarters follow */
+  const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; }; const CY=200;
+  const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
+  const hk=K(M.home), ak=K(M.away); const logo=function(T){ const t=String(T||'').toLowerCase(); return t?'https://sleepercdn.com/images/team_logos/nfl/'+esc(t)+'.png':''; };
+  const FONT="'Avenir Next Condensed','Arial Narrow','Roboto Condensed',Impact,'Segoe UI',Helvetica,Arial,sans-serif", MONO='ui-monospace,Menlo,Consolas,monospace';   /* GC96UX2: a condensed heavy display face — the clubs' wordmark fonts are proprietary */
+  const left=flip?{T:M.home,nm:M.hn,k:hk}:{T:M.away,nm:M.an,k:ak}, right=flip?{T:M.away,nm:M.an,k:ak}:{T:M.home,nm:M.hn,k:hk};
+  const ez=function(x0,side,o){ const cx=x0+50; let txt=String(o.nm||o.T||'').toUpperCase(); if(txt.length>12) txt=String(o.T||'').toUpperCase(); const fsz=txt.length>9?40:txt.length>7?48:56;
+    const ly=side<0?24:324, ty=side<0?244:156; const lg=logo(o.T);
+    return '<rect x="'+x0+'" y="0" width="100" height="400" fill="'+esc(o.k.p)+'"/><rect x="'+x0+'" y="0" width="100" height="400" fill="url(#gv96hatch)"/><rect x="'+x0+'" y="0" width="100" height="400" fill="url(#gv96ezg)"/>'
+      +(lg?'<image href="'+lg+'" x="'+(cx-26)+'" y="'+ly+'" width="52" height="52" preserveAspectRatio="xMidYMid meet" opacity=".97"/>':'')
+      +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="900" font-family="'+FONT+'" font-stretch="condensed" letter-spacing="1.5">'+esc(txt)+'</text>'; };
+  let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
+  const flipIn=!!(prev&&prev.flip!==flip);
+  let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(flip?' — ends switched this quarter':''))+'">';
+  s2+='<defs><clipPath id="gv96bc"><circle cx="0" cy="0" r="21"/></clipPath><linearGradient id="gv96ezg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>'
+    +'<pattern id="gv96hatch" patternUnits="userSpaceOnUse" width="16" height="16" patternTransform="rotate(45)"><rect width="16" height="8" fill="rgba(255,255,255,.075)"/></pattern></defs>';
+  s2+='<rect x="0" y="0" width="1000" height="400" fill="#0E2719"/>';
+  for(let k=0;k<16;k++) s2+='<rect x="'+(100+k*50)+'" y="0" width="50" height="400" fill="'+(k%2?'#133622':'#163B26')+'"/>';
+  s2+=ez(0,-1,left)+ez(900,1,right);
+  if(M.rz&&!post&&M.dir){ const xa=X(M.dir>0?20:80), xb=X(M.dir>0?0:100); s2+='<rect x="'+Math.min(xa,xb)+'" y="0" width="'+Math.abs(xb-xa)+'" height="400" fill="rgba(226,91,78,.16)"/>'; }
+  for(let yl=1;yl<100;yl++){ if(yl%5===0) continue; const x=X(yl); s2+='<line x1="'+x+'" y1="134" x2="'+x+'" y2="150" stroke="rgba(255,255,255,.28)" stroke-width="2"/><line x1="'+x+'" y1="250" x2="'+x+'" y2="266" stroke="rgba(255,255,255,.28)" stroke-width="2"/>'; }
+  for(let yl=5;yl<=95;yl+=5){ const x=X(yl); s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="rgba(255,255,255,'+(yl%10===0?'.5':'.22')+')" stroke-width="'+(yl===50?3:2)+'"/>'; }
+  s2+='<line x1="100" y1="0" x2="100" y2="400" stroke="#fff" stroke-width="4"/><line x1="900" y1="0" x2="900" y2="400" stroke="#fff" stroke-width="4"/>';
+  for(let yl=10;yl<=90;yl+=10){ const x=X(yl); const lab=yl<=50?yl:100-yl; s2+='<text x="'+x+'" y="362" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="'+MONO+'">'+lab+'</text><text x="'+x+'" y="38" transform="rotate(180 '+x+' 38)" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="'+MONO+'">'+lab+'</text>'; }
+  const hl=logo(M.home); if(hl) s2+='<circle cx="500" cy="'+CY+'" r="60" fill="rgba(0,0,0,.22)"/><image href="'+hl+'" x="450" y="'+(CY-50)+'" width="100" height="100" preserveAspectRatio="xMidYMid meet" opacity=".9"/>';
+  const d=M.drive; if(d&&d.yl0!=null){ const x=X(d.yl0); s2+='<path d="M'+(x-10)+' 400 L'+(x+10)+' 400 L'+x+' 384 Z" fill="rgba(255,255,255,.55)"/><line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="6 10"/>'; }
+  const L=M.last; if(L&&L.yl0!=null&&L.yl1!=null&&Math.abs(L.yl1-L.yl0)>=1){ const x0=X(L.yl0), x1=X(L.yl1); const col=L.to?'#FF9B4A':'rgba(255,255,255,.9)';
+    s2+='<g class="gv96arc"><path d="M'+x0+' '+CY+' Q'+((x0+x1)/2)+' '+(CY-125)+' '+x1+' '+CY+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/><circle cx="'+x0+'" cy="'+CY+'" r="7" fill="'+col+'"/></g>'; }
+  if(M.fd!=null&&!post&&M.dn>0&&!M.td){ const x=X(M.fd); s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="#3B82F6" stroke-width="5"/>'; }
+  if(M.yl!=null){ const x=X(M.yl); if(!post&&!M.td) s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="#F5C518" stroke-width="5"/>';
+    if(M.dir&&!post&&!M.td){ const sd=flip?M.dir:-M.dir; const ax=x+sd*76; s2+='<path d="M'+(ax-sd*16)+' '+(CY-22)+' L'+(ax+sd*6)+' '+CY+' L'+(ax-sd*16)+' '+(CY+22)+'" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'; }
+    const T=String(M.poss||'').toLowerCase(); let dx=0; if(prev&&prev.x!=null&&!flipIn&&!(M.mode==='replay')) dx=Math.round(prev.x-x); if(Math.abs(dx)<2) dx=0;
+    try{ GV.fieldPrev={gid:String(M.gid||''),x:x,flip:flip,ts:Date.now()}; }catch(e){}
+    s2+='<g transform="translate('+x+' '+CY+')"><g class="gv96slide" style="--dx:'+dx+'px">'+(live?'<circle class="gv96pulse" cx="0" cy="0" r="30" fill="none" stroke="#F5C518" stroke-width="4"/>':'')
+      +'<path d="M-12 20 L12 20 L0 36 Z" fill="#fff"/><circle cx="0" cy="0" r="26" fill="#fff"/>'
+      +(T?'<image href="https://sleepercdn.com/images/team_logos/nfl/'+esc(T)+'.png" x="-21" y="-21" width="42" height="42" clip-path="url(#gv96bc)" preserveAspectRatio="xMidYMid meet"/>':'<circle cx="0" cy="0" r="12" fill="#8B4513"/>')+'</g></g>'; }
+  else { try{ GV.fieldPrev={gid:String(M.gid||''),x:null,flip:flip,ts:Date.now()}; }catch(e){} }
+  s2+='</svg>'; return s2; }
+function gvFieldSVG96v1(M){ /* GC96FLD field (1000×300), kept for reference · viewBox 1000×300: the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th (clubs change ends every quarter); midfield carries the home logo; end zones carry logo + name; the ball slides between plays */
   const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; const flip=!post&&(q%2===0);
   const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; };
   const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
@@ -25194,12 +25273,33 @@ function gvStatsHTML96(g,sm){ /* the Stats tab: probabilities · swings · team 
     h+=gvStatsStampHTML96(sm,M);
     return h+'</div>';
   }catch(e){ return '<div id="gvStatsPanel" class="gvscroll gv96 gv96st"><div class="empty">The stats panel could not be drawn ('+esc((e&&e.message)||'error')+').</div></div>'; } }
+function gvMyMatchHTML96(g,sm,ML){ /* GC96UX_MARK · every league with a matchup: score vs score, win % and bar, what THIS game has done to it and what is still to play here, a sparkline of the win % since the app was opened */
+  const H=String(g.home||'').toUpperCase(), A=String(g.away||'').toUpperCase(); const inGame=function(pid){ const p=playerOf(pid); const t=p?String(p.t||'').toUpperCase():''; return !!t&&(t===H||t===A); };
+  const Ls=((ML&&ML.leagues)||[]).filter(function(L){ return L&&L.opp; }); if(!Ls.length) return '<div class="gv96none">No matchup this week in any league.</div>';
+  const short=function(pid){ try{ return lwShort(playerOf(pid)); }catch(e){ return 'Player'; } }; const f1=function(v){ try{ return fmtPts1(v); }catch(e){ return String(Math.round((Number(v)||0)*10)/10); } };
+  const side=function(L,pids,isMe){ const out=[]; let pts=0, left=0; (pids||[]).forEach(function(pid){ pid=String(pid||''); if(!pid||pid==='0'||!inGame(pid)) return; let v=0,pc=0; try{ v=Number(mlPts(pid,L))||0; }catch(e){ v=0; } try{ pc=Number(mlPace(pid,L))||0; }catch(e){ pc=v; } const rem=Math.max(0,pc-v); pts+=v; left+=rem; out.push({pid:pid,v:v,rem:rem}); });
+    out.sort(function(a,b){ return b.v-a.v; }); return {rows:out,pts:pts,left:left}; };
+  let h='<div class="gv96mms">';
+  Ls.forEach(function(L){ let w=null; try{ w=mlWin(L); }catch(e){ w=null; } let code=''; try{ code=mlCode(L); }catch(e){ code=String(L.short||'LG'); }
+    const me=side(L,L.startersArr,true), th=side(L,L.oppStart,false); const wp=(w&&w.wp!=null)?clamp(Number(w.wp),0,1):null; const pct=wp!=null?Math.round(wp*100):null;
+    const mePts=(w&&w.mePts!=null)?w.mePts:L.pts, opPts=(w&&w.opPts!=null)?w.opPts:L.oppPts;
+    const chip=function(r,cls){ return '<span class="gv96mmp '+cls+'" data-act="liveCard" data-pid="'+esc(r.pid)+'" role="button" tabindex="0">'+esc(short(r.pid))+' <b>'+esc(f1(r.v))+'</b>'+(r.rem>=0.5?'<i>+'+esc(f1(r.rem))+' left</i>':'')+'</span>'; };
+    const here=(me.rows.length||th.rows.length)?'<div class="gv96mmh"><span class="gv96mmk">In this game</span><span class="gv96mmc">'+(me.rows.length?me.rows.map(function(r){ return chip(r,'me'); }).join(''):'<span class="gv96est">none of yours</span>')+(th.rows.length?'<span class="gv96mmvs">vs</span>'+th.rows.map(function(r){ return chip(r,'vs'); }).join(''):'')+'</span></div>'
+      +'<div class="gv96mml"><span><b class="up">+'+esc(f1(me.pts))+'</b> for you \u00b7 <b class="dn">'+esc(f1(th.pts))+'</b> against you so far</span><span>still to play here: <b class="up">+'+esc(f1(me.left))+'</b> you \u00b7 <b class="dn">+'+esc(f1(th.left))+'</b> them <small>(pace)</small></span></div>'
+      :'<div class="gv96mml"><span class="gv96est">Nobody from this matchup is in this game.</span></div>';
+    let spark=''; try{ const a=(LIVE.wph&&LIVE.wph[L.lid])||[]; if(a.length>=6){ const vs=a.map(function(x){ return x[1]; }); const lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs); const sp=Math.max(0.04,hi-lo); const W=120,Hh=28;
+      const pts=vs.map(function(v,i){ return (i/(vs.length-1)*W).toFixed(1)+','+(Hh-2-((v-lo)/sp)*(Hh-4)).toFixed(1); }).join(' '); const d=Math.round((vs[vs.length-1]-vs[0])*100);
+      spark='<span class="gv96mmsp" title="Your win % in this league since you opened the app (sampled every poll; a model estimate, not Sleeper\u2019s figure)"><svg viewBox="0 0 '+W+' '+Hh+'" width="'+W+'" height="'+Hh+'" aria-hidden="true"><polyline fill="none" stroke="'+(d>=0?'#37E5A7':'#FF5F8D')+'" stroke-width="2" points="'+pts+'"/></svg><small>'+(d>=0?'+':'')+d+'% since you opened</small></span>'; } }catch(e){ spark=''; }
+    h+='<div class="gv96mm '+(pct==null?'':pct>=50?'up':'dn')+'"><div class="gv96mmt"><span class="tfcode">'+esc(code)+'</span><span class="gv96mmn">'+esc(String(L.name||L.short||''))+'</span>'+(pct!=null?'<span class="gv96mmw">'+pct+'%<small>win</small></span>':'')+'</div>'
+      +'<div class="gv96mms2"><span class="gv96mme"><small>'+esc(String(L.myName||'You'))+'</small><b>'+esc(f1(mePts))+'</b></span><span class="gv96mmv">vs</span><span class="gv96mmo"><small>'+esc(String(L.oppName||'Opponent'))+'</small><b>'+esc(f1(opPts))+'</b></span></div>'
+      +(pct!=null?'<div class="gv96mmb" aria-hidden="true"><i style="width:'+pct+'%"></i></div>':'')+here+(spark?'<div class="gv96mmf">'+spark+'</div>':'')+'</div>'; });
+  return h+'</div><div class="gv96est" style="margin:6px 2px 0">Scores and points are Sleeper\u2019s own; win % blends what is on the board with what is still to come; \u201cstill to play\u201d is each man\u2019s pace minus his points.</div>'; }
 function gvProbHTML96(g,sm,M){ let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; }
   const canMine=M.mode!=='replay'&&!!(ML&&ML.leagues&&ML.leagues.some(function(L){ return !!L.opp; })); const mode=(canMine&&GV.statsMode==='mine')?'mine':'wp';
   let h='<div class="gv96sec"><span>Probabilities</span>'+(canMine
     ?'<span class="gv96tog" role="tablist"><button type="button" class="gv96tb'+(mode==='wp'?' on':'')+'" data-act="gvStatsMode" data-v="wp" role="tab" aria-selected="'+(mode==='wp'?'true':'false')+'">Win %</button><button type="button" class="gv96tb'+(mode==='mine'?' on':'')+'" data-act="gvStatsMode" data-v="mine" role="tab" aria-selected="'+(mode==='mine'?'true':'false')+'">Your matchups</button></span>'
     :'<span>'+(M.mode==='replay'?'replay \u00b7 game line only':'ESPN win probability')+'</span>')+'</div>';
-  h+=mode==='mine'?gvMyWpHTML96(g,sm,ML):gvWpChartHTML96(g,sm,M);
+  h+=mode==='mine'?gvMyMatchHTML96(g,sm,ML):gvWpChartHTML96(g,sm,M);   /* GC96UX_MARK */
   h+=gvLastPlayHTML(M);
   try{ h+=gvSwingsHTML96(g,sm,M); }catch(e){ h+=gvErr96('Biggest swings',e); }
   return h; }
@@ -25499,6 +25599,8 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' If the ends look reversed against the broadcast, tap <b>\u21c4 ends</b> on the field once \u2014 the picture mirrors for that game and the quarter switches follow; the choice is remembered on this device.'; }catch(e){}   /* GC96UX2_MARK */
+try{ if(HELP.gcstats&&HELP.gcstats.b) HELP.gcstats.b+=' <b>Your matchups</b> (under Probabilities) is each league\u2019s matchup live: your score and theirs, the win %, what this game has already done to it \u2014 your players here against theirs, with Sleeper\u2019s points \u2014 and what is still to play here on each side (pace minus points). The small line is your win % since you opened the app, nothing more.'; }catch(e){}   /* GC96UX_MARK */
 try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> Clubs change ends every quarter, so the home end zone sits on the right in the 1st and 3rd quarters and on the left in the 2nd and 4th; ESPN never says which physical end a club defends, so the picture follows that convention. The club with the ball always comes from the same feed as the spot, so a punt or a turnover never shows the new spot with the old direction.'; }catch(e){}   /* GC96FLD_MARK */
 (function mob96(){ /* MOB96_MARK */
   let cond=-1; const onScroll=function(){ try{ if(S.ui.tab==='live') LW.scrollTs=Date.now(); const st=$('lwStrip'); if(!st) return; let ph=false; try{ ph=isPhone(); }catch(e){ ph=false; }
