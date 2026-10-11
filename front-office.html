@@ -4947,6 +4947,27 @@ body.phone .gv96mmp{min-height:32px} body.phone .gv96mme b,body.phone .gv96mmo b
 .gv96flipbtn{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:2;min-height:28px;padding:0 9px;border-radius:99px;border:1px solid rgba(255,255,255,.18);background:rgba(8,12,24,.74);color:var(--ink);font:800 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;appearance:none}
 .gv96flipbtn:hover{background:rgba(8,12,24,.92)}
 body.phone .gv96flipbtn{min-height:36px;padding:0 11px;font-size:10.5px}
+
+/* ═══════════ v9.6.5 · GC96ST_MARK — the kick chips ═══════════ */
+.gv96lpk i{font-style:normal;font-weight:700;opacity:.9;margin-left:5px;letter-spacing:0;text-transform:none}
+
+/* ═══════════ v9.6.5 · GC96RP_MARK — replay controls and jump chips ═══════════ */
+.gv96rpc{grid-template-columns:36px 36px minmax(0,1fr) 36px 36px auto auto;gap:6px}
+.gv96rb{min-height:40px;padding:0;font-size:14px}
+.gv96auto{min-width:74px;padding:0 10px;font:800 11px/1 var(--sans);letter-spacing:.04em;white-space:nowrap}
+.gv96auto.on{background:var(--acc);color:#0B1024;border-color:var(--acc)}
+.gv96rpj{display:flex;align-items:center;gap:8px;margin-top:9px;min-width:0}
+.gv96rjk{flex:none;font:800 9.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.gv96rjs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:2px 0;-webkit-overflow-scrolling:touch}
+.gv96rjs::-webkit-scrollbar{display:none}
+.gv96rj{flex:none;display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:40px;padding:5px 9px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--mut);cursor:pointer;-webkit-appearance:none;appearance:none;font:inherit;text-align:left}
+.gv96rj b{font:800 11px/1 var(--sans);color:var(--ink);white-space:nowrap} .gv96rj small{font:600 9.5px/1 var(--sans);color:var(--dim);white-space:nowrap}
+.gv96rj.t-sc{border-color:rgba(245,197,24,.4)} .gv96rj.t-sc b{color:#F5C518}
+.gv96rj.t-me{border-color:rgba(55,229,167,.4)} .gv96rj.t-me b{color:var(--gain)}
+.gv96rj.on{background:rgba(59,227,255,.14);border-color:var(--acc)}
+body.phone .gv96rpc{grid-template-columns:36px 36px minmax(0,1fr) 36px 36px;grid-auto-rows:auto;row-gap:8px}
+body.phone .gv96rpc .gv96auto{grid-column:1 / 4;min-height:44px;width:auto;justify-self:stretch} body.phone .gv96rpc .gv96fin{grid-column:4 / 6;min-height:44px;width:auto;justify-self:stretch}
+body.phone .gv96rb{min-height:44px} body.phone .gv96rj{min-height:44px}
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -17982,7 +18003,7 @@ function gvStampFresh(ok){ // a small "updated Ns ago" in the game header so the
 }
 function gvHelpMount(){ const b0=$('gvBody'); const b=(b0&&b0.querySelector('.gvmain'))||b0; if(!b) return; const x=$('gvHelpBox'); if(!GV.help){ if(x) x.remove(); return; } if(x) return; const h=HELP[GV.helpK||'gamecenter']||HELP.gamecenter||{};   /* GC96A_MARK */
   const d=document.createElement('div'); d.id='gvHelpBox'; d.className='card'; d.style.cssText='margin:0 0 10px'; d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><b>'+esc(h.t||'Game Center')+'</b><button class="btn sm" data-act="gvHelp">Close</button></div><div class="railnote">'+(h.b||'Live feed, box score, scoring plays and your players in this game.')+'</div>'; b.prepend(d); }
-function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; GV.helpK=null; try{ GVR.gid=null; GVR.i=null; GVR.dragTs=0; }catch(e){} if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
+function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; GV.helpK=null; try{ gvAutoStop96(); GVR.gid=null; GVR.i=null; GVR.dragTs=0; }catch(e){} if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
 function gameViewRepaint(){ gameViewRepaintInner(); if(GV.help) gvHelpMount(); }
 function gameViewRepaintInner(){ if(GVR.dragTs&&Date.now()-GVR.dragTs<1500&&S.ui.gvTab==='live'&&$('gvLivePanel')) return;
   if(GV.scrollTs&&Date.now()-GV.scrollTs<1000&&GV.tab===(S.ui.gvTab||'feed')) return;   /* MOB96_MARK: a repaint never lands under a moving thumb — the next tick paints */   /* GC96A_MARK: a replay scrub in progress keeps its slider */
@@ -22730,8 +22751,9 @@ document.addEventListener('click',async e=>{
   if(act==='rpickDone'){ closeOver(); return; }
   if(act==='openGame'){ openGame(b.dataset.gid); return; }
   if(act==='lvReplay96'){ lvReplay96(b.dataset.gid); return; }   /* LIVE96_MARK */
-  if(act==='gvTab'){ S.ui.gvTab=b.dataset.v; gameViewRepaint(); return; }
+  if(act==='gvTab'){ try{ gvAutoStop96(); }catch(e){} S.ui.gvTab=b.dataset.v; gameViewRepaint(); return; }
   if(act==='gvFlip'){ gvFlipToggle96(b.dataset.gid); return; }   /* GC96UX2_MARK */
+  if(act==='gvAuto'){ gvAuto96(b.dataset.gid); return; }   /* GC96RP_MARK */
   if(act==='gvReplay'){ gvReplay(b.dataset.gid,b.dataset.v); return; }   /* GC96A_MARK */
   if(act==='gvStatsMode'){ GV.statsMode=b.dataset.v==='mine'?'mine':'wp'; gameViewRepaint(); return; }   /* GC96B_MARK */
   if(act==='gvSwingGo'){ const i96=Number(b.dataset.v); if(isFinite(i96)){ S.ui.gvTab='live'; try{ gvReplay(b.dataset.gid,i96); }catch(e){} gameViewRepaint(); try{ const p96=$('gvLivePanel'); if(p96) p96.scrollTop=0; }catch(e){} } return; }   /* GC96B_MARK */
@@ -24763,7 +24785,7 @@ function gvModel(g,sm,o){ /* the view model of the LIVE state (o.replay: as of a
   const sit=(!replay&&live&&sm.sit)?sm.sit:null; const gs=(!replay&&live&&g.sit)?g.sit:null;
   const sitOK=!!(sit&&sit.poss&&sit.yl!=null);   /* GC96FLD_MARK: the spot and the club with the ball come from the SAME source — a mixed read showed the wrong side after a punt */
   let poss=null; if(sitOK) poss=sit.poss; else if(last&&last.tid1) poss=abOfId(last.tid1); else if(gs&&gs.poss) poss=gs.poss; else if(live&&g.poss) poss=g.poss; else if(last&&last.team) poss=last.team;
-  const td=!!(last&&last.score&&(last.dn1===-1||last.yl1===100||last.yl1===0));
+  const td=!!(last&&last.score&&!/field goal|extra point/i.test(String(last.type||''))&&(/touchdown/i.test(String(last.text||''))||/touchdown/i.test(String(last.type||''))||(last.dn1===-1&&(last.yl1===100||last.yl1===0)&&!/field goal/i.test(String(last.text||'')))));   /* GC96ST_MARK: a made field goal carries the same end signature as a touchdown */
   let dn=null,dist=null,yl=null,y2e=null,dd='',spot='';
   if(sitOK){ dn=sit.dn; dist=sit.dist; yl=sit.yl; y2e=sit.y2e; dd=sit.dd||''; spot=sit.spot||''; }
   const NP=/timeout|end period|end of half|end of game|end quarter|two-minute/i; let ref=last;
@@ -24803,6 +24825,31 @@ function gvReplayModel(g,sm,i){ /* the same shape as of play index i of sm.plays
   i=clamp(Math.round(Number(i)||0),0,P.length-1); const pl=P[i]; const t=gvTrunc96(sm,i);
   const g2=Object.assign({},g,{state:'in',period:pl.period||g.period,clock:pl.clock||'',hs:pl.hs!=null?pl.hs:g.hs,as:pl.as!=null?pl.as:g.as,poss:null,dd:'',spot:'',rz:false,sit:null});
   return gvModel(g2,t,{replay:true,i:i,n:P.length}); }
+function gvKick96(pl,M){ /* GC96ST_MARK · what ESPN's text and start/end fields say about a kick or a try — null for anything else */
+  if(!pl) return null; const ty=String(pl.type||'').toLowerCase(), t=String(pl.text||'').toLowerCase().replace(/\s+/g,' '); const home=M&&M.home, away=M&&M.away;
+  const abs=function(spot){ try{ return gvAbsYard96(String(spot||'').toUpperCase(),home,away,home,away); }catch(e){ return null; } };
+  const ret=function(after){ const m=/ to ([a-z]{2,4} \d{1,2}|50) for (-?\d+) yards?/.exec(after); return m?{spot:m[1],yds:Number(m[2])}:null; };
+  const res=function(str){ if(/touchback/.test(str)) return 'touchback'; if(/fair catch/.test(str)) return 'fair catch'; if(/muff/.test(str)) return 'muffed'; if(/blocked/.test(str)) return 'blocked'; if(/pushed ob|out of bounds|ran ob|steps out/.test(str)) return 'out of bounds'; if(/downed/.test(str)) return 'downed'; if(/onside/.test(str)) return 'onside'; return ''; };
+  const K={k:null,yds:null,land:null,res:'',ret:null,td:/touchdown/.test(t)&&!/nullified/.test(t),pat:null,good:null,label:''};
+  const xp=/extra point is (good|no good)/.exec(t); const tp=/two-point conversion attempt[^.]*?(succeeds|fails)/.exec(t)||/two-point (?:conversion|attempt)[^.]*?(succeeds|fails|is good|is no good)/.exec(t);
+  if(xp) K.pat=xp[1]==='good'?'xp good':'xp no good'; else if(tp) K.pat=/succeed|is good/.test(tp[1])?'2pt good':'2pt failed';
+  let m;
+  if(/kickoff/.test(ty)||(m=/kicks? (\d+) yards? from/.exec(t))){ K.k='kickoff'; m=/kicks? (\d+) yards? from ([a-z]{2,4} \d{1,2}|50) to ([a-z]{2,4} \d{1,2}|50|end zone)/.exec(t); if(m){ K.yds=Number(m[1]); K.land=/end zone/.test(m[3])?null:abs(m[3]); } K.res=res(t); const r=ret(t.slice(t.indexOf(' to ')+1)); if(r&&!/touchback/.test(t)){ K.ret=r.yds; } if(/onside/.test(t)) K.res='onside'; }
+  else if(/punt/.test(ty)||(m=/punts (\d+) yards?/.exec(t))){ K.k='punt'; m=/punts (\d+) yards? to ([a-z]{2,4} \d{1,2}|50|end zone)/.exec(t); if(m){ K.yds=Number(m[1]); K.land=/end zone/.test(m[2])?null:abs(m[2]); } K.res=res(t); const r=ret(t); if(r&&!/touchback|fair catch|out of bounds|downed/.test(t)) K.ret=r.yds; if(/blocked/.test(t)) K.res='blocked'; }
+  else if(/field goal/.test(ty)||/yard field goal/.test(t)){ K.k='fg'; m=/(\d+) yard field goal/.exec(t); if(m) K.yds=Number(m[1]); K.good=/is good/.test(t)?true:(/no good|blocked|missed/.test(t)?false:(pl.score?true:null)); if(/blocked/.test(t)) K.res='blocked'; }
+  else if(/extra point/.test(ty)&&!K.td){ K.k='xp'; K.good=/is good/.test(t); }
+  else if(/two.point/.test(ty)&&!K.td){ K.k='2pt'; K.good=/succeed|is good/.test(t); }
+  if(!K.k&&!K.pat) return null;
+  const y=K.yds!=null?K.yds+'-yd ':'';
+  if(K.k==='kickoff') K.label='Kickoff'+(K.res==='touchback'?' \u00b7 touchback':K.res==='onside'?' \u00b7 onside':K.ret!=null?' \u00b7 '+K.ret+'-yd return':K.res?' \u00b7 '+K.res:'')+(K.td?' \u00b7 TD':'');
+  else if(K.k==='punt') K.label='Punt'+(K.yds!=null?' \u00b7 '+K.yds+' yds':'')+(K.res?' \u00b7 '+K.res:K.ret!=null?' \u00b7 '+K.ret+'-yd return':'')+(K.td?' \u00b7 TD':'');
+  else if(K.k==='fg') K.label='FG '+(K.good===true?'\u2713':K.good===false?'\u2717':'')+(K.yds!=null?' '+K.yds+' yds':'')+(K.res==='blocked'?' \u00b7 blocked':'');
+  else if(K.k==='xp') K.label='XP '+(K.good?'\u2713':'\u2717');
+  else if(K.k==='2pt') K.label='2-pt '+(K.good?'\u2713':'\u2717');
+  else if(K.pat) K.label=K.pat==='xp good'?'XP \u2713':K.pat==='xp no good'?'XP \u2717':K.pat==='2pt good'?'2-pt \u2713':'2-pt \u2717';
+  return K; }
+function gvPlayDetail96(pl,M){ /* GC96ST_MARK: the chip's detail text beside the kind */
+  const K=gvKick96(pl,M); if(!K) return ''; if(K.k&&!K.td) return K.label; if(K.td&&K.pat) return K.k?K.label:(K.pat==='xp good'?'XP \u2713':K.pat==='xp no good'?'XP \u2717':K.pat==='2pt good'?'2-pt \u2713':'2-pt \u2717'); return K.k?K.label:''; }
 function gvPlayKind96(pl){ if(!pl) return ''; const ty=String(pl.type||'').toLowerCase(), t=String(pl.text||'').toLowerCase();
   if(/end of game/.test(ty)||/^end game/.test(t)) return 'Final';
   if(/end of half/.test(ty)) return 'Halftime';
@@ -24876,6 +24923,7 @@ function gvDriveHeadHTML96(M,sm){ const d=M.drive; const replay=M.mode==='replay
   return '<div class="gv96head"><div class="gv96hl">'+(M.poss?gvLogoImg96(M.poss,'gv96lg'):'<i class="gv96nolg"></i>')+'</div><div class="gv96ht"><div class="gv96ttl">'+ttl+'</div><div class="gv96meta">'+meta+'</div></div>'+(chips.length?'<div class="gv96chips">'+chips.join('')+'</div>':'')+'</div>'; }
 function gvDownWord96(M){ /* GC96POL_MARK: what the tile says when the feed carries no down — the play that just happened, never a dash when a word is true */
   const L=M&&M.last; const ty=String((L&&L.type)||''); if(M&&M.dn>0) return '';
+  try{ const K=gvKick96(L,M); const sp=String((M&&M.spot)||''); if(L&&L.sc&&/ 35$/.test(sp)&&!/kickoff/i.test(ty)) return 'Kickoff next'; if(L&&L.sc&&K&&K.td&&!K.pat&&/ (15|2)$/.test(sp)) return 'PAT'; if(K&&K.k==='fg'&&K.good===true&&!(M&&M.dn>0)) return 'Kickoff next'; }catch(e){}   /* GC96ST_MARK */
   if(L&&L.pen&&!/kickoff|punt/i.test(ty)) return 'No play'; if(/kickoff/i.test(ty)) return 'Kickoff'; if(/field goal/i.test(ty)) return 'Field goal'; if(/punt/i.test(ty)) return 'Punt';
   if(L&&L.sc) return 'Score'; if(/timeout/i.test(ty)) return 'Timeout'; if(/end period|end of|end quarter/i.test(ty)) return 'Break'; return '\u2014'; }
 function gvDownHTML96(M){ const post=M.fin&&M.mode!=='replay';
@@ -24889,18 +24937,20 @@ function gvFlipFor96(M){ /* GC96DIR_MARK: the home end zone sits on the right on
   const post=M&&M.fin&&M.mode!=='replay'; if(post) return false;
   if(M&&M.poss) return String(M.poss).toUpperCase()===String(M.home||'').toUpperCase();
   try{ if(GV.fieldPrev&&GV.fieldPrev.gid===String((M&&M.gid)||'')) return !!GV.fieldPrev.flip; }catch(e){} return false; }
-function gvFieldSVG96(M){ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th; hatched end zones with logo + name; midfield logo; the ball slides between plays */
+function gvEzFit96(){ /* GC96RP_MARK: every club's name runs the same length through its end zone — measured on this device's own face after the paint, so a short name grows (to 58) and a long one shrinks (to 30) */
+  try{ document.querySelectorAll('#gvLivePanel text.gv96ezn').forEach(function(t){ const base=Number(t.getAttribute('data-fs'))||48; let len=0; try{ len=t.getComputedTextLength(); }catch(e){ return; } if(!(len>0)) return; const cur=Number(t.getAttribute('font-size'))||base; let fs=cur*252/len; fs=Math.max(30,Math.min(58,fs)); if(Math.abs(fs-cur)>0.5) t.setAttribute('font-size',fs.toFixed(1)); }); }catch(e){} }
+function gvFieldSVG96(M){ try{ clearTimeout(GV.ezFitT); GV.ezFitT=setTimeout(gvEzFit96,0); }catch(e){}   /* GC96RP_MARK: the name fit runs once the picture is in the DOM */ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th; hatched end zones with logo + name; midfield logo; the ball slides between plays */
   const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; let flip=gvFlipFor96(M);   /* GC96DIR_MARK: the club with the ball drives left to right */
   const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; }; const CY=200;
   const K=function(T){ return (typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||{p:'#1E2739',a:'#FFFFFF'}; };
   const hk=K(M.home), ak=K(M.away); const logo=function(T){ const t=String(T||'').toLowerCase(); return t?'https://sleepercdn.com/images/team_logos/nfl/'+esc(t)+'.png':''; };
   const FONT="'Avenir Next Condensed','Arial Narrow','Roboto Condensed',Impact,'Segoe UI',Helvetica,Arial,sans-serif", MONO='ui-monospace,Menlo,Consolas,monospace';   /* GC96UX2: a condensed heavy display face — the clubs' wordmark fonts are proprietary */
   const left=flip?{T:M.home,nm:M.hn,k:hk}:{T:M.away,nm:M.an,k:ak}, right=flip?{T:M.away,nm:M.an,k:ak}:{T:M.home,nm:M.hn,k:hk};
-  const ez=function(x0,side,o){ const cx=x0+50; let txt=String(o.nm||o.T||'').toUpperCase(); if(txt.length>12) txt=String(o.T||'').toUpperCase(); const fsz=txt.length>9?40:txt.length>7?48:56;
-    const ly=side<0?24:324, ty=side<0?244:156; const lg=logo(o.T);
+  const ez=function(x0,side,o){ const cx=x0+50; let txt=String(o.nm||o.T||'').toUpperCase(); if(txt.length>12) txt=String(o.T||'').toUpperCase(); const fsz=txt.length>9?36:txt.length>7?42:txt.length>6?48:52;   /* GC96RP_MARK */
+    const ty=200; const lg=logo(o.T);
     return '<rect x="'+x0+'" y="0" width="100" height="400" fill="'+esc(o.k.p)+'"/><rect x="'+x0+'" y="0" width="100" height="400" fill="url(#gv96hatch)"/><rect x="'+x0+'" y="0" width="100" height="400" fill="url(#gv96ezg)"/>'
-      +(lg?'<image href="'+lg+'" x="'+(cx-26)+'" y="'+ly+'" width="52" height="52" preserveAspectRatio="xMidYMid meet" opacity=".97"/>':'')
-      +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="900" font-family="'+FONT+'" font-stretch="condensed" letter-spacing="1.5">'+esc(txt)+'</text>'; };
+      +(lg?'<image href="'+lg+'" x="'+(cx-22)+'" y="16" width="44" height="44" preserveAspectRatio="xMidYMid meet" opacity=".96"/><image href="'+lg+'" x="'+(cx-22)+'" y="340" width="44" height="44" preserveAspectRatio="xMidYMid meet" opacity=".96"/>':'')
+      +'<text class="gv96ezn" data-fs="'+fsz+'" x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="900" font-family="'+FONT+'" font-stretch="condensed" letter-spacing="2">'+esc(txt)+'</text>'; };
   let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
   const flipIn=!!(prev&&prev.flip!==flip);
   let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(M.poss?' \u2014 '+M.poss+' drives left to right':''))+'">';
@@ -24916,7 +24966,19 @@ function gvFieldSVG96(M){ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home 
   for(let yl=10;yl<=90;yl+=10){ const x=X(yl); const lab=yl<=50?yl:100-yl; s2+='<text x="'+x+'" y="362" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="'+MONO+'">'+lab+'</text><text x="'+x+'" y="38" transform="rotate(180 '+x+' 38)" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="30" font-weight="700" font-family="'+MONO+'">'+lab+'</text>'; }
   const hl=logo(M.home); if(hl) s2+='<circle cx="500" cy="'+CY+'" r="60" fill="rgba(0,0,0,.22)"/><image href="'+hl+'" x="450" y="'+(CY-50)+'" width="100" height="100" preserveAspectRatio="xMidYMid meet" opacity=".9"/>';
   const d=M.drive; if(d&&d.yl0!=null){ const x=X(d.yl0); s2+='<path d="M'+(x-10)+' 400 L'+(x+10)+' 400 L'+x+' 384 Z" fill="rgba(255,255,255,.55)"/><line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="6 10"/>'; }
-  const L=M.last; if(L&&L.yl0!=null&&L.yl1!=null&&Math.abs(L.yl1-L.yl0)>=1){ const x0=X(L.yl0), x1=X(L.yl1); const col=L.to?'#FF9B4A':'rgba(255,255,255,.9)';
+  const L=M.last; let KK=null; try{ KK=gvKick96(L,M); }catch(e){ KK=null; }
+  if(KK&&KK.k==='fg'&&L&&L.yl0!=null){ /* GC96ST_MARK: a kick at the posts — uprights on the end line the kicker attacks */
+    const kickerHome=String(M.poss||'').toUpperCase()===String(M.home||'').toUpperCase()||(L.tid0!=null&&M.homeId!=null&&String(L.tid0)===String(M.homeId)); const tgt=X(kickerHome?100:0); const right=tgt>500; const ux=right?982:18, x0=X(L.yl0);
+    const good=KK.good===true, blocked=KK.res==='blocked'; const col=good?'#F5C518':'#FF5F8D'; const endY=good?150:(blocked?CY-10:88), endX=blocked?(x0+(right?60:-60)):ux;
+    s2+='<g class="gv96arc"><line x1="'+ux+'" y1="'+(CY+90)+'" x2="'+ux+'" y2="'+(CY+30)+'" stroke="#F5D76E" stroke-width="6" stroke-linecap="round"/><line x1="'+(ux-28)+'" y1="'+(CY+30)+'" x2="'+(ux+28)+'" y2="'+(CY+30)+'" stroke="#F5D76E" stroke-width="6" stroke-linecap="round"/><line x1="'+(ux-28)+'" y1="'+(CY+30)+'" x2="'+(ux-28)+'" y2="'+(CY-70)+'" stroke="#F5D76E" stroke-width="6" stroke-linecap="round"/><line x1="'+(ux+28)+'" y1="'+(CY+30)+'" x2="'+(ux+28)+'" y2="'+(CY-70)+'" stroke="#F5D76E" stroke-width="6" stroke-linecap="round"/>'
+      +'<path d="M'+x0+' '+CY+' Q'+((x0+endX)/2)+' '+(CY-170)+' '+endX+' '+endY+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/><circle cx="'+x0+'" cy="'+CY+'" r="7" fill="'+col+'"/><circle cx="'+endX+'" cy="'+endY+'" r="9" fill="'+col+'"/>'
+      +(function(){ const lbl=(KK.yds!=null?KK.yds+'-YD FG ':'FG ')+(blocked?'BLOCKED':good?'GOOD':KK.good===false?'NO GOOD':''); const tw=lbl.length*13.5+26, tx=Math.max(tw/2+4,Math.min(996-tw/2,(x0+endX)/2)); return '<rect x="'+(tx-tw/2)+'" y="'+(CY+34)+'" width="'+tw+'" height="28" rx="14" fill="rgba(5,10,24,.74)"/><text x="'+tx+'" y="'+(CY+53)+'" text-anchor="middle" fill="'+col+'" font-size="24" font-weight="800" font-family="'+FONT+'" letter-spacing="1">'+esc(lbl)+'</text>'; })()+'</g>'; }
+  else if(KK&&(KK.k==='kickoff'||KK.k==='punt')&&L&&L.yl0!=null&&L.yl1!=null){ /* GC96ST_MARK: the kick to its landing spot, the return to the final spot */
+    const x0=X(L.yl0), x1=X(L.yl1); const xl=(KK.land!=null)?X(KK.land):x1; const col='rgba(255,255,255,.92)';
+    s2+='<g class="gv96arc"><path d="M'+x0+' '+CY+' Q'+((x0+xl)/2)+' '+(CY-175)+' '+xl+' '+CY+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/><circle cx="'+x0+'" cy="'+CY+'" r="7" fill="'+col+'"/>'
+      +(Math.abs(x1-xl)>=4?'<line x1="'+xl+'" y1="'+CY+'" x2="'+x1+'" y2="'+CY+'" stroke="#37E5A7" stroke-width="5" stroke-linecap="round"/><path d="M'+(x1+(x1>xl?-14:14))+' '+(CY-10)+' L'+x1+' '+CY+' L'+(x1+(x1>xl?-14:14))+' '+(CY+10)+'" fill="none" stroke="#37E5A7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>':'<circle cx="'+xl+'" cy="'+CY+'" r="9" fill="'+col+'"/>')
+      +(function(){ const lbl=(KK.yds!=null?KK.yds+'-YD ':'')+(KK.k==='punt'?'PUNT':'KICKOFF')+(KK.res?' \u00b7 '+KK.res.toUpperCase():KK.ret!=null?' \u00b7 '+KK.ret+'-YD RETURN':''); const tw=lbl.length*13.5+26, tx=Math.max(tw/2+4,Math.min(996-tw/2,(x0+xl)/2)); return '<rect x="'+(tx-tw/2)+'" y="'+(CY+34)+'" width="'+tw+'" height="28" rx="14" fill="rgba(5,10,24,.74)"/><text x="'+tx+'" y="'+(CY+53)+'" text-anchor="middle" fill="rgba(255,255,255,.92)" font-size="24" font-weight="800" font-family="'+FONT+'" letter-spacing="1">'+esc(lbl)+'</text>'; })()+'</g>'; }
+  else if(L&&L.yl0!=null&&L.yl1!=null&&Math.abs(L.yl1-L.yl0)>=1){ const x0=X(L.yl0), x1=X(L.yl1); const col=L.to?'#FF9B4A':'rgba(255,255,255,.9)';
     s2+='<g class="gv96arc"><path d="M'+x0+' '+CY+' Q'+((x0+x1)/2)+' '+(CY-125)+' '+x1+' '+CY+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/><circle cx="'+x0+'" cy="'+CY+'" r="7" fill="'+col+'"/></g>'; }
   if(M.fd!=null&&!post&&M.dn>0&&!M.td){ const x=X(M.fd); s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="#3B82F6" stroke-width="5"/>'; }
   if(M.yl!=null){ const x=X(M.yl); if(!post&&!M.td) s2+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="400" stroke="#F5C518" stroke-width="5"/>';
@@ -24939,7 +25001,7 @@ function gvFieldSVG96v1(M){ /* GC96FLD field (1000×300), kept for reference · 
     const ly=side<0?20:232, ty=side<0?186:114; const lg=logo(o.T);
     return '<rect x="'+x0+'" y="0" width="100" height="300" fill="'+esc(o.k.p)+'"/><rect x="'+x0+'" y="0" width="100" height="300" fill="url(#gv96ezg)"/>'
       +(lg?'<image href="'+lg+'" x="'+(cx-24)+'" y="'+ly+'" width="48" height="48" preserveAspectRatio="xMidYMid meet" opacity=".96"/>':'')
-      +'<text x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="800" font-family="'+FONT+'" letter-spacing="2.5">'+esc(txt)+'</text>'; };
+      +'<text class="gv96ezn" data-fs="'+fsz+'" x="'+cx+'" y="'+ty+'" transform="rotate('+(side<0?-90:90)+' '+cx+' '+ty+')" text-anchor="middle" dominant-baseline="central" fill="'+esc(o.k.a||'#fff')+'" font-size="'+fsz+'" font-weight="800" font-family="'+FONT+'" letter-spacing="2.5">'+esc(txt)+'</text>'; };
   let prev=null; try{ prev=(GV.fieldPrev&&GV.fieldPrev.gid===String(M.gid||''))?GV.fieldPrev:null; }catch(e){ prev=null; }
   const flipIn=!!(prev&&prev.flip!==flip);
   let s2='<svg class="gv96fsvg'+(flipIn?' gv96flipin':'')+'" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc((M.poss||'')+' ball'+(M.dd?', '+M.dd:'')+(M.spot?' at '+M.spot:'')+(M.poss?' \u2014 '+M.poss+' drives left to right':''))+'">';
@@ -25000,7 +25062,7 @@ function gvLastPlayHTML(M){ /* the last play (or the replay's play): type chip, 
   const clk=(L.period?((L.period>4?'OT':'Q'+L.period)+' '):'')+String(L.clock||''); const off=L.team?(' \u00b7 '+L.team+' ball'):'';
   const wp=M.wp; let wpTxt='Win % n/a'; if(wp!=null){ const hp=Math.round(wp*100); wpTxt='Win % '+esc(M.away)+' '+(100-hp)+' \u00b7 '+esc(M.home)+' '+hp; }
   let dTxt=''; if(M.dWp!=null){ const v=Math.abs(M.dWp)*100; const T=M.dWp>=0?M.home:M.away; dTxt=' <b class="'+(v<0.5?'':'up')+'" title="change in ESPN win probability on this play">'+(v<0.5?'\u00b10.0%':'+'+(v>=10?Math.round(v):v.toFixed(1))+'% '+esc(T))+'</b>'; } else if(wp!=null) dTxt=' <b class="na">\u0394 n/a</b>';
-  return '<div class="gv96lp'+(isNew?' gv96new':'')+'"><div class="gv96lph"><span class="gv96lpk k-'+esc(slug)+'">'+esc(kind)+'</span><span class="gv96lpc">'+esc(clk+off)+'</span><span class="gv96lptag">'+(M.mode==='replay'?'Play '+((M.i||0)+1):'Last play')+'</span></div>'
+  return '<div class="gv96lp'+(isNew?' gv96new':'')+'"><div class="gv96lph"><span class="gv96lpk k-'+esc(slug)+'">'+esc(kind)+(function(){ let d=''; try{ d=gvPlayDetail96(L,M); }catch(e){ d=''; } return (d&&d!==kind)?'<i>'+esc(d)+'</i>':''; })()+'</span><span class="gv96lpc">'+esc(clk+off)+'</span><span class="gv96lptag">'+(M.mode==='replay'?'Play '+((M.i||0)+1):'Last play')+'</span></div>'
     +'<div class="gv96lpt">'+esc(L.text||'')+'</div>'+(L.pen&&L.pt?'<div class="gv96pen">Flag: '+esc(L.pt)+'</div>':'')
     +'<div class="gv96lpf"><span>'+esc(M.away)+' '+esc(M.as)+' \u00b7 '+esc(M.home)+' '+esc(M.hs)+'</span><span>'+wpTxt+dTxt+'</span></div></div>'; }
 function gvNameForms96(nm){ const parts=String(nm||'').trim().split(/\s+/).filter(Boolean); if(parts.length<2) return parts.length?[parts[0].toLowerCase()]:[];
@@ -25059,7 +25121,7 @@ function gvDrivePlaysHTML96(g,sm,M){ const arr=(M.plays||[]).slice().reverse().s
 function gvStampHTML96(sm,M){ const ts=sm&&sm.ts; let t=''; try{ t=ts?new Date(ts).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit',second:'2-digit'}):''; }catch(e){ t=''; }
   const cov=(M&&M.npAll&&M.npAll>(sm.plays||[]).length&&M.mode==='replay')?' \u00b7 the replay covers the last '+(sm.plays||[]).length+' of '+M.npAll+' plays':'';
   return '<div class="gv96stamp"><span>'+(t?'Feed as of '+esc(t):'')+(M&&M.mode==='replay'?' \u00b7 replay':'')+' \u00b7 ESPN\u2019s feed trails the broadcast by 20\u201340 s'+cov+'</span><button class="gv96more" type="button" data-act="gvHelpK" data-k="gclive">What am I looking at?</button></div>'; }
-function gvRpLabel96(sm,M){ const n=(sm&&sm.plays&&sm.plays.length)||0; if(M.mode!=='replay') return 'Final \u00b7 '+n+(n===1?' play':' plays'); const L=M.last; return 'Play '+((M.i||0)+1)+' of '+n+(L?' \u00b7 '+(L.period>4?'OT':'Q'+(L.period||''))+' '+String(L.clock||''):''); }
+function gvRpLabel96(sm,M){ const n=(sm&&sm.plays&&sm.plays.length)||0; if(M.mode!=='replay') return 'Final \u00b7 '+n+(n===1?' play':' plays'); const L=M.last; return 'Play '+((M.i||0)+1)+' of '+n+(L?' \u00b7 '+(L.period>4?'OT':'Q'+(L.period||''))+' '+String(L.clock||''):'')+((M.as!=null&&M.hs!=null)?' \u00b7 '+M.away+' '+M.as+'\u2013'+M.home+' '+M.hs:''); }   /* GC96RP_MARK */
 function gvReplayPts96(g,sm,i,cands){ /* your points through play i per league — my starters for me, the starters against me — from the play text, priced with each league's own scoring (an ESTIMATE, never Sleeper's number) */
   const P=(sm&&sm.plays)||[]; let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; } if(!ML||!ML.leagues||!ML.leagues.length) return [];
   const side={}; cands.forEach(function(pid){ let A=[]; try{ A=mlSidesAll(pid); }catch(e){ A=[]; } A.forEach(function(x){ if(x.k==='ms'||x.k==='os') (side[pid]=side[pid]||[]).push(x); }); });
@@ -25075,15 +25137,35 @@ function gvRpPtsHTML96(g,sm,M){ if(M.mode!=='replay') return '<span class="gv96e
 function gvReplayCtlHTML96(g,sm,M){ if(g.state!=='post'||!sm||!sm.plays||sm.plays.length<2) return '';
   const n=sm.plays.length; const i=M.mode==='replay'?M.i:n-1;
   return '<div class="gv96rp" id="gvReplayCtl"><div class="gv96rph"><b>Replay the game</b><span id="gvRpLab">'+esc(gvRpLabel96(sm,M))+'</span></div>'
-    +'<div class="gv96rpc"><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="prev" aria-label="Previous play">\u25c0</button>'
+    +'<div class="gv96rpc"><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="pdrive" aria-label="Previous drive" title="Previous drive">\u23ee</button><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="prev" aria-label="Previous play" title="Previous play (\u2190)">\u25c0</button>'
     +'<input id="gvRange" class="gv96rng" type="range" min="0" max="'+(n-1)+'" step="1" value="'+i+'" data-act="gvRange" data-gid="'+esc(g.id)+'" aria-label="Scrub through the plays of the game">'
-    +'<button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="next" aria-label="Next play">\u25b6</button>'
-    +'<button class="btn sm gv96fin'+(M.mode==='replay'?' pri':'')+'" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="live">Final</button></div>'
+    +'<button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="next" aria-label="Next play" title="Next play (\u2192)">\u25b6</button><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="ndrive" aria-label="Next drive" title="Next drive">\u23ed</button><button class="gv96rb gv96auto'+(GVR.auto?' on':'')+'" type="button" data-act="gvAuto" data-gid="'+esc(g.id)+'" aria-label="'+(GVR.auto?'Pause':'Play the game')+'" title="'+(GVR.auto?'Pause (space)':'Play the game a play at a time (space)')+'">'+(GVR.auto?'\u275a\u275a':'\u25b6 Play')+'</button>'
+    +'<button class="btn sm gv96fin'+(M.mode==='replay'?' pri':'')+'" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="live">Final</button></div>'+gvRpJumpsHTML96(g,sm,M)
     +'<div class="gv96rpp" id="gvRpPts">'+gvRpPtsHTML96(g,sm,M)+'</div></div>'; }
+function gvDriveJump96(sm,cur,dir){ /* GC96RP_MARK: the first play of the previous / next drive */
+  const P=(sm&&sm.plays)||[]; if(!P.length) return cur; const dv=function(i){ return P[i]?String(P[i].dv||''):''; }; const here=dv(cur);
+  if(dir>0){ for(let i=cur+1;i<P.length;i++){ if(dv(i)!==here) return i; } return P.length-1; }
+  let i=cur; while(i>0&&dv(i-1)===here) i--; if(i===cur&&cur>0){ const prev=dv(cur-1); i=cur-1; while(i>0&&dv(i-1)===prev) i--; } return i; }
+function gvAutoStop96(){ try{ if(GVR.autoT){ clearInterval(GVR.autoT); } GVR.autoT=null; if(GVR.auto){ GVR.auto=false; const b=document.querySelector('#gvReplayCtl .gv96auto'); if(b){ b.classList.remove('on'); b.textContent='\u25b6 Play'; b.setAttribute('aria-label','Play the game'); } } }catch(e){} }
+function gvAuto96(gid){ /* GC96RP_MARK: the game plays itself a play every 1.3 s — the ball slides, the kicks arc; stops at the final, on a tap, on close */
+  gid=String(gid||S.ui.gameView||''); if(GVR.auto){ gvAutoStop96(); return; } const sm=LIVE.sum[gid]; if(!sm||!sm.plays||!sm.plays.length) return;
+  GVR.auto=true; if(GVR.gid!==gid||GVR.i==null){ gvReplay(gid,0); GVR.auto=true; } try{ gvLivePatch(); }catch(e){}
+  const tick=function(){ try{ if(!GVR.auto||S.ui.gameView!==gid||S.ui.gvTab!=='live'||!$('gvLivePanel')||document.hidden){ gvAutoStop96(); return; } const n=sm.plays.length; const cur=(GVR.i!=null)?GVR.i:n-1; if(cur>=n-1){ gvAutoStop96(); return; } gvReplay(gid,'auto'); if(GVR.i==null) gvAutoStop96(); }catch(e){ gvAutoStop96(); } };
+  GVR.autoT=setInterval(tick,1300); }
+function gvRpJumpsHTML96(g,sm,M){ /* GC96RP_MARK: jump chips — every scoring play, and the big plays that involved your players */
+  const P=(sm&&sm.plays)||[]; if(P.length<2) return ''; const cur=M.mode==='replay'?M.i:null; const chips=[]; const seen={};
+  let cands=[]; try{ cands=gvCands96(g); }catch(e){ cands=[]; }
+  P.forEach(function(p,i){ if(seen[i]) return; let kind='', tone='';
+    if(p.score){ let k=''; try{ k=gvPlayKind96(p); }catch(e){ k='Score'; } kind=k||'Score'; tone='sc'; }
+    else if(cands.length){ let pr=null; try{ pr=lwParseCached(p,g,cands); }catch(e){ pr=null; } if(pr&&pr.ev&&pr.ev.length&&(pr.td||pr.turnover||(pr.yds!=null&&pr.yds>=20))){ const who=(playerOf(pr.ev[0].pid)||{}); kind=(pr.turnover?'TO \u00b7 ':pr.td?'TD \u00b7 ':'')+(lwShort(who)||'Big play'); tone='me'; } }
+    if(!kind) return; seen[i]=1; const q=(p.period>4?'OT':'Q'+(p.period||''))+' '+String(p.clock||'');
+    chips.push('<button type="button" class="gv96rj t-'+tone+(cur===i?' on':'')+'" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="'+i+'" title="'+esc(String(p.text||'').slice(0,160))+'"><b>'+esc(kind)+'</b><small>'+esc((p.team?p.team+' \u00b7 ':'')+q)+'</small></button>'); });
+  if(!chips.length) return ''; return '<div class="gv96rpj" aria-label="Jump to a play"><span class="gv96rjk">Jump</span><div class="gv96rjs">'+chips.slice(0,24).join('')+'</div></div>'; }
 function gvReplay(gid,v){ /* sets GVR and patches only the panel: i | 'prev' | 'next' | 'live' */
   gid=String(gid||S.ui.gameView||''); const g=gameOf(gid); const sm=LIVE.sum[gid]; if(!g||!sm||!sm.plays||!sm.plays.length) return;
+  if(v!=='auto') gvAutoStop96();   /* GC96RP_MARK: a hand on the controls pauses the auto-play */
   const n=sm.plays.length; const cur=(GVR.gid===gid&&GVR.i!=null)?GVR.i:n-1; let i=null;
-  if(v==='prev') i=cur-1; else if(v==='next') i=cur+1; else if(v==='live'||v==='final'||v==null||v==='') i=null; else i=Number(v);
+  if(v==='prev') i=cur-1; else if(v==='next'||v==='auto') i=cur+1; else if(v==='pdrive'||v==='ndrive') i=gvDriveJump96(sm,cur,v==='ndrive'?1:-1); else if(v==='live'||v==='final'||v==null||v==='') i=null; else i=Number(v);   /* GC96RP_MARK */
   if(i!=null){ if(!isFinite(i)) i=null; else { i=clamp(Math.round(i),0,n-1); if(i===n-1) i=null; } }
   GVR.gid=gid; GVR.i=i; if($('gvLivePanel')){ GVR.dragTs=Date.now(); gvLivePatch(); } else { GVR.dragTs=0; GV.scrollTs=0; try{ gameViewRepaint(); }catch(e){} } }   /* GC96FIX */
 function gvLivePatch(){ /* re-renders the panel body in place; the slider element is kept so a drag in progress survives */
@@ -25095,6 +25177,9 @@ function gvLivePatch(){ /* re-renders the panel body in place; the slider elemen
   const r=$('gvRange'); if(r){ const want=String(M.mode==='replay'?M.i:((sm.plays||[]).length-1)); if(r.value!==want) r.value=want; }
   const lab=$('gvRpLab'); if(lab) lab.textContent=gvRpLabel96(sm,M);
   const fin=p.querySelector('.gv96fin'); if(fin) fin.classList.toggle('pri',M.mode==='replay');
+  try{ const ai=(M.mode==='replay')?M.i:null; const strip=p.querySelector('.gv96rjs'); let onEl=null; p.querySelectorAll('.gv96rj').forEach(function(b){ const on=ai!=null&&Number(b.dataset.v)===ai; b.classList.toggle('on',on); if(on) onEl=b; });
+    if(strip&&onEl){ const sr=strip.getBoundingClientRect(), br=onEl.getBoundingClientRect(); const L=br.left-sr.left+strip.scrollLeft; if(br.left<sr.left+8||br.right>sr.right-8) strip.scrollLeft=Math.max(0,L-(sr.width-br.width)/2); }
+    const ab=p.querySelector('.gv96auto'); if(ab){ ab.classList.toggle('on',!!GVR.auto); ab.textContent=GVR.auto?'❚❚':'▶ Play'; ab.setAttribute('aria-label',GVR.auto?'Pause':'Play the game'); ab.setAttribute('title',GVR.auto?'Pause (space)':'Play the game a play at a time (space)'); } }catch(e){}   /* GC96RP_MARK */
   const pts=$('gvRpPts'); if(pts) pts.innerHTML=gvRpPtsHTML96(g,sm,M); }
 document.addEventListener('input',function(e){ const r=e.target; if(!r||!r.dataset||r.dataset.act!=='gvRange') return; try{ gvReplay(r.dataset.gid,r.value); }catch(x){} });
 function gvWxText96(g){ /* kickoff weather: the app's own forecast for the home venue, ESPN's line as the backstop, "indoor" for a roof, n/a otherwise */
@@ -25603,6 +25688,11 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+document.addEventListener('keydown',function(e){ /* GC96RP_MARK: ← → step the replay, space plays / pauses — only with a finished game's controls on screen and no field focused */
+  try{ if(!S.ui.gameView||!$('gvReplayCtl')||!$('modal').classList.contains('on')) return; const t=e.target; if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)&&t.type!=='range') return; if(e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.key==='ArrowLeft'){ e.preventDefault(); gvReplay(S.ui.gameView,'prev'); } else if(e.key==='ArrowRight'){ e.preventDefault(); gvReplay(S.ui.gameView,'next'); } else if(e.key===' '||e.code==='Space'){ e.preventDefault(); gvAuto96(S.ui.gameView); } }catch(x){} });
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Replay.</b> On a finished game: \u23ee \u23ed jump a drive, \u25c0 \u25b6 step a play (\u2190 \u2192 on a keyboard), \u25b6 Play runs the game a play every 1.3 seconds (space pauses), and the Jump chips take you to every score and to the big plays your players were part of; the label carries the quarter, the clock and the score at that moment.'; }catch(e){}
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Kicks.</b> A kickoff or a punt is drawn as a high arc to where it landed and a solid run to where the return ended; a field goal ends at drawn uprights with GOOD, NO GOOD or BLOCKED; the chip under the field carries the distance and the result, and a touchdown chip carries the extra point or two-point try (ESPN folds the try into the touchdown play). When ESPN posts no down the tile says Kickoff next, PAT or 2-pt try.'; }catch(e){}   /* GC96ST_MARK */
 /* GC96DIR_MARK: the \u21c4 control was retired — the orientation follows the ball */
 try{ if(HELP.gcstats&&HELP.gcstats.b) HELP.gcstats.b+=' <b>Your matchups</b> (under Probabilities) is each league\u2019s matchup live: your score and theirs, the win %, what this game has already done to it \u2014 your players here against theirs, with Sleeper\u2019s points \u2014 and what is still to play here on each side (pace minus points). The small line is your win % since you opened the app, nothing more.'; }catch(e){}   /* GC96UX_MARK */
 try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> The club with the ball always drives left to right: the picture mirrors when possession changes, so the end zone on the right is the one being attacked and the chevron always points the way the offense is going. ESPN publishes no physical direction for a play, so this is the one orientation the data can back. The club with the ball always comes from the same feed as the spot, so a punt or a turnover never shows the new spot with the old direction.'; }catch(e){}   /* GC96DIR_MARK */
