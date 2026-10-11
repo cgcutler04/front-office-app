@@ -17603,7 +17603,7 @@ function liveParseSummary(j){ // ESPN game summary → per-athlete box map, play
   const wpArr=(j&&j.winprobability)||[]; const wp=wpArr.length?wpArr[wpArr.length-1].homeWinPercentage:null;
   const plays=[]; const drv=j&&j.drives;
   const collect=d=>{ (d.plays||[]).forEach(p=>plays.push(gvPlayExt96(p,d,{id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,score:!!p.scoringPlay,team:liveTeamKey(d.team&&d.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore}))); };   /* GC96A_MARK: + seq, start/end down-distance-spot, yardage, turnover, penalty, wallclock, drive id */
-  if(drv){ (drv.previous||[]).forEach(collect); if(drv.current) collect(drv.current); }
+  if(drv){ const seen96=new Set(); const uniq96=function(d){ if(!d) return; collect(Object.assign({},d,{plays:(d.plays||[]).filter(function(p){ const k=String((p&&p.id)||''); if(!k||seen96.has(k)) return false; seen96.add(k); return true; })})); }; (drv.previous||[]).forEach(uniq96); if(drv.current) uniq96(drv.current); }   /* GC96POL_MARK: the in-progress drive is listed twice by ESPN */
   const scoring=((j&&j.scoringPlays)||[]).map(p=>({id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,team:liveTeamKey(p.team&&p.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore,score:true}));
   const drive=(drv&&drv.current&&(drv.current.description||''))||'';
   const P93={box,wp,plays:plays.slice(-160),scoring,ts:Date.now(),teams,drive}; try{ r93ParseExtra(j,P93); }catch(e){} try{ gvExtra96(j,P93); }catch(e){}   /* GC96A_MARK: tms/drv/wpa/cur/sit/tstat/lead/info/pick */   // V93_RECAP: every play + the injury lists, for the recap engine
@@ -17833,7 +17833,7 @@ function openGame(gid){ const g=gameOf(gid); if(!g){ toast('That game is not on 
   S.ui.gameView=String(gid); S.ui.gvTab=gvOpenTab(gid); gvFsOn(); // v8.2: the skin goes on first, so the very first paint is already full screen
   $('mTitle').textContent=g.an+' @ '+g.hn; $('mBody').innerHTML='<div id="gvBody">'+gameViewHTML(g)+'</div>'; $('modal').classList.add('on'); if($('modal').querySelector('.mbox')) $('modal').querySelector('.mbox').scrollTop=0;
   liveFetchSummary(gid,!LIVE.sum[gid]||Date.now()-LIVE.sum[gid].ts>20000).then(()=>gameViewRepaint()); gameViewArm(); }
-const GVF={fast:8000, pts:2, stats:4, maxBack:30000};   // V93: summary every 8s, Sleeper points every 2nd tick (16s), the weekly stat file every 4th (32s)
+const GVF={fast:8000, pts:2, stats:4, maxBack:30000, sit:true, sumMax:40000, sitFail:0, sitTs:0}   /* GC96POL_MARK */;   // V93: summary every 8s, Sleeper points every 2nd tick (16s), the weekly stat file every 4th (32s)
 function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+1; const gen=GV.gen; // v7.0.1: generation token — only the newest arm may re-arm
   let n=0, back=0;
   const tick=async()=>{ if(gen!==GV.gen) return; GV.timer=null; if(!$('gvBody')||!$('modal').classList.contains('on')||!S.ui.gameView){ S.ui.gameView=null; return; }
@@ -17841,7 +17841,11 @@ function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+
     if(document.hidden){ GV.timer=setTimeout(tick,st==='in'?GVF.fast:30000); return; }             // hidden: no network, just stay armed
     if(st==='post'){ GV.timer=setTimeout(tick,60000); return; }                                    // final: nothing left to chase
     const t0=(LIVE.sum[gid]&&LIVE.sum[gid].ts)||0;
-    try{ await liveFetchSummary(gid,true); }catch(e){}                                              // plays, box score, scoring, win prob AND the score/clock
+    let need96=true; if(st==='in'&&GVF.sit!==false){ let si=null; try{ si=await gvSitPoll96(gid,g); }catch(e){ si=null; } if(gen!==GV.gen) return;
+      if(si){ const s0=LIVE.sum[gid]; const lastId=(s0&&s0.plays&&s0.plays.length)?String(s0.plays[s0.plays.length-1].id||''):'';
+        need96=!s0||!lastId||!si.lpid||String(si.lpid)!==lastId||(Date.now()-(Number(s0.pt)||0))>GVF.sumMax;   /* the summary only when a play landed, or every 40 s for the box score and win probability */
+        if(!need96) s0.ts=Date.now(); } }
+    try{ if(need96) await liveFetchSummary(gid,true); }catch(e){}                                              // plays, box score, scoring, win prob AND the score/clock
     let ok=!!(LIVE.sum[gid]&&LIVE.sum[gid].ts>t0);                                                  // a fresh timestamp is the only proof the pull landed
     if(gen!==GV.gen) return;
     try{ gvApplyHeader(gid); }catch(e){}
@@ -17851,8 +17855,23 @@ function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+
     try{ gameViewRepaint(); }catch(e){}
     try{ gvStampFresh(ok); }catch(e){}
     back=ok?0:Math.min(GVF.maxBack,(back||GVF.fast)*2);                                             // a failed pull backs off, a good one snaps back to 8s
-    GV.timer=setTimeout(tick, st==='in'?(back||GVF.fast):30000); };                                 // pre-game: every 30s so kickoff is caught
+    GV.timer=setTimeout(tick, st==='in'?(back||gvFast96()):30000); };                                 // pre-game: every 30s so kickoff is caught
   GV.timer=setTimeout(tick,1200); }                                                                  // first refresh right away, not 20s later
+function gvFast96(){ try{ return (navigator.connection&&navigator.connection.saveData)?16000:GVF.fast; }catch(e){ return GVF.fast; } }   /* GC96POL_MARK: Data Saver halves the cadence */
+function gvSitPoll96(gid,g){ /* ESPN's situation feed for ONE game — ~0.6 KB, often a play ahead of the summary; feeds sm.sit (the model's first choice) and the game object (the Live tab) */
+  return (async function(){ if(GVF.sitFail>=3&&Date.now()-GVF.sitTs<120000) return null;
+    let j=null; try{ j=await jget('https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/'+encodeURIComponent(String(gid))+'/competitions/'+encodeURIComponent(String(gid))+'/situation?lang=en&region=us',6000); }catch(e){ j=null; }
+    if(!j||(j.down==null&&!j.lastPlay)){ GVF.sitFail++; GVF.sitTs=Date.now(); return null; } GVF.sitFail=0;
+    const sm=LIVE.sum[gid]||null; const idOf=function(r){ const m=/\/(\d+)(?:\?|$)/.exec(String((r&&r.$ref)||'')); return m?m[1]:null; };
+    const tid=idOf(j.team); const byId=(sm&&sm.tmsById)||{}; let poss=tid?(byId[tid]||null):null;
+    if(!poss&&tid&&g){ if(g.homeId!=null&&String(g.homeId)===String(tid)) poss=g.home; else if(g.awayId!=null&&String(g.awayId)===String(tid)) poss=g.away; }
+    const yl=(j.yardLine!=null&&isFinite(Number(j.yardLine)))?Number(j.yardLine):null; const home=!!(poss&&g&&String(g.home||'').toUpperCase()===String(poss).toUpperCase());
+    const sit={dn:(j.down!=null&&isFinite(Number(j.down)))?Number(j.down):null,dist:(j.distance!=null&&isFinite(Number(j.distance)))?Number(j.distance):null,yl:yl,y2e:(yl!=null&&poss)?(home?100-yl:yl):null,
+      dd:String(j.shortDownDistanceText||j.downDistanceText||''),spot:String(j.possessionText||''),poss:poss||null,rz:!!j.isRedZone,
+      hto:(j.homeTimeouts!=null)?Number(j.homeTimeouts):null,ato:(j.awayTimeouts!=null)?Number(j.awayTimeouts):null,lpid:idOf(j.lastPlay),ts:Date.now(),src:'core'};
+    if(sm){ sm.sit=Object.assign({},sm.sit||{},sit); }
+    if(g&&g.state==='in'){ g.sit=Object.assign({},g.sit||{},sit); if(sit.dd) g.dd=sit.dd; if(sit.spot) g.spot=sit.spot; g.rz=sit.rz; if(poss) g.poss=poss; }
+    return sit; })(); }
 function gvStampFresh(ok){ // a small "updated Ns ago" in the game header so the cadence is visible
   const el=document.querySelector('#modal .gvstate'); if(!el) return;
   let t=el.querySelector('.gvfresh'); if(!t){ t=document.createElement('span'); t.className='gvfresh'; el.appendChild(t); }
@@ -18827,7 +18846,7 @@ function r93Frac(q,c){ q=Number(q)||0; if(q>4) return 0.97; const m=String(c||'0
 /* ── parse: called from liveParseSummary with the SAME json — no request of its own ── */
 function r93ParseExtra(j,P){
   const pall=[]; const drv=j&&j.drives;
-  const one=function(d,p){ const st=p.start||{}; const wc=Date.parse(p.wallclock||'');
+  const seen96=new Set(); const one=function(d,p){ const k96=String((p&&p.id)||''); if(k96){ if(seen96.has(k96)) return; seen96.add(k96); } const st=p.start||{}; const wc=Date.parse(p.wallclock||'');   /* GC96POL */
     pall.push({t:String(p.text||''),q:(p.period&&p.period.number)||0,c:(p.clock&&p.clock.displayValue)||'',tm:liveTeamKey(d&&d.team&&d.team.abbreviation),
       ty:(p.type&&p.type.text)||'',y2e:(st.yardsToEndzone!=null&&isFinite(Number(st.yardsToEndzone)))?Number(st.yardsToEndzone):null,
       hs:p.homeScore,as:p.awayScore,sc:!!p.scoringPlay,wc:isFinite(wc)?wc:null}); };
@@ -24568,7 +24587,7 @@ function gvExtra96(j,P){ /* the summary's team map, every drive, the win-probabi
     byId[String(t.id)]=ab; });
   P.tms=tms; P.tmsById=byId; P.homeId=homeId; P.awayId=awayId;
   const drv=j&&j.drives; const D=[];
-  const one=function(d,cur){ if(!d) return; const st=d.start||{}, en=d.end||{}; const pl=d.plays||[];
+  const one=function(d,cur){ if(!d) return; if(d.id!=null){ const k96=String(d.id); const ix96=D.findIndex(function(x){ return x.id===k96; }); if(ix96>=0){ if(!cur) return; D.splice(ix96,1); } }   /* GC96POL: the current drive replaces its stale copy */ const st=d.start||{}, en=d.end||{}; const pl=d.plays||[];
     D.push({id:String(d.id||''),tm:liveTeamKey(d.team&&d.team.abbreviation),tid:(d.team&&d.team.id!=null)?String(d.team.id):null,desc:String(d.description||''),
       q0:num(st.period&&st.period.number),c0:String((st.clock&&st.clock.displayValue)||''),yl0:num(st.yardLine),txt0:String(st.text||''),
       q1:num(en.period&&en.period.number),c1:String((en.clock&&en.clock.displayValue)||''),yl1:num(en.yardLine),txt1:String(en.text||''),
@@ -24708,7 +24727,7 @@ function gvBoxLine96(bx,pos){ /* his box line from the flattened sm.box row — 
   return b.join(' \u00b7 '); }
 function gvImplied96(ou,spread){ if(ou==null||spread==null||ou===''||spread==='') return null; ou=Number(ou); spread=Number(spread); if(!isFinite(ou)||!isFinite(spread)) return null; return {home:Math.round((ou/2-spread/2)*10)/10,away:Math.round((ou/2+spread/2)*10)/10}; }
 function gvMomentum96(sm,k){ /* the home win-probability change over the last k entries of the series ("DAL +11% over the last 6 plays") */
-  const W=(sm&&sm.wpa)||[]; if(W.length<2) return null; k=Math.max(1,Math.min(Number(k)||6,W.length-1));
+  const W=(sm&&sm.wpa)||[]; if(W.length<4) return null; k=Math.max(1,Math.min(Number(k)||6,W.length-1));   /* GC96POL: never a chip off one play */
   const a=W[W.length-1-k][1], b=W[W.length-1][1]; if(a==null||b==null) return null; return {d:b-a,n:k,home:(b-a)>=0}; }
 /* GC96A_PURE_END */
 function gvCurModel96(g,sm){ const rep=!!(sm&&sm.plays&&sm.plays.length>1&&g.state==='post'&&GVR.gid===String(g.id)&&GVR.i!=null); return rep?gvReplayModel(g,sm,GVR.i):gvModel(g,sm); }
@@ -24744,8 +24763,12 @@ function gvDriveHeadHTML96(M,sm){ const d=M.drive; const replay=M.mode==='replay
   const chips=[]; if(M.rz&&!post) chips.push('<span class="gv96chip rz">Red zone</span>'); if(M.two) chips.push('<span class="gv96chip two">2-min</span>'); if(M.ot&&!post) chips.push('<span class="gv96chip">OT</span>');
   let mo=(M&&M.mo!==undefined)?M.mo:null; if(M&&M.mo===undefined){ try{ mo=gvMomentum96(sm,6); }catch(e){} } if(mo&&!post&&Math.abs(mo.d)>=0.02){   /* GC96FIX_MARK: the model's series, so a replay reads the momentum as of that play */ const T=mo.home?M.home:M.away; chips.push('<span class="gv96chip mo '+(mo.home?'h':'a')+'" title="ESPN win probability change over the last '+mo.n+' plays">'+esc(T)+' +'+Math.round(Math.abs(mo.d)*100)+'% last '+mo.n+'</span>'); }
   return '<div class="gv96head"><div class="gv96hl">'+(M.poss?gvLogoImg96(M.poss,'gv96lg'):'<i class="gv96nolg"></i>')+'</div><div class="gv96ht"><div class="gv96ttl">'+ttl+'</div><div class="gv96meta">'+meta+'</div></div>'+(chips.length?'<div class="gv96chips">'+chips.join('')+'</div>':'')+'</div>'; }
+function gvDownWord96(M){ /* GC96POL_MARK: what the tile says when the feed carries no down — the play that just happened, never a dash when a word is true */
+  const L=M&&M.last; const ty=String((L&&L.type)||''); if(M&&M.dn>0) return '';
+  if(L&&L.pen&&!/kickoff|punt/i.test(ty)) return 'No play'; if(/kickoff/i.test(ty)) return 'Kickoff'; if(/field goal/i.test(ty)) return 'Field goal'; if(/punt/i.test(ty)) return 'Punt';
+  if(L&&L.sc) return 'Score'; if(/timeout/i.test(ty)) return 'Timeout'; if(/end period|end of|end quarter/i.test(ty)) return 'Break'; return '\u2014'; }
 function gvDownHTML96(M){ const post=M.fin&&M.mode!=='replay';
-  const dd=post?'Final':M.td?'Touchdown':(M.dd||((M.dn===0||M.dn==null)&&M.last&&/kickoff/i.test(M.last.type||'')?'Kickoff':(M.dn>0?'':'\u2014')));
+  const dd=post?'Final':M.td?'Touchdown':(M.dd||gvDownWord96(M));   /* GC96POL */
   const spot=M.td?'End zone':(M.spot||(M.yl!=null?gvSpotText96(M.yl,M.home,M.away):'n/a'));
   let h='<div class="gv96dd"><div class="gv96stat"><b>'+esc(dd||'\u2014')+'</b><small>'+(post?'Score':'Down')+'</small></div><div class="gv96stat"><b>'+esc(spot)+'</b><small>Ball on</small></div></div>';
   if(!post&&(M.hto!=null||M.ato!=null)){ const dots=function(k){ k=Number(k); if(!isFinite(k)) return 'n/a'; let s2=''; for(let a=0;a<3;a++) s2+=a<k?'\u25cf':'\u25cb'; return s2; };
@@ -25014,7 +25037,7 @@ function gvWpSample96(ts){ /* one [ts, wp] per league with a matchup, from mlWin
   ML.leagues.forEach(function(L){ if(!L||!L.opp) return; let w=null; try{ w=mlWin(L); }catch(e){ w=null; } if(!w||w.wp==null||!isFinite(Number(w.wp))) return;
     const a=LIVE.wph[L.lid]=LIVE.wph[L.lid]||[]; const last=a[a.length-1]; const v=Math.round(Number(w.wp)*1000)/1000;
     if(last&&ts-last[0]<5000) return;
-    a.push([ts,v]); n++; if(a.length>720) a.splice(0,a.length-720); });
+    a.push([ts,v]); n++; if(a.length>720){ const tail=a.slice(-240), head=a.slice(0,-240).filter(function(x,i){ return i%2===0; }); a.length=0; Array.prototype.push.apply(a,head.concat(tail)); } });   /* GC96POL: the whole day stays on the chart, thinner further back */
   return n; }
 function gvChartColor96(T,sm){ /* the club's colour for a fill on the dark panel — the alternate when the primary is too dark to read (DAL navy → silver) */
   const K=(typeof CLUBSKIN!=='undefined'&&CLUBSKIN[String(T||'').toUpperCase()])||null; const tm=sm&&sm.tms&&sm.tms[String(T||'').toUpperCase()];
@@ -25364,6 +25387,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Data.</b> Between plays the panel polls ESPN\u2019s situation feed (under 1 KB) every 8 seconds and pulls the full play feed only when a new play has landed, or every 40 seconds for the box score and win probability; with Data Saver on it checks every 16 seconds.'; }catch(e){}   /* GC96POL_MARK */
 /* ---------------- PWA · service worker (only when hosted over http/https — the double-clicked file never registers and works exactly as before) ---------------- */
 (function swBoot(){
   if(!('serviceWorker' in navigator)) return;
