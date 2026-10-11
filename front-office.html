@@ -17693,14 +17693,19 @@ function liveParseScoreboard(j){
     const comps=c.competitors||[]; const home=comps.find(x=>x.homeAway==='home'), away=comps.find(x=>x.homeAway==='away'); if(!home||!away) return;
     const ab=x=>liveTeamKey(x.team&&x.team.abbreviation);
     const st=ev.status||c.status||{}; const ty=st.type||{}; const sit=c.situation||null;
-    const pid=sit&&sit.possession!=null?String(sit.possession):null;
+    let pid=sit&&sit.possession!=null?String(sit.possession):null;   /* LIVE96OT_MARK: ESPN drops possession / possessionText / the down text from the scoreboard situation during official timeouts and right after a kickoff; the last play's end team still says who has the ball while a real down is on, and a down of -1 means a kickoff is pending (nobody is on the field) */
+    const lpe=sit&&sit.lastPlay&&sit.lastPlay.end; const dnN=(sit&&sit.down!=null&&isFinite(Number(sit.down)))?Number(sit.down):null; const ylN=(sit&&sit.yardLine!=null&&isFinite(Number(sit.yardLine)))?Number(sit.yardLine):null;
+    if(!pid&&lpe&&lpe.team&&lpe.team.id!=null&&dnN!=null&&dnN>=1) pid=String(lpe.team.id);
     const poss=pid?(pid===String(home.team.id)?ab(home):pid===String(away.team.id)?ab(away):null):null;
     const od=(c.odds&&c.odds[0])||null;
     out.push({id:String(ev.id),date:ev.date,home:ab(home),away:ab(away),homeId:String(home.team.id),awayId:String(away.team.id),
       hn:(home.team&&(home.team.shortDisplayName||home.team.name))||ab(home),an:(away.team&&(away.team.shortDisplayName||away.team.name))||ab(away),
       hs:Number(home.score||0),as:Number(away.score||0),
       state:ty.state||'pre',detail:ty.shortDetail||ty.detail||'',clock:st.displayClock||'',period:st.period||0,
-      poss,rz:!!(sit&&sit.isRedZone),dd:sit?(sit.shortDownDistanceText||sit.downDistanceText||''):'',spot:sit?(sit.possessionText||''):'',
+      poss,rz:(function(){ if(poss&&ylN!=null){ const y2e=(poss===ab(home))?100-ylN:ylN; return y2e<=20; } return !!(sit&&sit.isRedZone)&&dnN!=null&&dnN>=1; })(),   /* LIVE96OT_MARK: computed from the spot when it can be — ESPN's flag lingers through the kickoff after a score */
+      y2e:(poss&&ylN!=null)?((poss===ab(home))?100-ylN:ylN):null,
+      dd:sit?((sit.shortDownDistanceText||sit.downDistanceText||'')||((dnN!=null&&dnN>=1&&sit.distance!=null&&Number(sit.distance)>0)?((['1st','2nd','3rd','4th'][dnN-1]||'')+' & '+Number(sit.distance)):'')):'',
+      spot:sit?((sit.possessionText||'')||((ylN!=null&&poss)?(ylN===50?'50':ylN<50?ab(home)+' '+ylN:ab(away)+' '+(100-ylN)):'')):'',
       lastPlay:(sit&&sit.lastPlay)?{id:String(sit.lastPlay.id||''),text:sit.lastPlay.text||'',type:(sit.lastPlay.type&&sit.lastPlay.type.text)||''}:null,
       tv:(((c.broadcasts||[])[0]||{}).names||[])[0]||'',venue:(c.venue&&c.venue.fullName)||'',
       odds:od?{details:od.details||'',ou:od.overUnder,spread:(od.spread!=null&&isFinite(Number(od.spread)))?Number(od.spread):null,prov:(od.provider&&od.provider.name)||''}:null,   /* GC96A_MARK: spread is home-relative (negative = home favoured) */
@@ -24683,16 +24688,16 @@ function gvAbsYard96(txt,homeAb,awayAb,homeRaw,awayRaw){ /* "DAL 30" (home side)
 function liveSitOf96(sit,homeId,awayId,homeRaw,awayRaw){ /* ESPN's situation -> the compact live state. The ball spot comes from possessionText; situation.yardLine's frame is unverified, so it is kept only as ylRaw + whether it agreed. */
   if(!sit||typeof sit!=='object') return null;
   const hab=liveTeamKey(homeRaw), aab=liveTeamKey(awayRaw);
-  const pid=sit.possession!=null?String(sit.possession):null;
+  let pid=sit.possession!=null?String(sit.possession):null; const lpe96=sit.lastPlay&&sit.lastPlay.end; const dn96=(sit.down!=null&&isFinite(Number(sit.down)))?Number(sit.down):null; if(!pid&&lpe96&&lpe96.team&&lpe96.team.id!=null&&dn96!=null&&dn96>=1) pid=String(lpe96.team.id);   /* LIVE96OT_MARK: possession from the last play's end team while a real down is on */
   const poss=pid?(pid===String(homeId)?hab:pid===String(awayId)?aab:null):null;
-  const spot=String(sit.possessionText||'');
-  const yl=gvAbsYard96(spot,hab,aab,homeRaw,awayRaw);
+  let spot=String(sit.possessionText||'');   /* LIVE96OT_MARK: synthesised below when the feed drops the text */
+  const yl0=gvAbsYard96(spot,hab,aab,homeRaw,awayRaw); const rawYl96=(sit.yardLine!=null&&isFinite(Number(sit.yardLine)))?Number(sit.yardLine):null; const yl=(yl0!=null)?yl0:rawYl96;   /* LIVE96OT_MARK: the scoreboard's yardLine is home-goal-absolute (verified on live traffic) — it fills in when the text spot is missing */
   const raw=(sit.yardLine!=null&&isFinite(Number(sit.yardLine)))?Number(sit.yardLine):null;
   const num=function(v){ return (v!=null&&isFinite(Number(v)))?Number(v):null; };
   const dn=num(sit.down), dist=num(sit.distance);
-  const y2e=(yl!=null&&poss)?(poss===hab?100-yl:yl):null;
+  const y2e=(yl!=null&&poss)?(poss===hab?100-yl:yl):null; if(!spot&&yl!=null&&poss) spot=(yl===50?'50':yl<50?hab+' '+yl:aab+' '+(100-yl));   /* LIVE96OT_MARK */
   const lp=sit.lastPlay||null; const pr=(lp&&lp.probability&&lp.probability.homeWinPercentage!=null)?Number(lp.probability.homeWinPercentage):null;
-  return {dn:dn,dist:dist,yl:yl,y2e:y2e,dd:String(sit.shortDownDistanceText||sit.downDistanceText||''),spot:spot,poss:poss,rz:!!sit.isRedZone,
+  return {dn:dn,dist:dist,yl:yl,y2e:y2e,dd:(String(sit.shortDownDistanceText||sit.downDistanceText||'')||((dn!=null&&dn>=1&&dist!=null&&dist>0)?((['1st','2nd','3rd','4th'][dn-1]||'')+' & '+dist):'')),spot:spot,poss:poss,rz:((poss&&y2e!=null)?(y2e<=20):(!!sit.isRedZone&&dn!=null&&dn>=1)),   /* LIVE96OT_MARK: red zone from the spot when it can be; ESPN's flag lingers through the kickoff after a score */
     hto:num(sit.homeTimeouts),ato:num(sit.awayTimeouts),lpid:(lp&&lp.id!=null)?String(lp.id):null,prob:(pr!=null&&isFinite(pr))?pr:null,
     drive:String((lp&&lp.drive&&lp.drive.description)||''),lpt:String((lp&&lp.text)||''),lpty:String((lp&&lp.type&&lp.type.text)||''),ylRaw:raw,ylAgree:(yl!=null&&raw!=null&&raw===yl)}; }
 function gvPlayExt96(p,d,o){ /* the drive-panel fields on a play entry (additive to the v5.8 shape). yl0/yl1 are ABSOLUTE from the home goal line (0 = home goal, 100 = away goal); y2e is for the offense in tid. */
