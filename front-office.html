@@ -4968,6 +4968,102 @@ body.phone .gv96flipbtn{min-height:36px;padding:0 11px;font-size:10.5px}
 body.phone .gv96rpc{grid-template-columns:36px 36px minmax(0,1fr) 36px 36px;grid-auto-rows:auto;row-gap:8px}
 body.phone .gv96rpc .gv96auto{grid-column:1 / 4;min-height:44px;width:auto;justify-self:stretch} body.phone .gv96rpc .gv96fin{grid-column:4 / 6;min-height:44px;width:auto;justify-self:stretch}
 body.phone .gv96rb{min-height:44px} body.phone .gv96rj{min-height:44px}
+
+/* ═══════════ v9.7 · GC97RP_MARK — replay v2: timeline, tooltip, speed, catch-up, drive list ═══════════ */
+.gv96rp.gv97{position:relative}
+.gv97rng{position:relative;margin-top:8px}
+.gv97tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:3;max-width:min(320px,calc(100% - 8px));padding:7px 9px;border-radius:10px;background:#0B1024;border:1px solid rgba(59,227,255,.4);box-shadow:0 6px 18px rgba(0,0,0,.5);pointer-events:none;font:600 10.5px/1.35 var(--sans);color:var(--mut);white-space:normal}
+.gv97tip[hidden]{display:none} .gv97tip b{display:block;font:800 11px/1.2 var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap} .gv97tip i{display:inline-block;margin:3px 6px 0 0;padding:2px 6px;border-radius:99px;background:rgba(59,227,255,.14);color:var(--acc);font:800 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;font-style:normal} .gv97tip span{display:block;margin-top:3px}
+.gv97tlw{position:relative;margin:4px 14px 0;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none}
+.gv97tl{display:block;width:100%;height:48px;border-radius:6px;overflow:hidden}
+.gv97tlq{position:relative;height:14px;margin-top:2px} .gv97tlq span{position:absolute;top:0;transform:translateX(2px);font:800 10px/14px var(--sans);letter-spacing:.08em;color:var(--dim)}
+.gv97rpc.gv96rpc{display:grid;grid-template-columns:44px 44px 44px 44px minmax(90px,1fr) 52px auto;gap:6px;align-items:center;margin-top:10px}
+.gv97spd{font:800 11px/1 var(--mono);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.gv97live{display:inline-flex;align-items:center;gap:6px;white-space:nowrap} .gv97dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;box-shadow:0 0 0 0 rgba(255,59,92,.6);animation:gv97pulse 1.6s ease-out infinite}
+@keyframes gv97pulse{0%{box-shadow:0 0 0 0 rgba(255,59,92,.6)}70%{box-shadow:0 0 0 7px rgba(255,59,92,0)}100%{box-shadow:0 0 0 0 rgba(255,59,92,0)}}
+@media (prefers-reduced-motion:reduce){.gv97dot{animation:none}}
+.gv97back{margin-left:auto;min-height:30px;padding:0 10px;border-radius:99px;border:1px solid rgba(255,59,92,.5);background:rgba(255,59,92,.12);color:#FFB3C0;font:800 10.5px/1 var(--sans);letter-spacing:.04em;text-transform:none;cursor:pointer;-webkit-appearance:none;appearance:none;white-space:nowrap} .gv97back[hidden]{display:none}
+.gv97cu{display:flex;align-items:center;gap:6px;margin:0 0 10px} .gv97cub{flex:1;min-height:40px;padding:0 12px;border-radius:12px;border:1px solid rgba(55,229,167,.45);background:rgba(55,229,167,.12);color:var(--gain);font:800 12px/1 var(--sans);cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left} .gv97cux{flex:none;width:40px;min-height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--mut);font:800 13px/1 var(--sans);cursor:pointer;-webkit-appearance:none;appearance:none}
+.gv96rj.t-new{border-color:rgba(55,229,167,.55);box-shadow:inset 0 0 0 1px rgba(55,229,167,.25)} .gv97rjnew{flex:none;align-self:center;padding:0 4px 0 8px;border-left:2px solid rgba(55,229,167,.6);font:800 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--gain);white-space:nowrap}
+.gv97dl{margin-top:10px;min-width:0} .gv97dl summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;min-height:32px;font:800 10.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)} .gv97dl summary::-webkit-details-marker{display:none} .gv97dl summary::before{content:'›';display:inline-block;transform:rotate(0deg);transition:transform .15s;font-size:14px;color:var(--mut)} .gv97dl[open] summary::before{transform:rotate(90deg)}
+.gv97drs{display:flex;flex-direction:column;gap:4px;max-height:280px;overflow-y:auto;margin-top:4px;-webkit-overflow-scrolling:touch}
+.gv97dr{display:grid;grid-template-columns:22px minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:8px;align-items:center;min-height:40px;padding:5px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--mut);cursor:pointer;-webkit-appearance:none;appearance:none;font:inherit;text-align:left;min-width:0}
+.gv97dr .gv97drl{grid-row:1 / 3;width:22px;height:22px;object-fit:contain} .gv97dr b{font:800 11px/1.2 var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .gv97dr small{grid-column:2;font:600 10px/1.2 var(--sans);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .gv97dr i{grid-column:3;grid-row:1 / 3;font:700 10px/1 var(--mono);color:var(--dim);font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gv97dr.sc b{color:#F5C518} .gv97dr.on{background:rgba(59,227,255,.14);border-color:var(--acc)}
+body.phone .gv97tl{height:56px} body.phone .gv97tlw{margin:6px 14px 0}
+body.phone .gv97rpc.gv96rpc{grid-template-columns:44px 44px 44px 44px 44px minmax(0,1fr);grid-auto-rows:auto;row-gap:8px}
+body.phone .gv97rpc .gv96auto{grid-column:1 / 7;grid-row:2;min-height:44px;width:auto;justify-self:stretch} body.phone .gv97rpc .gv97spd{grid-column:5;grid-row:1;min-height:44px} body.phone .gv97rpc .gv96fin{grid-column:6 / 7;grid-row:1;min-height:44px;width:auto;justify-self:stretch;padding:0 8px}
+body.phone .gv97back{min-height:44px}
+.gv96rjk{font-size:10px} .gv96rj small{font-size:10px}   /* GC97RP: the GC96RP chip metas up to the 10 px floor */ body.phone .gv97cub,body.phone .gv97cux{min-height:44px} body.phone .gv97dr{min-height:44px} body.phone .gv97dl summary{min-height:44px} body.phone .gv97tip{font-size:11px}
+
+/* ═══════════ v9.7 · GC97MV_MARK — multiview ═══════════ */
+#modal.mv97{padding:20px 16px}
+#modal.mv97 .mbox{width:1180px;max-width:min(96vw,1180px);max-height:calc(100vh - 40px)}
+#gvBody.mv97{min-width:0;max-width:100%;overflow-x:hidden}
+.mv97pk{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 0 8px;min-width:0}
+.mv97pk::-webkit-scrollbar{display:none}
+.mv97c{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:5px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--mut);cursor:pointer;-webkit-appearance:none;appearance:none;font:inherit}
+.mv97c b{font:800 11px/1 var(--sans);color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center} .mv97c b .livedot{width:6px;height:6px;margin-right:5px} .mv97c small{font:600 10px/1 var(--mono);color:var(--dim);white-space:nowrap} .mv97c em{font:700 10px/1 var(--mono);font-style:normal;white-space:nowrap}
+.mv97c em .me{color:var(--gain)} .mv97c em .vs{color:var(--loss)}
+.mv97c .mv97ck{display:inline-flex;gap:2px} .mv97c .mv97ck i{width:5px;height:14px;border-radius:2px;display:block}
+.mv97c.st-in{border-color:rgba(55,229,167,.35)} .mv97c.on{background:rgba(59,227,255,.14);border-color:var(--acc)} .mv97c.auto.on{background:rgba(245,197,24,.14);border-color:#F5C518}
+.mv97grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:0}
+.mv97grid.n1{grid-template-columns:minmax(0,640px);justify-content:center}
+.mv97p{min-width:0;border-radius:14px;background:#0D1320;border:1px solid rgba(255,255,255,.08);padding:10px;display:flex;flex-direction:column;gap:8px}
+.mv97bug{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.mv97t{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px;border-radius:10px;background:linear-gradient(135deg,var(--tint) 0%,rgba(255,255,255,.02) 100%);border:1px solid rgba(255,255,255,.08);position:relative}
+.mv97t.h{flex-direction:row-reverse}
+.mv97t img,.mv97t .nolg{width:34px;height:34px;object-fit:contain;flex:none;display:block}
+.mv97t .ab{font:800 12px/1 var(--sans);letter-spacing:.06em;color:var(--mut)} .mv97t.lead .ab{color:var(--ink)}
+.mv97t .sc{margin-left:auto;font:800 28px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--mut)} .mv97t.h .sc{margin-left:0;margin-right:auto} .mv97t.lead .sc{color:var(--ink)}
+.mv97t .mv97pd{position:absolute;top:5px;width:8px;height:8px;border-radius:50%;background:var(--gain);box-shadow:0 0 0 3px rgba(55,229,167,.18);animation:lpulse 1.6s ease infinite} .mv97t.a .mv97pd{right:6px} .mv97t.h .mv97pd{left:6px}
+.mv97mid{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:64px}
+.mv97clk{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font:700 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+.mv97clk .livedot{margin-right:0;width:7px;height:7px}
+.mv97clk.in{color:var(--gain);border-color:rgba(55,229,167,.35)} .mv97clk.fin{color:var(--ink)}
+.mv97bd{display:flex;gap:4px;flex-wrap:wrap;justify-content:center} .mv97bd .gv96chip{font-size:10px} .mv97bd .gv96chip.rz{background:rgba(226,91,78,.18);color:#FF8A7A;animation:none} .mv97bd .gv96chip.two{background:rgba(245,197,24,.16);color:#F5C518}
+.mv97p .gv96field{margin:0}
+.mv97dl{display:flex;align-items:center;gap:6px;font:600 11px/1.3 var(--mono);color:var(--mut);min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis} .mv97dl img,.mv97dl .nolg{width:16px;height:16px;flex:none;display:block} .mv97dl b{color:var(--ink);flex:none} .mv97dl span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mv97lp{padding:8px 10px;border-radius:10px;background:#121A30;border:1px solid rgba(255,255,255,.08);min-width:0}
+.mv97lp .gv96lph{margin-bottom:4px} .mv97lp .gv96lpk,.mv97lp .gv96lptag{font-size:10px} .mv97lp .mv97txt{font:500 12px/1.4 var(--sans);color:var(--ink);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden} .mv97lp .mv97txt.gv96mut{color:var(--dim)}
+.mv97lp.gv96new{animation:gv96flash 1.2s ease-out}
+.mv97pp{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px} .mv97pp span{font:700 10px/1 var(--sans);padding:4px 7px;border-radius:7px;background:rgba(255,255,255,.07);color:var(--mut)} .mv97pp span i{font-style:normal;opacity:.75} .mv97pp span.me{color:var(--gain);background:rgba(55,229,167,.12)} .mv97pp span.vs{color:var(--loss);background:rgba(255,95,141,.12)}
+.mv97pull{margin:0;padding:22px 12px}
+.mv97my{display:flex;flex-direction:column;gap:3px}
+.mv97r{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:baseline;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.03);border-left:3px solid transparent;font:600 11px/1.3 var(--sans);color:var(--mut)}
+.mv97r.me{border-left-color:var(--gain)} .mv97r.vs{border-left-color:var(--loss)} .mv97r b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .mv97r i{font:700 10px/1 var(--mono);font-style:normal;color:var(--dim)} .mv97r em{font:800 13px/1 var(--mono);font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink)}
+.mv97r.bn b{color:var(--mut)} .mv97more{font:600 10px/1 var(--sans);color:var(--dim);padding:2px 8px}
+.mv97ft{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto} .mv97ft .fine{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mv97e{padding:28px 12px;text-align:center;margin:0}
+.mv97foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+.mv97eb{white-space:nowrap} .mv97gt{margin-left:auto}
+.lwstrip.mv97s{display:flex;gap:8px;align-items:stretch} .lwstrip.mv97s .lwsx{flex:1 1 auto;min-width:0}
+.mv97sb{flex:none;width:44px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:12px;border:1px solid rgba(59,227,255,.35);background:rgba(59,227,255,.08);color:var(--acc);font:800 20px/1 var(--sans);cursor:pointer;-webkit-appearance:none;appearance:none}
+.mv97sb small{font:800 10px/1 var(--sans);letter-spacing:.04em;text-transform:uppercase}
+.gvtop2 .gvboard.mv97b::after{display:none}
+.gvtop2 .mv97gb{font:800 22px/1 var(--sans);padding:0;color:var(--acc)}
+body:not(.phone) .gvtop2 .mv97gb{display:none}
+/* phone */
+body.phone #modal.gvfs #gvBody.mv97 .gvmain{padding:10px 12px calc(30px + env(safe-area-inset-bottom,0px))}
+body.phone .mv97top .gvbar{gap:6px;padding:0 6px 0 0} body.phone .mv97tt{font:800 15px/1 var(--sans);color:var(--ink);margin-right:auto} body.phone .mv97n{font:600 10.5px/1 var(--mono);color:var(--dim)}
+body.phone .mv97top .btn.sm{min-height:44px;min-width:44px;padding:0 10px;white-space:nowrap}
+body.phone .mv97c{min-height:44px} body.phone .mv97sb{min-height:72px}
+body.phone #lwStrip.lwcond .mv97sb{min-height:44px;font-size:16px;padding:0;transition:min-height .18s ease} body.phone #lwStrip.lwcond .mv97sb small{display:none}
+body.phone .mv97grid,body.phone .mv97grid.n1{grid-template-columns:1fr;gap:10px;justify-content:stretch}
+body.phone #gvBody.mv97.c2 .mv97grid{grid-template-columns:1fr 1fr;gap:8px}
+body.phone #gvBody.mv97 .btn.sm.mv97open{min-height:44px;padding:0 14px}
+body.phone #gvBody.mv97.c2 .mv97p{padding:7px;gap:6px}
+body.phone #gvBody.mv97.c2 .mv97bug{grid-template-columns:1fr 1fr;gap:4px} body.phone #gvBody.mv97.c2 .mv97t{padding:4px 5px;gap:4px;overflow:hidden} body.phone #gvBody.mv97.c2 .mv97t.a{grid-row:1;grid-column:1} body.phone #gvBody.mv97.c2 .mv97t.h{grid-row:1;grid-column:2} body.phone #gvBody.mv97.c2 .mv97t img,body.phone #gvBody.mv97.c2 .mv97t .nolg{width:24px;height:24px}
+body.phone #gvBody.mv97.c2 .mv97t .sc{font-size:19px} body.phone #gvBody.mv97.c2 .mv97t .ab{display:none}
+body.phone #gvBody.mv97.c2 .mv97mid{grid-row:2;grid-column:1/-1;flex-direction:row;flex-wrap:wrap;justify-content:center;min-width:0;gap:6px} body.phone #gvBody.mv97.c2 .mv97clk{padding:4px 6px;font-size:10px}
+body.phone #gvBody.mv97.c2 .mv97bd .gv96chip{font-size:0;width:8px;height:8px;padding:0;border-radius:50%}
+body.phone #gvBody.mv97.c2 .mv97t.a .mv97pd{right:auto;left:2px;top:2px} body.phone #gvBody.mv97.c2 .mv97t.h .mv97pd{left:auto;right:2px;top:2px}
+body.phone #gvBody.mv97.c2 .mv97lp .mv97txt{-webkit-line-clamp:2;font-size:11px} body.phone #gvBody.mv97.c2 .mv97pp{display:none}
+body.phone #gvBody.mv97.c2 .mv97dl{font-size:10px}
+body.phone #gvBody.mv97.c2 .btn.sm.mv97open{min-width:44px;padding:0 10px}
+body.phone #gvBody.mv97.c2 .mv97open .lg{display:none}
+body.phone .mv97eb{min-height:36px}
+@media(prefers-reduced-motion:reduce){ .mv97t .mv97pd{animation:none} .mv97lp.gv96new{animation:none} }
 </style>
 <meta name="theme-color" content="#0A0E17">
 <meta name="color-scheme" content="dark">
@@ -13279,7 +13375,7 @@ Object.assign(HELP,{ // v6.1 · readouts
 Object.assign(HELP,{ // v6.0 · league hub, post-trade lineup, game center, roster picker
   hub:{t:'Your leagues',b:'Every league you are in, at a glance. <b>Record · standing</b> come from Sleeper; the <b>matchup</b> shows this week\'s projected totals for you and your opponent (exact league scoring for the active league, PPR/half/standard by each league\'s reception setting for the others), live points once games start, and a win-odds read from the projected gap. <b>Tags</b> are the to-do list: empty starter slots, injured or bye-week starters, questionable starters, bench players projecting clearly ahead of a starter, the best trending free agent who beats your worst active piece, the trade deadline and FAAB left. Tap a card to make that league the scope for every other tab; tap a name to open the player. Finished or past-season leagues are hidden — <b>Show past</b> on the My leagues card brings them back.'},
   posttrade:{t:'Your lineup after the trade',b:'The starting lineup you would actually field once the deal goes through, slot by slot — who arrives, who steps up off the bench, who leaves. <b>This week</b> is the change in projected points and the shift in win odds against this week\'s opponent (a normal read on the projected gap). <b>Rest of season</b> sums season-long projections over the starters before and after. <b>Dynasty window</b> projects the whole roster\'s value one, two and three seasons out along the age curve (picks held at today\'s chart), so a deal that helps now but bleeds later shows it.'},
-  gamecenter:{t:'Game center',b:'One game, live: ESPN\'s scoreboard for score, clock, possession and down &amp; distance; the game summary for the play-by-play, every box-score group for both teams, scoring plays and win probability. Plays that touch your players (or your opponent\'s starters) are highlighted with the names. It refreshes every 8 seconds while the game is on (the scoreboard feed on its own 20 s ticks); tap any box-score row to open that player.'},
+  gamecenter:{t:'Game center',b:'One game, live: ESPN\'s scoreboard for score, clock, possession and down &amp; distance; the game summary for the play-by-play, every box-score group for both teams, scoring plays and win probability. Plays that touch your players (or your opponent\'s starters) are highlighted with the names. It refreshes every 5 seconds while the game is on (the scoreboard feed on its own 15 s ticks); tap any box-score row to open that player.'},
   rpick:{t:'Roster picker',b:'The whole roster for that side of the trade with a tick box per player (and per draft pick in dynasty leagues), grouped by position and ordered by value. Tick to add to the deal, untick to remove — the desk underneath re-prices as you go and the sheet stays open until you tap Done. The search box still works for anyone not on the roster list.'}
 });
 Object.assign(HELP,{ // v3.9 · dossier methodology (+ v5.1 format/IDP keys)
@@ -17730,7 +17826,7 @@ function liveParseSummary(j){ // ESPN game summary → per-athlete box map, play
   if(drv){ const seen96=new Set(); const uniq96=function(d){ if(!d) return; collect(Object.assign({},d,{plays:(d.plays||[]).filter(function(p){ const k=String((p&&p.id)||''); if(!k||seen96.has(k)) return false; seen96.add(k); return true; })})); }; (drv.previous||[]).forEach(uniq96); if(drv.current) uniq96(drv.current); }   /* GC96POL_MARK: the in-progress drive is listed twice by ESPN */
   const scoring=((j&&j.scoringPlays)||[]).map(p=>({id:String(p.id||''),text:p.text||'',period:p.period&&p.period.number,clock:p.clock&&p.clock.displayValue,team:liveTeamKey(p.team&&p.team.abbreviation),type:(p.type&&p.type.text)||'',hs:p.homeScore,as:p.awayScore,score:true}));
   const drive=(drv&&drv.current&&(drv.current.description||''))||'';
-  const P93={box,wp,plays:plays.slice(-160),scoring,ts:Date.now(),teams,drive}; try{ r93ParseExtra(j,P93); }catch(e){} try{ gvExtra96(j,P93); }catch(e){}   /* GC96A_MARK: tms/drv/wpa/cur/sit/tstat/lead/info/pick */   // V93_RECAP: every play + the injury lists, for the recap engine
+  const P93={box,wp,plays:plays,scoring,ts:Date.now(),teams,drive};   /* GC97RP_MARK: every play of the game — the feed tab and the Live tab cap themselves (livePlaysFor(g,160)) */ try{ r93ParseExtra(j,P93); }catch(e){} try{ gvExtra96(j,P93); }catch(e){}   /* GC96A_MARK: tms/drv/wpa/cur/sit/tstat/lead/info/pick */   // V93_RECAP: every play + the injury lists, for the recap engine
   return P93;
 }
 /* ===== v5.8 · GAME CENTER — one game, live: play by play, box score, scoring, your players ===== */
@@ -17835,11 +17931,11 @@ function gvTopHTML(g){ // V92_GVTOP: a scoreboard, not a strip of abbreviations
           +(g.dd?'<span class="gvdd">'+esc(g.dd)+(g.spot?mid+esc(g.spot):'')+'</span>':'')+'</div>'
       : ((pre&&(g.tv||g.venue))?'<div class="gvsit2"><span class="gvdd">'+esc([g.tv,g.venue].filter(Boolean).join(mid))+'</span></div>':'');
     return '<div class="gvtop gvtop2">'   // V921_GVROW: one row — the clock sits between the two clubs instead of on its own line
-      +'<div class="gvboard">'
+      +'<div class="gvboard mv97b">'
         +'<button class="gvback" data-act="gvBack" aria-label="Close the game view" title="Back">\u2039</button>'
         +side(g.away,g.as,'gvA')
         +'<span class="gvstate'+(live?' in':(fin?' fin':''))+'">'+(live?'<i class="livedot in"></i>':'')+esc(clk)+'</span>'
-        +side(g.home,g.hs,'gvH')
+        +side(g.home,g.hs,'gvH')+'<button class="gvback mv97gb" type="button" data-act="openMulti" data-gid="'+esc(g.id)+'" aria-label="Add this game to the multiview" title="Multiview">'+mvSq97()+'</button>'
       +'</div>'
       +situ
     +'</div>';
@@ -17957,7 +18053,7 @@ function openGame(gid){ const g=gameOf(gid); if(!g){ toast('That game is not on 
   S.ui.gameView=String(gid); S.ui.gvTab=gvOpenTab(gid); gvFsOn(); // v8.2: the skin goes on first, so the very first paint is already full screen
   $('mTitle').textContent=g.an+' @ '+g.hn; $('mBody').innerHTML='<div id="gvBody">'+gameViewHTML(g)+'</div>'; $('modal').classList.add('on'); if($('modal').querySelector('.mbox')) $('modal').querySelector('.mbox').scrollTop=0;
   liveFetchSummary(gid,!LIVE.sum[gid]||Date.now()-LIVE.sum[gid].ts>20000).then(()=>gameViewRepaint()); gameViewArm(); }
-const GVF={fast:8000, pts:2, stats:4, maxBack:30000, sit:true, sumMax:40000, sitFail:0, sitTs:0}   /* GC96POL_MARK */;   // V93: summary every 8s, Sleeper points every 2nd tick (16s), the weekly stat file every 4th (32s)
+const GVF={fast:5000, pts:4, stats:8, maxBack:30000, sit:true, sumMax:30000, sitFail:0, sitTs:0}   /* LIVE97FAST_MARK: situation every 5 s (the CDN caches it 10 s), summary floor 30 s, Sleeper points every 4th tick (20 s), the weekly stat file every 8th (40 s) */   /* GC96POL_MARK */;   // V93: summary every 8s, Sleeper points every 2nd tick (16s), the weekly stat file every 4th (32s)
 function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+1; const gen=GV.gen; // v7.0.1: generation token — only the newest arm may re-arm
   let n=0, back=0;
   const tick=async()=>{ if(gen!==GV.gen) return; GV.timer=null; if(!$('gvBody')||!$('modal').classList.contains('on')||!S.ui.gameView){ S.ui.gameView=null; return; }
@@ -17965,14 +18061,18 @@ function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+
     if(document.hidden){ GV.timer=setTimeout(tick,st==='in'?GVF.fast:30000); return; }             // hidden: no network, just stay armed
     if(st==='post'){ GV.timer=setTimeout(tick,60000); return; }                                    // final: nothing left to chase
     const t0=(LIVE.sum[gid]&&LIVE.sum[gid].ts)||0;
-    let need96=true; if(st==='in'&&GVF.sit!==false){ let si=null; try{ si=await gvSitPoll96(gid,g); }catch(e){ si=null; } if(gen!==GV.gen) return;
-      if(si){ const s0=LIVE.sum[gid]; const lastId=(s0&&s0.plays&&s0.plays.length)?String(s0.plays[s0.plays.length-1].id||''):'';
-        need96=!s0||!lastId||!si.lpid||String(si.lpid)!==lastId||(Date.now()-(Number(s0.pt)||0))>GVF.sumMax;   /* the summary only when a play landed, or every 40 s for the box score and win probability */
-        if(!need96) s0.ts=Date.now(); } }
+    let need96=true, okSit97=false; const s097=LIVE.sum[gid]; const pt97=Number(s097&&s097.pt)||0; const stale97=!s097||(Date.now()-pt97)>GVF.sumMax; const bigPend97=!!(s097&&LIVE.play97&&LIVE.play97[gid]&&LIVE.play97[gid].bigTs>pt97);   /* LIVE97FAST_MARK: the shared situation service first; a new play lands as a 2 KB core object; the 216 KB summary only after a score / turnover / end, at the 30 s floor, or when a light-appended big play is still owed one */
+    if(st==='in'&&GVF.sit!==false){ let si=null; try{ si=await liveSit97(gid,2500,g); }catch(e){ si=null; } if(gen!==GV.gen) return;
+      if(si){ okSit97=true; const lastId=(s097&&s097.plays&&s097.plays.length)?String(s097.plays[s097.plays.length-1].id||''):''; const cmp97=!!(s097&&lastId&&si.lpid);
+        if(cmp97&&String(si.lpid)!==lastId&&!stale97){ let lp=null; try{ lp=await livePlayPull97(gid,si.lpid,g); }catch(e){ lp=null; } if(gen!==GV.gen) return; need96=!lp||!lp.ok||(!!lp.big&&!lp.dup)||bigPend97; }   /* a play the summary already holds (the situation's CDN copy can trail a fresh summary) never re-pulls the summary */
+        else need96=stale97||bigPend97||(!cmp97&&(Date.now()-pt97)>15000);
+        if(!need96){ const s1=LIVE.sum[gid]; if(s1) s1.ts=Date.now(); } }
+      else need96=stale97||bigPend97; }
+    else if(st==='in') need96=stale97||bigPend97;
     try{ if(need96) await liveFetchSummary(gid,true); }catch(e){}                                              // plays, box score, scoring, win prob AND the score/clock
-    let ok=!!(LIVE.sum[gid]&&LIVE.sum[gid].ts>t0);                                                  // a fresh timestamp is the only proof the pull landed
+    let ok=need96?!!(LIVE.sum[gid]&&LIVE.sum[gid].ts>t0):okSit97;   /* LIVE97FAST_MARK: a light tick is proven by the situation, a heavy one by the summary's stamp */                                                  // a fresh timestamp is the only proof the pull landed
     if(gen!==GV.gen) return;
-    try{ gvApplyHeader(gid); }catch(e){}
+    try{ if(need96&&ok) gvApplyHeader(gid); }catch(e){}   /* LIVE97FAST_MARK: the header only on the tick its summary landed - a light tick keeps the situation's possession and the play's clock, a failed pull never reverts the score */
     if(st==='in'){ n++;
       if(n%GVF.pts===0){ try{ LIVE.last.mu=0; LIVE.last.ml=0; if(n%GVF.stats===0) LIVE.last.st=0; await liveRefresh(); }catch(e){ ok=false; } }   // the league-scored fantasy points
       if(gen!==GV.gen) return; }
@@ -17981,8 +18081,101 @@ function gameViewArm(){ if(GV.timer) clearTimeout(GV.timer); GV.gen=(GV.gen||0)+
     back=ok?0:Math.min(GVF.maxBack,(back||GVF.fast)*2);                                             // a failed pull backs off, a good one snaps back to 8s
     GV.timer=setTimeout(tick, st==='in'?(back||gvFast96()):30000); };                                 // pre-game: every 30s so kickoff is caught
   GV.timer=setTimeout(tick,1200); }                                                                  // first refresh right away, not 20s later
+/* ═══ LIVE97FAST_MARK · begin — the shared situation service, the light core-play path and the Live-tab sweep ═══ */
+LIVE.sit97={}; LIVE.play97={}; LIVE.sweep={every:6000,half:30000,saver:12000,maxIn:2,maxBack:30000,max:10,ts:0,n:0,fx:{sit:0,play:0,dup:0,fail:0},rpT:null,list:[],listTs:0,hb:null};   /* LIVE97FAST_MARK: sit97[gid]={sit,ts,at,p,fail,back,sig} · play97[gid]={pid,p,ts,fail,bigTs} · sweep = the Live-tab cadence + the fx counters the acceptance checks read */
+function liveSaver97(){ try{ return !!(navigator.connection&&navigator.connection.saveData); }catch(e){ return false; } }
+function liveRefOf97(r){ /* the trailing numeric id of a core $ref ({$ref:'.../plays/4018729814994?lang=en'} -> '4018729814994') */ const m=/\/(\d+)(?:\?|$)/.exec(String((r&&r.$ref)||'')); return m?m[1]:null; }
+function liveAbOfId97(tid,g,sm){ /* a team id -> its abbreviation: the summary's map first, then the scoreboard's homeId / awayId */ if(tid==null) return null; tid=String(tid); const byId=(sm&&sm.tmsById)||{}; if(byId[tid]) return byId[tid]; if(g){ if(g.homeId!=null&&String(g.homeId)===tid) return g.home||null; if(g.awayId!=null&&String(g.awayId)===tid) return g.away||null; } return null; }
+function liveGameOf97(gid){ /* the LIVE game object (the scoreboard replaces them every 15 s) - null when none */ try{ return gameOf(String(gid||''))||null; }catch(e){ return null; } }
+function liveSitParse97(j,g,sm){ /* PURE: the core situation JSON -> the compact situation (gvSitPoll96's shape); null when the body carries neither a down nor a last play */
+  if(!j||typeof j!=='object'||(j.down==null&&!j.lastPlay)) return null;
+  const num=function(v){ return (v!=null&&isFinite(Number(v)))?Number(v):null; };
+  const poss=liveAbOfId97(liveRefOf97(j.team),g,sm)||null; const yl=num(j.yardLine); const dn=num(j.down), dist=num(j.distance);
+  const hab=String((g&&g.home)||''), aab=String((g&&g.away)||''); const home=!!(poss&&hab&&hab.toUpperCase()===String(poss).toUpperCase()); const y2e=(yl!=null&&poss)?(home?100-yl:yl):null;
+  let spot=String(j.possessionText||''); if(!spot&&yl!=null&&poss) spot=(yl===50?'50':yl<50?hab+' '+yl:aab+' '+(100-yl));
+  const dd=String(j.shortDownDistanceText||j.downDistanceText||'')||((dn!=null&&dn>=1&&dist!=null&&dist>0)?((['1st','2nd','3rd','4th'][dn-1]||'')+' & '+((y2e!=null&&dist>=y2e)?'Goal':dist)):'');   /* gvModel's own rule: inside the 10 the distance reads "Goal" */
+  const rz=(poss&&y2e!=null)?(y2e<=20):(!!j.isRedZone&&dn!=null&&dn>=1);   /* the LIVE96OT rule: from the spot when it can be; ESPN's flag lingers through the kickoff after a score */
+  return {dn:dn,dist:dist,yl:yl,y2e:y2e,dd:dd,spot:spot,poss:poss,rz:!!rz,hto:num(j.homeTimeouts),ato:num(j.awayTimeouts),lpid:liveRefOf97(j.lastPlay),ts:Date.now(),src:'core'}; }
+function liveSitSig97(sit){ if(!sit) return ''; return [sit.lpid,sit.poss,sit.dn,sit.dist,sit.yl,sit.dd,sit.spot,sit.rz?1:0,sit.hto,sit.ato].map(function(v){ return v==null?'':String(v); }).join('|'); }
+function liveSitApply97(gid,sit,g){ /* exactly gvSitPoll96's writes: sm.sit, and on an in-progress game g.sit / g.dd / g.spot / g.rz / g.poss - on the caller's object AND the live one (the scoreboard replaces the objects every 15 s); records the signature; returns whether anything changed */
+  gid=String(gid||''); if(!sit) return false; const gl=liveGameOf97(gid); const sm=LIVE.sum[gid]||null;
+  if(sm){ sm.sit=Object.assign({},sm.sit||{},sit); }
+  [g,gl].forEach(function(x,i){ if(!x||(i===1&&x===g)||x.state!=='in') return; x.sit=Object.assign({},x.sit||{},sit); if(sit.dd) x.dd=sit.dd; if(sit.spot) x.spot=sit.spot; x.rz=sit.rz; if(sit.poss) x.poss=sit.poss; });
+  const e=LIVE.sit97[gid]||(LIVE.sit97[gid]={sit:null,ts:0,at:0,p:null,fail:0,back:0,sig:''}); const sig=liveSitSig97(sit); const changed=sig!==e.sig; e.sit=sit; e.ts=(sit.ts!=null&&isFinite(Number(sit.ts))&&Number(sit.ts)>0)?Number(sit.ts):Date.now(); e.sig=sig; return changed; }   /* the stamp is the situation's landing time, so a re-apply never extends the cache */
+function liveSitCarry97(games){ /* after a scoreboard pass replaced the game objects: a core situation that is at least as fresh as the scoreboard's (the same last play, or younger than one sweep) is re-applied, so the rows never fall back a play for a few seconds; returns how many */
+  const now=Date.now(); const young=((LIVE.sweep&&LIVE.sweep.every)||6000)+1000; let k=0;
+  (games||[]).forEach(function(g){ if(!g||g.state!=='in') return; const gid=String(g.id); const e=LIVE.sit97[gid]; if(!e||!e.sit) return;
+    const sb=(g.lastPlay&&g.lastPlay.id!=null)?String(g.lastPlay.id):''; const same=!!(sb&&e.sit.lpid&&sb===String(e.sit.lpid)); if(!same&&now-e.ts>young) return;
+    try{ liveSitApply97(gid,e.sit,g); k++; }catch(x){} });
+  return k; }
+function liveSit97(gid,maxAgeMs,g){ /* the ONE reader of the core situation: one request in flight per game shared by every caller, a cache hit under maxAgeMs (re-applied to a game object that does not carry it yet), a per-game back-off (x2 to 30 s) that snaps back on success */
+  gid=String(gid||''); if(!gid) return Promise.resolve(null); const e=LIVE.sit97[gid]||(LIVE.sit97[gid]={sit:null,ts:0,at:0,p:null,fail:0,back:0,sig:''}); const now=Date.now();
+  if(e.p) return e.p;
+  if(e.sit&&maxAgeMs>0&&now-e.ts<=maxAgeMs){ const tg=g||liveGameOf97(gid); if(tg&&tg.state==='in'&&(!tg.sit||tg.sit.ts!==e.sit.ts)){ try{ liveSitApply97(gid,e.sit,g); }catch(x){} } return Promise.resolve(e.sit); }
+  if(e.back&&now-e.at<e.back) return Promise.resolve(null);
+  e.at=now; LIVE.sweep.fx.sit++; if(!g) g=liveGameOf97(gid);
+  const url='https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/'+encodeURIComponent(gid)+'/competitions/'+encodeURIComponent(gid)+'/situation?lang=en&region=us';
+  e.p=(async function(){ let j=null; try{ j=await jget(url,6000); }catch(x){ j=null; } let sit=null; try{ sit=liveSitParse97(j,g||liveGameOf97(gid),LIVE.sum[gid]||null); }catch(x){ sit=null; }
+    if(!sit){ e.fail++; LIVE.sweep.fx.fail++; e.back=Math.min(LIVE.sweep.maxBack,(e.back||6000)*2); return null; }
+    e.fail=0; e.back=0; try{ liveSitApply97(gid,sit,g); }catch(x){} return sit; })().finally(function(){ e.p=null; });
+  return e.p; }
+function livePlayBig97(p){ /* PURE: a play that is owed the full summary right away - a score, a turnover, the end of the game */ return !!(p&&(p.score||p.to||/end of game/i.test(String(p.type||'')))); }
+function livePlayFromCore97(j,g,sm){ /* PURE: the ~1.8 KB core play JSON -> the summary's play shape, through the same gvPlayExt96 (team ids resolved to abbreviations; pt0 / pt1 / dd1 stay '' until the summary) */
+  if(!j||typeof j!=='object'||j.id==null||j.id==='') return null;
+  const num=function(v){ return (v!=null&&isFinite(Number(v)))?Number(v):null; };
+  const o={id:String(j.id),text:String(j.text||''),period:num(j.period&&j.period.number),clock:String((j.clock&&j.clock.displayValue)||''),score:!!j.scoringPlay,team:liveAbOfId97(liveRefOf97(j.team),g,sm)||'',type:String((j.type&&j.type.text)||''),hs:num(j.homeScore),as:num(j.awayScore)};
+  const side=function(x){ x=(x&&typeof x==='object')?x:{}; const t=liveRefOf97(x.team); const y=Object.assign({},x); if(t!=null) y.team={id:t}; else delete y.team; return y; };
+  const p2=Object.assign({},j,{start:side(j.start),end:side(j.end)});
+  gvPlayExt96(p2,{id:liveRefOf97(j.drive)},o); o.lite=true; return o; }
+function livePlayApply97(gid,p,g){ /* appends a light play when its id is new (id-deduped over the last 240) - by sequence number, so a play that lands after a newer one is spliced in rather than shown as the last play; the drive / possession / score / clock folds follow only a tail play; marks a big play as owed its summary */
+  gid=String(gid||''); const sm=LIVE.sum[gid]; if(!sm||!p||p.id==null) return {added:false,big:false};
+  if(!Array.isArray(sm.plays)) sm.plays=[]; const P=sm.plays; const id=String(p.id); const big=livePlayBig97(p);
+  for(let i=P.length-1,k=0;i>=0&&k<240;i--,k++){ if(P[i]&&String(P[i].id)===id) return {added:false,big:livePlayBig97(P[i]),p:P[i],dup:true}; }
+  let at=P.length; if(p.seq!=null&&isFinite(Number(p.seq))){ const sq=Number(p.seq); for(let i=P.length-1,k=0;i>=0&&k<240;i--,k++){ const q=P[i]; if(!q||q.seq==null||!isFinite(Number(q.seq))) continue; if(Number(q.seq)<=sq) break; at=i; } }
+  const tail=at>=P.length; if(tail) P.push(p); else P.splice(at,0,p); sm._wpIx=null; const gl=liveGameOf97(gid); const G=[g,gl].filter(function(x,i){ return x&&!(i===1&&x===g)&&x.state==='in'; });
+  try{ const D=sm.drv||(sm.drv=[]); const d=p.dv?D.find(function(x){ return x&&String(x.id)===String(p.dv); }):null;
+    if(d){ if(d.cur){ if(tail) d.p1=id; d.np=(d.np||0)+1; } }   /* a play filed under a finished drive is a correction - the summary sorts it out */
+    else if(p.dv&&tail){ D.forEach(function(x){ if(x) x.cur=false; }); const nd={id:String(p.dv),tm:p.team||'',tid:p.tid0||p.tid1||null,desc:'',q0:(p.period!=null?p.period:null),c0:String(p.clock||''),yl0:(p.yl0!=null?p.yl0:null),txt0:'',q1:null,c1:'',yl1:null,txt1:'',yds:null,n:null,te:'',res:'',resT:'',sc:false,cur:true,p0:id,p1:id,np:1,lite:true}; D.push(nd); sm.cur=nd; }
+    sm.npAll=(sm.npAll||0)+1; }catch(e){}
+  try{ if(tail&&sm.sit&&!sm.sit.poss&&p.tid1&&sm.sit.dn!=null&&sm.sit.dn>=1){ const ab=liveAbOfId97(p.tid1,g||gl,sm); if(ab){ sm.sit.poss=ab; G.forEach(function(x){ x.sit=Object.assign({},x.sit||{},{poss:ab}); x.poss=ab; }); } } }catch(e){}
+  try{ if(tail){ G.forEach(function(x){ if(p.hs!=null&&isFinite(Number(p.hs))) x.hs=Number(p.hs); if(p.as!=null&&isFinite(Number(p.as))) x.as=Number(p.as);
+    if(p.period!=null&&p.clock&&gvClockSecs96(p.period,p.clock)>gvClockSecs96(x.period,x.clock)){ x.period=p.period; x.clock=p.clock; } }); } }catch(e){}   /* never moves the clock backwards against a newer scoreboard */
+  if(big){ (LIVE.play97[gid]||(LIVE.play97[gid]={pid:null,p:null,ts:0,fail:0})).bigTs=Date.now(); }
+  return {added:true,big:big,p:p,tail:tail}; }
+function livePlayPull97(gid,pid,g){ /* fetch + convert + apply ONE core play, deduped per game; null when the game has no summary yet (never fabricate one - a dozen readers treat its presence as "summary pulled") */
+  gid=String(gid||''); pid=String(pid||''); if(!gid||!pid||!LIVE.sum[gid]) return Promise.resolve(null);
+  const e=LIVE.play97[gid]||(LIVE.play97[gid]={pid:null,p:null,ts:0,fail:0}); if(e.p&&e.pid===pid) return e.p;
+  const P=LIVE.sum[gid].plays||[]; for(let i=P.length-1,k=0;i>=0&&k<240;i--,k++){ if(P[i]&&String(P[i].id)===pid){ LIVE.sweep.fx.dup++; return Promise.resolve({ok:true,added:false,big:livePlayBig97(P[i]),p:P[i],dup:true}); } }
+  e.pid=pid; e.ts=Date.now(); LIVE.sweep.fx.play++; if(!g) g=liveGameOf97(gid);
+  const url='https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/'+encodeURIComponent(gid)+'/competitions/'+encodeURIComponent(gid)+'/plays/'+encodeURIComponent(pid)+'?lang=en&region=us';
+  e.p=(async function(){ let j=null; try{ j=await jget(url,6000); }catch(x){ j=null; } let p=null; try{ p=livePlayFromCore97(j,g||liveGameOf97(gid),LIVE.sum[gid]||null); }catch(x){ p=null; }
+    if(!p){ e.fail++; return null; } e.fail=0; let r=null; try{ r=livePlayApply97(gid,p,g); }catch(x){ r=null; } if(!r) return null; r.ok=true; return r; })().finally(function(){ if(e.pid===pid) e.p=null; });
+  return e.p; }
+function liveSweepEvery97(g){ const W=LIVE.sweep; if(liveSaver97()) return W.saver; if(g&&/half/i.test(String(g.detail||''))) return W.half; return W.every; }
+function liveSweepDue97(games,st,now,o){ /* PURE: which in-progress games the sweep asks now - not in flight, past their cadence (30 s at halftime), not backing off; oldest attempt first so the stagger emerges by itself */
+  o=o||{}; st=st||{}; const maxIn=(o.maxIn!=null)?o.maxIn:2, every=(o.every!=null)?o.every:6000, half=(o.half!=null)?o.half:30000;
+  let inflight=0; for(const k in st){ if(st[k]&&st[k].p) inflight++; } const room=maxIn-inflight; if(room<=0) return [];
+  const due=[]; (games||[]).forEach(function(g){ if(!g||g.state!=='in') return; const gid=String(g.id); const ev=/half/i.test(String(g.detail||''))?half:every; const e=st[gid];
+    if(e&&(e.p||now-e.at<ev||(e.back&&now-e.at<e.back))) return; due.push({gid:gid,at:e?e.at:0}); });
+  due.sort(function(a,b){ return a.at-b.at; }); return due.slice(0,room).map(function(x){ return x.gid; }); }
+function liveSweepList97(now){ const W=LIVE.sweep; now=now||Date.now(); if(W.list&&W.listTs&&now-W.listTs<5000) return W.list;
+  let L=[]; try{ L=(liveGamesOfInterest()||[]).filter(function(g){ return g&&g.state==='in'; }).slice(0,W.max); }catch(e){ L=[]; } W.list=L; W.listTs=now; return L; }
+function liveSweepOn97(){ try{ return !document.hidden&&S.ui.tab==='live'&&!!$('liveRoot')&&livePullOn()&&liveSurface(); }catch(e){ return false; } }
+function liveRepaintSoon97(ms){ const W=LIVE.sweep; if(W.rpT) return; W.rpT=setTimeout(function(){ W.rpT=null; try{ if(!document.hidden) liveRepaint(); }catch(e){} },ms||400); }
+function liveSweepTick97(){ /* the 1 s heartbeat: on the Live tab, every in-progress game of interest is asked for its situation every ~6 s (<= 2 in flight), a new play is appended through the light path, and ONE coalesced repaint follows any change */
+  const W=LIVE.sweep; if(!liveSweepOn97()) return; const now=Date.now(); const games=liveSweepList97(now); if(!games.length) return;
+  const saver=liveSaver97(); const gids=liveSweepDue97(games,LIVE.sit97,now,{maxIn:saver?1:W.maxIn,every:saver?W.saver:W.every,half:W.half});
+  gids.forEach(function(gid){ const g=liveGameOf97(gid)||games.find(function(x){ return String(x.id)===gid; }); const prev=(LIVE.sit97[gid]||{}).sig;   /* the live object first - the cached list can be a scoreboard pass old */
+    liveSit97(gid,0,g).then(function(sit){ if(!sit) return; W.ts=Date.now(); W.n++; let changed=((LIVE.sit97[gid]||{}).sig!==prev);
+      const sm=LIVE.sum[gid]; const P=(sm&&sm.plays)||[]; const lastId=P.length?String(P[P.length-1].id||''):'';
+      if(sm&&sit.lpid&&lastId&&String(sit.lpid)!==lastId) return livePlayPull97(gid,sit.lpid,g).then(function(r){ if(r&&r.added) changed=true; if(changed) liveRepaintSoon97(); });
+      if(changed) liveRepaintSoon97(); }).catch(function(){}); }); }
+try{ LIVE.sweep.hb=setInterval(liveSweepTick97,1000); }catch(e){}
+try{ HELP.live.b+=' <b>Play speed.</b> While the Live tab is open, every in-progress game of yours is asked for ESPN\'s tiny situation feed about every 6 seconds (30 at halftime, 12 with Data Saver) and a new play is pulled as a 2 KB object the moment its id changes, so the tiles, rows and ticker move at play speed; the scoreboard lands every 15 seconds, and nothing pulls while the page is hidden.'; }catch(e){}
+/* ═══ LIVE97FAST_MARK · end ═══ */
 function gvFast96(){ try{ return (navigator.connection&&navigator.connection.saveData)?16000:GVF.fast; }catch(e){ return GVF.fast; } }   /* GC96POL_MARK: Data Saver halves the cadence */
-function gvSitPoll96(gid,g){ /* ESPN's situation feed for ONE game — ~0.6 KB, often a play ahead of the summary; feeds sm.sit (the model's first choice) and the game object (the Live tab) */
+function gvSitPoll96(gid,g){ return liveSit97(gid,0,g); }   /* LIVE97FAST_MARK: every caller goes through the shared service */
+function gvSitPoll96Old97(gid,g){ /* unused since LIVE97 - ESPN's situation feed for ONE game — ~0.6 KB, often a play ahead of the summary; feeds sm.sit (the model's first choice) and the game object (the Live tab) */
   return (async function(){ if(GVF.sitFail>=3&&Date.now()-GVF.sitTs<120000) return null;
     let j=null; try{ j=await jget('https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/'+encodeURIComponent(String(gid))+'/competitions/'+encodeURIComponent(String(gid))+'/situation?lang=en&region=us',6000); }catch(e){ j=null; }
     if(!j||(j.down==null&&!j.lastPlay)){ GVF.sitFail++; GVF.sitTs=Date.now(); return null; } GVF.sitFail=0;
@@ -18008,7 +18201,7 @@ function gvStampFresh(ok){ // a small "updated Ns ago" in the game header so the
 }
 function gvHelpMount(){ const b0=$('gvBody'); const b=(b0&&b0.querySelector('.gvmain'))||b0; if(!b) return; const x=$('gvHelpBox'); if(!GV.help){ if(x) x.remove(); return; } if(x) return; const h=HELP[GV.helpK||'gamecenter']||HELP.gamecenter||{};   /* GC96A_MARK */
   const d=document.createElement('div'); d.id='gvHelpBox'; d.className='card'; d.style.cssText='margin:0 0 10px'; d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><b>'+esc(h.t||'Game Center')+'</b><button class="btn sm" data-act="gvHelp">Close</button></div><div class="railnote">'+(h.b||'Live feed, box score, scoring plays and your players in this game.')+'</div>'; b.prepend(d); }
-function closeModal(){ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; GV.helpK=null; try{ gvAutoStop96(); GVR.gid=null; GVR.i=null; GVR.dragTs=0; }catch(e){} if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
+function closeModal(){ try{ if(mvCloseHook97()) return; }catch(e){}   /* GC97MV_MARK: a Game Center opened from the multiview closes back onto it */ gvFsOff(); $('modal').classList.remove('on'); S.ui.gameView=null; GV.help=false; GV.helpK=null; try{ gvAutoStop96(); GVR.gid=null; GVR.i=null; GVR.dragTs=0; }catch(e){} if(GV.timer){ clearTimeout(GV.timer); GV.timer=null; } GV.gen=(GV.gen||0)+1; } // v7.0.1: every way of closing the modal stops the game poll
 function gameViewRepaint(){ gameViewRepaintInner(); if(GV.help) gvHelpMount(); }
 function gameViewRepaintInner(){ if(GVR.dragTs&&Date.now()-GVR.dragTs<1500&&S.ui.gvTab==='live'&&$('gvLivePanel')) return;
   if(GV.scrollTs&&Date.now()-GV.scrollTs<1000&&GV.tab===(S.ui.gvTab||'feed')) return;   /* MOB96_MARK: a repaint never lands under a moving thumb — the next tick paints */   /* GC96A_MARK: a replay scrub in progress keeps its slider */
@@ -18027,7 +18220,7 @@ function gameViewHTML(g){ const sm=LIVE.sum[g.id]; const tab=S.ui.gvTab||'feed';
     +(sm&&sm.drive&&g.state==='in'&&tab!=='live'?'<div class="fine" style="margin:0 0 8px">Drive: '+esc(sm.drive)+'</div>':'');   /* GC96A_MARK: the Live tab carries the drive itself */
   const TABS=[['live',g.state==='in'?'Live':'Game'],['stats','Team stats'],['feed','Play by play'],['box','Box score'],['scoring','Scoring'],['mine','My players']]; if(g.state==='post') TABS.push(['recap','Recaps']);   /* GC96A_MARK */
   const tab2=(tab==='recap'&&g.state!=='post')?'feed':tab;
-  const tabs='<div class="tabsub gvtabs">'+TABS.map(([k,l])=>'<button class="btn sm'+(tab2===k?' pri':'')+'" data-act="gvTab" data-v="'+k+'">'+l+'</button>').join('')+'</div>';
+  const tabs='<div class="tabsub gvtabs">'+TABS.map(([k,l])=>'<button class="btn sm'+(tab2===k?' pri':'')+'" data-act="gvTab" data-v="'+k+'">'+l+'</button>').join('')+'<button class="btn sm mv97gt" type="button" data-act="openMulti" data-gid="'+esc(g.id)+'" title="Add this game to the multiview">'+mvSq97()+' Multiview</button></div>';   /* GC97MV_MARK */
   let body='';
   if(tab2==='live'){ body=gvLiveHTML(g,sm); }   /* GC96A_MARK: current drive · field · last play · player on the play · replay */
   else if(tab2==='stats'){ body=gvStatsHTML96(g,sm); }   /* GC96B_MARK: probabilities · team stats · game script · leaders · fantasy leaders */
@@ -18169,15 +18362,15 @@ async function liveRefreshInner(){ // one polling pass — each feed on its own 
     if(S.live.week!==wk){ S.live={games:[],stats:{},log:{},matchup:null,week:wk,ts:0}; LIVE.sum={}; LIVE.finKey=''; LIVE.wph={}; MLIVE.memo=null; LIVE.last.sb=0; LIVE.last.mu=0; LIVE.last.st=0; LIVE.last.ml=0; }   /* V94B_LIVE_MARK: a new week pulls its slate on this same pass */ // v8: stats are keyed to EVERY league's players now
     const anyIn=(S.live.games||[]).some(g=>g.state==='in'); const heavy=liveSurface(); // v5.5: the multi-MB weekly stat file and per-game summaries only pull while a live surface is on screen; points come from the 28s matchup feed everywhere
     LIVE.wasHeavy=heavy; // the 75s heavy gate below refreshes rows that aged under the lighter cadence; liveArm's deferred refresh brings a fresh dossier here
-    if(now-LIVE.last.sb>(anyIn?(heavy?18000:40000):55000)){ // scoreboard: state, clock, possession, last play
+    if(now-LIVE.last.sb>(anyIn?(heavy?14000:40000):55000)){   /* LIVE97FAST_MARK: every 15 s tick while a live surface shows */ // scoreboard: state, clock, possession, last play
       try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'+(S.nfl.season_type==='regular'?('?seasontype=2&week='+wk):''),12000);   // V94_POLISH_MARK: Sleeper's week, not ESPN's "current" week
-        const games=liveParseScoreboard(j); if(games.length){ const prev={}; (S.live.games||[]).forEach(g=>prev[g.id]=g); S.live.games=games; S.live.ts=Date.now();
+        const games=liveParseScoreboard(j); if(games.length){ const prev={}; (S.live.games||[]).forEach(g=>prev[g.id]=g); S.live.games=games; S.live.ts=Date.now(); try{ liveSitCarry97(games); }catch(e){}   /* LIVE97FAST_MARK: the core situation (a play ahead of the scoreboard) survives the swap */
           games.forEach(g=>{ if(g.lastPlay&&g.lastPlay.text){ const log=S.live.log[g.id]=S.live.log[g.id]||[]; const last=log[log.length-1];
             if(!last||last.id!==g.lastPlay.id){ log.push({id:g.lastPlay.id,text:g.lastPlay.text,type:g.lastPlay.type,period:g.period,clock:g.clock,team:g.poss,hs:g.hs,as:g.as,ts:Date.now()}); if(log.length>60) log.splice(0,log.length-60); } } });
           LIVE.last.sb=now; }
       }catch(e){} }
     const gi=liveGamesOfInterest(); const inGames=gi.filter(g=>g.state==='in');
-    if(S.net.sleeper&&S.nfl.season_type==='regular'&&now-LIVE.last.mu>(inGames.length?28000:180000)){ // league matchups: live league-scored points + the opponent
+    if(S.net.sleeper&&S.nfl.season_type==='regular'&&now-LIVE.last.mu>(inGames.length?(heavy?14000:28000):180000)){   /* LIVE97FAST_MARK: every 15 s tick on a live surface */ // league matchups: live league-scored points + the opponent
       try{ const m=await myMatchup(wk); if(m&&m.mine){ S.live.matchup=m; LIVE.last.mu=now; if(S.conn&&S.conn.leagueId&&Array.isArray(m.all)) HUB.byLid[S.conn.leagueId]={ts:now,wk,m:m.all}; MLIVE.memo=null; } }catch(e){} } // v8: mirror into HUB so mlSides has ONE uniform source and the Command hub gets live numbers free
     try{ await mlFetchMatchups(now,inGames.length>0); }catch(e){}
     const finKey=mlFinalKey(gi,wk); const finDue=!!finKey&&LIVE.finKey!==finKey; // v8: exactly one extra pull per newly-finished game of interest, so a recap reads the finished line
@@ -18185,7 +18378,7 @@ async function liveRefreshInner(){ // one polling pass — each feed on its own 
       try{ const raw=await slp('/stats/nfl/regular/'+y+'/'+wk); if(raw&&typeof raw==='object'){
           S.live.stats=liveTrimWeek(raw);                          // v8.5: EVERY player's row is kept now — a free agent, another manager's player, anyone in a dossier gets live points
           LIVE.last.st=now; if(finDue) LIVE.finKey=finKey; } }catch(e){} } // finKey only on success — a failed fetch retries next pass
-    if(heavy){ const need=g=>{ const s=LIVE.sum[g.id]; return g.state==='post'?liveSumPending(g):!(s&&now-s.ts<45000); };
+    if(heavy&&now-(LIVE.last.hv||0)>=19000){ LIVE.last.hv=now; const need=g=>{ const s=LIVE.sum[g.id]; if(g.state!=='post'&&s&&LIVE.play97&&LIVE.play97[g.id]&&LIVE.play97[g.id].bigTs>(Number(s.pt)||0)) return true; return g.state==='post'?liveSumPending(g):!(s&&now-s.ts<45000); };   /* LIVE97FAST_MARK: the summary pass keeps its 20 s rhythm under the 15 s tick; a score or turnover the light path appended is owed its summary */
       const due=gi.filter(g=>g.state!=='pre'&&need(g)).sort((a,b)=>((b.state==='in')-(a.state==='in'))||(((LIVE.sum[a.id]||{}).ts||0)-((LIVE.sum[b.id]||{}).ts||0))).slice(0,2); // ESPN summary: box lines, drives, win probability — in-progress first, then ONE finished game per pass so a recap gets its box score
       for(const g of due){
         try{ const j=await jget('https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event='+g.id,12000); if(j){ LIVE.sum[g.id]=liveParseSummary(j); if(g.state==='post') LIVE.sum[g.id].fin=true; } }catch(e){ const prev=LIVE.sum[g.id]||{box:{},plays:[],scoring:[],wp:null}; LIVE.sum[g.id]=Object.assign(prev,{ts:now,tries:(prev.tries||0)+1}); } } }
@@ -18205,7 +18398,7 @@ async function liveTick(){ if(LIVE.timer) clearTimeout(LIVE.timer); LIVE.timer=n
   try{
     if(!document.hidden){ try{ await liveRefresh(); }catch(e){} }
     const st=liveState(); let pend=false; try{ pend=liveSurface()&&liveGamesOfInterest().some(liveSumPending); }catch(e){}
-    const delay=pend?20000:st==='in'?(liveSurface()?20000:40000):st==='soon'?60000:st==='today'?300000:900000;
+    const delay=pend?20000:st==='in'?(liveSurface()?15000:40000):st==='soon'?60000:st==='today'?300000:900000;   /* LIVE97FAST_MARK */
     LIVE.next=Date.now()+delay; LIVE.timer=setTimeout(liveTick,delay); liveNextPaint();
   }finally{ LIVE.ticking=false; }
 }
@@ -18218,7 +18411,7 @@ function liveNextPaint(){ // the visible proof that nobody has to refresh: a run
   const on=livePullOn(), bt=on?'● Live pull ON':'○ Live pull OFF'; document.querySelectorAll('[data-act="livePull"]').forEach(b=>{ if(b.classList.contains('lpon')!==on) b.classList.toggle('lpon',on); if(b.textContent!==bt) b.textContent=bt; }); // compare before writing — no style recalc per second
 }
 setInterval(liveNextPaint,1000);
-function livePullBtnHTML(){ return '<button class="btn sm'+(livePullOn()?' pri lpon':'')+'" data-act="livePull" title="Keeps the feed pulling by itself — 20s during games, once a minute near kickoff, quiet on off days. Click to pause.">'+(livePullOn()?'● Live pull ON':'○ Live pull OFF')+'</button> <span class="fine liveNext"></span>'; }
+function livePullBtnHTML(){ return '<button class="btn sm'+(livePullOn()?' pri lpon':'')+'" data-act="livePull" title="Keeps the feed pulling by itself — 15s during games, once a minute near kickoff, quiet on off days. Click to pause.">'+(livePullOn()?'● Live pull ON':'○ Live pull OFF')+'</button> <span class="fine liveNext"></span>'; }
 /* v5.5: the resume-from-background hook lives in onResume() (init block) — it re-arms the live poller, the draft poller and the 10-minute feeds together */
 function liveRepaint(){ // in-place paints only — never a full renderTab (that wipes un-persisted panels)
   try{ if($('tfPop')) tfPopCheck(); }catch(e){} const root=$('liveRoot'); if(root) lwRootPaint(root);   /* MOB96 */                                // V91: the Watch board patches in place; the ledger views rebuild as before
@@ -20564,20 +20757,20 @@ function lwStripHTML(){ // the slate, kickoff order — built whole for the ledg
   let C=null; try{ C=LW.C&&LW.C.now>Date.now()-3000?LW.C:lwCtx(); }catch(e){ C=null; }
   const games=C?C.games:((S.live&&S.live.games)||[]).slice().sort(lwGameOrd); if(!games.length) return '';
   const cnt=C?lwStripCounts(C):{};
-  return '<div class="lwstrip" id="lwStrip" role="region" aria-label="This week’s games"><div class="lwsx" id="lwSx">'
+  return '<div class="lwstrip mv97s" id="lwStrip" role="region" aria-label="This week’s games"><button type="button" class="mv97sb" data-act="openMulti" aria-label="Multiview — up to four games at once" title="Multiview">'+mvSq97()+'<small>Multi</small></button><div class="lwsx" id="lwSx">'
     +games.map(function(g){ const c=cnt[String(g.id)]; return '<button type="button" class="'+lwGameTileCls(g)+'" data-lwg="'+esc(String(g.id))+'" data-act="'+lwTileAct96(g)+'" data-gid="'+esc(String(g.id))+'" aria-label="'+esc(lwGameAria(g,c))+'">'+lwGameTileHTML(g,C||{now:Date.now()},c)+'</button>'; }).join('')
     +'</div></div>'; }
 function lwAgoTxt(ts){ if(!ts) return 'waiting for the first pull'; const s=Math.max(0,Math.round((Date.now()-ts)/1000));
   return 'updated '+(s<90?s+'s':s<5400?Math.round(s/60)+'m':Math.round(s/3600)+'h')+' ago'; }
 function lwDataTs(){ try{ let h=0; try{ for(const k in (HUB.byLid||{})){ const x=HUB.byLid[k]; if(x&&Array.isArray(x.m)&&x.ts>h) h=x.ts; } }catch(e){}
-    return Math.max((S.live&&S.live.ts)||0,LIVE.last.mu||0,LIVE.last.st||0,h); }catch(e){ return 0; } }   // v9.1.1: LIVE.last.ml is stamped before its fetch, so it can never prove data landed
+    return Math.max((S.live&&S.live.ts)||0,LIVE.last.mu||0,LIVE.last.st||0,(LIVE.sweep&&LIVE.sweep.ts)||0,h); }catch(e){ return 0; } }   /* LIVE97FAST_MARK */   // v9.1.1: LIVE.last.ml is stamped before its fetch, so it can never prove data landed
 function lwPulseCls(){ let st='idle'; try{ st=liveState(); }catch(e){}
   return 'lwpulse '+(!livePullOn()?'off':LIVE.refreshing?'pull':st); }
 function lwWatchHTML(){ // the skeleton — lwPatch fills and then keeps every part current in place
   return '<div class="lwwrap" id="lwWrap">'
     +'<div class="lwbar" id="lwBar"><span class="'+lwPulseCls()+'" id="lwPulse" aria-hidden="true"></span>'
       +'<span class="lwago" id="lwAgo" aria-live="off">'+esc(lwAgoTxt(lwDataTs()))+'</span><span class="lwslate" id="lwSlate"></span>'
-      +'<span class="lwbarr"><button class="btn sm" data-act="liveNow">Pull now</button>'+helpBtn('livewatch')+'</span></div>'
+      +'<span class="lwbarr"><button class="btn sm mv97eb" type="button" data-act="openMulti" title="Watch up to four games at once">'+mvSq97()+' Multiview</button><button class="btn sm" data-act="liveNow">Pull now</button>'+helpBtn('livewatch')+'</span></div>'
     +'<div class="lwrail"><div class="lwlgs" id="lwLgs"></div><div class="lwtkw" id="lwTkW"><div class="lwtkh"><span class="lwtkt">Scoring &amp; big plays</span><span class="lwtkn fine" id="lwTkN"></span></div>'
       +'<div class="lwtk" id="lwTk" role="log" aria-live="polite" aria-label="Scoring and big plays on your board"></div></div></div>'
     +'<div class="lwmain"><div class="lwpre96" id="lwPre"></div><div class="lwctl" id="lwCtl"></div><div class="lwboard" id="lwBoard"></div>'
@@ -22754,12 +22947,20 @@ document.addEventListener('click',async e=>{
   if(act==='teamsRefresh'){ b.disabled=true; b.textContent='Pulling…'; try{ await Promise.allSettled([loadDvp(false),loadVegas(false),loadWeather(false),liveSeasonWanted()?loadSeasonStats(sb95Cur(),true):Promise.resolve()]); }catch(e){} TEAMS.memo=null; TEAMS.m={}; miBust(); valDirty(); renderTab(); return; }
   if(act==='togglePast'){ S.ui.showPast=!S.ui.showPast; renderHeader(); renderTab(); return; }
   if(act==='rpickDone'){ closeOver(); return; }
+  if(act==='openMulti'){ openMulti(b.dataset.gid?{add:b.dataset.gid}:null); return; }   /* GC97MV_MARK */
+  if(act==='mvTog'){ mvToggle97(b.dataset.gid); return; }
+  if(act==='mvAuto'){ mvAuto97(); return; }
+  if(act==='mvCols'){ mvCols97(); return; }
+  if(act==='mvOpen'){ mvOpenGame97(b.dataset.gid); return; }
   if(act==='openGame'){ openGame(b.dataset.gid); return; }
   if(act==='lvReplay96'){ lvReplay96(b.dataset.gid); return; }   /* LIVE96_MARK */
   if(act==='gvTab'){ try{ gvAutoStop96(); }catch(e){} S.ui.gvTab=b.dataset.v; gameViewRepaint(); return; }
   if(act==='gvFlip'){ gvFlipToggle96(b.dataset.gid); return; }   /* GC96UX2_MARK */
   if(act==='gvAuto'){ gvAuto96(b.dataset.gid); return; }   /* GC96RP_MARK */
   if(act==='gvReplay'){ gvReplay(b.dataset.gid,b.dataset.v); return; }   /* GC96A_MARK */
+  if(act==='gvSpeed'){ gvRpSpeedCycle97(); return; }   /* GC97RP_MARK */
+  if(act==='gvCatchUp'){ gvCatchUpGo97(b.dataset.gid); return; }
+  if(act==='gvCuDis'){ gvCatchUpDis97(b.dataset.gid); return; }
   if(act==='gvStatsMode'){ GV.statsMode=b.dataset.v==='mine'?'mine':'wp'; gameViewRepaint(); return; }   /* GC96B_MARK */
   if(act==='gvSwingGo'){ const i96=Number(b.dataset.v); if(isFinite(i96)){ S.ui.gvTab='live'; try{ gvReplay(b.dataset.gid,i96); }catch(e){} gameViewRepaint(); try{ const p96=$('gvLivePanel'); if(p96) p96.scrollTop=0; }catch(e){} } return; }   /* GC96B_MARK */
   if(act==='gvHelpK'){ const k96=b.dataset.k||'gamecenter'; if(GV.help&&GV.helpK===k96){ GV.help=false; } else { GV.help=true; GV.helpK=k96; const x96=$('gvHelpBox'); if(x96) x96.remove(); } gvHelpMount(); return; }
@@ -24672,7 +24873,7 @@ function splashDone(){ if(SPLASH.done) return; SPLASH.done=true; clearInterval(S
    GC96A_PURE_END touches no DOM and no network (the checkers lift it): liveSitOf96, gvAbsYard96, gvPlayExt96, gvExtra96, gvWpAt96,
    gvClockSecs96, gvMMSS96, gvDriveAsOf96, gvTrunc96, gvModel, gvReplayModel, gvPlayKind96, gvBoxLine96, gvImplied96, gvMomentum96,
    gvSpotText96. Nothing here fetches: it reads LIVE.sum / S.live and the multi-league spine on the Game Center's own 8 s poll. */
-const GVR={gid:null,i:null,dragTs:0,lpid:null,lpTs:0};
+const GVR={gid:null,i:null,pid:null,dragTs:0,lpid:null,lpTs:0,auto:false,autoT:null,autoFn:null,speed:null,speed0:null,cuRun:0,cuDis:null,idleT:null,idleMs:90000,prevT:0,prevP:null,scrubI:null,scrubGid:null,tipT:null,tl:null,tlT:null,autoKA:null,dlOpen:false};   /* GC97RP_MARK: pid = the rewound play id; speed/catch-up/idle/scrub state; tlT = the timeline hold timer; autoKA = the auto-play keepalive */
 /* GC96A_PURE_BEGIN */
 function gvAbsYard96(txt,homeAb,awayAb,homeRaw,awayRaw){ /* "DAL 30" (home side) -> 30 · "TB 27" (away side) -> 73 · "50" -> 50 · unreadable -> null. Absolute from the HOME goal line, whoever has the ball. */
   const t=String(txt==null?'':txt).trim(); if(!t) return null;
@@ -24893,7 +25094,7 @@ function gvMomentum96(sm,k){ /* the home win-probability change over the last k 
   const W=(sm&&sm.wpa)||[]; if(W.length<4) return null; k=Math.max(1,Math.min(Number(k)||6,W.length-1));   /* GC96POL: never a chip off one play */
   const a=W[W.length-1-k][1], b=W[W.length-1][1]; if(a==null||b==null) return null; return {d:b-a,n:k,home:(b-a)>=0}; }
 /* GC96A_PURE_END */
-function gvCurModel96(g,sm){ const rep=!!(sm&&sm.plays&&sm.plays.length>1&&g.state==='post'&&GVR.gid===String(g.id)&&GVR.i!=null); return rep?gvReplayModel(g,sm,GVR.i):gvModel(g,sm); }
+function gvCurModel96(g,sm){ try{ gvRpSync97(g,sm); }catch(e){} const rep=!!(sm&&sm.plays&&sm.plays.length>1&&g.state!=='pre'&&GVR.gid===String(g.id)&&GVR.i!=null); return rep?gvReplayModel(g,sm,GVR.i):gvModel(g,sm); }   /* GC97RP_MARK: live games rewind too; the position is resolved by play id first */
 function gvCands96(g){ /* every pid in this game the play parser should know: my boards (mine + opp, pins), every roster of mine, the starters against me — in any league */
   const out=[], seen=new Set(); const add=function(pid){ pid=String(pid==null?'':pid); if(!pid||pid==='0'||seen.has(pid)) return; let p=null; try{ p=playerOf(pid); }catch(e){} if(!p) return; const T=String(p.t||'').toUpperCase(); if(T!==g.home&&T!==g.away) return; seen.add(pid); out.push(pid); };
   let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; }
@@ -24943,7 +25144,7 @@ function gvFlipFor96(M){ /* GC96DIR_MARK: the home end zone sits on the right on
   if(M&&M.poss) return String(M.poss).toUpperCase()===String(M.home||'').toUpperCase();
   try{ if(GV.fieldPrev&&GV.fieldPrev.gid===String((M&&M.gid)||'')) return !!GV.fieldPrev.flip; }catch(e){} return false; }
 function gvEzFit96(){ /* GC96RP_MARK: every club's name runs the same length through its end zone — measured on this device's own face after the paint, so a short name grows (to 58) and a long one shrinks (to 30) */
-  try{ document.querySelectorAll('#gvLivePanel text.gv96ezn').forEach(function(t){ const base=Number(t.getAttribute('data-fs'))||48; let len=0; try{ len=t.getComputedTextLength(); }catch(e){ return; } if(!(len>0)) return; const cur=Number(t.getAttribute('font-size'))||base; let fs=cur*252/len; fs=Math.max(30,Math.min(58,fs)); if(Math.abs(fs-cur)>0.5) t.setAttribute('font-size',fs.toFixed(1)); }); }catch(e){} }
+  try{ document.querySelectorAll('.gv96field text.gv96ezn, #gvLivePanel text.gv96ezn')   /* GC97MV_MARK */.forEach(function(t){ const base=Number(t.getAttribute('data-fs'))||48; let len=0; try{ len=t.getComputedTextLength(); }catch(e){ return; } if(!(len>0)) return; const cur=Number(t.getAttribute('font-size'))||base; let fs=cur*252/len; fs=Math.max(30,Math.min(58,fs)); if(Math.abs(fs-cur)>0.5) t.setAttribute('font-size',fs.toFixed(1)); }); }catch(e){} }
 function gvFieldSVG96(M){ try{ clearTimeout(GV.ezFitT); GV.ezFitT=setTimeout(gvEzFit96,0); }catch(e){}   /* GC96RP_MARK: the name fit runs once the picture is in the DOM */ /* GC96UX_MARK · viewBox 1000×400 (2.5:1): the home end zone on the right in the 1st/3rd quarter, on the left in the 2nd/4th; hatched end zones with logo + name; midfield logo; the ball slides between plays */
   const post=M.fin&&M.mode!=='replay'; const live=M.state==='in'&&!post; const q=Number(M.period)||1; let flip=gvFlipFor96(M);   /* GC96DIR_MARK: the club with the ball drives left to right */
   const X=function(yl){ yl=clamp(Number(yl),0,100); return flip?100+8*yl:900-8*yl; }; const CY=200;
@@ -25126,7 +25327,82 @@ function gvDrivePlaysHTML96(g,sm,M){ const arr=(M.plays||[]).slice().reverse().s
 function gvStampHTML96(sm,M){ const ts=sm&&sm.ts; let t=''; try{ t=ts?new Date(ts).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit',second:'2-digit'}):''; }catch(e){ t=''; }
   const cov=(M&&M.npAll&&M.npAll>(sm.plays||[]).length&&M.mode==='replay')?' \u00b7 the replay covers the last '+(sm.plays||[]).length+' of '+M.npAll+' plays':'';
   return '<div class="gv96stamp"><span>'+(t?'Feed as of '+esc(t):'')+(M&&M.mode==='replay'?' \u00b7 replay':'')+' \u00b7 ESPN\u2019s feed trails the broadcast by 20\u201340 s'+cov+'</span><button class="gv96more" type="button" data-act="gvHelpK" data-k="gclive">What am I looking at?</button></div>'; }
-function gvRpLabel96(sm,M){ const n=(sm&&sm.plays&&sm.plays.length)||0; if(M.mode!=='replay') return 'Final \u00b7 '+n+(n===1?' play':' plays'); const L=M.last; return 'Play '+((M.i||0)+1)+' of '+n+(L?' \u00b7 '+(L.period>4?'OT':'Q'+(L.period||''))+' '+String(L.clock||''):'')+((M.as!=null&&M.hs!=null)?' \u00b7 '+M.away+' '+M.as+'\u2013'+M.home+' '+M.hs:''); }   /* GC96RP_MARK */
+/* GC97RP_PURE_BEGIN */
+function gvRpIndexOf97(sm,pid){ /* GC97RP_MARK: the index of a play id in sm.plays, -1 when absent — memoised per plays length + last id */
+  const P=(sm&&sm.plays)||[]; if(!P.length||pid==null) return -1; pid=String(pid); const lastId=String(P[P.length-1].id||'');
+  let ix=sm._pix; if(!ix||ix.n!==P.length||ix.last!==lastId){ ix={n:P.length,last:lastId,m:Object.create(null)}; P.forEach(function(p,i){ const k=String((p&&p.id)||''); if(k&&ix.m[k]==null) ix.m[k]=i; }); sm._pix=ix; }
+  const i=ix.m[pid]; return i==null?-1:i; }
+function gvRpSync97(g,sm){ /* GC97RP_MARK: the rewound position is a play id — plays landing before or after it never move the view */
+  const gid=String((g&&g.id)||''); if(!sm||!sm.plays||!sm.plays.length||GVR.gid!==gid||GVR.i==null) return; const n=sm.plays.length;
+  if(GVR.pid!=null){ const k=gvRpIndexOf97(sm,GVR.pid); if(k>=0){ GVR.i=k; return; } }
+  const i=clamp(Math.round(Number(GVR.i)||0),0,n-1); if(i>=n-1){ GVR.i=null; GVR.pid=null; return; } GVR.i=i; GVR.pid=String(sm.plays[i].id||''); }
+function gvRpPtsOf97(p,prev){ if(!p||!p.score) return 0; const a=(Number(p.hs)||0)+(Number(p.as)||0), b=prev?((Number(prev.hs)||0)+(Number(prev.as)||0)):0; const d=a-b; if(d>0&&d<=8) return d;
+  let k=''; try{ k=gvPlayKind96(p); }catch(e){ k=''; } return k==='FG'?3:k==='Safety'?2:(k==='TD'||k==='Def TD')?6:3; }
+function gvTimeline97(sm,g,cands){ /* GC97RP_MARK: the timeline's marks — quarters, scores (height by points), turnovers, your players' big plays, the win-prob series by play index, the last play seen */
+  const P=(sm&&sm.plays)||[]; const n=P.length; const out={n:n,q:[],ticks:[],wp:[],seen:-1}; if(!n) return out;
+  if(cands==null){ try{ cands=gvCands96(g); }catch(e){ cands=[]; } } cands=cands||[];
+  let lastQ=null; P.forEach(function(p,i){ const q=Number(p.period)||0; if(q!==lastQ){ out.q.push({i:i,q:q}); lastQ=q; }
+    let k='', v=0, t='';
+    if(p.score){ k='sc'; v=gvRpPtsOf97(p,i>0?P[i-1]:null); let kind=''; try{ kind=gvPlayKind96(p); }catch(e){ kind='Score'; } t=(p.team?p.team+' ':'')+(kind||'Score'); }
+    else if(p.to){ k='to'; t=(p.team?p.team+' ':'')+'turnover'; }
+    else if(cands.length){ let pr=null; try{ pr=lwParseCached(p,g,cands); }catch(e){ pr=null; } if(pr&&pr.ev&&pr.ev.length&&(pr.td||pr.turnover||(pr.yds!=null&&pr.yds>=20))){ k='me'; let who=null; try{ who=playerOf(pr.ev[0].pid); }catch(e){ who=null; } t=(who?lwShort(who):'Your player')+(pr.yds!=null?' '+pr.yds+' yds':''); } }
+    if(k) out.ticks.push({i:i,k:k,v:v,t:t});
+    let h=null; try{ h=gvWpAt96(sm,p.id); }catch(e){ h=null; } if(h&&h.wp!=null) out.wp.push([i,h.wp]); });
+  try{ const m=gvSeenLoad97(); const sn=m[String((g&&g.id)||'')]; if(sn&&sn.pid!=null) out.seen=gvRpIndexOf97(sm,sn.pid); }catch(e){}
+  return out; }
+function gvTimelineSVG97(T,cur){ /* GC97RP_MARK: 1000×60 stretched to the strip — quarter lines, the home win-prob line, gold score ticks sized by points, orange turnovers, green plays of yours, the cursor */
+  const n=(T&&T.n)||0; if(n<2) return ''; const X=function(i){ return (i/(n-1))*1000; }; let h='';
+  h+='<rect x="0" y="0" width="1000" height="60" fill="rgba(255,255,255,.03)"/><line x1="0" y1="30" x2="1000" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1" vector-effect="non-scaling-stroke"/>';
+  T.q.forEach(function(b,k){ if(k===0) return; const x=X(b.i).toFixed(1); h+='<line class="gv97q" x1="'+x+'" y1="0" x2="'+x+'" y2="60" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>'; });
+  if(T.seen>=0&&T.seen<n-1){ const x=X(T.seen); h+='<rect class="gv97seen" x="'+x.toFixed(1)+'" y="0" width="'+(1000-x).toFixed(1)+'" height="60" fill="rgba(55,229,167,.07)"/>'; }
+  if(T.wp.length>1){ let d=''; T.wp.forEach(function(w,k){ d+=(k?'L':'M')+X(w[0]).toFixed(1)+' '+(56-w[1]*52).toFixed(1)+' '; }); h+='<path class="gv97wp" d="'+d.trim()+'" fill="none" stroke="rgba(59,227,255,.6)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>'; }
+  T.ticks.forEach(function(t){ const x=X(t.i); const hh=t.k==='sc'?Math.min(48,12+(t.v||3)*5):t.k==='to'?30:22; const col=t.k==='sc'?'#F5C518':t.k==='to'?'#FF8A3D':'#37E5A7'; h+='<rect class="gv97tk t-'+t.k+'" x="'+(x-3).toFixed(1)+'" y="'+(60-hh)+'" width="6" height="'+hh+'" rx="1" fill="'+col+'" opacity=".92"><title>'+esc(t.t)+'</title></rect>'; });
+  const cx=(cur==null)?1000:X(cur); h+='<rect id="gvTlCur" x="'+(cx-3).toFixed(1)+'" y="0" width="6" height="60" rx="1" fill="'+(cur==null?'rgba(255,255,255,.55)':'#fff')+'"/>';
+  return '<svg class="gv97tl" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">'+h+'</svg>'; }
+function gvTimelineHTML97(T,cur,gid){ const n=(T&&T.n)||0; if(n<2) return ''; const labs=T.q.map(function(b){ const pct=(b.i/(n-1))*100; return '<span style="left:'+pct.toFixed(2)+'%">'+esc(b.q>4?'OT':(b.q?'Q'+b.q:''))+'</span>'; }).join('');
+  return '<div id="gvTimeline" class="gv97tlw" data-gid="'+esc(gid)+'" data-n="'+n+'" role="slider" aria-label="Timeline — drag to scrub" aria-valuemin="1" aria-valuemax="'+n+'" aria-valuenow="'+((cur==null?n-1:cur)+1)+'">'+gvTimelineSVG97(T,cur)+'<div class="gv97tlq">'+labs+'</div></div>'; }
+function gvRpTipHTML97(g,sm,i){ const P=(sm&&sm.plays)||[]; const p=P[i]; if(!p) return ''; let kind=''; try{ kind=gvPlayKind96(p); }catch(e){ kind=''; }
+  const q=(p.period>4?'OT':(p.period?'Q'+p.period:''))+' '+String(p.clock||''); const sc=(p.as!=null&&p.hs!=null)?' · '+String(g.away||'')+' '+p.as+'–'+String(g.home||'')+' '+p.hs:'';
+  const t=String(p.text||''); const txt=t.slice(0,70)+(t.length>70?'…':'');
+  return '<b>'+esc('Play '+(i+1)+' of '+P.length+' · '+q.trim()+sc)+'</b>'+(kind?'<i>'+esc(kind)+'</i>':'')+'<span>'+esc(txt)+'</span>'; }
+function gvRpLabel97(sm,M){ if(!M||M.mode==='replay'||M.state!=='in') return null; const n=(sm&&sm.plays&&sm.plays.length)||0; const L=M.last; return 'Live · '+n+(n===1?' play':' plays')+(L?' · '+(L.period>4?'OT':'Q'+(L.period||''))+' '+String(L.clock||''):''); }
+function gvRpSpeed97(){ if(GVR.speed==null){ let v=1; try{ v=Number(localStorage.getItem('fo:rpspeed'))||1; }catch(e){ v=1; } GVR.speed=[0.5,1,2,4].indexOf(v)>=0?v:1; } return GVR.speed; }
+function gvRpInterval97(sp){ sp=Number(sp)||gvRpSpeed97(); return Math.max(200,Math.round(1300/sp)); }
+function gvRpSpeedFace97(v){ v=Number(v)||gvRpSpeed97(); return (v===0.5?'½':String(v))+'×'; }
+function gvSeenLoad97(){ if(GV.seen&&typeof GV.seen==='object') return GV.seen; let m={}; try{ m=JSON.parse(localStorage.getItem('fo:gvseen')||'{}')||{}; }catch(e){ m={}; } if(!m||typeof m!=='object'||Array.isArray(m)) m={}; GV.seen=m; return m; }
+function gvSeenSave97(m){ const ks=Object.keys(m); if(ks.length>20){ ks.sort(function(a,b){ return (Number(m[a]&&m[a].ts)||0)-(Number(m[b]&&m[b].ts)||0); }); ks.slice(0,ks.length-20).forEach(function(k){ delete m[k]; }); } try{ localStorage.setItem('fo:gvseen',JSON.stringify(m)); }catch(e){} }
+function gvSeenMark97(gid,sm){ /* GC97RP_MARK: only a FRESH summary (≤ 60 s) counts as seen — the stale cache painted at open must not become "what you saw" */
+  gid=String(gid||''); const P=(sm&&sm.plays)||[]; if(!gid||!P.length) return; if(!(Number(sm.ts)>0)||Date.now()-Number(sm.ts)>60000) return; const pid=String(P[P.length-1].id||''); if(!pid) return; const m=gvSeenLoad97(); if(m[gid]&&m[gid].pid===pid) return; m[gid]={pid:pid,ts:Date.now()}; gvSeenSave97(m); }
+function gvSeenClear97(gid){ gid=String(gid||''); const m=gvSeenLoad97(); if(m[gid]){ delete m[gid]; gvSeenSave97(m); } }
+function gvCatchUp97(gid,sm,seen){ /* GC97RP_MARK: {pid,i,from,n} when 3+ plays landed after the last play seen live, else null — pure given seen */
+  gid=String(gid||''); const P=(sm&&sm.plays)||[]; if(!P.length) return null; if(seen===undefined){ const m=gvSeenLoad97(); seen=m[gid]||null; } if(!seen||seen.pid==null) return null;
+  const i=gvRpIndexOf97(sm,seen.pid); if(i<0) return null; const n=P.length-1-i; if(n<3) return null; if(GVR.cuDis===gid+':'+String(seen.pid)) return null; return {pid:String(seen.pid),i:i,from:i+1,n:n}; }
+function gvNewSince97(gid,sm){ try{ const m=gvSeenLoad97(); const sn=m[String(gid||'')]; return (sn&&sn.pid!=null)?gvRpIndexOf97(sm,sn.pid):-1; }catch(e){ return -1; } }
+function gvDriveListHTML97(g,sm,M){ /* GC97RP_MARK: every drive — logo · result · plays/yards/time · quarter; tap jumps to its first play; the model's drive is lit */
+  const D=(sm&&sm.drv)||[]; if(D.length<2) return ''; const curId=(M&&M.drive)?String(M.drive.id||''):''; const gid=esc(g.id);
+  const rows=D.map(function(d){ const ix=gvRpIndexOf97(sm,d.p0); if(ix<0) return ''; const on=!!(curId&&String(d.id)===curId); const meta=[(d.n!=null?d.n+' plays':(d.np!=null?d.np+' plays':'')),(d.yds!=null?d.yds+' yds':''),String(d.te||'')].filter(Boolean).join(' · ');
+    return '<button type="button" class="gv97dr'+(on?' on':'')+(d.sc?' sc':'')+'" data-act="gvReplay" data-gid="'+gid+'" data-v="'+ix+'" data-dv="'+esc(d.id)+'">'+gvLogoImg96(d.tm,'gv97drl')+'<b>'+esc(d.resT||d.res||(d.cur?'In progress':'Drive'))+'</b><small>'+esc(meta)+'</small><i>'+esc((d.q0>4?'OT':(d.q0?'Q'+d.q0:''))+' '+String(d.c0||''))+'</i></button>'; }).join('');
+  if(!rows) return ''; return '<details class="gv97dl"'+(GVR.dlOpen?' open':'')+'><summary>Drives · '+D.length+'</summary><div class="gv97drs">'+rows+'</div></details>'; }
+function gvReplayCtlHTML97(g,sm,M){ /* GC97RP_MARK: replay v2 — any game with 2+ plays: catch-up pill, header + label + back-to-live, slider + tooltip, the timeline, the buttons (speed, LIVE/Final), jump chips, the drive list, points through this play */
+  if(!g||g.state==='pre'||!sm||!sm.plays||sm.plays.length<2) return '';
+  const gid=String(g.id); const n=sm.plays.length; const live=g.state==='in'; const rep=M.mode==='replay'; const i=rep?M.i:n-1;
+  let cu=null; if(live&&!rep){ try{ cu=gvCatchUp97(gid,sm); }catch(e){ cu=null; } if(!cu){ try{ gvSeenMark97(gid,sm); }catch(e){} } } else if(!live){ try{ gvSeenClear97(gid); }catch(e){} }
+  let T=null; try{ T=gvTimeline97(sm,g); }catch(e){ T=null; }
+  const btn=function(v,face,title){ return '<button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(gid)+'" data-v="'+v+'" aria-label="'+esc(title)+'" title="'+esc(title)+'">'+face+'</button>'; };
+  let h='<div class="gv96rp gv97" id="gvReplayCtl">';
+  if(cu) h+='<div class="gv97cu" id="gvRpCu"><button type="button" class="gv97cub" data-act="gvCatchUp" data-gid="'+esc(gid)+'">Catch up · '+cu.n+' new plays ▶</button><button type="button" class="gv97cux" data-act="gvCuDis" data-gid="'+esc(gid)+'" aria-label="Dismiss">✕</button></div>';
+  h+='<div class="gv96rph"><b>'+(live?'Rewind':'Replay the game')+'</b><span id="gvRpLab">'+esc(gvRpLabel96(sm,M))+'</span><button type="button" class="gv97back" id="gvRpBack" data-act="gvReplay" data-gid="'+esc(gid)+'" data-v="live"'+((live&&rep)?'':' hidden')+'>⟲ Back to live · '+(n-1-i)+' new</button></div>';
+  h+='<div class="gv97rng"><input id="gvRange" class="gv96rng" type="range" min="0" max="'+(n-1)+'" step="1" value="'+i+'" data-act="gvRange" data-gid="'+esc(gid)+'" aria-label="Scrub through the plays of the game"><div id="gvRpTip" class="gv97tip" hidden></div></div>';
+  if(T) h+=gvTimelineHTML97(T,rep?i:null,gid);
+  h+='<div class="gv96rpc gv97rpc">'+btn('pdrive','⏮','Previous drive ([)')+btn('prev','◀','Previous play (←)')+btn('next','▶','Next play (→)')+btn('ndrive','⏭','Next drive (])')
+    +'<button class="gv96rb gv96auto'+(GVR.auto?' on':'')+'" type="button" data-act="gvAuto" data-gid="'+esc(gid)+'" aria-label="'+(GVR.auto?'Pause':'Play the game')+'" title="'+(GVR.auto?'Pause (space)':'Play the game a play at a time (space)')+'">'+(GVR.auto?'❚❚':'▶ Play')+'</button>'
+    +'<button class="gv96rb gv97spd" type="button" data-act="gvSpeed" data-gid="'+esc(gid)+'" aria-label="Replay speed" title="Replay speed (keys 1–4)">'+esc(gvRpSpeedFace97())+'</button>'
+    +'<button class="btn sm gv96fin'+(rep?' pri':'')+(live?' gv97live':'')+'" type="button" data-act="gvReplay" data-gid="'+esc(gid)+'" data-v="live" data-face="'+(live?'live':'final')+'">'+(live?'<i class="gv97dot"></i>LIVE':'Final')+'</button></div>';
+  h+=gvRpJumpsHTML96(g,sm,M);
+  try{ h+=gvDriveListHTML97(g,sm,M); }catch(e){}
+  h+='<div class="gv96rpp" id="gvRpPts">'+gvRpPtsHTML96(g,sm,M)+'</div></div>'; return h; }
+/* GC97RP_PURE_END */
+function gvRpLabel96(sm,M){ try{ const r97=gvRpLabel97(sm,M); if(r97!=null) return r97; }catch(e){} const n=(sm&&sm.plays&&sm.plays.length)||0; if(M.mode!=='replay') return 'Final \u00b7 '+n+(n===1?' play':' plays'); const L=M.last; return 'Play '+((M.i||0)+1)+' of '+n+(L?' \u00b7 '+(L.period>4?'OT':'Q'+(L.period||''))+' '+String(L.clock||''):'')+((M.as!=null&&M.hs!=null)?' \u00b7 '+M.away+' '+M.as+'\u2013'+M.home+' '+M.hs:''); }   /* GC96RP_MARK */
 function gvReplayPts96(g,sm,i,cands){ /* your points through play i per league — my starters for me, the starters against me — from the play text, priced with each league's own scoring (an ESTIMATE, never Sleeper's number) */
   const P=(sm&&sm.plays)||[]; let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; } if(!ML||!ML.leagues||!ML.leagues.length) return [];
   const side={}; cands.forEach(function(pid){ let A=[]; try{ A=mlSidesAll(pid); }catch(e){ A=[]; } A.forEach(function(x){ if(x.k==='ms'||x.k==='os') (side[pid]=side[pid]||[]).push(x); }); });
@@ -25139,7 +25415,8 @@ function gvRpPtsHTML96(g,sm,M){ if(M.mode!=='replay') return '<span class="gv96e
   if(!rows.length) return '<span class="gv96est">No league matchups loaded \u2014 nothing to price.</span>';
   const f=function(v){ return (v>=0?'+':'\u2212')+fmtPts1(Math.abs(v)); };
   return rows.map(function(r){ let code=''; try{ code=mlCode(r.L); }catch(e){ code=r.L.short||'LG'; } return '<span><b class="gv96lc">'+esc(code)+'</b> for you <b class="'+(r.me>0?'up':'')+'">'+f(r.me)+'</b> \u00b7 against you <b class="'+(r.vs>0?'dn':'')+'">'+f(r.vs)+'</b></span>'; }).join('')+'<span class="gv96est">Your points through this play \u00b7 est. from play text, your starters and theirs</span>'; }
-function gvReplayCtlHTML96(g,sm,M){ if(g.state!=='post'||!sm||!sm.plays||sm.plays.length<2) return '';
+function gvReplayCtlHTML96(g,sm,M){ return gvReplayCtlHTML97(g,sm,M); }   /* GC97RP_MARK: v2 controls; the v9.6.5 body below is kept unused */
+function gvReplayCtlHTML96_old(g,sm,M){ if(g.state!=='post'||!sm||!sm.plays||sm.plays.length<2) return '';
   const n=sm.plays.length; const i=M.mode==='replay'?M.i:n-1;
   return '<div class="gv96rp" id="gvReplayCtl"><div class="gv96rph"><b>Replay the game</b><span id="gvRpLab">'+esc(gvRpLabel96(sm,M))+'</span></div>'
     +'<div class="gv96rpc"><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="pdrive" aria-label="Previous drive" title="Previous drive">\u23ee</button><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="prev" aria-label="Previous play" title="Previous play (\u2190)">\u25c0</button>'
@@ -25147,32 +25424,79 @@ function gvReplayCtlHTML96(g,sm,M){ if(g.state!=='post'||!sm||!sm.plays||sm.play
     +'<button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="next" aria-label="Next play" title="Next play (\u2192)">\u25b6</button><button class="gv96rb" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="ndrive" aria-label="Next drive" title="Next drive">\u23ed</button><button class="gv96rb gv96auto'+(GVR.auto?' on':'')+'" type="button" data-act="gvAuto" data-gid="'+esc(g.id)+'" aria-label="'+(GVR.auto?'Pause':'Play the game')+'" title="'+(GVR.auto?'Pause (space)':'Play the game a play at a time (space)')+'">'+(GVR.auto?'\u275a\u275a':'\u25b6 Play')+'</button>'
     +'<button class="btn sm gv96fin'+(M.mode==='replay'?' pri':'')+'" type="button" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="live">Final</button></div>'+gvRpJumpsHTML96(g,sm,M)
     +'<div class="gv96rpp" id="gvRpPts">'+gvRpPtsHTML96(g,sm,M)+'</div></div>'; }
+/* GC97RP_DOM_BEGIN */
+function gvRpSpeedSet97(v,persist){ v=Number(v); if([0.5,1,2,4].indexOf(v)<0) return; GVR.speed=v; if(persist!==false){ GVR.speed0=null; try{ localStorage.setItem('fo:rpspeed',String(v)); }catch(e){} }
+  try{ const b=document.querySelector('#gvReplayCtl .gv97spd'); if(b) b.textContent=gvRpSpeedFace97(v); }catch(e){}
+  if(GVR.auto&&GVR.autoT&&GVR.autoFn){ try{ clearInterval(GVR.autoT); }catch(e){} GVR.autoT=setInterval(GVR.autoFn,gvRpInterval97(v)); } }
+function gvRpSpeedCycle97(){ const L=[0.5,1,2,4]; const k=L.indexOf(gvRpSpeed97()); gvRpSpeedSet97(L[(k+1)%L.length],true); try{ toast('Replay speed '+gvRpSpeedFace97(),'good'); }catch(e){} }
+function gvIdleArm97(gid){ /* GC97RP_MARK: a rewound in-progress game drifts back to live after 90 s without a hand on the controls */
+  gid=String(gid||''); try{ if(GVR.idleT){ clearTimeout(GVR.idleT); GVR.idleT=null; } }catch(e){} const g=gameOf(gid); if(!g||g.state!=='in'||GVR.i==null||GVR.auto) return;
+  GVR.idleT=setTimeout(function(){ GVR.idleT=null; try{ const g2=gameOf(gid); if(!g2||g2.state!=='in'||S.ui.gameView!==gid||GVR.gid!==gid||GVR.i==null||GVR.auto||!$('gvLivePanel')) return; if(document.hidden){ gvIdleArm97(gid); return; } gvReplay(gid,'live'); try{ toast('Back to live','good'); }catch(e){} }catch(e){} },GVR.idleMs||90000); }
+function gvCatchUpGo97(gid){ gid=String(gid||S.ui.gameView||''); const sm=LIVE.sum[gid]; const cu=gvCatchUp97(gid,sm); if(!cu) return;
+  GVR.cuDis=gid+':'+cu.pid; gvReplay(gid,cu.from); if(GVR.i==null) return; GVR.speed0=gvRpSpeed97(); GVR.speed=2; GVR.cuRun=1; if(!GVR.auto) gvAuto96(gid); }
+function gvCatchUpDis97(gid){ gid=String(gid||S.ui.gameView||''); const sm=LIVE.sum[gid]; const cu=gvCatchUp97(gid,sm); if(cu) GVR.cuDis=gid+':'+cu.pid; try{ const el=$('gvRpCu'); if(el) el.remove(); }catch(e){} try{ gvLivePatch(); }catch(e){} }
+function gvTlIndex97(w,clientX){ /* GC97RP_MARK: the play index under clientX — null when the strip is gone or unsized (a tick rebuild under a held finger must never scrub to the end) */
+  if(!w||!w.getBoundingClientRect) return null; let r=null; try{ r=w.getBoundingClientRect(); }catch(e){ r=null; } if(!r||!(r.width>0)) return null; try{ if(document.contains&&!document.contains(w)) return null; }catch(e){}
+  const n=Number(w.dataset&&w.dataset.n)||1; const f=clamp((Number(clientX)-r.left)/r.width,0,1); return Math.round(f*(n-1)); }
+function gvTlEl97(t){ /* GC97RP_MARK: the LIVE #gvTimeline of the drag's game — the one cached at pointerdown may have been rebuilt away by the tick */
+  if(!t) return null; let w=null; try{ w=$('gvTimeline'); }catch(e){ w=null; } if(w&&String((w.dataset&&w.dataset.gid)||'')===String(t.gid||'')){ t.el=w; return w; } return t.el||null; }
+function gvTlHold97(on){ /* GC97RP_MARK: while a pointer holds the timeline, GVR.dragTs is refreshed every 500 ms so the live tick never rebuilds #gvBody under the finger */
+  try{ if(GVR.tlT){ clearInterval(GVR.tlT); GVR.tlT=null; } }catch(e){} if(!on) return; GVR.dragTs=Date.now();
+  GVR.tlT=setInterval(function(){ try{ if(GVR.tl){ GVR.dragTs=Date.now(); } else { clearInterval(GVR.tlT); GVR.tlT=null; } }catch(e){} },500); }
+function gvRpTipHide97(){ try{ const t=$('gvRpTip'); if(t) t.hidden=true; }catch(e){} }
+function gvRpTipShow97(g,sm,i){ const t=$('gvRpTip'), r=$('gvRange'); if(!t||!r||!r.parentNode) return; const n=(sm&&sm.plays&&sm.plays.length)||0; if(n<2) return;
+  t.innerHTML=gvRpTipHTML97(g,sm,i); t.hidden=false; try{ clearTimeout(GVR.tipT); }catch(e){}
+  try{ const w=r.parentNode.getBoundingClientRect().width; let x=14+(i/(n-1))*(w-28); const tw=t.offsetWidth||0; x=clamp(x,tw/2,Math.max(tw/2,w-tw/2)); t.style.left=Math.round(x)+'px'; }catch(e){} }
+function gvScrub97(gid,v){ /* GC97RP_MARK: a drag moves the tooltip, the label and the cursor at once; the full panel follows at most every 120 ms (a leading render drops the pending trailing one) */
+  gid=String(gid||S.ui.gameView||''); if(S.ui.gameView!==gid) return; const g=gameOf(gid); const sm=LIVE.sum[gid]; if(!g||!sm||!sm.plays||!sm.plays.length) return; const n=sm.plays.length; const i=clamp(Math.round(Number(v)||0),0,n-1);
+  gvAutoStop96(); GVR.dragTs=Date.now(); GVR.scrubI=i; GVR.scrubGid=gid;
+  try{ const r=$('gvRange'); if(r&&String(r.value)!==String(i)) r.value=String(i); }catch(e){}
+  try{ const lab=$('gvRpLab'); if(lab) lab.textContent='Play '+(i+1)+' of '+n; }catch(e){}
+  try{ gvRpTipShow97(g,sm,i); }catch(e){}
+  try{ const c=$('gvTlCur'); if(c){ c.setAttribute('x',((i/(n-1))*1000-3).toFixed(1)); c.setAttribute('fill','#fff'); } }catch(e){}
+  const now=Date.now(); const gap=now-(Number(GVR.prevT)||0);
+  if(gap>=120){ if(GVR.prevP){ try{ clearTimeout(GVR.prevP); }catch(e){} GVR.prevP=null; } GVR.prevT=now; gvReplay(gid,i); } else if(!GVR.prevP){ GVR.prevP=setTimeout(function(){ GVR.prevP=null; if(GVR.scrubGid===gid&&GVR.scrubI!=null&&S.ui.gameView===gid){ GVR.prevT=Date.now(); gvReplay(gid,GVR.scrubI); } },120-gap); } }
+function gvScrubEnd97(gid,v){ gid=String(gid||S.ui.gameView||''); try{ if(GVR.prevP){ clearTimeout(GVR.prevP); GVR.prevP=null; } }catch(e){} GVR.scrubI=null; GVR.scrubGid=null; GVR.prevT=Date.now(); gvReplay(gid,v); try{ clearTimeout(GVR.tipT); GVR.tipT=setTimeout(gvRpTipHide97,900); }catch(e){} }
+function gvRpCtlSync97(g,sm,M){ /* GC97RP_MARK: the controls outside #gvLiveBody follow a patch — cursor, back pill, drive highlight, speed face, LIVE/Final face, slider range */
+  const p=$('gvReplayCtl'); if(!p||!g||!sm||!sm.plays||!sm.plays.length) return; const n=sm.plays.length; const rep=M.mode==='replay'; const i=rep?M.i:n-1; const live=g.state==='in';
+  try{ const c=$('gvTlCur'); if(c){ c.setAttribute('x',((n>1?i/(n-1):0)*1000-3).toFixed(1)); c.setAttribute('fill',rep?'#fff':'rgba(255,255,255,.55)'); } }catch(e){}
+  try{ const w=$('gvTimeline'); if(w){ w.dataset.n=String(n); w.setAttribute('aria-valuenow',String(i+1)); } }catch(e){}
+  try{ const bk=$('gvRpBack'); if(bk){ const show=live&&rep; bk.hidden=!show; if(show) bk.textContent='⟲ Back to live · '+(n-1-i)+' new'; } }catch(e){}
+  try{ const cur=(M.drive)?String(M.drive.id||''):''; p.querySelectorAll('.gv97dr').forEach(function(b){ b.classList.toggle('on',!!(cur&&b.dataset.dv===cur)); }); }catch(e){}
+  try{ const sb=p.querySelector('.gv97spd'); if(sb) sb.textContent=gvRpSpeedFace97(); }catch(e){}
+  try{ const fin=p.querySelector('.gv96fin'); if(fin){ const want=live?'live':'final'; if(fin.dataset.face!==want){ fin.dataset.face=want; fin.innerHTML=live?'<i class="gv97dot"></i>LIVE':'Final'; fin.classList.toggle('gv97live',live); } } }catch(e){}
+  try{ const rg=$('gvRange'); if(rg&&String(rg.max)!==String(n-1)) rg.max=String(n-1); }catch(e){}
+  try{ const t=p.querySelector('.gv96rph b'); if(t){ const want=live?'Rewind':'Replay the game'; if(t.textContent!==want) t.textContent=want; } }catch(e){} }
+/* GC97RP_DOM_END */
 function gvDriveJump96(sm,cur,dir){ /* GC96RP_MARK: the first play of the previous / next drive */
   const P=(sm&&sm.plays)||[]; if(!P.length) return cur; const dv=function(i){ return P[i]?String(P[i].dv||''):''; }; const here=dv(cur);
   if(dir>0){ for(let i=cur+1;i<P.length;i++){ if(dv(i)!==here) return i; } return P.length-1; }
   let i=cur; while(i>0&&dv(i-1)===here) i--; if(i===cur&&cur>0){ const prev=dv(cur-1); i=cur-1; while(i>0&&dv(i-1)===prev) i--; } return i; }
-function gvAutoStop96(){ try{ if(GVR.autoT){ clearInterval(GVR.autoT); } GVR.autoT=null; if(GVR.auto){ GVR.auto=false; const b=document.querySelector('#gvReplayCtl .gv96auto'); if(b){ b.classList.remove('on'); b.textContent='\u25b6 Play'; b.setAttribute('aria-label','Play the game'); } } }catch(e){} }
-function gvAuto96(gid){ /* GC96RP_MARK: the game plays itself a play every 1.3 s — the ball slides, the kicks arc; stops at the final, on a tap, on close */
-  gid=String(gid||S.ui.gameView||''); if(GVR.auto){ gvAutoStop96(); return; } const sm=LIVE.sum[gid]; if(!sm||!sm.plays||!sm.plays.length) return;
-  GVR.auto=true; if(GVR.gid!==gid||GVR.i==null){ gvReplay(gid,0); GVR.auto=true; } try{ gvLivePatch(); }catch(e){}
-  const tick=function(){ try{ if(!GVR.auto||S.ui.gameView!==gid||S.ui.gvTab!=='live'||!$('gvLivePanel')||document.hidden){ gvAutoStop96(); return; } const n=sm.plays.length; const cur=(GVR.i!=null)?GVR.i:n-1; if(cur>=n-1){ gvAutoStop96(); return; } gvReplay(gid,'auto'); if(GVR.i==null) gvAutoStop96(); }catch(e){ gvAutoStop96(); } };
-  GVR.autoT=setInterval(tick,1300); }
+function gvAutoStop96(){ try{ if(GVR.autoKA){ clearInterval(GVR.autoKA); GVR.autoKA=null; } if(GVR.idleT){ clearTimeout(GVR.idleT); GVR.idleT=null; } if(GVR.cuRun){ GVR.cuRun=0; if(GVR.speed0!=null){ GVR.speed=GVR.speed0; GVR.speed0=null; try{ const sb97=document.querySelector('#gvReplayCtl .gv97spd'); if(sb97) sb97.textContent=gvRpSpeedFace97(); }catch(e){} } } }catch(e){}   /* GC97RP_MARK */ try{ if(GVR.autoT){ clearInterval(GVR.autoT); } GVR.autoT=null; if(GVR.auto){ GVR.auto=false; const b=document.querySelector('#gvReplayCtl .gv96auto'); if(b){ b.classList.remove('on'); b.textContent='\u25b6 Play'; b.setAttribute('aria-label','Play the game'); } } }catch(e){} }
+function gvAuto96(gid){ /* GC97RP_MARK: the game plays itself a play every 1.3 s ÷ speed (½× 1× 2× 4×) — the ball slides, the kicks arc; stops at the end, on a tap, on close, on a hidden page; a 1 s keepalive refreshes GVR.dragTs so the live tick never rebuilds #gvBody mid-run (½× steps every 2.6 s, past the 1.5 s guard) */
+  gid=String(gid||S.ui.gameView||''); if(GVR.auto){ gvAutoStop96(); return; } const sm0=LIVE.sum[gid]; if(!sm0||!sm0.plays||!sm0.plays.length) return;
+  GVR.auto=true; if(GVR.gid!==gid||GVR.i==null){ gvReplay(gid,0); GVR.auto=true; } try{ if(GVR.idleT){ clearTimeout(GVR.idleT); GVR.idleT=null; } }catch(e){} try{ gvLivePatch(); }catch(e){}
+  const tick=function(){ try{ if(!GVR.auto||S.ui.gameView!==gid||S.ui.gvTab!=='live'||!$('gvLivePanel')||document.hidden){ gvAutoStop96(); return; } const sm=LIVE.sum[gid]; const n=(sm&&sm.plays&&sm.plays.length)||0; const cur=(GVR.i!=null)?GVR.i:n-1; if(!n||cur>=n-1){ gvAutoStop96(); return; } gvReplay(gid,'auto'); if(GVR.i==null) gvAutoStop96(); }catch(e){ gvAutoStop96(); } };
+  GVR.autoFn=tick; try{ if(GVR.autoKA){ clearInterval(GVR.autoKA); } }catch(e){} GVR.autoKA=setInterval(function(){ try{ if(GVR.auto&&$('gvLivePanel')) GVR.dragTs=Date.now(); }catch(e){} },1000); GVR.autoT=setInterval(tick,gvRpInterval97()); }
 function gvRpJumpsHTML96(g,sm,M){ /* GC96RP_MARK: jump chips — every scoring play, and the big plays that involved your players */
-  const P=(sm&&sm.plays)||[]; if(P.length<2) return ''; const cur=M.mode==='replay'?M.i:null; const chips=[]; const seen={};
+  const P=(sm&&sm.plays)||[]; if(P.length<2) return ''; const cur=M.mode==='replay'?M.i:null; const chips=[]; const seen={}; const nw97=gvNewSince97(g.id,sm); const cix97=[];   /* GC97RP_MARK: the "since you left" group */
   let cands=[]; try{ cands=gvCands96(g); }catch(e){ cands=[]; }
   P.forEach(function(p,i){ if(seen[i]) return; let kind='', tone='';
     if(p.score){ let k=''; try{ k=gvPlayKind96(p); }catch(e){ k='Score'; } kind=k||'Score'; tone='sc'; }
     else if(cands.length){ let pr=null; try{ pr=lwParseCached(p,g,cands); }catch(e){ pr=null; } if(pr&&pr.ev&&pr.ev.length&&(pr.td||pr.turnover||(pr.yds!=null&&pr.yds>=20))){ const who=(playerOf(pr.ev[0].pid)||{}); kind=(pr.turnover?'TO \u00b7 ':pr.td?'TD \u00b7 ':'')+(lwShort(who)||'Big play'); tone='me'; } }
     if(!kind) return; seen[i]=1; const q=(p.period>4?'OT':'Q'+(p.period||''))+' '+String(p.clock||'');
-    chips.push('<button type="button" class="gv96rj t-'+tone+(cur===i?' on':'')+'" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="'+i+'" title="'+esc(String(p.text||'').slice(0,160))+'"><b>'+esc(kind)+'</b><small>'+esc((p.team?p.team+' \u00b7 ':'')+q)+'</small></button>'); });
-  if(!chips.length) return ''; return '<div class="gv96rpj" aria-label="Jump to a play"><span class="gv96rjk">Jump</span><div class="gv96rjs">'+chips.slice(0,24).join('')+'</div></div>'; }
-function gvReplay(gid,v){ /* sets GVR and patches only the panel: i | 'prev' | 'next' | 'live' */
-  gid=String(gid||S.ui.gameView||''); const g=gameOf(gid); const sm=LIVE.sum[gid]; if(!g||!sm||!sm.plays||!sm.plays.length) return;
-  if(v!=='auto') gvAutoStop96();   /* GC96RP_MARK: a hand on the controls pauses the auto-play */
-  const n=sm.plays.length; const cur=(GVR.gid===gid&&GVR.i!=null)?GVR.i:n-1; let i=null;
-  if(v==='prev') i=cur-1; else if(v==='next'||v==='auto') i=cur+1; else if(v==='pdrive'||v==='ndrive') i=gvDriveJump96(sm,cur,v==='ndrive'?1:-1); else if(v==='live'||v==='final'||v==null||v==='') i=null; else i=Number(v);   /* GC96RP_MARK */
+    cix97.push(i); chips.push('<button type="button" class="gv96rj t-'+tone+(cur===i?' on':'')+((nw97>=0&&i>nw97)?' t-new':'')+'" data-act="gvReplay" data-gid="'+esc(g.id)+'" data-v="'+i+'" title="'+esc(String(p.text||'').slice(0,160))+'"><b>'+esc(kind)+'</b><small>'+esc((p.team?p.team+' \u00b7 ':'')+q)+'</small></button>'); });
+  if(!chips.length) return ''; let out97=chips.slice(0,32); try{ if(nw97>=0){ const k=cix97.findIndex(function(x){ return x>nw97; }); if(k>=0&&k<out97.length) out97.splice(k,0,'<span class="gv97rjnew">since you left</span>'); } }catch(e){} return '<div class="gv96rpj" aria-label="Jump to a play"><span class="gv96rjk">Jump</span><div class="gv96rjs">'+out97.join('')+'</div></div>'; }   /* GC97RP_MARK */
+function gvReplay(gid,v){ /* GC97RP_MARK: sets GVR (keyed by play id) and patches only the panel: i | 'prev' | 'next' | 'auto' | 'pdrive' | 'ndrive' | 'home' | 'live' */
+  gid=String(gid||S.ui.gameView||''); if(S.ui.gameView!==gid) return; const g=gameOf(gid); const sm=LIVE.sum[gid]; if(!g||!sm||!sm.plays||!sm.plays.length) return;
+  if(v!=='auto') gvAutoStop96();
+  if(GVR.gid!==gid){ GVR.gid=gid; GVR.i=null; GVR.pid=null; } try{ gvRpSync97(g,sm); }catch(e){}
+  const n=sm.plays.length; const cur=(GVR.i!=null)?GVR.i:n-1; let i=null;
+  if(v==='prev') i=cur-1; else if(v==='next'||v==='auto') i=cur+1; else if(v==='pdrive'||v==='ndrive') i=gvDriveJump96(sm,cur,v==='ndrive'?1:-1); else if(v==='home') i=0; else if(v==='live'||v==='final'||v==='end'||v==null||v==='') i=null; else i=Number(v);
   if(i!=null){ if(!isFinite(i)) i=null; else { i=clamp(Math.round(i),0,n-1); if(i===n-1) i=null; } }
-  GVR.gid=gid; GVR.i=i; if($('gvLivePanel')){ GVR.dragTs=Date.now(); gvLivePatch(); } else { GVR.dragTs=0; GV.scrollTs=0; try{ gameViewRepaint(); }catch(e){} } }   /* GC96FIX */
+  GVR.i=i; GVR.pid=(i!=null)?String(sm.plays[i].id||''):null;
+  if(v!=='auto'){ try{ const cu=gvCatchUp97(gid,sm); if(cu) GVR.cuDis=gid+':'+cu.pid; }catch(e){} try{ gvIdleArm97(gid); }catch(e){} }
+  if($('gvLivePanel')){ GVR.dragTs=Date.now(); gvLivePatch(); } else { GVR.dragTs=0; GV.scrollTs=0; try{ gameViewRepaint(); }catch(e){} } }
 function gvLivePatch(){ /* re-renders the panel body in place; the slider element is kept so a drag in progress survives */
   const gid=S.ui.gameView; const g=gid?gameOf(gid):null; const sm=g?LIVE.sum[g.id]:null; const p=$('gvLivePanel'); if(!g||!p) return;
   if(!sm||!sm.plays){ p.outerHTML=gvLiveHTML(g,sm); return; }
@@ -25185,8 +25509,8 @@ function gvLivePatch(){ /* re-renders the panel body in place; the slider elemen
   try{ const ai=(M.mode==='replay')?M.i:null; const strip=p.querySelector('.gv96rjs'); let onEl=null; p.querySelectorAll('.gv96rj').forEach(function(b){ const on=ai!=null&&Number(b.dataset.v)===ai; b.classList.toggle('on',on); if(on) onEl=b; });
     if(strip&&onEl){ const sr=strip.getBoundingClientRect(), br=onEl.getBoundingClientRect(); const L=br.left-sr.left+strip.scrollLeft; if(br.left<sr.left+8||br.right>sr.right-8) strip.scrollLeft=Math.max(0,L-(sr.width-br.width)/2); }
     const ab=p.querySelector('.gv96auto'); if(ab){ ab.classList.toggle('on',!!GVR.auto); ab.textContent=GVR.auto?'❚❚':'▶ Play'; ab.setAttribute('aria-label',GVR.auto?'Pause':'Play the game'); ab.setAttribute('title',GVR.auto?'Pause (space)':'Play the game a play at a time (space)'); } }catch(e){}   /* GC96RP_MARK */
-  const pts=$('gvRpPts'); if(pts) pts.innerHTML=gvRpPtsHTML96(g,sm,M); }
-document.addEventListener('input',function(e){ const r=e.target; if(!r||!r.dataset||r.dataset.act!=='gvRange') return; try{ gvReplay(r.dataset.gid,r.value); }catch(x){} });
+  const pts=$('gvRpPts'); if(pts) pts.innerHTML=gvRpPtsHTML96(g,sm,M); try{ gvRpCtlSync97(g,sm,M); }catch(e){} }   /* GC97RP_MARK */
+document.addEventListener('input',function(e){ const r=e.target; if(!r||!r.dataset||r.dataset.act!=='gvRange') return; try{ gvScrub97(r.dataset.gid,r.value); }catch(x){} });   /* GC97RP_MARK: preview while dragging, the full render at most every 120 ms */
 function gvWxText96(g){ /* kickoff weather: the app's own forecast for the home venue, ESPN's line as the backstop, "indoor" for a roof, n/a otherwise */
   try{ const T=String(g.home||'').toUpperCase(); const st=(typeof STADIUMS!=='undefined')?STADIUMS[T]:null; const dome=!!(st&&(st.dome||st.roof==='dome'));
     const wx=(S.wx&&S.wx.week===liveWeek()&&S.wx.byHome)?S.wx.byHome[T]:null;
@@ -25225,7 +25549,7 @@ Object.assign(HELP,{ gclive:{t:'Live \u00b7 the current drive',b:
   +'<p><b>Last play</b> shows the score after it and both clubs\u2019 win probability after it, joined to ESPN\u2019s win-probability series by play id; the swing is against the play before. <b>n/a</b> means ESPN has not posted a figure for that play.</p>'
   +'<p><b>Player on the play</b> reads the play text for anyone on your boards (your players and the starters against you in every league, your pins) and prices what the play was worth in each league\u2019s own scoring \u2014 that figure is an <b>estimate from the play text</b>, never Sleeper\u2019s number; the line under his name is his box score so far. When nobody of yours touched the play, the first name in the text is shown with where he stands in your leagues: <b>free agent in \u2026</b> is an add read.</p>'
   +'<p><b>Replay</b> (finished games) scrubs through every play the feed kept: the field, the score, the win probability and the drive are rebuilt as of that play. <b>Your points through this play</b> sums the play text for your starters and the starters against you, priced per league \u2014 an estimate; the Scores and Mine tabs carry the real numbers.</p>'
-  +'<p><b>Timing.</b> The panel refreshes every 8 seconds while the game is on and shows the time of its last update. ESPN\u2019s feed trails the broadcast by roughly 20\u201340 seconds, so a play you just watched may land a few ticks later; nothing here claims to be closer to live than that stamp.</p>'} });
+  +'<p><b>Timing.</b> The panel reads ESPN\'s situation feed every 5 seconds while the game is on; a new play lands as a 2 KB object within one pull, the full summary (box score, win probability, drives) every 30 seconds or at once after a score or a turnover, and the stamp shows the time of its last update. ESPN\u2019s feed trails the broadcast by roughly 20\u201340 seconds, so a play you just watched may land a few ticks later; nothing here claims to be closer to live than that stamp.</p>'} });
 /* ═══════════ v9.6 · GC96B_MARK — GAME CENTER · THE STATS TAB ═══════════
    Probabilities (ESPN's win-probability chart + my matchups' sampled win %), the biggest swings priced in my leagues, two-sided team
    stats with the fantasy rows, the game script per club, my stake per club, game leaders with headshots and my tags, fantasy leaders
@@ -25508,7 +25832,7 @@ Object.assign(HELP,{ gcstats:{t:'Team stats \u00b7 probabilities, stats, leaders
   +'<p><b>Biggest swings</b> are the three plays with the largest change in ESPN\u2019s win probability. The player on each is priced in your leagues\u2019 own scoring from the play text (an estimate). On a finished game, tap a swing to see it on the field.</p>'
   +'<p><b>Team stats</b> are ESPN\u2019s box score, each bar split by the two sides\u2019 share; \u2193 marks a row where lower is better. Pass rate is pass attempts \u00f7 (attempts + rushes) \u2014 sacks and scrambles are not attempts. <b>Game script</b> reads the margin, the quarter and the pass rate into one sentence per club. <b>Your stake</b> lists your players on each club with their points per league and their share of the club\u2019s yards (rushing + receiving \u00f7 total yards; a QB\u2019s passing yards are credited to his receivers, so he shows his rushing share only).</p>'
   +'<p><b>Game leaders</b> are ESPN\u2019s five categories per club; when ESPN posts none for a category the box score\u2019s top line stands in, marked \u201cbox score\u201d. <b>Fantasy leaders</b> ranks every player in this game with a stat line in the active league\u2019s scoring: Sleeper\u2019s own points where it has posted them, else exact scoring over the live stat row; the tag says whether he is yours, against you, rostered by another team, or a free agent \u2014 a free agent near the top is an add read. <b>n/a</b> means the feed has not carried that figure.</p>'
-  +'<p>Everything here reads the summary the Game Center already polls every 8 seconds while the game is on; nothing extra is fetched. ESPN\u2019s feed trails the broadcast by roughly 20\u201340 seconds, and the stamp at the foot is the time of the last update.</p>'} });
+  +'<p>Everything here reads the summary the Game Center already polls every 5 seconds while the game is on (a new play lands as a 2 KB object within one pull, the full summary every 30 seconds); nothing extra is fetched. ESPN\u2019s feed trails the broadcast by roughly 20\u201340 seconds, and the stamp at the foot is the time of the last update.</p>'} });
 /* ═══════════ v9.6 · LIVE96_MARK — THE LIVE TAB'S INSIGHT LAYER ═══════════
    The situation on every game surface (strip tiles, By-game cards, kickoff group heads, Live-now rows), on-the-field badges and a
    sort, momentum and the win-probability swing on big plays, the game script and the per-league stake on each game card, the
@@ -25517,6 +25841,246 @@ Object.assign(HELP,{ gcstats:{t:'Team stats \u00b7 probabilities, stats, leaders
    spine (the checkers lift it): lvTwoMin96, lvSit96, lvMo96, lvPlayWp96, lvNetCalc96, lvSigned96, lvOnD96, lvDefRz96, lnFieldCmp96,
    lvSwingPick96, lvPreGroups96, lwTileAct96. */
 /* LIVE96_PURE_BEGIN */
+/* ═══════════ v9.7 · GC97MV_MARK — MULTIVIEW: two to four games at once ═══════════ */
+const MV={every:5000,sumEvery:60000,timer:null,gen:0,n:0,ts:0,sig:{},pickSig:'',lpid:{},lpTs:{},prev:{},back:{},backTs:{},lastSum:{},lpSeen:{},pending:{},hot:{},sumBack:{},sumBackTs:{},inClose:false,rzT:null,P:null};
+function mvSq97(k){ /* GC97MV_MARK: the squared-plus / squared-minus glyphs (not used anywhere else in the file) */ return String.fromCharCode(k===2?0x229F:0x229E); }
+function mvEvery97(){ try{ return (navigator.connection&&navigator.connection.saveData)?12000:MV.every; }catch(e){ return MV.every; } }
+function mvLoad97(){ /* GC97MV_MARK: the saved picker {sel,auto,cols,wk} — a stale week resets to Auto */
+  let p=null; try{ p=JSON.parse(localStorage.getItem('fo:multi')||'null'); }catch(e){ p=null; }
+  let wk=0; try{ wk=liveWeek(); }catch(e){ wk=0; }
+  const o={sel:[],auto:true,cols:1,wk:wk};
+  if(p&&typeof p==='object'){ if(Array.isArray(p.sel)) o.sel=p.sel.map(function(x){ return String(x); }).filter(function(x,i,a){ return x&&x!=='undefined'&&a.indexOf(x)===i; }).slice(0,4); o.auto=p.auto!==false; o.cols=(Number(p.cols)===2)?2:1; if(p.wk!=null&&Number(p.wk)!==wk){ o.sel=[]; o.auto=true; } }
+  return o; }
+function mvSave97(p){ /* GC97MV_MARK: fo:multi — sel mirrors what is shown (the auto pick too) */
+  p=p||MV.P; if(!p) return; MV.P=p; let wk=0; try{ wk=liveWeek(); }catch(e){ wk=0; } p.wk=wk;
+  try{ localStorage.setItem('fo:multi',JSON.stringify({sel:(function(){ const ok={}; let n=0; try{ ((S.live&&S.live.games)||[]).forEach(function(g){ if(g&&g.id!=null){ ok[String(g.id)]=1; n++; } }); }catch(e){} return (p.sel||[]).map(function(x){ return String(x); }).filter(function(x,i,a){ return x&&x!=='undefined'&&a.indexOf(x)===i&&(!n||ok[x]); }).slice(0,4); })(),auto:!!p.auto,cols:p.cols===2?2:1,wk:wk,ts:Date.now()})); }catch(e){} }
+function mvStake97(g,ML){ /* GC97MV_MARK: ▲ my starters in this game (any league) · ▼ starters against me · weight — pure */
+  const o={me:0,vs:0,w:0}; try{ if(!g||!ML||!ML.byTeam) return o; const seen={};
+    [g.home,g.away].forEach(function(T){ const b=ML.byTeam[T]; if(!b) return;
+      (b.mine||[]).forEach(function(pid){ pid=String(pid); if(seen['m'+pid]) return; seen['m'+pid]=1; if(ML.startPids&&ML.startPids.has(pid)) o.me++; });
+      (b.opp||[]).forEach(function(pid){ pid=String(pid); if(seen['o'+pid]) return; seen['o'+pid]=1; o.vs++; }); });
+    o.w=o.me*2+o.vs; }catch(e){} return o; }
+function mvKick97(g){ try{ const t=new Date(g&&g.date).getTime(); return isFinite(t)?t:0; }catch(e){ return 0; } }
+function mvGames97(games,ML,now){ /* GC97MV_MARK: [{g,st,stake,kick}] ordered in → pre → post, stake desc, kickoff asc, id — pure */
+  const ord={in:0,pre:1,post:2}; const out=[]; const seen={};
+  (games||[]).forEach(function(g){ if(!g||g.id==null||g.id==='') return; const id=String(g.id); if(seen[id]) return; const st=String(g.state||''); if(ord[st]==null) return; seen[id]=1; out.push({g:g,id:id,st:st,stake:mvStake97(g,ML),kick:mvKick97(g)}); });
+  out.sort(function(a,b){ return (ord[a.st]-ord[b.st])||(b.stake.w-a.stake.w)||(a.kick-b.kick)||(a.id<b.id?-1:a.id>b.id?1:0); });
+  return out; }
+function mvPick97(games,ctx){ /* GC97MV_MARK: Auto — the live games by stake (ties: kickoff asc, id), then upcoming by stake / kickoff, then finals (latest first); ≤ max, unique — pure */
+  ctx=ctx||{}; const max=Math.max(1,Number(ctx.max)||4); const stake=(typeof ctx.stake==='function')?ctx.stake:function(){ return {me:0,vs:0,w:0}; };
+  const ord={in:0,pre:1,post:2}; const rows=[]; const seen={};
+  (games||[]).forEach(function(g){ if(!g||g.id==null||g.id==='') return; const id=String(g.id); if(seen[id]) return; const st=String(g.state||''); if(ord[st]==null) return; seen[id]=1;
+    let w=0; try{ const k=stake(g); w=(k&&isFinite(Number(k.w)))?Number(k.w):0; }catch(e){ w=0; } rows.push({id:id,st:st,w:w,kick:mvKick97(g)}); });
+  rows.sort(function(a,b){ return (ord[a.st]-ord[b.st])||(b.w-a.w)||(a.st==='post'?(b.kick-a.kick):(a.kick-b.kick))||(a.id<b.id?-1:a.id>b.id?1:0); });
+  return rows.slice(0,max).map(function(r){ return r.id; }); }
+function mvSel97(P,games,ML){ /* GC97MV_MARK: the effective selection — Auto recomputes from the board, otherwise the saved gids still on the board; ≤ 4 */
+  P=P||MV.P||{sel:[],auto:true}; games=games||((S.live&&S.live.games)||[]);
+  if(P.auto){ if(ML===undefined){ try{ ML=mlSides(); }catch(e){ ML=null; } } return mvPick97(games,{stake:function(g){ return mvStake97(g,ML); },max:4}); }
+  const ok={}; games.forEach(function(g){ if(g&&g.id!=null) ok[String(g.id)]=1; });
+  return (P.sel||[]).map(function(x){ return String(x); }).filter(function(x,i,a){ return ok[x]&&a.indexOf(x)===i; }).slice(0,4); }
+function mvPtsRows97(g,ML,o){ /* GC97MV_MARK: my players in this game — mine (starters first) then the starters against me; pre: the projection; capped, with .more */
+  o=o||{}; const cap=Math.max(1,Number(o.cap)||6); const rows=[]; rows.more=0; if(!g) return rows; const seen={};
+  const expOf=function(pid){ try{ let L=null; const rec=ML&&ML.byPid&&ML.byPid[pid]; if(rec&&rec.in&&rec.in[0]) L=rec.in[0].L; if(!L&&ML&&ML.leagues) L=ML.leagues[0]||null; const v=mlExp(pid,L); return (v!=null&&isFinite(Number(v)))?Number(v):null; }catch(e){ return null; } };
+  const ptsOf=function(pid){ try{ const v=mlPtsAny(pid); return (v!=null&&isFinite(Number(v)))?Number(v):null; }catch(e){ return null; } };
+  const add=function(pid,side){ pid=String(pid==null?'':pid); if(!pid||pid==='0'||seen[pid]) return; let p=null; try{ p=playerOf(pid); }catch(e){ p=null; } if(!p) return; seen[pid]=1;
+    rows.push({pid:pid,nm:lwShort(p),pos:String(p.p||''),T:String(p.t||''),pts:o.pre?expOf(pid):ptsOf(pid),side:side,st:!!(ML&&((side==='me'&&ML.startPids&&ML.startPids.has(pid))||(side==='vs'&&ML.oppPids&&ML.oppPids.has(pid))))}); };
+  try{ const RW=mlGameRows(g); (RW.mine||[]).forEach(function(pid){ add(pid,'me'); }); }catch(e){}
+  try{ if(ML&&ML.byTeam){ [g.away,g.home].forEach(function(T){ const b=ML.byTeam[T]; if(b) (b.opp||[]).forEach(function(pid){ add(pid,'vs'); }); }); } }catch(e){}
+  if(rows.length>cap){ const more=rows.length-cap; rows.length=cap; rows.more=more; }
+  return rows; }
+function mvSig97(g,sm,M,rows){ /* GC97MV_MARK: a cheap signature of what the panel shows — pure */
+  g=g||{}; M=M||{}; rows=rows||[]; const L=M.last||null;
+  return [String(g.state||''),M.hs,M.as,M.period,M.clock,M.poss||'',M.dd||'',M.spot||'',M.rz?1:0,M.two?1:0,(L&&L.id)||'',(sm&&sm.plays)?sm.plays.length:0,(sm&&sm.cur&&sm.cur.desc)||'',(sm?1:0),rows.map(function(r){ return r.pid+':'+(r.pts==null?'':r.pts); }).join(',')+(rows.more?'+'+rows.more:'')].join('|'); }
+function mvBugHTML97(g,M,o){ /* GC97MV_MARK: the score bug — logos, abbreviations, scores (— before kickoff), the clock pill or the kickoff, the possession dot, RZ / 2-MIN / OT */
+  o=o||{}; g=g||{}; M=M||{}; const st=String(g.state||'pre'); const live=st==='in', pre=st==='pre', fin=st==='post';
+  const num=function(v){ return (v!=null&&isFinite(Number(v)))?Number(v):0; };
+  const hs=pre?null:Math.max(num(g.hs),num(M.hs)), as=pre?null:Math.max(num(g.as),num(M.as));
+  const lead=function(h){ if(pre||hs===as) return false; return h?(hs>as):(as>hs); };
+  const side=function(T,sc,h){ T=String(T||''); const has=!!(live&&M.poss&&String(M.poss).toUpperCase()===T.toUpperCase()); let tint='rgba(255,255,255,.04)'; try{ tint=gvClubTint(T); }catch(e){}
+    return '<div class="mv97t '+(h?'h':'a')+(lead(h)?' lead':'')+(has?' poss':'')+'" style="--tint:'+esc(tint)+'">'+lwLogo(T,'')+'<span class="ab">'+esc(T)+'</span><b class="sc">'+(pre?'—':esc(String(sc)))+'</b>'+(has?'<i class="mv97pd" title="has the ball" aria-label="has the ball"></i>':'')+'</div>'; };
+  let mid=''; try{ if(live) mid='<span class="mv97clk in"><i class="livedot in"></i>'+esc(lwClock(g))+'</span>'; else if(fin) mid='<span class="mv97clk fin">'+esc(lwClock(g))+'</span>'; else mid='<span class="mv97clk">'+esc(lwKickShort(g)||'TBD')+'</span><small class="fine">'+esc(lwKickDay(g))+'</small>'; }catch(e){ mid='<span class="mv97clk">'+esc(String(g.detail||''))+'</span>'; }
+  const bd=[]; if(live){ if(M.rz) bd.push('<span class="gv96chip rz">RZ</span>'); if(M.two) bd.push('<span class="gv96chip two">2-MIN</span>'); if(M.ot) bd.push('<span class="gv96chip">OT</span>'); }
+  return '<div class="mv97bug">'+side(g.away,as,false)+'<div class="mv97mid">'+mid+(bd.length?'<div class="mv97bd">'+bd.join('')+'</div>':'')+'</div>'+side(g.home,hs,true)+'</div>'; }
+function mvLastPlayHTML97(gid,M,g,sm,ML){ /* GC97MV_MARK: the last play — kind chip + detail, Q · clock · club, the text, up to two of my players on it; the flash once per new play per panel */
+  const L=M&&M.last; if(!L) return '<div class="mv97lp"><div class="mv97txt gv96mut">No play in the feed yet.</div></div>';
+  let kind=''; try{ kind=gvPlayKind96(L)||''; }catch(e){ kind=''; } const slug=String(kind).toLowerCase().replace(/[^a-z0-9]+/g,'-'); let det=''; try{ det=gvPlayDetail96(L,M)||''; }catch(e){ det=''; }
+  let isNew=false; if(M.state==='in'&&!M.fin){ const id=String(L.id||''); if(MV.lpid[gid]!==id){ MV.lpid[gid]=id; MV.lpTs[gid]=Date.now(); isNew=true; } let rm=false; try{ rm=lwRM(); }catch(e){ rm=false; } if(rm) isNew=false; }
+  const clk=(L.period?((L.period>4?'OT':'Q'+L.period)+' '):'')+String(L.clock||'')+(L.team?' · '+String(L.team):'');
+  let chips=''; try{ const cands=gvCands96(g); const pr=cands.length?lwParseCached(L,g,cands):null;
+    if(pr&&pr.kind!=='void'&&pr.ev&&pr.ev.length){ const seen={}; const out=[]; pr.ev.forEach(function(ev){ const pid=String((ev&&ev.pid)||''); if(!pid||seen[pid]||out.length>=2) return; seen[pid]=1; const p=playerOf(pid); if(!p) return; const me=!!(ML&&ML.startPids&&ML.startPids.has(pid)), vs=!!(ML&&ML.oppPids&&ML.oppPids.has(pid)); out.push('<span class="'+(me?'me':vs?'vs':'')+'">'+esc(lwShort(p))+(p.p?' <i>'+esc(p.p)+'</i>':'')+'</span>'); });
+      if(out.length) chips='<div class="mv97pp">'+out.join('')+'</div>'; } }catch(e){ chips=''; }
+  return '<div class="mv97lp'+(isNew?' gv96new':'')+'"><div class="gv96lph"><span class="gv96lpk k-'+esc(slug||'play')+'">'+esc(kind||'Play')+((det&&det!==kind)?'<i>'+esc(det)+'</i>':'')+'</span><span class="gv96lpc">'+esc(clk)+'</span><span class="gv96lptag">'+(M.fin?'Final play':'Last play')+'</span></div><div class="mv97txt">'+esc(String(L.text||'').slice(0,180))+'</div>'+chips+'</div>'; }
+function mvMineHTML97(rows,o){ /* GC97MV_MARK: my players in this game — name · pos · pts, green for me / red against; pre: projections — pure */
+  o=o||{}; if(!rows||!rows.length) return ''; const pre=!!o.pre;
+  return '<div class="mv97my">'+rows.map(function(r){ return '<span class="mv97r '+(r.side==='vs'?'vs':'me')+(r.st?'':' bn')+'"><b>'+esc(r.nm||'')+'</b><i>'+esc(r.pos||'')+(pre?' proj':'')+'</i><em>'+(r.pts==null?'—':esc(fmtPts1(r.pts)))+'</em></span>'; }).join('')+(rows.more>0?'<span class="mv97more">+'+rows.more+' more</span>':'')+'</div>'; }
+function mvField97(gid,M){ /* GC97MV_MARK: the Game Center's field with a PER-GAME GV.fieldPrev — swapped in for the call, the Game Center's own value restored after */
+  let keep=null; try{ keep=GV.fieldPrev; }catch(e){ keep=null; } let svg='';
+  try{ GV.fieldPrev=MV.prev[gid]||null; svg=gvFieldSVG96(M); MV.prev[gid]=GV.fieldPrev; }catch(e){ svg=''; }
+  try{ GV.fieldPrev=keep; }catch(e){}
+  return '<div class="gv96field mv97f">'+svg+'</div>'; }
+function mvDriveHTML97(M,g){ /* GC97MV_MARK: the drive line — the club with the ball · down & distance · spot · drive so far | Kickoff · tv | Last drive · result — pure */
+  g=g||{}; M=M||{}; const st=String(g.state||'pre'); const d=M.drive;
+  if(st==='pre') return '<div class="mv97dl"><b>Kickoff</b>'+(g.tv?'<span>· '+esc(g.tv)+'</span>':(g.venue?'<span>· '+esc(g.venue)+'</span>':''))+'</div>';
+  if(st==='post') return '<div class="mv97dl"><b>Last drive</b>'+(d?'<span>· '+esc(d.resT||d.res||d.desc||'')+'</span>':'')+'</div>';
+  const parts=[]; if(M.dd) parts.push(esc(M.dd)); if(M.spot) parts.push(esc(M.spot)); if(d&&d.desc) parts.push(esc(d.desc));
+  return '<div class="mv97dl">'+(M.poss?lwLogo(M.poss,'')+'<b>'+esc(M.poss)+' ball</b>':'')+(parts.length?'<span>'+(M.poss?'· ':'')+parts.join(' · ')+'</span>':(M.poss?'':'<span class="gv96mut">Waiting on the feed</span>'))+'</div>'; }
+function mvPanelHTML97(g,sm,ctx){ /* GC97MV_MARK: one panel — {html,sig,rows}; the caller writes data-sig and repaints only when it changed */
+  ctx=ctx||{}; g=g||{}; sm=sm||null; let ML=ctx.ML; if(ML===undefined){ try{ ML=mlSides(); }catch(e){ ML=null; } }
+  const gid=String(g.id||''); const st=String(g.state||'pre'); const cols=Number(ctx.cols)===2?2:1;
+  let M=null; try{ M=gvModel(g,sm||{}); }catch(e){ M=null; }
+  if(!M) M={mode:'live',gid:gid,state:st,home:String(g.home||''),away:String(g.away||''),hn:String(g.hn||g.home||''),an:String(g.an||g.away||''),hs:g.hs,as:g.as,period:g.period,clock:String(g.clock||''),poss:null,dd:'',spot:'',rz:false,two:false,ot:false,last:null,drive:null,fin:st==='post',yl:null,dir:0};
+  const rows=mvPtsRows97(g,ML,{cap:cols===2?4:6,pre:st==='pre'}); const sig=mvSig97(g,sm,M,rows); const k=mvStake97(g,ML);
+  let h=mvBugHTML97(g,M,{cols:cols});
+  if(st==='pre'){ h+=mvDriveHTML97(M,g)+mvField97(gid,M)+'<div class="mv97lp"><div class="mv97txt gv96mut">The feed starts with the first snap</div></div>'; }
+  else if(!sm){ h+='<div class="empty mv97pull"><span class="spin"></span> Pulling the drive…</div>'; }
+  else { h+=mvDriveHTML97(M,g)+mvField97(gid,M)+mvLastPlayHTML97(gid,M,g,sm,ML); }
+  h+=mvMineHTML97(rows,{pre:st==='pre'});
+  const fine=(k.me||k.vs)?((k.me?'▲'+k.me+' mine':'')+(k.me&&k.vs?' · ':'')+(k.vs?'▼'+k.vs+' against':'')):'none of yours';
+  h+='<div class="mv97ft"><button class="btn sm mv97open" type="button" data-act="mvOpen" data-gid="'+esc(gid)+'" aria-label="'+(st==='post'?'Replay':'Open')+' '+esc(String(g.away||'')+' at '+String(g.home||''))+'"><span class="lg">'+(st==='post'?'Replay':'Open')+'</span> ›</button><span class="fine">'+esc(fine)+'</span></div>';
+  return {html:h,sig:sig,rows:rows}; }
+function mvPickerHTML97(list,sel,auto,o){ /* GC97MV_MARK: the chip strip — Auto, then one chip per game (live → upcoming → finals) with ▲ mine ▼ against — pure */
+  o=o||{}; const on={}; (sel||[]).forEach(function(x){ on[String(x)]=1; });
+  let h='<button type="button" class="mv97c auto'+(auto?' on':'')+'" data-act="mvAuto" aria-pressed="'+(auto?'true':'false')+'" title="The four live games you have the most riding on"><b>Auto</b><small>top stakes</small></button>';
+  (list||[]).forEach(function(r){ const g=r.g||{}; const id=String(r.id||g.id||''); const st=String(r.st||g.state||''); const k=r.stake||{me:0,vs:0}; const sel1=!!on[id];
+    let meta=''; try{ meta=(st==='pre')?((lwKickDay(g)+' '+lwKickShort(g)).trim()):lwClock(g); }catch(e){ meta=''; }
+    let ca='#2B3448', ch='#2B3448'; try{ ca=lwClubColor(g.away); ch=lwClubColor(g.home); }catch(e){}
+    h+='<button type="button" class="mv97c st-'+esc(st)+(sel1?' on':'')+'" data-act="mvTog" data-gid="'+esc(id)+'" aria-pressed="'+(sel1?'true':'false')+'" aria-label="'+esc(String(g.away||'')+' at '+String(g.home||'')+(sel1?', shown':''))+'"><span class="mv97ck"><i style="background:'+esc(ca)+'"></i><i style="background:'+esc(ch)+'"></i></span><b>'+(st==='in'?'<i class="livedot in"></i>':'')+esc(String(g.away||'')+' @ '+String(g.home||''))+'</b><small class="mv97cm">'+esc(meta)+'</small>'+((k.me||k.vs)?'<em>'+(k.me?'<span class="me">▲'+k.me+'</span>':'')+(k.me&&k.vs?' ':'')+(k.vs?'<span class="vs">▼'+k.vs+'</span>':'')+'</em>':'')+'</button>'; });
+  return h; }
+function mvTopHTML97(o){ /* GC97MV_MARK: the phone's own top bar (the modal's .mhd is hidden under .gvfs) */
+  o=o||{}; const cols=Number(o.cols)===2?2:1; const k=Number(o.n)||0;
+  return '<div class="gvtop gvtop2 mv97top"><div class="gvtoprow gvbar"><button class="gvback" type="button" data-act="gvBack" aria-label="Close the multiview" title="Back">‹</button><b class="mv97tt">Multiview</b><span class="mv97n">'+k+' game'+(k===1?'':'s')+'</span><button class="btn sm mv97cb" type="button" data-act="mvCols" aria-pressed="'+(cols===2?'true':'false')+'" title="One column or two">'+(cols===2?mvSq97(2)+' 1 col':mvSq97()+' 2 col')+'</button><button class="btn sm" type="button" data-act="gvHelpK" data-k="multi" aria-label="How this works" title="How this works">?</button></div></div>'; }
+function mvFootHTML97(){ return '<span class="fine mv97st">'+esc(mvStatus97())+'</span><span class="inlinebtns">'+(gvPhone()?'':'<button class="btn sm" type="button" data-act="gvHelpK" data-k="multi" title="How this works">?</button>')+'</span>'; }
+function mvStatus97(){ try{ const P=MV.P||mvLoad97(); const sel=mvSel97(P); let live=0; sel.forEach(function(gid){ const g=gameOf(gid); if(g&&g.state==='in') live++; }); const ago=MV.ts?Math.max(0,Math.round((Date.now()-MV.ts)/1000)):null; return (ago==null?'waiting for the first pull':'updated '+ago+'s ago')+' · '+live+' live'+(live?' · situation every '+Math.round(mvEvery97()/1000)+' s':' · nothing to poll'); }catch(e){ return ''; } }
+function mvHTML97(){ /* GC97MV_MARK: the root — (phone top bar) + the one scroller holding the picker, the grid, the empty state and the foot */
+  const P=MV.P||(MV.P=mvLoad97()); const ph=gvPhone(); let k=0; try{ k=mvSel97(P).length; }catch(e){ k=0; }
+  return (ph?mvTopHTML97({cols:P.cols,n:k}):'')+'<div class="gvmain mv97main" id="mvMain"><div class="mv97pk" id="mvPick" role="group" aria-label="Pick the games"></div><div class="mv97grid n'+Math.max(1,k)+'" id="mvGrid"></div><div class="empty mv97e" id="mvEmpty" style="display:none">Pick up to four games above — Auto takes the live games you have the most riding on.</div><div class="mv97foot" id="mvFoot">'+mvFootHTML97()+'</div></div>'; }
+function openMulti(o){ /* GC97MV_MARK: the multiview in the Game Center's modal shell — o.add adds a game, o.back is the bounce from a Game Center opened here */
+  o=o||{};
+  if(!S.live||!S.live.games||!S.live.games.length){ toast('No games on the board yet — pull the feed first','warn'); return; }
+  if(S.ui.gameView&&!o.back){ if(mvBounceDue97()&&!MV.inClose){ try{ closeModal(); }catch(e){} }         // a Game Center opened from here bounces back through the hook (which keeps the phone's one history entry itself)
+    else { let navOn=null; try{ navOn=GVNAV.on; GVNAV.on=false; }catch(e){ navOn=null; } try{ closeModal(); }catch(e){} try{ if(navOn!=null) GVNAV.on=navOn; }catch(e){} } }   // a plain Game Center: gvNavPop stays a no-op (its queued history.back() would pop the multiview a second later); gvFsOn then reuses the entry
+  if(S.ui.multi&&$('mvGrid')&&o.add){ mvAdd97(o.add); return; }
+  const P=mvLoad97();
+  if(o.add){ const id=String(o.add); P.auto=false; if(P.sel.indexOf(id)<0){ if(P.sel.length<4) P.sel.push(id); else toast('Four games at most — drop one in the picker first','warn'); } }
+  MV.P=P; if(P.auto){ try{ P.sel=mvSel97(P); }catch(e){} } mvSave97(P);
+  S.ui.multi={on:1,ts:Date.now()}; S.ui.gameView=null; S.ui.multiBack=null; MV.gen=(MV.gen||0)+1; if(MV.timer){ try{ clearTimeout(MV.timer); }catch(e){} MV.timer=null; } MV.sig={}; MV.pickSig=''; MV.ts=0;
+  try{ GV.help=false; GV.helpK=null; }catch(e){}
+  try{ gvFsOn(); }catch(e){}
+  const m=$('modal'); m.classList.add('on'); m.classList.add('mv97'); $('mTitle').textContent='Multiview';
+  $('mBody').innerHTML='<div id="gvBody" class="mv97'+(gvPhone()?' ph':'')+' c'+(P.cols===2?'2':'1')+'">'+mvHTML97()+'</div>';
+  try{ const bx=m.querySelector('.mbox'); if(bx) bx.scrollTop=0; }catch(e){}
+  try{ mvPaint97({first:true}); }catch(e){}
+  multiArm(); }
+function mvPaint97(o){ /* GC97MV_MARK: keyed repaint — a panel's innerHTML only when its signature changed; the picker only when its own did; the root and the scroller are never rewritten */
+  o=o||{}; const grid=$('mvGrid'); if(!grid||!S.ui.multi) return; const P=MV.P||(MV.P=mvLoad97());
+  let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; } const games=(S.live&&S.live.games)||[]; const now=Date.now();
+  const list=mvGames97(games,ML,now); const sel=mvSel97(P,games,ML);
+  if(sel.join(',')!==(P.sel||[]).join(',')){ P.sel=sel.slice(); try{ mvSave97(P); }catch(e){} }                 // Auto's pick, or gids that left the board, are mirrored into the saved selection
+  const ctx={ML:ML,phone:gvPhone(),cols:P.cols===2?2:1,now:now};
+  if(typeof document.createElement!=='function'||!grid.children) return;                             // no real DOM (the harness): nothing to patch
+  try{
+    const have={}; Array.prototype.slice.call(grid.children).forEach(function(el){ const k=el&&el.dataset?el.dataset.mvg:null; if(k) have[k]=el; else { try{ grid.removeChild(el); }catch(e){} } });
+    const want={};
+    sel.forEach(function(gid){ const g=gameOf(gid); if(!g) return; want[gid]=1; const sm=LIVE.sum[gid]||null; let el=have[gid];
+      if(!el){ el=document.createElement('div'); el.className='mv97p st-'+esc(String(g.state||'pre')); el.dataset.mvg=gid; grid.appendChild(el); have[gid]=el; }
+      let r=null; try{ r=mvPanelHTML97(g,sm,ctx); }catch(e){ r=null; } if(!r) return;
+      const sig=r.sig+'|c'+ctx.cols; if(el.dataset.sig!==sig){ el.innerHTML=r.html; el.dataset.sig=sig; el.className='mv97p st-'+esc(String(g.state||'pre')); } });
+    Object.keys(have).forEach(function(k){ if(!want[k]){ try{ grid.removeChild(have[k]); }catch(e){} delete have[k]; } });
+    let ref=null; for(let i=sel.length-1;i>=0;i--){ const el=have[sel[i]]; if(!el) continue; if(el.nextSibling!==ref){ try{ grid.insertBefore(el,ref); }catch(e){} } ref=el; }
+    const shown=Object.keys(want).length; grid.className='mv97grid n'+Math.max(1,shown); const em=$('mvEmpty'); if(em) em.style.display=shown?'none':'';
+  }catch(e){}
+  try{ const pk=$('mvPick'); if(pk){ const psig=[P.auto?1:0,sel.join(','),list.map(function(r){ return r.id+':'+r.st+':'+r.stake.me+':'+r.stake.vs; }).join('|')].join('#');
+      if(MV.pickSig!==psig){ MV.pickSig=psig; const sl=pk.scrollLeft||0; pk.innerHTML=mvPickerHTML97(list,sel,P.auto,{phone:ctx.phone}); try{ pk.scrollLeft=sl; }catch(e){} }
+      else { list.forEach(function(r){ if(r.st!=='in') return; try{ const b=pk.querySelector('.mv97c[data-gid="'+r.id+'"] .mv97cm'); const t=lwClock(r.g); if(b&&b.textContent!==t) b.textContent=t; }catch(e){} }); } } }catch(e){}
+  try{ const st=document.querySelector('#mvFoot .mv97st'); if(st) st.textContent=mvStatus97(); }catch(e){}
+  try{ const nn=document.querySelector('#gvBody.mv97 .mv97n'); if(nn){ const t=sel.length+' game'+(sel.length===1?'':'s'); if(nn.textContent!==t) nn.textContent=t; } }catch(e){} }
+function multiArm(){ /* GC97MV_MARK: the tick — a generation token like gameViewArm; every await is followed by a gen check */
+  if(MV.timer){ try{ clearTimeout(MV.timer); }catch(e){} MV.timer=null; } MV.gen=(MV.gen||0)+1; const gen=MV.gen; let n=0;
+  const tick=async function(){ if(gen!==MV.gen) return; MV.timer=null; let m=null; try{ m=$('modal'); }catch(e){ m=null; }
+    if(!S.ui.multi||!$('mvGrid')||!m||!m.classList.contains('on')){ S.ui.multi=null; return; }
+    const P=MV.P||(MV.P=mvLoad97()); const games=(S.live&&S.live.games)||[]; let ML=null; try{ ML=mlSides(); }catch(e){ ML=null; }
+    const sel=mvSel97(P,games,ML); const live=sel.filter(function(gid){ const g=gameOf(gid); return !!(g&&g.state==='in'); });
+    if(document.hidden){ MV.timer=setTimeout(tick,live.length?mvEvery97():30000); return; }           // hidden: no network, no paint, just stay armed
+    n++; MV.n=n; const now=Date.now();
+    const need=sel.filter(function(gid){ const g=gameOf(gid); if(!g||g.state==='pre'||LIVE.sum[gid]) return false; const b=MV.sumBack[gid]||0; return !(b&&now-(MV.sumBackTs[gid]||0)<b); });   // no summary yet (a final, or a live game the situation feed is failing on): exactly one pull, with its own back-off
+    for(let i=0;i<need.length;i+=2){ if(gen!==MV.gen) return; try{ await Promise.all(need.slice(i,i+2).map(function(gid){ return mvSumFirst97(gid,gen); })); }catch(e){} }
+    if(gen!==MV.gen) return;
+    const todo=live.filter(function(gid){ const b=MV.back[gid]||0; return !(b&&now-(MV.backTs[gid]||0)<b); });
+    for(let i=0;i<todo.length;i+=2){ if(gen!==MV.gen) return; try{ await Promise.all(todo.slice(i,i+2).map(function(gid){ return mvTickOne97(gid,gen); })); }catch(e){} }
+    if(gen!==MV.gen) return;
+    if(live.length){ let force=false; if(n%3===0){ LIVE.last.sb=0; force=true; } if(n%4===0){ LIVE.last.mu=0; LIVE.last.ml=0; force=true; }   // the scoreboard at 15 s and Sleeper points at 20 s while panels are live
+      if(force){ try{ await liveRefresh(); }catch(e){} if(gen!==MV.gen) return; } }
+    MV.ts=Date.now(); try{ mvPaint97(); }catch(e){}
+    MV.timer=setTimeout(tick,live.length?mvEvery97():30000); };
+  MV.timer=setTimeout(tick,600); }
+async function mvTickOne97(gid,gen){ /* GC97MV_MARK: one live panel's pull — the situation, then the light play / the summary only when a play landed or the floor elapsed */
+  gid=String(gid); const g=gameOf(gid); if(!g||g.state!=='in') return; const now=Date.now();
+  let sit=null; try{ sit=await mvSitOne97(gid,g); }catch(e){ sit=null; } if(gen!==MV.gen) return;
+  const sm=LIVE.sum[gid]||null;                                                                        // the first summary is the tick's own pre-pass (mvSumFirst97): a null situation never gates it
+  if(!sit){ if(typeof liveSit97==='function') MV.back[gid]=0; else { MV.back[gid]=Math.min(30000,(MV.back[gid]||5000)*2); MV.backTs[gid]=now; } return; } MV.back[gid]=0;   // the sibling's service paces itself (its own x2 back-off, null while inside it): a null there is "nothing new", not a second back-off on top
+  if(!sm) return;
+  const lpid=(sit&&sit.lpid!=null)?String(sit.lpid):''; const last=(sm&&sm.plays&&sm.plays.length)?String(sm.plays[sm.plays.length-1].id||''):'';
+  const fresh=!!(now-(Number(sm.pt)||0)<MV.sumEvery); let needSum=false;
+  if(lpid&&lpid!==last&&lpid!==MV.lpSeen[gid]){
+    if(typeof livePlayPull97==='function'||typeof livePlayFromCore97==='function'){ let ok=false; try{ ok=await mvPlayOne97(gid,g,sm,lpid); }catch(e){ ok=false; } if(gen!==MV.gen) return; MV.lpSeen[gid]=lpid; needSum=!ok||!!MV.hot[gid]; }
+    else { needSum=now-(MV.lastSum[gid]||0)>=20000; if(!needSum) MV.pending[gid]=lpid; } }
+  else { needSum=!fresh; if(!needSum) sm.ts=Date.now(); }                                             // unchanged: the same freshness stamp gameViewArm writes
+  if(needSum){ let ok=false; try{ ok=await mvSumOne97(gid); }catch(e){ ok=false; } if(gen!==MV.gen) return;
+    if(ok){ MV.lastSum[gid]=now; MV.pending[gid]=null; MV.hot[gid]=false; } else { MV.back[gid]=Math.min(30000,(MV.back[gid]||5000)*2); MV.backTs[gid]=now; } } }
+async function mvSitOne97(gid,g){ /* GC97MV_MARK: the situation — through the sibling's cached service when present (one fetch per game per 3 s across every surface), else gvSitPoll96 */
+  if(typeof liveSit97==='function'){ let s1=null; try{ s1=await liveSit97(gid,3000); }catch(e){ s1=null; } if(s1&&typeof liveSitApply97==='function'){ try{ liveSitApply97(gid,s1); }catch(e){} } return s1||null; }
+  try{ return await gvSitPoll96(gid,g); }catch(e){ return null; } }
+async function mvPlayOne97(gid,g,sm,lpid){ /* GC97MV_MARK: the ~1.8 KB core play — through the sibling's livePlayPull97 when present (one fetch per play across every surface, the drive / score / clock folded, a big play marked for its summary), else its own fetch + the sibling's parser; dedupe by id */
+  if(typeof livePlayPull97==='function'){ let r=null; try{ r=await livePlayPull97(gid,lpid,g); }catch(e){ r=null; } if(r&&r.p){ MV.hot[gid]=!!r.big; return true; } return false; }
+  let j=null; try{ j=await jget('https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/'+encodeURIComponent(String(gid))+'/competitions/'+encodeURIComponent(String(gid))+'/plays/'+encodeURIComponent(String(lpid))+'?lang=en&region=us',6000); }catch(e){ j=null; }
+  if(!j||typeof livePlayFromCore97!=='function') return false; let pl=null; try{ pl=livePlayFromCore97(j,g,sm); }catch(e){ pl=null; } if(!pl||pl.id==null) return false;
+  const id=String(pl.id); if(!sm.plays) sm.plays=[]; if(!sm.plays.some(function(p){ return String(p.id)===id; })){ sm.plays.push(pl); sm.ts=Date.now(); }
+  MV.hot[gid]=!!(j.scoringPlay||j.isTurnover); return true; }
+async function mvSumOne97(gid){ /* GC97MV_MARK: the full summary — proven by its pt stamp; the header folded into the game object */
+  const t0=(LIVE.sum[gid]&&Number(LIVE.sum[gid].pt))||0; try{ await liveFetchSummary(gid,true); }catch(e){} const s1=LIVE.sum[gid]; const ok=!!(s1&&(Number(s1.pt)||0)>t0);
+  if(ok){ try{ gvApplyHeader(gid); }catch(e){} } return ok; }
+async function mvSumFirst97(gid,gen){ /* GC97MV_MARK: the first summary of a panel that has none — the floor stamp on success, its own back-off (x2 to 30 s) on failure */
+  gid=String(gid); let ok=false; try{ ok=await mvSumOne97(gid); }catch(e){ ok=false; } if(gen!==MV.gen) return false; const now=Date.now();
+  if(ok){ MV.lastSum[gid]=now; MV.sumBack[gid]=0; MV.pending[gid]=null; MV.hot[gid]=false; } else { MV.sumBack[gid]=Math.min(30000,(MV.sumBack[gid]||5000)*2); MV.sumBackTs[gid]=now; } return ok; }
+function mvAdd97(gid){ /* GC97MV_MARK: the Game Center's ⊞ while the multiview is up — add only when missing (a game already shown scrolls into view; never toggled off, Auto untouched) */
+  gid=String(gid||''); if(!gid) return; const P=MV.P||(MV.P=mvLoad97()); let cur=[]; try{ cur=P.auto?mvSel97(P):(P.sel||[]).map(function(x){ return String(x); }); }catch(e){ cur=[]; }
+  if(cur.indexOf(gid)<0){ mvToggle97(gid); return; }
+  try{ const el=document.querySelector('#mvGrid .mv97p[data-mvg="'+gid+'"]'); if(el&&typeof el.scrollIntoView==='function') el.scrollIntoView({block:'nearest'}); }catch(e){} }
+function mvBounceDue97(){ /* GC97MV_MARK: the Game Center on screen is the one a panel opened (same gid, the generation gameViewArm minted for it) — closing it lands back on the multiview */
+  try{ const bk=S.ui.multiBack; return !!(bk&&S.ui.gameView&&String(bk.gid)===String(S.ui.gameView)&&bk.gen===GV.gen); }catch(e){ return false; } }
+function mvStop97(){ /* GC97MV_MARK: the tick off, the modal no longer the multiview; the selection stays persisted */
+  MV.gen=(MV.gen||0)+1; if(MV.timer){ try{ clearTimeout(MV.timer); }catch(e){} } MV.timer=null; S.ui.multi=null; try{ $('modal').classList.remove('mv97'); }catch(e){} MV.sig={}; MV.pickSig=''; }
+function mvOpenGame97(gid){ /* GC97MV_MARK: Open › / Replay › — the Game Center (a final on the Live tab at the final play), with the way back remembered */
+  gid=String(gid||''); const g=gameOf(gid); if(!g){ toast('That game is not on the board right now','warn'); return; }
+  mvStop97(); S.ui.multiBack={gid:gid,gen:null};
+  try{ if(g.state==='post') lvReplay96(gid); else openGame(gid); }catch(e){}
+  try{ if(S.ui.multiBack) S.ui.multiBack.gen=GV.gen; }catch(e){} }
+function mvCloseHook97(){ /* GC97MV_MARK: true = handled (the modal is now the multiview again) */
+  if(MV.inClose) return false;
+  if(S.ui.multi){ mvStop97(); return false; }                                                          // the multiview itself is closing: stop its tick, let closeModal finish
+  if(!S.ui.multiBack) return false; const due=mvBounceDue97(); S.ui.multiBack=null;
+  if(!due) return false;                                                                               // not the Game Center we opened (a later openGame minted a new generation)
+  MV.inClose=true; let navOn=null; try{ navOn=GVNAV.on; GVNAV.on=false; }catch(e){ navOn=null; }       // the phone keeps its ONE history entry: the pop and the re-push would race through popstate
+  try{ closeModal(); }finally{ MV.inClose=false; try{ if(navOn!=null) GVNAV.on=navOn; }catch(e){} }    // the real close, in full — every reset the sibling patches add to closeModal included
+  openMulti({back:true}); mvNavGuard97(); return true; }
+function mvNavGuard97(){ /* GC97MV_MARK: teamOpen / leagueOpen / rosterOpen close the modal and then navigate — the bounce must not sit over the destination */
+  let t0=null, tf=null, hf=null; try{ t0=S.ui.tab; tf=S.ui.teamFocus; hf=S.ui.hubFocus; }catch(e){}
+  setTimeout(function(){ try{ if(!S.ui.multi) return; let so=false; try{ so=$('sover').classList.contains('on'); }catch(e){ so=false; } if(S.ui.tab!==t0||S.ui.teamFocus!==tf||S.ui.hubFocus!==hf||so) closeModal(); }catch(e){} },0); }
+function mvToggle97(gid){ /* GC97MV_MARK: a picker chip — add (max 4) or drop; Auto off */
+  gid=String(gid||''); if(!gid) return; const P=MV.P||(MV.P=mvLoad97()); const sel=(P.auto?mvSel97(P):(P.sel||[])).slice(); const i=sel.indexOf(gid);
+  if(i>=0) sel.splice(i,1); else { if(sel.length>=4){ toast('Four games at most — drop one first','warn'); return; } sel.push(gid); }
+  P.sel=sel; P.auto=false; mvSave97(P); try{ mvPaint97(); }catch(e){} }
+function mvAuto97(){ /* GC97MV_MARK: Auto on — the four live games with my biggest stakes, recomputed on every paint until a chip is tapped */
+  const P=MV.P||(MV.P=mvLoad97()); P.auto=true; try{ P.sel=mvSel97(P); }catch(e){ P.sel=[]; } mvSave97(P); try{ mvPaint97(); }catch(e){} }
+function mvCols97(){ /* GC97MV_MARK: phone — one column or two */
+  const P=MV.P||(MV.P=mvLoad97()); P.cols=(P.cols===2)?1:2; mvSave97(P);
+  try{ const root=$('gvBody'); if(root){ root.classList.toggle('c2',P.cols===2); root.classList.toggle('c1',P.cols!==2); } }catch(e){}
+  try{ const b=document.querySelector('#gvBody.mv97 .mv97cb'); if(b){ b.textContent=(P.cols===2?mvSq97(2)+' 1 col':mvSq97()+' 2 col'); b.setAttribute('aria-pressed',P.cols===2?'true':'false'); } }catch(e){}
+  try{ mvPaint97(); }catch(e){} }
+function mvFsSync97(){ /* GC97MV_MARK: rotate / resize — swap the phone skin and rebuild the root when gvPhone() flipped */
+  try{ if(!S.ui.multi||!$('mvGrid')) return; const ph=gvPhone(); const root=$('gvBody'); if(!root||!root.classList.contains('mv97')) return; if(root.classList.contains('ph')===ph) return;
+    const m=$('modal'); if(ph) m.classList.add('gvfs'); else m.classList.remove('gvfs'); root.classList.toggle('ph',ph);
+    root.innerHTML=mvHTML97(); MV.sig={}; MV.pickSig=''; mvPaint97(); }catch(e){} }
 function lvTwoMin96(period,clock){ /* inside the two-minute warning: the 2nd or 4th quarter with 2:00 or less on the clock (0:00 is the end of the half, not the window) */
   const q=Number(period)||0; if(q!==2&&q!==4) return false; const left=gvClockLeft96(clock); return left!=null&&left<=120&&left>0; }
 function lvSit96(g,sm){ /* the live situation one place: the scoreboard's g.sit / g.dd / g.spot and the summary's current drive — null when the game is not in progress; a field the feed has not carried is '' / null, never invented */
@@ -25693,9 +26257,20 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) return; 
   try{ for(const se in (S.glog||{})) glogEvict(se); }catch(e){}
   try{ glogFlush(null,true); }catch(e){} });
 window.addEventListener('pageshow',onResume);
+window.addEventListener('resize',function(){ try{ clearTimeout(MV.rzT); MV.rzT=setTimeout(mvFsSync97,160); }catch(e){} });   /* GC97MV_MARK: rotate / resize under an open multiview */
+document.addEventListener('visibilitychange',function(){ try{ if(!document.hidden&&S.ui.multi&&$('mvGrid')) multiArm(); }catch(e){} });   /* GC97MV_MARK: back from the background → a fresh generation, first tick in 600 ms */
+try{ Object.assign(HELP,{ multi:{t:'Multiview',b:'<p><b>Up to four games at once.</b> Tap the chips to pick games (live first, then the ones still to kick off, then finals); <b>Auto</b> takes the live games you have the most riding on — ▲ counts your starters in the game across every league, ▼ the starters against you. Each panel is the Game Center’s own picture: the score bug, the field with the ball, the drive, the last play and your players in that game with their live points. <b>Open ›</b> opens that game’s Game Center; closing it brings you back here.</p><p>While a game is on, its situation is checked every 5 seconds and its full feed only when a play lands (at most once a minute, sooner for a score or a turnover); finals and games yet to kick off are never polled. On a phone the '+mvSq97()+' toggle stacks the panels in one column or two.</p>'} }); }catch(e){}   /* GC97MV_MARK */
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Multiview.</b> The '+mvSq97()+' in the header adds this game to the multiview — up to four games on one screen.'; }catch(e){}
+document.addEventListener('change',function(e){ /* GC97RP_MARK: the slider's release commits the scrub */ const r=e.target; if(!r||!r.dataset||r.dataset.act!=='gvRange') return; try{ gvScrubEnd97(r.dataset.gid,r.value); }catch(x){} });
+document.addEventListener('pointerdown',function(e){ /* GC97RP_MARK: tap or drag on the timeline scrubs; the strip is re-resolved on every move (the tick may rebuild it) and a hold timer keeps the tick off #gvBody */ try{ const w=e.target&&e.target.closest?e.target.closest('#gvTimeline'):null; if(!w) return; if(e.button!=null&&e.button!==0) return; e.preventDefault(); GVR.tl={gid:String(w.dataset.gid||''),el:w}; try{ w.setPointerCapture(e.pointerId); }catch(x){} try{ gvTlHold97(true); }catch(x){} const i=gvTlIndex97(w,e.clientX); if(i!=null) gvScrub97(GVR.tl.gid,i); }catch(x){} },{passive:false});
+document.addEventListener('pointermove',function(e){ try{ const t=GVR.tl; if(!t) return; const i=gvTlIndex97(gvTlEl97(t),e.clientX); if(i!=null) gvScrub97(t.gid,i); }catch(x){} });
+(function(){ const up=function(e){ try{ const t=GVR.tl; if(!t) return; GVR.tl=null; try{ gvTlHold97(false); }catch(x){} const i=gvTlIndex97(gvTlEl97(t),e.clientX); if(i!=null) gvScrubEnd97(t.gid,i); else if(GVR.scrubI!=null&&GVR.scrubGid===t.gid) gvScrubEnd97(t.gid,GVR.scrubI); else gvRpTipHide97(); }catch(x){} }; document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up); })();
+document.addEventListener('toggle',function(e){ try{ const d=e.target; if(d&&d.classList&&d.classList.contains('gv97dl')) GVR.dlOpen=!!d.open; }catch(x){} },true);
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Rewind.</b> The controls are there on a live game too: rewind and the feed keeps landing without moving your view (the ⟲ pill counts the plays you are behind; tap it, press End, or wait 90 seconds to go back to LIVE). The strip under the slider is the timeline — the win-probability line, gold ticks for scores (taller for more points), orange for turnovers, green for the big plays of your players; tap or drag it to scrub, and the tooltip over the thumb reads the play while you drag. ▶ Play runs at ½×, 1×, 2× or 4× (tap the speed, or keys 1–4). When you come back to a game with three or more new plays, Catch up plays them at 2× and lands on LIVE; the Drives list jumps to any drive. Keys: ← → or , . step a play, [ ] a drive, Home/End, space plays.'; }catch(e){}   /* GC97RP_MARK */
 document.addEventListener('keydown',function(e){ /* GC96RP_MARK: ← → step the replay, space plays / pauses — only with a finished game's controls on screen and no field focused */
   try{ if(!S.ui.gameView||!$('gvReplayCtl')||!$('modal').classList.contains('on')) return; const t=e.target; if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)&&t.type!=='range') return; if(e.metaKey||e.ctrlKey||e.altKey) return;
-    if(e.key==='ArrowLeft'){ e.preventDefault(); gvReplay(S.ui.gameView,'prev'); } else if(e.key==='ArrowRight'){ e.preventDefault(); gvReplay(S.ui.gameView,'next'); } else if(e.key===' '||e.code==='Space'){ e.preventDefault(); gvAuto96(S.ui.gameView); } }catch(x){} });
+    if(e.key==='ArrowLeft'||e.key===','){ e.preventDefault(); gvReplay(S.ui.gameView,'prev'); } else if(e.key==='ArrowRight'||e.key==='.'){ e.preventDefault(); gvReplay(S.ui.gameView,'next'); } else if(e.key===' '||e.code==='Space'){ e.preventDefault(); gvAuto96(S.ui.gameView); }
+    else if(e.key==='Home'){ e.preventDefault(); gvReplay(S.ui.gameView,'home'); } else if(e.key==='End'){ e.preventDefault(); gvReplay(S.ui.gameView,'live'); } else if(e.key==='['){ e.preventDefault(); gvReplay(S.ui.gameView,'pdrive'); } else if(e.key===']'){ e.preventDefault(); gvReplay(S.ui.gameView,'ndrive'); } else if(/^[1-4]$/.test(String(e.key))){ e.preventDefault(); gvRpSpeedSet97([0.5,1,2,4][Number(e.key)-1],true); } }catch(x){} });   /* GC97RP_MARK: Home/End, [ ] drives, , . frame-step, 1-4 speeds */
 try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Replay.</b> On a finished game: \u23ee \u23ed jump a drive, \u25c0 \u25b6 step a play (\u2190 \u2192 on a keyboard), \u25b6 Play runs the game a play every 1.3 seconds (space pauses), and the Jump chips take you to every score and to the big plays your players were part of; the label carries the quarter, the clock and the score at that moment.'; }catch(e){}
 try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Kicks.</b> A kickoff or a punt is drawn as a high arc to where it landed and a solid run to where the return ended; a field goal ends at drawn uprights with GOOD, NO GOOD or BLOCKED; the chip under the field carries the distance and the result, and a touchdown chip carries the extra point or two-point try (ESPN folds the try into the touchdown play). When ESPN posts no down the tile says Kickoff next, PAT or 2-pt try.'; }catch(e){}   /* GC96ST_MARK */
 /* GC96DIR_MARK: the \u21c4 control was retired — the orientation follows the ball */
@@ -25707,7 +26282,7 @@ try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>The field.</b> The club 
   window.addEventListener('scroll',onScroll,{passive:true});
   document.addEventListener('scroll',function(e){ try{ const t=e.target; if(t&&t.closest&&t.closest('#gvBody')) GV.scrollTs=Date.now(); }catch(x){} },true);
 })();
-try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Data.</b> Between plays the panel polls ESPN\u2019s situation feed (under 1 KB) every 8 seconds and pulls the full play feed only when a new play has landed, or every 40 seconds for the box score and win probability; with Data Saver on it checks every 16 seconds.'; }catch(e){}   /* GC96POL_MARK */
+try{ if(HELP.gclive&&HELP.gclive.b) HELP.gclive.b+=' <b>Data.</b> Between plays the panel polls ESPN\u2019s situation feed (under 1 KB) every 5 seconds, pulls a new play as a 2 KB object the moment its id changes, and the full play feed every 30 seconds or at once after a score or a turnover; with Data Saver on it checks every 16 seconds.'; }catch(e){}   /* GC96POL_MARK */
 /* ---------------- PWA · service worker (only when hosted over http/https — the double-clicked file never registers and works exactly as before) ---------------- */
 (function swBoot(){
   if(!('serviceWorker' in navigator)) return;
